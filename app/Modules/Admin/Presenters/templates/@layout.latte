@@ -34,7 +34,7 @@
 
 <div class="page-container"><!-- add class "sidebar-collapsed" to close sidebar by default, "chat-visible" to make chat appear always -->
 
-	<div class="sidebar-menu">
+	<div n:tag-if="$user->roles[0] === 'ADMIN'" class="sidebar-menu">
 
 		<div class="sidebar-menu-inner">
 
@@ -84,6 +84,11 @@
 					<a href="Editace:show">
 						<i class="entypo-gause"></i>
 						Editace
+					</a>
+				</li>
+				<li>
+					<a n:href="Sign:out">
+						Odhlásit
 					</a>
 				</li>
 

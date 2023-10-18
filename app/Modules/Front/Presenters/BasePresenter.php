@@ -6,6 +6,7 @@ use Nette\Application\UI\Presenter;
 
 class BasePresenter extends Presenter
 {
+
     protected function startup()
     {
         parent::startup();

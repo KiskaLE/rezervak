@@ -10,4 +10,10 @@ use Nette;
 final class ReservationPresenter extends BasePresenter
 {
 
+    public function __construct(
+        private Nette\Database\Connection $database,
+    ){
+
+    }
+
 }

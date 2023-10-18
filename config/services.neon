@@ -1,5 +1,6 @@
 services:
 	- App\Router\RouterFactory::createRouter
+	- App\Modules\Authenticator
 
 
 search:
@@ -7,3 +8,4 @@ search:
 		classes:
 			- *Factory
 			- *Facade
+
