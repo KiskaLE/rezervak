@@ -1,14 +1,14 @@
 <?php
 
-
-declare(strict_types=1);
-
 namespace App\Modules\Front\Presenters;
 
-use Nette;
+use Nette\Application\UI\Presenter;
 
-
-final class BasePresenter extends Nette\Application\UI\Presenter
+class BasePresenter extends Presenter
 {
-
+    protected function startup()
+    {
+        parent::startup();
+        // Your code here
+    }
 }

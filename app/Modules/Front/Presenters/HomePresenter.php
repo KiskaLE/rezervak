@@ -7,7 +7,7 @@ namespace App\Modules\Front\Presenters;
 use Nette;
 
 
-final class HomePresenter extends Nette\Application\UI\Presenter
+final class HomePresenter extends BasePresenter
 {
 
 }
