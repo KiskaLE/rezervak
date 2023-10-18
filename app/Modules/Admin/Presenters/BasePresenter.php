@@ -8,7 +8,7 @@ class BasePresenter extends Presenter
 {
 
 
-    public function __construct( \Nette\Database\Explorer $database)
+    public function __construct(\Nette\Database\Explorer $database)
     {
         parent::__construct();
     }

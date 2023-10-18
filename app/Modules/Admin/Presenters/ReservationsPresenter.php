@@ -10,5 +10,7 @@ use Nette;
 
 final class ReservationsPresenter extends SecurePresenter
 {
-
+    public function __construct()
+    {
+    }
 }
