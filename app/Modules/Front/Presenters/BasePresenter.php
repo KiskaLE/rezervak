@@ -3,11 +3,12 @@
 namespace App\Modules\Front\Presenters;
 
 use Nette\Application\UI\Presenter;
+use Nette\Database\Explorer;
 
 class BasePresenter extends Presenter
 {
-
-    public function __construct( \Nette\Database\Explorer $database)
+    private $database;
+    public function __construct()
     {
         parent::__construct();
     }
