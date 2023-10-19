@@ -1,0 +1,23 @@
+{block content}
+<h1>Services</h1>
+
+<div class="table-wrapper">
+    <table class="table dataTable table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Actions</th>
+        </tr>
+        </thead>
+        {foreach $services as $service}
+            <tr>
+                <th>{$service->name}</th>
+                <th>{$service->price}</th>
+                <th><a class="btn btn-default btn-sm btn-icon icon-left" n:href="Services:edit $service->id"><i class="entypo-pencil"></i>Edit</a></th>
+            </tr>
+        {/foreach}
+    </table>
+
+    <div><a n:href="Services:create" class="btn btn-default">Create</a></div>
+</div>
