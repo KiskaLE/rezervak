@@ -3,9 +3,9 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<link rel="icon" href="{$basePath}/front/assets/images/favicon.ico">
-	<link rel="stylesheet" href="{$basePath}/front/assets/css/">
+	<link rel="icon" href="{$basePath}/assets/images/favicon.ico">
 	<link rel="stylesheet" href="{$basePath}/assets/front/css/styles.css">
+	<script src="{$basePath}/assets/front/js/index.js"></script>
 
 	<title>Neon | Dashboard</title>
 
@@ -14,8 +14,14 @@
 </head>
 
 <body>
-<div class="body-container"></div>
-{include content}
+<div class="body-container">{include content}</div>
+
+{block scripts}
+	<script src="https://unpkg.com/nette-forms@3/src/assets/netteForms.js"></script>
+	<script src="https://unpkg.com/naja@2/dist/Naja.min.js"></script>
+
+{/block}
+
 
 </body>
 </html>

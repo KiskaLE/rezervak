@@ -12,6 +12,14 @@ final class Authenticator implements Nette\Security\Authenticator {
         private Nette\Security\Passwords $passwords,
     ) {
     }
+    /**
+     * Authenticates a user with the given username and password.
+     *
+     * @param string $username The username of the user to authenticate.
+     * @param string $password The password of the user to authenticate.
+     * @throws Nette\Security\AuthenticationException If the user is not found or the password is invalid.
+     * @return SimpleIdentity The authenticated user's identity.
+     */
     public function authenticate(string $username, string $password): SimpleIdentity {
         $row = $this->database->table('users')
             ->where('username', $username)
@@ -30,6 +38,14 @@ final class Authenticator implements Nette\Security\Authenticator {
             ['name' => $row->username],
         );
     }
+    /**
+     * Creates a new user with the given username and password.
+     *
+     * @param string $username The username for the new user.
+     * @param string $password The password for the new user.
+     * @throws Some_Exception_Class If there is an error during the user creation process.
+     * @return string The username of the newly created user.
+     */
     public function createUser($username, $password): string {
         $passwordHash = $this->passwords->hash($password);
 

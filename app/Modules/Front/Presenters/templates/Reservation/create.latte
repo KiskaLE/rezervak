@@ -1,20 +1,14 @@
 {block content}
 
 <div class="page-wrapper">
-    {control reservationForm}
-    <form action="">
-    <table class="items-table">
-        <tr class="table-header">
-            <th>Služba</th>
-            <th>Cena</th>
-            <th>Popis</th>
-        </tr>
-
-        <tr>
-            <th>Loremmgfd</th>
-            <th>400 Kč</th>
-            <th>Loremm idksfm sd fsdlkfjsldjflksdj lfkjsdif j</th>
-        </tr>
-    </table>
+    <form n:name="form">
+        <div><input n:name="service"></div>
+        <div><input n:name="date"></div>
+        <div><a class="ajax" n:snippet="Link" href="#">Select</a></div>
+        <div><select class="ajax" n:name="date">
+                {snippet dayOptions}
+                {/snippet}
+            </select></div>
     </form>
+
 </div>
