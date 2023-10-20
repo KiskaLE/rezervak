@@ -1,6 +1,6 @@
 {block content}
-<a n:href="Reservation:create" class="ajax">Test</a>
-<div class="page-wrapper" n:snippet="content">
+<a n:href="sendDate! '', ''" class="ajax" id="load-day"></a>
+<div class="page-wrapper">
     <!--{control form}-->
     <div class="reservationForm-wrapper">
         <div style="text-align:center;margin-top:40px;">
@@ -8,14 +8,31 @@
             <span class="step"></span>
             <span class="step"></span>
             <span class="step"></span>
+            <span class="step"></span>
         </div>
 
-        <form n:name="form" id="regForm">
+        <form n:name="form" id="regForm" class="ajax" >
+
             <div class="tab">
                 <p><label for="">Služba:</label><select n:name="service"></select></p>
             </div>
             <div class="tab">
-                <p><label for="">Čas:</label><select n:name="time"></select></p>
+                <p><label for="">Datum:</label><input n:name="date"></p>
+            </div>
+            <div class="tab">
+                <input n:name="time" value="{$hours ? $hours[0] : ""}" class="time">
+                <p><label for="">Čas:</label>
+                    <select n:snippet="content" class="dummiTime" onchange="writeData()">
+                        {var $i = 0}
+                        <option>Select</option>
+                        {foreach $hours as $hour}
+                            <option value="{$hour}">{$hour}</option>
+                            {$i++}
+                        {/foreach}
+
+                    </select>
+
+                </p>
             </div>
             <div class="tab">
                 <p><label for="">Jméno:</label><input n:name="firstname"></p>

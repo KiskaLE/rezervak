@@ -1,9 +1,9 @@
-var currentTab = 0; // Current tab is set to be the first tab (0)
+let currentTab = 0; // Current tab is set to be the first tab (0)
 showTab(currentTab); // Display the current tab
 
 function showTab(n) {
     // This function will display the specified tab of the form ...
-    var x = document.getElementsByClassName("tab");
+    let x = document.getElementsByClassName("tab");
     x[n].style.display = "block";
     // ... and fix the Previous/Next buttons:
     if (n == 0) {
@@ -17,12 +17,15 @@ function showTab(n) {
         document.getElementById("nextBtn").innerHTML = "Další";
     }
     // ... and run a function that displays the correct step indicator:
+    if (n == 2) {
+        changeDay();
+    }
     fixStepIndicator(n)
 }
 
 function nextPrev(n) {
     // This function will figure out which tab to display
-    var x = document.getElementsByClassName("tab");
+    let x = document.getElementsByClassName("tab");
     // Exit the function if any field in the current tab is invalid:
     if (n == 1 && !validateForm()) return false;
     // Hide the current tab:
@@ -38,13 +41,14 @@ function nextPrev(n) {
         document.getElementById("regForm").submit();
         return false;
     }
+
     // Otherwise, display the correct tab:
     showTab(currentTab);
 }
 
 function validateForm() {
     // This function deals with validation of the form fields
-    var x, y, i, valid = true;
+    let x, y, i, valid = true;
     x = document.getElementsByClassName("tab");
     y = x[currentTab].getElementsByTagName("input");
     // A loop that checks every input field in the current tab:
@@ -66,7 +70,7 @@ function validateForm() {
 
 function fixStepIndicator(n) {
     // This function removes the "active" class of all steps...
-    var i, x = document.getElementsByClassName("step");
+    let i, x = document.getElementsByClassName("step");
     for (i = 0; i < x.length; i++) {
         x[i].className = x[i].className.replace(" active", "");
     }
@@ -88,9 +92,9 @@ function recap(){
         const div = document.createElement("div");
         const p = document.createElement("p");
         if (i == 0) {
-            p.innerHTML = getOption("service", data[1]);
+            //p.innerHTML = getOption("service", data[1]);
         }else if (i == 1){
-            p.innerHTML = getOption("time", data[1]);
+            //p.innerHTML = getOption("time", data[1]);
         }else {
             p.innerHTML = data[1];
         }
@@ -115,3 +119,18 @@ function getOption(name, number) {
     return optionsArray[parseInt(number)];
 }
 
+
+function writeData() {
+    const dummi = document.querySelector(".dummiTime").value;
+    const time = document.querySelector(".time");
+
+    time.value = dummi;
+}
+
+function changeDay() {
+    const button = document.querySelector("#load-day");
+    const day = document.querySelector("[name='date']").value;
+    const service = document.querySelector("[name='service']").value;
+    button.href = `/reservation/create?date=${day}&service_id=${service}&do=sendDate`;
+    button.click();
+}

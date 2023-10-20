@@ -22,41 +22,52 @@ final class ReservationPresenter extends BasePresenter
 
     }
 
-    public function afterRender()
+    protected function startup()
     {
-        parent::afterRender();
-        $this->availableDates->getAvailableStartingHours("2024-1-1", 30, );
+        parent::startup();
+        $this->template->hours = [];
+        $this->times = [];
+
     }
+
 
     protected function beforeRender()
     {
         parent::beforeRender();
-        $this->redrawControl("content");
 
         $services = $this->database->table("services")->fetchAll();
         $this->template->services = $services;
+        $this->redrawControl("content");
 
 
+
+    }
+
+    public function handleSendDate(string $date, string $service_id) {
+        $service = $this->database->table("services")->where("id=?", $service_id+1)->fetch();
+        $duration = $service->duration;
+        $times = $this->availableDates->getAvailableStartingHours($date, intval($duration) );
+
+        bdump($this->times);
+        $this->template->hours = $times;
+        $this->redrawControl("content");
+        $this->times = $times;
     }
 
     protected function createComponentForm(): Form
     {
         $services = $this->database->table("services")->fetchAll();
         $this->services = $services;
-
         $servicesList = [];
         foreach ($services as $service){
             $servicesList[] = $service->name;
         }
 
-
-        $times = $this->availableDates->getAvailableStartingHours("2024-1-1",30 );
-        $this->times = $times;
-
         $form = new Form;
         $form->addSelect("service", "Služba:", $servicesList)->setRequired();
-        //$form->addText("date")->setHtmlAttribute("type", "date")->setRequired();
-        $form->addSelect("time", "Čas:", $times)->setRequired();
+        $form->addText("date")->setHtmlAttribute("type", "date")->setRequired();
+        //$form->addSelect("time", "Čas:", $this->hours)->setRequired();
+        $form->addHidden("time")->setRequired();
         $form->addText("firstname", "Jmeno:")->setRequired();
         $form->addText("lastname", "Příjmení:")->setRequired();
         $form->addText("phone", "Telefon:")->setRequired();
@@ -75,12 +86,11 @@ final class ReservationPresenter extends BasePresenter
         $service_id = $this->services[$data->service+1]->id;
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = intval($service->duration);
-        $date = "2024-1-1";
-        $time = $this->times[$data->time];
+        //$time = $this->times[$data->time];
         $this->database->table("registereddates")->insert([
-            "date" => $date,
+            "date" => $data->date,
             "service_id" => $service_id,
-            "start" => $time,
+            "start" => $data->time,
             "duration" => $duration,
             "firstname" => $data->firstname,
             "lastname" => $data->lastname,
