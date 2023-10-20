@@ -86,11 +86,11 @@ final class ReservationPresenter extends BasePresenter
         $service_id = $this->services[$data->service+1]->id;
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = intval($service->duration);
-        //$time = $this->times[$data->time];
+        $times = $this->availableDates->getAvailableStartingHours($data->date, $duration );
         $this->database->table("registereddates")->insert([
             "date" => $data->date,
             "service_id" => $service_id,
-            "start" => $data->time,
+            "start" => $times[$data->time],
             "duration" => $duration,
             "firstname" => $data->firstname,
             "lastname" => $data->lastname,
