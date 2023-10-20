@@ -50,7 +50,7 @@ final class ReservationPresenter extends BasePresenter
         }
 
 
-        $times = $this->availableDates->getAvailableStartingHours("2024-1-1", 30);
+        $times = $this->availableDates->getAvailableStartingHours("2024-1-1",30 );
         $this->times = $times;
 
         $form = new Form;
@@ -72,10 +72,11 @@ final class ReservationPresenter extends BasePresenter
     }
 
     public function formSucceeded(Form $form, $data): void {
-        $date = "2024-1-1";
-        $duration = 30;
-        $time = $this->times[$data->time];
         $service_id = $this->services[$data->service+1]->id;
+        $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
+        $duration = intval($service->duration);
+        $date = "2024-1-1";
+        $time = $this->times[$data->time];
         $this->database->table("registereddates")->insert([
             "date" => $date,
             "service_id" => $service_id,

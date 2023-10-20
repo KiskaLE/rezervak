@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace App\Modules\admin\Presenters;
 
+use Cassandra\Duration;
 use Nette;
 use Nette\Application\UI\Form;
 
@@ -42,7 +43,8 @@ final class ServicesPresenter extends SecurePresenter
         $form = new Form;
         $form->addHidden("action");
         $form->addText("name", "Name")->setRequired();
-        $form->addText("price", "Price")->setRequired();
+        $form->addText("duration", "Duration")->setHtmlAttribute("type", "number")->setRequired();
+        $form->addText("price", "Price")->setHtmlAttribute("type", "number")->setRequired();
         $form->addSubmit("submit", "Save");
 
         $form->onSuccess[] = [$this, "formSuccess"];
@@ -55,12 +57,14 @@ final class ServicesPresenter extends SecurePresenter
             $this->database->table("services")->where("id=?", $this->id)->update([
                 "name" => $data->name,
                 "price" => $data->price,
+                "duration" => $data->duration
             ]);
         }
         if ($data->action === "create"){
             $this->database->table("services")->insert([
                 "name" => $data->name,
                 "price" => $data->price,
+                "duration" => $data->duration
             ]);
         }
 
