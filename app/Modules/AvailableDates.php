@@ -32,7 +32,7 @@ class AvailableDates {
             $sv = true;
             foreach ($bookedArray as $booked) {
                 $start = $this->convertTimeToMinutes($booked->start);
-                $duration2 = $this->convertTimeToMinutes($booked->end) - $start;
+                $duration2 = intval($booked->duration);
                 if (!$this->isPossible($dayStartMinutes, $duration, $start, $duration2)) {
                     $sv = false;
                     break;

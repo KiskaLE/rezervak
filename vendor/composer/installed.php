@@ -3,7 +3,7 @@
         'name' => 'nette/web-project',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '19f53366e885dc4eeda4188f77acbb2d08b27a5b',
+        'reference' => '660f4b383bfa6eb4f00873a445d508766e99045b',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -184,7 +184,7 @@
         'nette/web-project' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '19f53366e885dc4eeda4188f77acbb2d08b27a5b',
+            'reference' => '660f4b383bfa6eb4f00873a445d508766e99045b',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

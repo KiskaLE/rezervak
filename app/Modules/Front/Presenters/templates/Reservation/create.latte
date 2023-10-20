@@ -1,14 +1,45 @@
 {block content}
 
-<div class="page-wrapper">
-    <form n:name="form">
-        <div><input n:name="service"></div>
-        <div><input n:name="date"></div>
-        <div><a class="ajax" n:snippet="Link" href="#">Select</a></div>
-        <div><select class="ajax" n:name="date">
-                {snippet dayOptions}
-                {/snippet}
-            </select></div>
-    </form>
+<div class="page-wrapper" n:snippet="content">
+    <!--{control form}-->
+    <div class="reservationForm-wrapper">
+        <div style="text-align:center;margin-top:40px;">
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+        </div>
+
+        <form n:name="form" id="regForm">
+            <div class="tab">
+                <p><label for="">Služba:</label><select n:name="service"></select></p>
+            </div>
+            <div class="tab">
+                <p><label for="">Čas:</label><select n:name="time"></select></p>
+            </div>
+            <div class="tab">
+                <p><label for="">Jméno:</label><input n:name="firstname"></p>
+                <p><label for="">Příjmení:</label><input n:name="lastname"></p>
+                <p><label for="">Tel.:</label><input n:name="phone"></p>
+                <p><label for="">E-mail:</label><input n:name="email"></p>
+                <p><label for="">Adresa a č.p.</label><input n:name="address"></p>
+                <p><label for="">PSČ:</label><input n:name="code"></p>
+                <p><label for="">Město:</label><input n:name="city"></p>
+            </div>
+            <div class="tab" id="recap">
+
+            </div>
+            <div style="overflow:auto;">
+                <div style="float:right;">
+                    <button type="button" id="prevBtn" onclick="nextPrev(-1)">Zpět</button>
+                    <button type="button" id="nextBtn" onclick="nextPrev(1)">Další</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
 
 </div>
+
+<script src="{$basePath}/assets/front/js/multistepForm.js"></script>
+
