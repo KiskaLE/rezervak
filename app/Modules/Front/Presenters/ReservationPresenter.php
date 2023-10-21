@@ -12,7 +12,6 @@ use App\Modules\AvailableDates;
 final class ReservationPresenter extends BasePresenter
 {
 
-    private $times;
     private $services;
 
     public function __construct(
@@ -26,7 +25,6 @@ final class ReservationPresenter extends BasePresenter
     {
         parent::startup();
         $this->template->hours = [];
-        $this->times = [];
 
     }
 
@@ -48,10 +46,8 @@ final class ReservationPresenter extends BasePresenter
         $duration = $service->duration;
         $times = $this->availableDates->getAvailableStartingHours($date, intval($duration) );
 
-        bdump($this->times);
         $this->template->hours = $times;
         $this->redrawControl("content");
-        $this->times = $times;
     }
 
     protected function createComponentForm(): Form
@@ -91,7 +87,6 @@ final class ReservationPresenter extends BasePresenter
             "date" => $data->date,
             "service_id" => $service_id,
             "start" => $times[$data->time],
-            "duration" => $duration,
             "firstname" => $data->firstname,
             "lastname" => $data->lastname,
             "phone" => $data->phone,

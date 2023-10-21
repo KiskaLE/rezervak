@@ -31,8 +31,9 @@ class AvailableDates {
         while ($dayStartMinutes < $dayEndMinutes) {
             $sv = true;
             foreach ($bookedArray as $booked) {
+                $service = $booked->ref("services", "service_id");
                 $start = $this->convertTimeToMinutes($booked->start);
-                $duration2 = intval($booked->duration);
+                $duration2 = intval($service->duration);
                 if (!$this->isPossible($dayStartMinutes, $duration, $start, $duration2)) {
                     $sv = false;
                     break;
