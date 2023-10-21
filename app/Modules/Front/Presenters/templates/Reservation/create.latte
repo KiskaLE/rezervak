@@ -1,0 +1,62 @@
+{block content}
+<a n:href="sendDate! '', ''" class="ajax" id="load-day"></a>
+<div class="page-wrapper">
+    <!--{control form}-->
+    <div class="reservationForm-wrapper">
+        <div style="text-align:center;margin-top:40px;">
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+        </div>
+
+        <form n:name="form" id="regForm" class="ajax" >
+
+            <div class="tab">
+                <p><label for="">Služba:</label><select n:name="service"></select></p>
+            </div>
+            <div class="tab">
+                <p><label for="">Datum:</label><input n:name="date"></p>
+            </div>
+            <div class="tab">
+                <input n:name="time" value="{$hours ? $hours[0] : ""}" class="time">
+                <p><label for="">Čas:</label>
+                    <select n:snippet="content" class="dummiTime" onchange="writeData()">
+                        {var $i = 0}
+                        <option>Select</option>
+                        {foreach $hours as $hour}
+                            <option value="{$i}">{$hour}</option>
+                            {$i++}
+                        {/foreach}
+
+                    </select>
+
+                </p>
+            </div>
+            <div class="tab">
+                <p><label for="">Jméno:</label><input n:name="firstname"></p>
+                <p><label for="">Příjmení:</label><input n:name="lastname"></p>
+                <p><label for="">Tel.:</label><input n:name="phone"></p>
+                <p><label for="">E-mail:</label><input n:name="email"></p>
+                <p><label for="">Adresa a č.p.</label><input n:name="address"></p>
+                <p><label for="">PSČ:</label><input n:name="code"></p>
+                <p><label for="">Město:</label><input n:name="city"></p>
+            </div>
+            <div class="tab" id="recap">
+
+            </div>
+            <div style="overflow:auto;">
+                <div style="float:right;">
+                    <button type="button" id="prevBtn" onclick="nextPrev(-1)">Zpět</button>
+                    <button type="button" id="nextBtn" onclick="nextPrev(1)">Další</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+</div>
+
+<script src="{$basePath}/assets/front/js/multistepForm.js"></script>
+

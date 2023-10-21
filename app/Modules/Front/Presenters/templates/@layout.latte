@@ -3,7 +3,9 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<link rel="icon" href="assets/images/favicon.ico">
+	<link rel="icon" href="{$basePath}/assets/images/favicon.ico">
+	<link rel="stylesheet" href="{$basePath}/assets/front/css/styles.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 	<title>Neon | Dashboard</title>
 
@@ -12,7 +14,14 @@
 </head>
 
 <body>
-{include content}
+<div class="body-container">{include content}</div>
+
+{block scripts}
+	<script src="https://unpkg.com/nette-forms@3/src/assets/netteForms.js"></script>
+
+{/block}
+<script src="{$basePath}/assets/bundle.js"></script>
+
 
 </body>
 </html>

@@ -8,7 +8,12 @@ namespace App\Modules\admin\Presenters;
 use Nette;
 
 
-final class HomePresenter extends Nette\Application\UI\Presenter
+final class HomePresenter extends SecurePresenter
 {
+
+    public function __construct()
+    {
+    }
+
 
 }

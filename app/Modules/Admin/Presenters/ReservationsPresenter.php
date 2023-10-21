@@ -8,7 +8,9 @@ namespace App\Modules\admin\Presenters;
 use Nette;
 
 
-final class ReservationsPresenter extends Nette\Application\UI\Presenter
+final class ReservationsPresenter extends SecurePresenter
 {
-
+    public function __construct()
+    {
+    }
 }

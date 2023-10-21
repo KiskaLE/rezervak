@@ -6,7 +6,6 @@ application:
 	mapping:
 		Front: App\Modules\Front\Presenters\*Presenter
 		Admin: App\Modules\Admin\Presenters\*Presenter
-		Api: App\Api\*Presenter
 
 
 latte:
