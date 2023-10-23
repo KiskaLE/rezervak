@@ -25,6 +25,28 @@ reservationForm-wrapper {
   flex-direction: column;
 }
 
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#confirmation {
+  max-width: 800px;
+  height: fit-content;
+}
+#confirmation h1 {
+  text-align: center;
+  font-size: 70px;
+}
+#confirmation p {
+  font-size: 25px;
+}
+
+.h-full {
+  height: 100vh;
+}
+
 /* Style the form */
 #regForm {
   background-color: #ffffff;

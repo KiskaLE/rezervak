@@ -95,7 +95,7 @@ final class ReservationPresenter extends BasePresenter
             "code" => $data->code,
             "city" => $data->city
         ]);
-        $this->redirect("Home:");
+        $this->redirect("Reservation:confirmation");
 
     }
 

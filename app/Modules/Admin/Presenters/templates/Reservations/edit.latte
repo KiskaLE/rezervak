@@ -1,0 +1,35 @@
+{block content}
+<h1>Edit</h1>
+
+<div><a class="btn btn-default" n:href="Reservations:show">Back</a></div>
+<div class="col-lg-5">
+    <form n:name="form">
+        <input n:name="action" value="edit">
+        <div class="form-group">
+            <label class="col-sm-3 control-label" n:name="firstname">Firstname</label>
+            <div class="col-sm-8"><input class="form-control" n:name="firstname" value="{$reservation->firstname}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" n:name="lastname">Lastname</label>
+            <div class="col-sm-8"><input class="form-control" n:name="lastname" value="{$reservation->lastname}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" n:name="email">Email</label>
+            <div class="col-sm-8"><input class="form-control" n:name="email" value="{$reservation->email}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" n:name="phone">Phone</label>
+            <div class="col-sm-8"><input class="form-control" n:name="phone" value="{$reservation->phone}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" n:name="service_id">Service</label>
+            <div class="col-sm-8"><input class="form-control" n:name="service_id" value="{$reservation->service_id}"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" n:name="status">Status</label>
+            <div class="col-sm-8"><input class="form-control" n:name="status" value="{$reservation->status}"></div>
+        </div>
+        <input class="btn btn-default" n:name="submit">
+
+    </form>
+</div>

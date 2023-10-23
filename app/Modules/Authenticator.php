@@ -48,11 +48,13 @@ final class Authenticator implements Nette\Security\Authenticator {
      */
     public function createUser($username, $password): string {
         $passwordHash = $this->passwords->hash($password);
+        $database = $this->database;
 
-        $this->database->table("users")->insert([
+        $database->table("users")->insert([
             "username" => $username,
             "password" => $passwordHash
         ]);
+
         return $username;
     }
 }
