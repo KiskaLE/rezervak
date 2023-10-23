@@ -35,10 +35,15 @@ final class ReservationPresenter extends BasePresenter
 
         $services = $this->database->table("services")->fetchAll();
         $this->template->services = $services;
+        $this->template->availableDates = $this->availableDates->getAvailableDates(30, 10);
+
         $this->redrawControl("content");
+    }
+    public function actionCreate($run, $data) {
 
-
-
+       if ($run === "fetch") {
+           $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates(30, 10)]);
+       }
     }
 
     public function handleSendDate(string $date, string $service_id) {
@@ -47,7 +52,12 @@ final class ReservationPresenter extends BasePresenter
         $times = $this->availableDates->getAvailableStartingHours($date, intval($duration) );
 
         $this->template->hours = $times;
+        bdump($date. $service_id);
         $this->redrawControl("content");
+    }
+
+    public function actionFetch() {
+
     }
 
     protected function createComponentForm(): Form
@@ -60,8 +70,8 @@ final class ReservationPresenter extends BasePresenter
         }
 
         $form = new Form;
-        $form->addSelect("service", "Služba:", $servicesList)->setRequired();
-        $form->addText("date")->setHtmlAttribute("type", "date")->setRequired();
+        $form->addhidden("service")->setRequired();
+        $form->addHidden("date")->setRequired();
         //$form->addSelect("time", "Čas:", $this->hours)->setRequired();
         $form->addHidden("time")->setRequired();
         $form->addText("firstname", "Jmeno:")->setRequired();

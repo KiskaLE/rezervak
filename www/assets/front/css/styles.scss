@@ -1,8 +1,21 @@
+body {
+ margin: 0;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+}
+
+.body-container {
+ width: 1100px;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+}
 .page-wrapper {
  display: flex;
- min-height: 100vh;
- justify-content: center;
+ flex-direction: column;
  align-items: center;
+ width: 100%;
 }
 
 .items-table {
@@ -18,9 +31,25 @@
   }
 }
 
-reservationForm-wrapper {
+#reservation-steps {
+ display: flex;
+ width: 100%;
+ justify-content: space-evenly;
+ padding: 10px 0;
+ .step {
+  height: 50px;
+  width: 50px;
+  border: blue 3px solid;
+  border-radius: 50%;
+  display: inline-block;
+ }
+ .active {
+
+ }
+}
+
+.reservationForm-wrapper {
  max-width: 300px;
- min-width: 150px;
  display: flex;
  flex-direction: column;
 }
@@ -43,9 +72,55 @@ reservationForm-wrapper {
  }
 }
 
-.h-full {
+.service-button {
+ padding: 5px 10px;
+ border: 1px #0d7eff solid;
+ border-radius: 5px;
+ transition-duration: 100ms;
+
+}
+
+.service-button:hover {
+ background-color: #0d7eff;
+ color:white;
+ cursor: pointer;
+}
+
+.h-screen {
  height: 100vh;
 }
+
+.w-screen {
+ width: 100vw;
+}
+.w-full {
+ width: 100%;
+}
+
+#calendar {
+ th.day {
+  border: 1px #0d7eff solid;
+ }
+ th.available:hover {
+  cursor: pointer;
+ }
+ th {
+  padding: 5px;
+  border-radius: 5px;
+ }
+ .week {
+ }
+ .available:hover {
+  background-color: #0d7eff;
+  color: white;
+ }
+
+ .unavailable {
+  background-color: grey;
+ }
+}
+
+
 
 /* Style the form */
 #regForm {

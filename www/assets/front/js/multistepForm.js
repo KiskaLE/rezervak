@@ -1,5 +1,7 @@
+
 let currentTab = 0; // Current tab is set to be the first tab (0)
 showTab(currentTab); // Display the current tab
+
 
 function showTab(n) {
     // This function will display the specified tab of the form ...
@@ -8,14 +10,29 @@ function showTab(n) {
     // ... and fix the Previous/Next buttons:
     if (n == 0) {
         document.getElementById("prevBtn").style.display = "none";
+        document.getElementById("nextBtn").style.display = "none";
     } else {
         document.getElementById("prevBtn").style.display = "inline";
+        document.getElementById("nextBtn").style.display = "inline";
     }
     if (n == (x.length - 1)) {
         document.getElementById("nextBtn").innerHTML = "Odeslat";
     } else {
         document.getElementById("nextBtn").innerHTML = "Další";
     }
+
+    if (n == (x.length - 1)) {
+        document.getElementById("nextBtn").innerHTML = "Odeslat";
+    }
+    //render recap
+    if (currentTab >= x.length-1) {
+        recap();
+    }
+    //render calendar
+    if (currentTab == "1") {
+        createCalendar();
+    }
+
     // ... and run a function that displays the correct step indicator:
     if (n == 2) {
         changeDay();
@@ -33,9 +50,6 @@ function nextPrev(n) {
     // Increase or decrease the current tab by 1:
     currentTab = currentTab + n;
     // if you have reached the end of the form... :
-    if (currentTab >= x.length-1) {
-        recap();
-    }
     if (currentTab >= x.length) {
         //...the form gets submitted:
         document.getElementById("regForm").submit();
@@ -133,4 +147,105 @@ function changeDay() {
     const service = document.querySelector("[name='service']").value;
     button.href = `/reservation/create?date=${day}&service_id=${service}&do=sendDate`;
     button.click();
+}
+
+function setService(id) {
+    console.log(id);
+    document.querySelector("[name='service']").value = id;
+    nextPrev(currentTab+1);
+
+}
+
+function createCalendar() {
+
+    getAvailableDays().then((data) => {
+        const container = document.querySelector("#calendar");
+        const curDate = new Date();
+        const firstDateOfMonth = new Date(curDate.getFullYear(), curDate.getMonth(), 1);
+        const curMonth = curDate.getMonth();
+        const curYear = curDate.getFullYear();
+        const availableDays = data;
+        const lastDayOfMonth = new Date(curDate.getFullYear(), curDate.getMonth() + 1, 0);
+        let days = [];
+
+        container.innerHTML = "";
+
+        for (let i = 0; i < getDayIndexMondaySunday(firstDateOfMonth); i++) {
+            const th = document.createElement("th");
+            th.className = "day unavailable";
+            days.push(th);
+        }
+        //week
+        for (let i = 1; i <= curDate.getDate(); i++) {
+            const date = new Date(curYear, curMonth, i);
+            const th = document.createElement("th");
+            th.className = "day unavailable";
+            if (date.getDay() === 0 || date.getDay() === 6) {
+                th.className += " weekend";
+            }
+            th.innerHTML = i;
+
+            days.push(th);
+        }
+
+        for (let i = curDate.getDate()+1; i < lastDayOfMonth.getDate(); i++) {
+            const date = new Date(curYear, curMonth, i);
+            const th = document.createElement("th");
+            th.className = "day";
+            if (date.getDay() === 0 || date.getDay() === 6) {
+                th.className += " weekend";
+            }
+            th.innerHTML = i;
+            let isFull = true;
+            for (let j = 0; j < availableDays.length; j++) {
+                console.log(availableDays[j] + ": " + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() );
+                if (availableDays[j] == date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()) {
+                    isFull = false;
+                }
+            }
+            if (isFull){
+                th.className += " unavailable"
+            } else {
+                th.className += " available"
+                th.addEventListener("click", () => {
+                    document.querySelector("[name='date']").value = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+                    document.querySelector("#nextBtn").click();
+
+                });
+            }
+            days.push(th);
+        }
+
+        //split days into weeks
+        let week = document.createElement("tr");
+        for (let i = 0; i < days.length; i++) {
+            if (i % 7 === 0) {
+                container.appendChild(week);
+                week = document.createElement("tr");
+                week.className = "week";
+            }
+            week.appendChild(days[i]);
+            if (i === days.length - 1) {
+                container.appendChild(week);
+            }
+        }
+    });
+    function getDayIndexMondaySunday(date) {
+        return date.getDay() === 0 ? 6 : date.getDay() - 1
+    }
+
+    async function getAvailableDays() {
+        let naja = window.Naja;
+        const req = await naja.makeRequest("GET", "/reservation/create", {run: "fetch"}, {
+            fetch: {
+                credentials: 'include',
+            },
+        })
+        return Promise.resolve(req.availableDates);
+
+
+
+    }
+
+
 }

@@ -11,6 +11,20 @@ class AvailableDates {
     )
     {
     }
+
+    public function getAvailableDates(int $duration ,int $numberOfDays){
+       $date = date("Y-m-d");
+       $available = [];
+        //add one day to curDay
+        for ($i = 0; $i < $numberOfDays; $i++) {
+            if (!$this->getAvailableStartingHours($date, $duration ) == []) {
+                $available[] = $date;
+            }
+            $date = date('Y-m-d', strtotime($date. ' +1 days'));
+        }
+        return $available;
+
+    }
     /**
      * Retrieves an array of available dates based on the provided parameters.
      *
