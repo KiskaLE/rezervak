@@ -2,6 +2,7 @@ services:
 	- App\Router\RouterFactory::createRouter
 	- App\Modules\Authenticator
 	- App\Modules\AvailableDates
+	- App\Modules\Mailer
 
 
 search:

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Front\Presenters;
 
+use http\Url;
 use Nette;
 use Nette\Application\UI\Form;
 use App\Modules\AvailableDates;
+use App\Modules\Mailer;
 
 
 final class ReservationPresenter extends BasePresenter
@@ -16,7 +18,8 @@ final class ReservationPresenter extends BasePresenter
 
     public function __construct(
         private Nette\Database\Explorer $database,
-        private AvailableDates $availableDates
+        private AvailableDates $availableDates,
+        private Mailer $mailer
     ){
 
     }
@@ -86,7 +89,7 @@ final class ReservationPresenter extends BasePresenter
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = intval($service->duration);
         $times = $this->availableDates->getAvailableStartingHours($data->date, $duration );
-        $this->database->table("registereddates")->insert([
+        $status = $this->database->table("registereddates")->insert([
             "date" => $data->date,
             "service_id" => $service_id,
             "start" => $times[$data->time],
@@ -98,7 +101,13 @@ final class ReservationPresenter extends BasePresenter
             "code" => $data->code,
             "city" => $data->city
         ]);
+        $id = $this->database->getInsertId("registereddates");
+        bdump($status);
+        bdump($id);
+        $this->mailer->sendConfirmationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:default", $status->id));
         $this->redirect("Reservation:confirmation");
+
+
 
     }
 
