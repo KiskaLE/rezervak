@@ -24,7 +24,7 @@ final class ReservationPresenter extends BasePresenter
     protected function startup()
     {
         parent::startup();
-        $this->template->hours = [];
+        $this->template->times = [];
 
     }
 
@@ -36,18 +36,21 @@ final class ReservationPresenter extends BasePresenter
         $services = $this->database->table("services")->fetchAll();
         $this->template->services = $services;
         $this->redrawControl("content");
-
-
-
     }
+    public function actionCreate($run, $day, $service_id) {
 
-    public function handleSendDate(string $date, string $service_id) {
-        $service = $this->database->table("services")->where("id=?", $service_id+1)->fetch();
-        $duration = $service->duration;
-        $times = $this->availableDates->getAvailableStartingHours($date, intval($duration) );
+       if ($run === "fetch") {
+           //TODO number of Days stored in database
+           $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates(30, 60)]);
+       } else if ($run === "setDate") {
+           $service = $this->database->table("services")->where("id=?", $service_id+1)->fetch();
+           $duration = $service->duration;
+           $times = $this->availableDates->getAvailableStartingHours($day, intval($duration) );
 
-        $this->template->hours = $times;
-        $this->redrawControl("content");
+           bdump($times);
+           $this->template->times = $times;
+           $this->redrawControl("content");
+       }
     }
 
     protected function createComponentForm(): Form
@@ -60,8 +63,8 @@ final class ReservationPresenter extends BasePresenter
         }
 
         $form = new Form;
-        $form->addSelect("service", "Služba:", $servicesList)->setRequired();
-        $form->addText("date")->setHtmlAttribute("type", "date")->setRequired();
+        $form->addhidden("service")->setRequired();
+        $form->addHidden("date")->setRequired();
         //$form->addSelect("time", "Čas:", $this->hours)->setRequired();
         $form->addHidden("time")->setRequired();
         $form->addText("firstname", "Jmeno:")->setRequired();
