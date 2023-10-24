@@ -1,11 +1,10 @@
-Nette Web Project
-=================
-Web Server Setup
-----------------
+# Nette Web Project
+
+## Web Server Setup
 
 The simplest way to get started is to start the built-in PHP server in the root directory of your project:
 
-	php -S localhost:8000 -t www
+    php -S localhost:8000 -t www
 
 Then visit `http://localhost:8000` in your browser to see the welcome page.
 
@@ -16,10 +15,21 @@ should be ready to go.
 via a web browser. See [security warning](https://nette.org/security-warning).**
 
 # Used Libraries
+
 ## Node
+
 naja
 
 ## Admin template
+
 neon-bootstrap-admin
 
 # TODO
+
+add
+if ($this->isAjax()) {
+$this->sendJson(...);
+}
+// ...
+
+to ReservationPresenter actionCreate
