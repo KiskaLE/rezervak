@@ -94,8 +94,22 @@ body {
   width: 100%;
 }
 
+#calendar-nav {
+  display: flex;
+}
+#calendar-nav img {
+  height: 50px;
+}
+#calendar-nav h2 {
+  width: 150px;
+  text-align: center;
+}
+
 #calendar th.day {
   border: 1px #0d7eff solid;
+}
+#calendar th.available {
+  background-color: green;
 }
 #calendar th.available:hover {
   cursor: pointer;
@@ -120,6 +134,17 @@ body {
   width: 70%;
   min-width: 300px;
 }
+#regForm button {
+  padding: 5px 10px;
+  border: 1px #0d7eff solid;
+  border-radius: 5px;
+  transition-duration: 100ms;
+}
+#regForm button:hover {
+  background-color: #0d7eff;
+  color: white;
+  cursor: pointer;
+}
 
 /* Style the input fields */
 input {
@@ -127,7 +152,8 @@ input {
   width: 100%;
   font-size: 17px;
   font-family: Raleway;
-  border: 1px solid #aaaaaa;
+  border: 1px solid #0d7eff;
+  border-radius: 10px;
 }
 
 /* Mark input boxes that gets an error on validation: */

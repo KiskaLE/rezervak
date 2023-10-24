@@ -35,25 +35,21 @@ final class ReservationPresenter extends BasePresenter
 
         $services = $this->database->table("services")->fetchAll();
         $this->template->services = $services;
-        $this->template->availableDates = $this->availableDates->getAvailableDates(30, 10);
-
         $this->redrawControl("content");
     }
-    public function actionCreate($run, $data) {
+    public function actionCreate($run, $day, $service_id) {
 
        if ($run === "fetch") {
-           $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates(30, 10)]);
+           //TODO number of Days stored in database
+           $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates(30, 60)]);
+       } else if ($run === "setDate") {
+           $service = $this->database->table("services")->where("id=?", $service_id+1)->fetch();
+           $duration = $service->duration;
+           $times = $this->availableDates->getAvailableStartingHours($day, intval($duration) );
+
+           $this->template->hours = $times;
+           $this->redrawControl("content");
        }
-    }
-
-    public function handleSendDate(string $date, string $service_id) {
-        $service = $this->database->table("services")->where("id=?", $service_id+1)->fetch();
-        $duration = $service->duration;
-        $times = $this->availableDates->getAvailableStartingHours($date, intval($duration) );
-
-        $this->template->hours = $times;
-        bdump($date. $service_id);
-        $this->redrawControl("content");
     }
 
     public function actionFetch() {

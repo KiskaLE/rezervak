@@ -1,12 +1,11 @@
 {block content}
-<a n:href="sendDate! '', ''" class="ajax" id="load-day"></a>
 <div class="page-wrapper">
         <div id="reservation-steps">
-                <span class="step"></span>
-                <span class="step"></span>
-                <span class="step"></span>
-                <span class="step"></span>
-                <span class="step"></span>
+                <span onclick="goToTab(0)" class="step"></span>
+                <span onclick="goToTab(1)" class="step"></span>
+                <span onclick="goToTab(2)" class="step"></span>
+                <span onclick="goToTab(3)" class="step"></span>
+                <span onclick="goToTab(4)" class="step"></span>
         </div>
         <div class="reservationForm-wrapper">
             <form n:name="form" id="regForm" >
@@ -16,29 +15,11 @@
                         <div><p onclick="setService({$i})" class="service-button">{$service->name}</p></div>
                         {var $i = $i + 1}
                     {/foreach}
-                    <input n:name="service">
+                    <input n:name="service" class="multiform">
                 </div>
                 <div class="tab">
-                    <div>
-                        <table>
-                            <thead>
-                            <tr>
-                                <th>Po</th>
-                                <th>Út</th>
-                                <th>St</th>
-                                <th>Čt</th>
-                                <th>Pa</th>
-                                <th>So</th>
-                                <th>Ne</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                        </table>
-                    </div>
-
                     <table>
+                        <div id="calendar-nav"><img src="{$basePath}/assets/front/icons/arrow-prev-small-svgrepo-com.svg" alt="previous" onclick="calNext(-1)"  id="prev-month"><h2 id="calendar-month"></h2><img src="{$basePath}/assets/front/icons/arrow-next-small-svgrepo-com.svg" alt="next" onclick="calNext(1)" id="next-month"></div>
                         <thead>
                             <tr>
                                 <th>Po</th>
@@ -53,7 +34,7 @@
                         <tbody id="calendar">
                         </tbody>
                     </table>
-                    <input n:name="date">
+                    <input n:name="date" class="multiform">
                 </div>
                 <div class="tab">
                     <input n:name="time" value="{$hours ? $hours[0] : ""}" class="time">
@@ -71,13 +52,13 @@
                     </p>
                 </div>
                 <div class="tab">
-                    <p><label for="">Jméno:</label><input n:name="firstname"></p>
-                    <p><label for="">Příjmení:</label><input n:name="lastname"></p>
-                    <p><label for="">Tel.:</label><input n:name="phone"></p>
-                    <p><label for="">E-mail:</label><input n:name="email"></p>
-                    <p><label for="">Adresa a č.p.</label><input n:name="address"></p>
-                    <p><label for="">PSČ:</label><input n:name="code"></p>
-                    <p><label for="">Město:</label><input n:name="city"></p>
+                    <p><label for="">Jméno:</label><input n:name="firstname" class="multiform"></p>
+                    <p><label for="">Příjmení:</label><input n:name="lastname" class="multiform"></p>
+                    <p><label for="">Tel.:</label><input n:name="phone" class="multiform"></p>
+                    <p><label for="">E-mail:</label><input n:name="email" class="multiform"></p>
+                    <p><label for="">Adresa a č.p.</label><input n:name="address" class="multiform"></p>
+                    <p><label for="">PSČ:</label><input n:name="code" class="multiform"></p>
+                    <p><label for="">Město:</label><input n:name="city" class="multiform"></p>
                 </div>
                 <div class="tab" id="recap">
 

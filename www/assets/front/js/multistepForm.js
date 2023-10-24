@@ -1,6 +1,8 @@
-
 let currentTab = 0; // Current tab is set to be the first tab (0)
+let tabCounter = 0;
 showTab(currentTab); // Display the current tab
+let showMonth = new Date().getMonth();
+let showYear = new Date().getFullYear();
 
 
 function showTab(n) {
@@ -10,10 +12,15 @@ function showTab(n) {
     // ... and fix the Previous/Next buttons:
     if (n == 0) {
         document.getElementById("prevBtn").style.display = "none";
+    }
+    if (n < 2) {
         document.getElementById("nextBtn").style.display = "none";
     } else {
         document.getElementById("prevBtn").style.display = "inline";
         document.getElementById("nextBtn").style.display = "inline";
+    }
+    if (n == 1) {
+        document.getElementById("prevBtn").style.display = "inline";
     }
     if (n == (x.length - 1)) {
         document.getElementById("nextBtn").innerHTML = "Odeslat";
@@ -30,7 +37,7 @@ function showTab(n) {
     }
     //render calendar
     if (currentTab == "1") {
-        createCalendar();
+        createCalendar(showMonth, showYear);
     }
 
     // ... and run a function that displays the correct step indicator:
@@ -58,6 +65,19 @@ function nextPrev(n) {
 
     // Otherwise, display the correct tab:
     showTab(currentTab);
+    tabCounter++;
+}
+
+function goToTab(n) {
+    let x = document.getElementsByClassName("tab");
+    // activeted tabs
+    const activeTabs = document.getElementsByClassName("step finish");
+
+    if (n<= activeTabs.length) {
+        x[currentTab].style.display = "none";
+        currentTab = n;
+        showTab(currentTab);
+    }
 }
 
 function validateForm() {
@@ -96,11 +116,32 @@ function recap(){
     const container = document.getElementById("recap");
     container.innerHTML = "";
 
+    //get form data into objest with key and value format, key = name, value = value, text is in uft-8 format;
+    const inputs = document.querySelectorAll(".multiform");
+    let data = []
+    for (let i = 0; i <inputs.length; i++) {
+        const input = inputs[i];
+        data.push({
+            name: input.name,
+            value: input.value
+        })
+    }
+    // generate text from data
+    for (let i = 0; i < data.length; i++) {
+        const div = document.createElement("div");
+        const p = document.createElement("p");
+        p.innerHTML = data[i].name + ": " + data[i].value;
+        div.appendChild(p);
+        container.appendChild(div);
+    }
+
+
+
+  /*
     let datas = $('#regForm').serialize();
     datas = datas.split("&");
     //remove last element (_sumbit)
     datas.pop();
-    console.log(datas)
     for (let i = 0; i < datas.length; i++) {
         let data = datas[i].split("=");
         const div = document.createElement("div");
@@ -119,6 +160,7 @@ function recap(){
         div.appendChild(p);
         document.getElementById("recap").appendChild(div);
     }
+    */
 }
 
 function getOption(name, number) {
@@ -145,8 +187,12 @@ function changeDay() {
     const button = document.querySelector("#load-day");
     const day = document.querySelector("[name='date']").value;
     const service = document.querySelector("[name='service']").value;
-    button.href = `/reservation/create?date=${day}&service_id=${service}&do=sendDate`;
-    button.click();
+    let naja = window.Naja;
+    naja.makeRequest("GET", "/reservation/create", {run: "setDate", day: day, service_id: service}, {
+        fetch: {
+            credentials: 'include',
+        },
+    })
 }
 
 function setService(id) {
@@ -156,51 +202,98 @@ function setService(id) {
 
 }
 
-function createCalendar() {
 
-    getAvailableDays().then((data) => {
+function calNext(n) {
+    showMonth += n;
+    if (showMonth < 0) {
+        showMonth = 11;
+        showYear--;
+    } else if (showMonth > 11) {
+        showMonth = 0;
+        showYear++;
+    }
+    console.log(showMonth, showYear)
+    createCalendar(showMonth,showYear);
+}
+async function createCalendar(month, year) {
         const container = document.querySelector("#calendar");
+        const calendarTitle = document.querySelector("#calendar-month")
         const curDate = new Date();
-        const firstDateOfMonth = new Date(curDate.getFullYear(), curDate.getMonth(), 1);
         const curMonth = curDate.getMonth();
-        const curYear = curDate.getFullYear();
-        const availableDays = data;
-        const lastDayOfMonth = new Date(curDate.getFullYear(), curDate.getMonth() + 1, 0);
-        let days = [];
+        const firstDateOfMonth = new Date(year, month, 1);
+        const lastDayOfMonth = new Date(year, month+1, 0);
+        const availableDays = await getAvailableDays();
 
+        calendarTitle.innerHTML = "";
         container.innerHTML = "";
+        let curMonthName = "";
+        switch (month) {
+        case 0:
+            curMonthName = "Leden";
+            break;
+        case 1:
+            curMonthName = "Únor";
+            break;
+        case 2:
+            curMonthName = "Březen";
+            break;
+        case 3:
+            curMonthName = "Duben";
+            break;
+        case 4:
+            curMonthName = "Květen";
+            break;
+        case 5:
+            curMonthName = "Červen";
+            break;
+        case 6:
+            curMonthName = "Červenec";
+            break;
+        case 7:
+            curMonthName = "Srpen";
+            break;
+        case 8:
+            curMonthName = "Záři";
+            break;
+        case 9:
+            curMonthName = "Říjen";
+            break;
+        case 10:
+            curMonthName = "Listopad";
+            break;
+        case 11:
+            curMonthName = "Prosinec";
+    }
+        calendarTitle.innerHTML = curMonthName+" "+year;
 
+        //days in calendar
+        let days = [];
+        //create last month days
         for (let i = 0; i < getDayIndexMondaySunday(firstDateOfMonth); i++) {
             const th = document.createElement("th");
             th.className = "day unavailable";
             days.push(th);
         }
         //week
-        for (let i = 1; i <= curDate.getDate(); i++) {
-            const date = new Date(curYear, curMonth, i);
+        for (let i = 1; i < lastDayOfMonth.getDate()+1; i++) {
+            const date = new Date(year, month, i);
             const th = document.createElement("th");
-            th.className = "day unavailable";
-            if (date.getDay() === 0 || date.getDay() === 6) {
-                th.className += " weekend";
-            }
             th.innerHTML = i;
-
-            days.push(th);
-        }
-
-        for (let i = curDate.getDate()+1; i < lastDayOfMonth.getDate(); i++) {
-            const date = new Date(curYear, curMonth, i);
-            const th = document.createElement("th");
             th.className = "day";
+            if (date <=  curDate) {
+                th.className += " unavailable";
+                days.push(th);
+                continue;
+            }
+
             if (date.getDay() === 0 || date.getDay() === 6) {
                 th.className += " weekend";
             }
-            th.innerHTML = i;
             let isFull = true;
             for (let j = 0; j < availableDays.length; j++) {
-                console.log(availableDays[j] + ": " + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() );
-                if (availableDays[j] == date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()) {
+                if (availableDays[j] == date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0')) {
                     isFull = false;
+                    break;
                 }
             }
             if (isFull){
@@ -210,7 +303,6 @@ function createCalendar() {
                 th.addEventListener("click", () => {
                     document.querySelector("[name='date']").value = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
                     document.querySelector("#nextBtn").click();
-
                 });
             }
             days.push(th);
@@ -228,8 +320,7 @@ function createCalendar() {
             if (i === days.length - 1) {
                 container.appendChild(week);
             }
-        }
-    });
+        };
     function getDayIndexMondaySunday(date) {
         return date.getDay() === 0 ? 6 : date.getDay() - 1
     }
