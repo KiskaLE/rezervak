@@ -37,10 +37,10 @@
                     <input n:name="date" class="multiform">
                 </div>
                 <div class="tab">
-                    <input n:name="time" value="{$hours ? $hours[0] : ""}" class="time">
+                    <input n:name="time" value="{$hours ? $hours[0] : ""}" id="time">
                     <p><label for="">Čas:</label>
-                        <select n:snippet="content" class="dummiTime" onchange="writeData()">
-                            <option>Select</option>
+                        <select n:snippet="content" class="dummiTime" name="dummiTime" onchange="writeData()">
+                            <option value="select">Select</option>
                             {var $i = 0}
                             {foreach $hours as $hour}
                                 <option value="{$i}">{$hour}</option>

@@ -88,11 +88,48 @@ function validateForm() {
     // A loop that checks every input field in the current tab:
     for (i = 0; i < y.length; i++) {
         // If a field is empty...
-        if (y[i].value == "") {
-            // add an "invalid" class to the field:
+        let name = y[i].name;
+        let value = y[i].value;
+        y[i].className = "multiform";
+        if (value == "") {
             y[i].className += " invalid";
-            // and set the current valid status to false:
             valid = false;
+        }
+        if (name == "service" || name == "time") {
+            if (!value.match(/\d+/)) {
+                y[i].className += " invalid";
+                valid = false;
+            }
+        } else if (name == "date") {
+            if (!value.match(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/)) {
+                y[i].className += " invalid";
+                valid = false;
+            }
+        } else if (name == "firstname" || name == "lastname" || name == "city") {
+            if (value.match(/\d+/)){
+                y[i].className += " invalid";
+                valid = false;
+            }
+        } else if (name == "phone") {
+            if (!value.match(/^\+?[1-9]\d{1,14}$/)) {
+                y[i].className += " invalid";
+                valid = false;
+            }
+        } else if (name == "email") {
+            if (!value.match(/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/)) {
+                y[i].className += " invalid";
+                valid = false;
+            }
+        } else if (name == "address") {
+            if (value == "") {
+                y[i].className += " invalid";
+                valid = false;
+            }
+        } else if (name = "code") {
+            if (!value.match(/^\d{5}$/)) {
+                y[i].className += " invalid";
+                valid = false;
+            }
         }
     }
     // If the valid status is true, mark the step as finished and valid:
@@ -177,10 +214,15 @@ function getOption(name, number) {
 
 
 function writeData() {
-    const dummi = document.querySelector(".dummiTime").value;
-    const time = document.querySelector(".time");
+    const dummi = document.querySelector("[name='dummiTime']").value;
+    const time = document.querySelector("#time");
 
-    time.value = dummi;
+    if (dummi != null) {
+        time.value = dummi;
+    }else {
+        time.value = "";
+    }
+
 }
 
 function changeDay() {
@@ -196,10 +238,13 @@ function changeDay() {
 }
 
 function setService(id) {
-    console.log(id);
     document.querySelector("[name='service']").value = id;
     nextPrev(currentTab+1);
+}
 
+function setTime(id) {
+    document.querySelector("[name='time']").value = id;
+    nextPrev(currentTab+1);
 }
 
 
