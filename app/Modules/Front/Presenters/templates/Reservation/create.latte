@@ -13,7 +13,7 @@
                     {var $i = 0}
                     {foreach $services as $service}
                         <div><p onclick="setService({$i})" class="service-button">{$service->name}</p></div>
-                        {var $i = $i + 1}
+                        {do $i++}
                     {/foreach}
                     <input n:name="service" class="multiform">
                 </div>
@@ -37,19 +37,23 @@
                     <input n:name="date" class="multiform">
                 </div>
                 <div class="tab">
-                    <input n:name="time" value="{$hours ? $hours[0] : ""}" id="time">
-                    <p><label for="">Čas:</label>
-                        <select n:snippet="content" class="dummiTime" name="dummiTime" onchange="writeData()">
-                            <option value="select">Select</option>
+                    <div class="time-wrapper"><input n:name="time" value="{$times ? $times[0] : ""}" id="time">
+
+                        {snippet content}
                             {var $i = 0}
-                            {foreach $hours as $hour}
-                                <option value="{$i}">{$hour}</option>
-                                {$i++}
+                            {var $count = 0}
+                            {foreach $times as $time }
+                                {if $count == 0}<div>{/if}
+                                    <div><p onclick="setTime({$i})" class="service-button" >{$time}</p></div>
+                            {do $count++}
+                            {if $count == 4}
+                                </div>
+                                {do $count = 0}
+                            {/if}
+                                {do $i++}
                             {/foreach}
-
-                        </select>
-
-                    </p>
+                        {/snippet}
+                    </div>
                 </div>
                 <div class="tab">
                     <p><label for="">Jméno:</label><input n:name="firstname" class="multiform"></p>

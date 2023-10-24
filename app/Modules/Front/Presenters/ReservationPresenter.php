@@ -24,7 +24,7 @@ final class ReservationPresenter extends BasePresenter
     protected function startup()
     {
         parent::startup();
-        $this->template->hours = [];
+        $this->template->times = [];
 
     }
 
@@ -47,13 +47,10 @@ final class ReservationPresenter extends BasePresenter
            $duration = $service->duration;
            $times = $this->availableDates->getAvailableStartingHours($day, intval($duration) );
 
-           $this->template->hours = $times;
+           bdump($times);
+           $this->template->times = $times;
            $this->redrawControl("content");
        }
-    }
-
-    public function actionFetch() {
-
     }
 
     protected function createComponentForm(): Form

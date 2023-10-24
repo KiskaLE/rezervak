@@ -126,6 +126,10 @@ body {
   background-color: grey;
 }
 
+.time-wrapper div div {
+  display: flex;
+}
+
 /* Style the form */
 #regForm {
   background-color: #ffffff;

@@ -213,18 +213,6 @@ function getOption(name, number) {
 }
 
 
-function writeData() {
-    const dummi = document.querySelector("[name='dummiTime']").value;
-    const time = document.querySelector("#time");
-
-    if (dummi != null) {
-        time.value = dummi;
-    }else {
-        time.value = "";
-    }
-
-}
-
 function changeDay() {
     const button = document.querySelector("#load-day");
     const day = document.querySelector("[name='date']").value;
@@ -239,12 +227,12 @@ function changeDay() {
 
 function setService(id) {
     document.querySelector("[name='service']").value = id;
-    nextPrev(currentTab+1);
+    nextPrev(1);
 }
 
 function setTime(id) {
     document.querySelector("[name='time']").value = id;
-    nextPrev(currentTab+1);
+    nextPrev(1);
 }
 
 
