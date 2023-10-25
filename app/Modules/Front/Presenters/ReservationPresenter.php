@@ -50,11 +50,11 @@ final class ReservationPresenter extends BasePresenter
                 $service = $this->database->table("services")->where("id=?", $service_id+1)->fetch();
                 $duration = $service->duration;
                 $times = $this->availableDates->getAvailableStartingHours($day, intval($duration) );
-
-                bdump($times);
                 $this->template->times = $times;
                 $this->redrawControl("content");
             }
+            $this->payload->postGet = true;
+            $this->payload->url = $this->link("Reservation:create");
         }
     }
 

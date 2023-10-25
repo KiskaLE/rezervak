@@ -16,7 +16,7 @@
                 <th>{$service->name}</th>
                 <th>{$service->price}</th>
                 <th>{$service->duration}</th>
-                <th><a class="btn btn-default btn-sm btn-icon icon-left" n:href="Services:edit $service->id"><i class="entypo-pencil"></i>Edit</a></th>
+                <th><a class="btn btn-default btn-sm btn-icon icon-left ajax" n:href="Services:edit $service->id"><i class="entypo-pencil"></i>Edit</a></th>
             </tr>
         {/foreach}
     </table>

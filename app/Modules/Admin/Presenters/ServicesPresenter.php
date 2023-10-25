@@ -65,7 +65,6 @@ final class ServicesPresenter extends SecurePresenter
             ]);
         }
 
-
         $this->redirect("Services:show");
     }
 
