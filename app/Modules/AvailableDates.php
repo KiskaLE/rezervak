@@ -5,14 +5,14 @@ use Nette;
 
 class AvailableDates {
 
-    private $table = "registereddates";
+    private string $table = "registereddates";
     public function __construct(
         private Nette\Database\Explorer $database
     )
     {
     }
 
-    public function getAvailableDates(int $duration ,int $numberOfDays){
+    public function getAvailableDates(int $duration ,int $numberOfDays): array{
        $date = date("Y-m-d");
        $available = [];
         //add one day to curDay
@@ -30,8 +30,6 @@ class AvailableDates {
      *
      * @param string $date The date for which to retrieve available dates.
      * @param int $duration The duration in minutes of each available date.
-     * @param string $dayStart The starting time of each day (eg. 8:00).
-     * @param string $dayEnd The ending time of each day (eg. 16:00.
      * @return array An array of available starting hours.
      */
     public function getAvailableStartingHours(string $date, int $duration): array{
@@ -39,8 +37,18 @@ class AvailableDates {
         $available = [];
         $dayStartMinutes = $this->convertTimeToMinutes($workingHours->start);
         $dayEndMinutes = $this->convertTimeToMinutes($workingHours->stop);
+        //todo interval set in admin
         $interval = 30;
-        $bookedArray = $this->database->table($this->table)->where("date=?", $date)->fetchAll();
+        $unverified = $this->database->table($this->table)->where("date=? AND status=?", [$date, "UNVERIFIED"])->fetchAll();
+        $bookedArray = $this->database->table($this->table)->where("date=? AND status=?", [$date, "VERIFIED"])->fetchAll();
+        //adds unverified dates that still can be verified
+        foreach ($unverified as $row) {
+            //todo set time in admin settings
+            $isLate = strtotime(strval($row->created_at)) < strtotime(date("Y-m-d H:i:s"). ' -15 minutes');
+            if (!$isLate) {
+                $bookedArray[] = $row;
+            }
+        }
 
         while ($dayStartMinutes < $dayEndMinutes) {
             $sv = true;
@@ -79,7 +87,7 @@ class AvailableDates {
      * @param string $time The time in the format '9:30'.
      * @return int The time converted to minutes.
      */
-    private function convertTimeToMinutes($time) {
+    private function convertTimeToMinutes(string $time):int {
         $split = explode(":", $time);
         return intval($split[0]) * 60 + intval($split[1]);
     }
@@ -89,7 +97,7 @@ class AvailableDates {
      * @param int $minutes The number of minutes to convert.
      * @return string The time in hours and minutes format (e.g. "2:30").
      */
-    private function convertMinutesToTime($minutes) {
+    private function convertMinutesToTime(int $minutes):string {
         $hours = floor($minutes / 60);
         $minutes = $minutes % 60;
         return $hours . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT);
@@ -100,7 +108,7 @@ class AvailableDates {
      * @param string $date The date in the format YYYY-MM-DD.
      * @return int The day of the week, where 0 represents Monday and 6 represents Sunday.
      */
-    private function getDay($date) {
+    private function getDay(string $date):string {
         return date('N', strtotime($date))-1;
     }
 }

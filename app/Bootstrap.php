@@ -30,4 +30,10 @@ class Bootstrap
 
 		return $configurator;
 	}
+
+    public static function bootForCron(): Configurator
+    {
+        # Debug mód pouze pokud existuje --debug přepínač
+        return self::createConfigurator(in_array('--debug', $_SERVER['argv'], true));
+    }
 }

@@ -37,9 +37,6 @@ final class ServicesPresenter extends SecurePresenter
     }
 
     protected function createComponentForm(): Form {
-        //TODO editable in admin
-        $currencies = ["CZK", "EUR"];
-
         $form = new Form;
         $form->addHidden("action");
         $form->addText("name", "Name")->setRequired();

@@ -109,7 +109,8 @@ final class ReservationPresenter extends BasePresenter
             "email" => $data->email,
             "address" => $data->address,
             "code" => $data->code,
-            "city" => $data->city
+            "city" => $data->city,
+            "created_at" => date("Y-m-d H:i:s")
         ]);
         if ($status) {
             $this->mailer->sendConfirmationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:default", strval($uuid)));
