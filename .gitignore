@@ -1,2 +1,3 @@
 config/local.neon
 node_modules
+vendor
