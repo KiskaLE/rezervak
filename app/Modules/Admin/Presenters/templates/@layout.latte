@@ -15,6 +15,7 @@
 	<link rel="stylesheet" href="{$basePath}/assets/css/neon-theme.css">
 	<link rel="stylesheet" href="{$basePath}/assets/css/neon-forms.css">
 	<link rel="stylesheet" href="{$basePath}/assets/css/custom.css">
+	<link rel="stylesheet" href="{$basePath}/assets/css/styles.css">
 
 	<script src="{$basePath}/assets/js/jquery-1.11.3.min.js"></script>
 
@@ -34,7 +35,7 @@
 
 <div class="page-container"><!-- add class "sidebar-collapsed" to close sidebar by default, "chat-visible" to make chat appear always -->
 
-	<div class="sidebar-menu">
+	<div n:tag-if="$user->roles[0] === 'ADMIN'" class="sidebar-menu">
 
 		<div class="sidebar-menu-inner">
 
@@ -77,13 +78,30 @@
 				<li>
 					<a n:href="Reservations:show">
 						<i class="entypo-gause"></i>
-						Rezervace
+						<span class="title">Rezervace</span>
 					</a>
 				</li>
-				<li>
-					<a href="Editace:show">
+				<li class="has-sub">
+					<a href="">
 						<i class="entypo-gause"></i>
-						Editace
+						<span class="title">Nastavení</span>
+					</a>
+					<ul>
+						<li>
+							<a n:href="Workhours:show">
+								<span class="title">Pracovní doba</span>
+							</a>
+						</li>
+						<li>
+							<a n:href="Services:show">
+								<span class="title">Služby</span>
+							</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a n:href="Sign:out">
+						Odhlásit
 					</a>
 				</li>
 

@@ -1,0 +1,33 @@
+{block content}
+
+<h1>Edit - {switch $day->weekday}
+        {case 0}
+        Monday
+        {case 1}
+        Tuesday
+        {case 2}
+        Wednesday
+        {case 3}
+        Thursday
+        {case 4}
+        Friday
+        {case 5}
+        Saturday
+        {case 6}
+        Sunday
+    {/switch}</h1>
+<form n:name="editForm">
+    <div class="dataTable-wrapper table-edit">
+        <table class="table table-bordered dataTable">
+            <tr>
+                <th>Start</th>
+                <th>Stop</th>
+            </tr>
+            <tr>
+                <th><input  n:name="start" type="time" value="{$day->start}"></th>
+                <th><input  n:name="stop" type="time" value="{$day->stop}"></th>
+            </tr>
+        </table>
+        <input class="btn btn-default" n:name="submit">
+    </div>
+</form>

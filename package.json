@@ -1,0 +1,22 @@
+{
+  "name": "rezervak",
+  "version": "1.0.0",
+  "description": "Nette Web Project ================= Web Server Setup ----------------",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --config ./webpack.config.js --mode development",
+    "build": "cross-env NODE_ENV=production webpack"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "dependencies": {
+    "naja": "^2.5.0",
+    "nette-forms": "^3.3.2"
+  }
+}
