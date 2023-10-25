@@ -1,13 +1,39 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 html {
-  --main: #dce0d9;
-  --secondary: #2f52e0;
-  --blue: #5438dc;
-  --highlight-red: #fb3640;
+  --main: #ßEFFFFB;
+  --secondary: #50D890;
+  --blue: #4F98CA;
+  --text: #272727;
+  --shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  --shadow-clicked: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+.text-highlight {
+  color: var(--highlight-red);
+}
+
+p {
+  color: var(--text);
+}
+
+.card {
+  padding: 20px;
+  border-radius: 50px;
+
+}
+
+bold {
+  font-weight: bold;
+}
+
+h1 {
+  color: var(--blue);
+  margin-bottom: 50px;
 }
 
 body {
+  background-color: var(--main);
   font-family: "Inter", sans-serif;
   margin: 0;
   display: flex;
@@ -50,18 +76,32 @@ body {
   .step {
     height: 50px;
     width: 50px;
-    border: blue 3px solid;
+    border: var(--blue) 3px solid;
     border-radius: 50%;
     display: inline-block;
   }
-  .active {
+  .step.active {
+    opacity: 1;
+    border: blue 3px solid;
+    background-color: var(--blue);
+    cursor: pointer;
+
+  }
+  .step.finish {
+    opacity: 0.5;
+    background-color: var(--blue);
+    cursor: pointer;
   }
 }
 
 .reservationForm-wrapper {
-  max-width: 300px;
+  max-width: 500px;
   display: flex;
   flex-direction: column;
+
+  h1 {
+    text-align: center;
+  }
 }
 
 .center {
@@ -82,11 +122,19 @@ body {
   }
 }
 
-.service-button {
+
+
+.button {
   padding: 5px 10px;
-  border: 1px #0d7eff solid;
+  border: 1px var(--blue) solid;
   border-radius: 5px;
   transition-duration: 100ms;
+  cursor: pointer;
+}
+.button:hover {
+  background-color: var(--blue);
+  color: white;
+  box-shadow: var(--shadow);
 }
 
 .service-button:hover {
@@ -120,11 +168,17 @@ body {
 
 #calendar {
   th.day {
-    border: 1px #0d7eff solid;
+    border: 1px var(--blue) solid;
+  }
+
+  th.unavailable {
+    background-color: white;
   }
 
   th.available {
-    background-color: green;
+    background-color: var(--blue);
+    color: white;
+    transition-duration: 100ms;
   }
   th.available:hover {
     cursor: pointer;
@@ -136,12 +190,9 @@ body {
   .week {
   }
   .available:hover {
-    background-color: #0d7eff;
+    background-color: var(--blue);
+    filter: brightness(1.2);
     color: white;
-  }
-
-  .unavailable {
-    background-color: grey;
   }
 }
 
@@ -151,27 +202,22 @@ body {
       display: flex;
     }
   }
+  .time {
+    display: flex;
+    flex-flow: wrap;
+    gap: 20px;
+  }
+}
+
+#recap {
+  gap:50px;
+  h2 {
+    font-size: 20px;
+  }
 }
 
 /* Style the form */
 #regForm {
-  background-color: #ffffff;
-  margin: 100px auto;
-  padding: 40px;
-  width: 70%;
-  min-width: 300px;
-
-  button {
-    padding: 5px 10px;
-    border: 1px #0d7eff solid;
-    border-radius: 5px;
-    transition-duration: 100ms;
-  }
-  button:hover {
-    background-color: #0d7eff;
-    color: white;
-    cursor: pointer;
-  }
 }
 
 /* Style the input fields */
@@ -192,26 +238,17 @@ input.invalid {
 /* Hide all steps by default: */
 .tab {
   display: none;
+  width: 100%;
 }
 
 /* Make circles that indicate the steps of the form: */
-.step {
-  height: 15px;
-  width: 15px;
-  margin: 0 2px;
-  background-color: #bbbbbb;
-  border: none;
-  border-radius: 50%;
-  display: inline-block;
-  opacity: 0.5;
-}
 
 /* Mark the active step: */
 .step.active {
   opacity: 1;
+  border: none;
+  background-color: var(--blue);
 }
 
 /* Mark the steps that are finished and valid: */
-.step.finish {
-  background-color: #04aa6d;
-}
+

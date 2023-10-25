@@ -20,16 +20,12 @@ via a web browser. See [security warning](https://nette.org/security-warning).**
 
 naja
 
+## CSS
+color pallete: https://colorhunt.co/palette/f3f9fb474f8551e3d4f3ecd3
+
 ## Admin template
 
 neon-bootstrap-admin
 
 # TODO
 
-add
-if ($this->isAjax()) {
-$this->sendJson(...);
-}
-// ...
-
-to ReservationPresenter actionCreate

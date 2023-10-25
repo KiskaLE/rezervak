@@ -166,38 +166,15 @@ function recap(){
     // generate text from data
     for (let i = 0; i < data.length; i++) {
         const div = document.createElement("div");
+        const h2 = document.createElement("h2");
         const p = document.createElement("p");
-        p.innerHTML = data[i].name + ": " + data[i].value;
+        h2.innerHTML = data[i].name;
+        p.innerHTML =data[i].value;
+        div.appendChild(h2);
         div.appendChild(p);
         container.appendChild(div);
     }
 
-
-
-  /*
-    let datas = $('#regForm').serialize();
-    datas = datas.split("&");
-    //remove last element (_sumbit)
-    datas.pop();
-    for (let i = 0; i < datas.length; i++) {
-        let data = datas[i].split("=");
-        const div = document.createElement("div");
-        const p = document.createElement("p");
-        if (i == 0) {
-            //p.innerHTML = getOption("service", data[1]);
-        }else if (i == 1){
-            //p.innerHTML = getOption("time", data[1]);
-        }else {
-            p.innerHTML = data[1];
-        }
-
-        const h2 = document.createElement("h2");
-        h2.innerHTML = data[0];
-        div.appendChild(h2);
-        div.appendChild(p);
-        document.getElementById("recap").appendChild(div);
-    }
-    */
 }
 
 function getOption(name, number) {
@@ -304,7 +281,7 @@ async function createCalendar(month, year) {
         //create last month days
         for (let i = 0; i < getDayIndexMondaySunday(firstDateOfMonth); i++) {
             const th = document.createElement("th");
-            th.className = "day unavailable";
+            th.className = "";
             days.push(th);
         }
         //week
