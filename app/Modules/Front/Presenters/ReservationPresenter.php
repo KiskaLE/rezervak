@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Front\Presenters;
 
-use http\Url;
 use Nette;
 use Nette\Application\UI\Form;
 use App\Modules\AvailableDates;
 use App\Modules\Mailer;
+use Ramsey\Uuid\Uuid;
 
 
 final class ReservationPresenter extends BasePresenter
@@ -42,18 +42,18 @@ final class ReservationPresenter extends BasePresenter
     }
     public function actionCreate($run, $day, $service_id) {
 
-       if ($run === "fetch") {
-           //TODO number of Days stored in database
-           $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates(30, 60)]);
-       } else if ($run === "setDate") {
-           $service = $this->database->table("services")->where("id=?", $service_id+1)->fetch();
-           $duration = $service->duration;
-           $times = $this->availableDates->getAvailableStartingHours($day, intval($duration) );
+        if ($run === "fetch") {
+            //TODO number of Days stored in database
+            $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates(30, 60)]);
+        } else if ($run === "setDate") {
+            $service = $this->database->table("services")->where("id=?", $service_id+1)->fetch();
+            $duration = $service->duration;
+            $times = $this->availableDates->getAvailableStartingHours($day, intval($duration) );
 
-           bdump($times);
-           $this->template->times = $times;
-           $this->redrawControl("content");
-       }
+            bdump($times);
+            $this->template->times = $times;
+            $this->redrawControl("content");
+        }
     }
 
     protected function createComponentForm(): Form
@@ -85,11 +85,13 @@ final class ReservationPresenter extends BasePresenter
     }
 
     public function formSucceeded(Form $form, $data): void {
+        $uuid = Uuid::uuid4();
         $service_id = $this->services[$data->service+1]->id;
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = intval($service->duration);
         $times = $this->availableDates->getAvailableStartingHours($data->date, $duration );
         $status = $this->database->table("registereddates")->insert([
+            "uuid" => $uuid,
             "date" => $data->date,
             "service_id" => $service_id,
             "start" => $times[$data->time],
@@ -101,10 +103,7 @@ final class ReservationPresenter extends BasePresenter
             "code" => $data->code,
             "city" => $data->city
         ]);
-        $id = $this->database->getInsertId("registereddates");
-        bdump($status);
-        bdump($id);
-        $this->mailer->sendConfirmationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:default", $status->id));
+        $this->mailer->sendConfirmationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:default", strval($uuid)));
         $this->redirect("Reservation:confirmation");
 
 
