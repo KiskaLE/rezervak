@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Front\Presenters;
 
-use http\Url;
 use Nette;
 use Nette\Application\UI\Form;
 use App\Modules\AvailableDates;
 use App\Modules\Mailer;
+use Ramsey\Uuid\Uuid;
 
 
 final class ReservationPresenter extends BasePresenter
@@ -82,11 +82,13 @@ final class ReservationPresenter extends BasePresenter
     }
 
     public function formSucceeded(Form $form, $data): void {
+        $uuid = Uuid::uuid4();
         $service_id = $this->services[$data->service+1]->id;
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = intval($service->duration);
         $times = $this->availableDates->getAvailableStartingHours($data->date, $duration );
         $status = $this->database->table("registereddates")->insert([
+            "uuid" => $uuid,
             "date" => $data->date,
             "service_id" => $service_id,
             "start" => $times[$data->time],
@@ -99,9 +101,7 @@ final class ReservationPresenter extends BasePresenter
             "city" => $data->city
         ]);
         $id = $this->database->getInsertId("registereddates");
-        bdump($status);
-        bdump($id);
-        $this->mailer->sendConfirmationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:default", $status->id));
+        $this->mailer->sendConfirmationMail("vojtech.kylar@securitynet.cz",$this->link("Payment:default", strval($uuid)) );
         $this->redirect("Reservation:confirmation");
 
 

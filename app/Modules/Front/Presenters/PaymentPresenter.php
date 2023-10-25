@@ -17,13 +17,13 @@ final class PaymentPresenter extends BasePresenter
 
     }
 
-    public function actionDefault($id) {
-        $service = $this->database->table("registereddates")->where("id=?", $id)->fetch();
+    public function actionDefault($uuid) {
+        $service = $this->database->table("registereddates")->where("uuid=?", $uuid)->fetch();
         $this->template->service = $service;
         bdump($service);
         //confirm reservation
         if ($service->status == "UNVERIFIED") {
-            $this->database->table("registereddates")->where("id=?", $id)->update([
+            $this->database->table("registereddates")->where("uuid=?", $uuid)->update([
                 "status" => "VERIFIED"
             ]);
         }
