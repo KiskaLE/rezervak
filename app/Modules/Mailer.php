@@ -25,7 +25,7 @@ final class Mailer {
         $mail = $this->createMail($from, $to, $subject, $message);
         $mailer->send($mail);
     }
-
+//TODO code it in DRY
     public function sendConfirmationMail(string $to, string $confirmUrl) {
         $latte = new Engine;
         $params = [
@@ -36,6 +36,21 @@ final class Mailer {
         $mail->addTo($to);
         $mail->setSubject('Rezervace');
         $mail->setHtmlBody($latte->renderToString(__DIR__.'/Mails/confirmation.latte', $params));
+
+        $mailer = new Nette\Mail\SendmailMailer;
+        $mailer->send($mail);
+    }
+
+    public function sendBackupConfiramationMail(string $to, string $confirmUrl) {
+        $latte = new Engine;
+        $params = [
+            'url' => "http://localhost:8000".$confirmUrl,
+        ];
+        $mail = new Nette\Mail\Message;
+        $mail->setFrom('vojtakylar@seznam.cz');
+        $mail->addTo($to);
+        $mail->setSubject('Rezervace');
+        $mail->setHtmlBody($latte->renderToString(__DIR__.'/Mails/backup.latte', $params));
 
         $mailer = new Nette\Mail\SendmailMailer;
         $mailer->send($mail);

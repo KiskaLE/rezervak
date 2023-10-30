@@ -68,6 +68,11 @@ final class ReservationPresenter extends BasePresenter
         $this->template->reservation = $reservation;
     }
 
+    public function actionBackup($uuid) {
+        $reservation = $this->database->table("backup_reservations")->where("uuid=?", $uuid)->fetch();
+        $this->template->reservation = $reservation;
+    }
+
     protected function createComponentForm(): Form
     {
         $services = $this->database->table("services")->fetchAll();
@@ -138,7 +143,7 @@ final class ReservationPresenter extends BasePresenter
             ]);
             if ($status) {
                 $this->mailer->sendConfirmationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:backup", strval($uuid)));
-                $this->redirect("Reservation:backup");
+                $this->redirect("Reservation:backup" , ["uuid" => strval($uuid)]);
             } else {
                 $this->flashMessage("Nepovedlo se uložit rezervaci.");
             }
