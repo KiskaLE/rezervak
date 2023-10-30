@@ -25,6 +25,24 @@ class AvailableDates {
         return $available;
 
     }
+
+    /**
+     * Retrieves the backup hours for a given date and duration.
+     *
+     * @param string $date The date for which to retrieve the backup hours.
+     * @param int $duration The duration for which to retrieve the backup hours.
+     * @return array The array of backup hours.
+     */
+    public function getBackupHours(string $date, int $duration) : array{
+        $workingHours = $this->database->table("workinghours")->where("weekday=?", $this->getDay($date))->fetch();
+        $backupHours = [];
+        $backupDates = $this->database->query("SELECT registereddates.* FROM registereddates LEFT JOIN services ON registereddates.service_id = services.id WHERE `status`='VERIFIED' AND date='$date' AND duration='$duration'")->fetchAll();
+        foreach ($backupDates as $backupDate) {
+            $backupHours[] = $backupDate->start;
+        }
+
+        return $backupHours;
+    }
     /**
      * Retrieves an array of available dates based on the provided parameters.
      *

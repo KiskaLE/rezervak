@@ -134,6 +134,10 @@ body {
   box-shadow: var(--shadow);
 }
 
+.backup {
+  background-color: yellow;
+}
+
 .service-button:hover {
   background-color: #0d7eff;
   color: white;

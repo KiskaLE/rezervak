@@ -48,10 +48,16 @@
                                 {var $i = 0}
                                 {foreach $times as $time }
                                         <p onclick="setTime({$i})" class="button" >{$time}</p>
-
                                 {do $i++}
                                 {/foreach}
+
                         </div>
+                                <div class="time">
+                                    <h2>Náhradní čas:</h2>
+                                    {foreach $backupTimes as $time}
+                                        <p class="button backup">{$time}</p>
+                                    {/foreach}
+                                </div>
                             {/snippet}
 
                     </div>

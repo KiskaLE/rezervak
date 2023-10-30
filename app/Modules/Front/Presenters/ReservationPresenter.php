@@ -28,6 +28,8 @@ final class ReservationPresenter extends BasePresenter
     {
         parent::startup();
         $this->template->times = [];
+        $this->template->backupTimes = [];
+
 
     }
 
@@ -49,8 +51,10 @@ final class ReservationPresenter extends BasePresenter
             } else if ($run === "setDate") {
                 $service = $this->database->table("services")->where("id=?", $service_id+1)->fetch();
                 $duration = $service->duration;
-                $times = $this->availableDates->getAvailableStartingHours($day, intval($duration) );
-                $this->template->times = $times;
+                $availableTimes = $this->availableDates->getAvailableStartingHours($day, intval($duration) );
+                $availableBackup = $this->availableDates->getBackupHours($day, intval($duration) );
+                $this->template->times = $availableTimes;
+                $this->template->backupTimes = $availableBackup;
                 $this->redrawControl("content");
             }
             $this->payload->postGet = true;
@@ -68,10 +72,6 @@ final class ReservationPresenter extends BasePresenter
     {
         $services = $this->database->table("services")->fetchAll();
         $this->services = $services;
-        $servicesList = [];
-        foreach ($services as $service){
-            $servicesList[] = $service->name;
-        }
 
         $form = new Form;
         $form->addhidden("service")->setRequired();
