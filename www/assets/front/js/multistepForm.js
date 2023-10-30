@@ -314,8 +314,8 @@ async function createCalendar(month, year) {
             } else {
                 th.className += " available"
                 th.addEventListener("click", () => {
-                    document.querySelector("[name='date']").value = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-                    document.querySelector("#nextBtn").click();
+                    document.querySelector("[name='date']").value = date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0');
+                    nextPrev(1);
                 });
             }
             days.push(th);
