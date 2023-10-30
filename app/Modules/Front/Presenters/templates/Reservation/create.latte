@@ -42,20 +42,23 @@
                     <h1>Vyberte čas</h1>
                     <div class="time-wrapper">
                         <input n:name="time" value="{$times ? $times[0] : ""}" id="time">
+                        <input n:name="dateType">
 
                             {snippet content}
                         <div class="time">
                                 {var $i = 0}
                                 {foreach $times as $time }
-                                        <p onclick="setTime({$i})" class="button" >{$time}</p>
+                                        <p onclick="setTime({$i},'default')" class="button" >{$time}</p>
                                 {do $i++}
                                 {/foreach}
 
                         </div>
                                 <div class="time">
                                     <h2>Náhradní čas:</h2>
+                                    {$j = 0}
                                     {foreach $backupTimes as $time}
-                                        <p class="button backup">{$time}</p>
+                                        <p onclick="setTime({$j},'backup')" class="button backup">{$time->start}</p>
+                                        {do $j++}
                                     {/foreach}
                                 </div>
                             {/snippet}

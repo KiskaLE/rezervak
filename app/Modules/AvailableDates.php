@@ -37,11 +37,8 @@ class AvailableDates {
         $workingHours = $this->database->table("workinghours")->where("weekday=?", $this->getDay($date))->fetch();
         $backupHours = [];
         $backupDates = $this->database->query("SELECT registereddates.* FROM registereddates LEFT JOIN services ON registereddates.service_id = services.id WHERE `status`='VERIFIED' AND date='$date' AND duration='$duration'")->fetchAll();
-        foreach ($backupDates as $backupDate) {
-            $backupHours[] = $backupDate->start;
-        }
 
-        return $backupHours;
+        return $backupDates;
     }
     /**
      * Retrieves an array of available dates based on the provided parameters.

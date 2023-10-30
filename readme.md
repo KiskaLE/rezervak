@@ -28,4 +28,8 @@ color pallete: https://colorhunt.co/palette/f3f9fb474f8551e3d4f3ecd3
 neon-bootstrap-admin
 
 # TODO
+backup reservation
+
+Connect Fio API
+
 

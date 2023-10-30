@@ -29,6 +29,13 @@ final class ReservationsPresenter extends SecurePresenter
         $this->template->reservation = $reservation;
     }
 
+    public function actionDelete(int $id) {
+        $this->id = $id;
+        $reservation = $this->database->table("registereddates")->where("id=?", $id)->fetch();
+        $this->template->reservation = $reservation;
+
+    }
+
     protected function createComponentForm(): Form {
         $form = new Form;
 
@@ -59,6 +66,21 @@ final class ReservationsPresenter extends SecurePresenter
             ]);
         }
 
+        $this->redirect('Reservations:show');
+    }
+
+    protected function createComponentDeleteForm(string $name): Form
+    {
+        $form = new Form;
+        $form->addSubmit("submit", "delete");
+
+        $form->onSuccess[] = [$this, "deleteFormSucceeded"];
+
+        return $form;
+    }
+
+    public function deleteFormSucceeded(Form $form, \stdClass $data): void {
+        $this->database->table('registereddates')->where('id=?', $this->id)->delete();
         $this->redirect('Reservations:show');
     }
 

@@ -91,10 +91,6 @@ function validateForm() {
         let name = y[i].name;
         let value = y[i].value;
         y[i].className = "multiform";
-        if (value == "") {
-            y[i].className += " invalid";
-            valid = false;
-        }
         if (name == "service" || name == "time") {
             if (!value.match(/\d+/)) {
                 y[i].className += " invalid";
@@ -125,11 +121,17 @@ function validateForm() {
                 y[i].className += " invalid";
                 valid = false;
             }
-        } else if (name = "code") {
+        } else if (name == "code") {
             if (!value.match(/^\d{5}$/)) {
                 y[i].className += " invalid";
                 valid = false;
             }
+        } else if (name = "dateType") {
+            if (!(value == "default" || value == "backup")) {
+                y[i].className += " invalid";
+                valid = false;
+            }
+
         }
     }
     // If the valid status is true, mark the step as finished and valid:
@@ -207,8 +209,9 @@ function setService(id) {
     nextPrev(1);
 }
 
-function setTime(id) {
+function setTime(id, type) {
     document.querySelector("[name='time']").value = id;
+    document.querySelector("[name='dateType']").value = type;
     nextPrev(1);
 }
 

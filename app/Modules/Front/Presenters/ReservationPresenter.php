@@ -75,6 +75,7 @@ final class ReservationPresenter extends BasePresenter
 
         $form = new Form;
         $form->addhidden("service")->setRequired();
+        $form->addHidden("dateType")->setRequired();
         $form->addHidden("date")->setRequired();
         //$form->addSelect("time", "Čas:", $this->hours)->setRequired();
         $form->addHidden("time")->setRequired();
@@ -93,35 +94,55 @@ final class ReservationPresenter extends BasePresenter
     }
 
     public function formSucceeded(Form $form, $data): void {
-        $uuid = Uuid::uuid4();
         $service_id = $this->services[$data->service+1]->id;
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = intval($service->duration);
-        $times = $this->availableDates->getAvailableStartingHours($data->date, $duration );
-        $status = $this->database->table("registereddates")->insert([
-            "uuid" => $uuid,
-            "date" => $data->date,
-            "service_id" => $service_id,
-            "start" => $times[$data->time],
-            "firstname" => $data->firstname,
-            "lastname" => $data->lastname,
-            "phone" => $data->phone,
-            "email" => $data->email,
-            "address" => $data->address,
-            "code" => $data->code,
-            "city" => $data->city,
-            "created_at" => date("Y-m-d H:i:s")
-        ]);
-        if ($status) {
-            $this->mailer->sendConfirmationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:default", strval($uuid)));
-            $this->redirect("Reservation:confirmation" , ["uuid" => strval($uuid)]);
-        } else {
-            $this->flashMessage("Nepovedlo se uložit rezervaci.");
+        $uuid = Uuid::uuid4();
+        if ($data->dateType == "default") {
+            $times = $this->availableDates->getAvailableStartingHours($data->date, $duration );
+            $status = $this->database->table("registereddates")->insert([
+                "uuid" => $uuid,
+                "date" => $data->date,
+                "service_id" => $service_id,
+                "start" => $times[$data->time],
+                "firstname" => $data->firstname,
+                "lastname" => $data->lastname,
+                "phone" => $data->phone,
+                "email" => $data->email,
+                "address" => $data->address,
+                "code" => $data->code,
+                "city" => $data->city,
+                "created_at" => date("Y-m-d H:i:s")
+            ]);
+            if ($status) {
+                $this->mailer->sendConfirmationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:default", strval($uuid)));
+                $this->redirect("Reservation:confirmation" , ["uuid" => strval($uuid)]);
+            } else {
+                $this->flashMessage("Nepovedlo se uložit rezervaci.");
+            }
+        } else if ($data->dateType == "backup") {
+            $times = $this->availableDates->getBackupHours($data->date, $service->duration );
+            $status = $this->database->table("backup_reservations")->insert([
+                "uuid" => $uuid,
+                "date" => $data->date,
+                "service_id" => $service_id,
+                "start" => $times[$data->time]->start,
+                "firstname" => $data->firstname,
+                "lastname" => $data->lastname,
+                "phone" => $data->phone,
+                "email" => $data->email,
+                "address" => $data->address,
+                "code" => $data->code,
+                "city" => $data->city,
+                "created_at" => date("Y-m-d H:i:s")
+            ]);
+            if ($status) {
+                $this->mailer->sendConfirmationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:backup", strval($uuid)));
+                $this->redirect("Reservation:backup");
+            } else {
+                $this->flashMessage("Nepovedlo se uložit rezervaci.");
+            }
         }
-
-
-
-
     }
 
 }
