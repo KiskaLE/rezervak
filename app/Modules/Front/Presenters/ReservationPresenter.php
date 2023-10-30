@@ -142,7 +142,7 @@ final class ReservationPresenter extends BasePresenter
                 "created_at" => date("Y-m-d H:i:s")
             ]);
             if ($status) {
-                $this->mailer->sendConfirmationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:backup", strval($uuid)));
+                $this->mailer->sendBackupConfiramationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:backup", strval($uuid)));
                 $this->redirect("Reservation:backup" , ["uuid" => strval($uuid)]);
             } else {
                 $this->flashMessage("Nepovedlo se uložit rezervaci.");

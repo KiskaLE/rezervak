@@ -28,12 +28,16 @@ final class PaymentPresenter extends BasePresenter
         //confirm reservation
         if ($reservation->status == "UNVERIFIED" && !$isLate) {
             $this->confirm($uuid, $reservation, "registereddates");
+            $this->database->table("payments")->insert([
+                "price" => $reservation->ref("services", "service_id")->price,
+                "registereddate_id" => $reservation->id
+            ]);
             $this->redirect("this");
         }
 
         $payments = $this->database->table("payments")->where("registereddate_id=?", $reservation->id)->fetchAll();
         foreach ($payments as $payment) {
-            $this->paymentsHelper->test();
+            $this->paymentsHelper->generatePaymentCode($payment->id);
         }
         $this->template->payments = $payments;
     }
@@ -56,10 +60,7 @@ final class PaymentPresenter extends BasePresenter
             "status" => "VERIFIED"
         ]);
         //create payment table row
-        $this->database->table("payments")->insert([
-            "price" => "123",
-            "registereddate_id" => $service->id
-        ]);
+
     }
 
 }
