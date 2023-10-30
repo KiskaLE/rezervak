@@ -13,30 +13,41 @@ final class ReservationsPresenter extends SecurePresenter
 {
 
     private int $id;
+
     public function __construct(
         private Nette\Database\Explorer $database,
     )
     {
     }
 
-    public function actionShow() {
-        $reservations = $this->database->table("reservations")->order("date ASC")->fetchAll();
+    public function actionShow()
+    {
+        $reservations = $this->database->table("reservations")->where("date>=? AND status='VERIFIED'", date("Y-m-d"))->order("date ASC")->fetchAll();
         $this->template->reservations = $reservations;
     }
-    public function  actionEdit(int $id) {
+
+    public function actionEdit(int $id)
+    {
         $this->id = $id;
         $reservation = $this->database->table("reservations")->get($id);
         $this->template->reservation = $reservation;
     }
 
-    public function actionDelete(int $id) {
+    public function actionDetail(int $id) {
+        $reservation = $this->database->table("reservations")->get($id);
+        $this->template->reservation = $reservation;
+    }
+
+    public function actionDelete(int $id)
+    {
         $this->id = $id;
         $reservation = $this->database->table("reservations")->where("id=?", $id)->fetch();
         $this->template->reservation = $reservation;
 
     }
 
-    protected function createComponentForm(): Form {
+    protected function createComponentForm(): Form
+    {
         $form = new Form;
 
         $form->addHidden("action")->setRequired();
@@ -53,7 +64,8 @@ final class ReservationsPresenter extends SecurePresenter
         return $form;
     }
 
-    public function formSucceeded(Form $form,\stdClass $data): void {
+    public function formSucceeded(Form $form, \stdClass $data): void
+    {
 
         if ($data->action === "edit") {
             $this->database->table('reservations')->where('id=?', $this->id)->update([
@@ -79,7 +91,8 @@ final class ReservationsPresenter extends SecurePresenter
         return $form;
     }
 
-    public function deleteFormSucceeded(Form $form, \stdClass $data): void {
+    public function deleteFormSucceeded(Form $form, \stdClass $data): void
+    {
         $this->database->table('reservations')->where('id=?', $this->id)->delete();
         $this->redirect('Reservations:show');
     }

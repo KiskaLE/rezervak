@@ -16,15 +16,20 @@
         </thead>
         {foreach $reservations as $reservation}
             <tr>
-                <th>{$reservation->date}</th>
+                <th>{$reservation->date|date:"d.m.Y"}</th>
                 <th>{$reservation->firstname}</th>
                 <th>{$reservation->lastname}</th>
                 <th>{$reservation->email}</th>
                 <th>{$reservation->phone}</th>
                 <th>{$reservation->ref("services", "service_id")->name}</th>
                 <th>{$reservation->status}</th>
-                <th><a class="btn btn-default btn-sm btn-icon icon-left ajax" n:href="Reservations:edit $reservation->id"><i class="entypo-pencil"></i>Edit</a>
-                <a class="btn btn-default btn-sm btn-icon icon-left ajax" n:href="Reservations:delete $reservation->id"><i class="entypo-cancel"></i>Delete</a></th>
+                <th>
+                    <a class="btn btn-default btn-sm btn-icon icon-left ajax" n:href="Reservations:detail $reservation->id"><i
+                                class="entypo-eye"></i>Detail</a>
+                    <a class="btn btn-default btn-sm btn-icon icon-left ajax" n:href="Reservations:edit $reservation->id"><i
+                                class="entypo-pencil"></i>Edit</a>
+                    <a class="btn btn-default btn-sm btn-icon icon-left ajax" n:href="Reservations:delete $reservation->id"><i
+                                class="entypo-cancel"></i>Delete</a></th>
             </tr>
         {/foreach}
     </table>

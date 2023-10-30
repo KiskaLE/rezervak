@@ -30,12 +30,12 @@ final class PaymentPresenter extends BasePresenter
             $this->confirm($uuid, $reservation, "reservations");
             $this->database->table("payments")->insert([
                 "price" => $reservation->ref("services", "service_id")->price,
-                "registereddate_id" => $reservation->id
+                "reservation_id" => $reservation->id
             ]);
             $this->redirect("this");
         }
 
-        $payments = $this->database->table("payments")->where("registereddate_id=?", $reservation->id)->fetchAll();
+        $payments = $this->database->table("payments")->where("reservation_id=?", $reservation->id)->fetchAll();
         foreach ($payments as $payment) {
             $this->paymentsHelper->generatePaymentCode($payment->id);
         }

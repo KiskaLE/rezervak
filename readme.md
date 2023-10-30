@@ -28,8 +28,38 @@ color pallete: https://colorhunt.co/palette/f3f9fb474f8551e3d4f3ecd3
 neon-bootstrap-admin
 
 # TODO
-backup reservation
+
+## Front
+
+backup reservation flow
+
+optimize reservation flow on mobile
+
+Create Email templates
+
+Design Copletation pages
+
+
+
+
+## Admin
+
+Write cron that deletes old reservations
+
+Write cron to check payment
+
+Create detail view of reservations
+
+Create Dashboard
+
+fix animations
+
+fix resrvations on mobile
 
 Connect Fio API
+
+
+
+
 
 
