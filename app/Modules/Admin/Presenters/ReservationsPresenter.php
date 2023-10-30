@@ -20,18 +20,18 @@ final class ReservationsPresenter extends SecurePresenter
     }
 
     public function actionShow() {
-        $reservations = $this->database->table("registereddates")->order("date ASC")->fetchAll();
+        $reservations = $this->database->table("reservations")->order("date ASC")->fetchAll();
         $this->template->reservations = $reservations;
     }
     public function  actionEdit(int $id) {
         $this->id = $id;
-        $reservation = $this->database->table("registereddates")->get($id);
+        $reservation = $this->database->table("reservations")->get($id);
         $this->template->reservation = $reservation;
     }
 
     public function actionDelete(int $id) {
         $this->id = $id;
-        $reservation = $this->database->table("registereddates")->where("id=?", $id)->fetch();
+        $reservation = $this->database->table("reservations")->where("id=?", $id)->fetch();
         $this->template->reservation = $reservation;
 
     }
@@ -56,7 +56,7 @@ final class ReservationsPresenter extends SecurePresenter
     public function formSucceeded(Form $form,\stdClass $data): void {
 
         if ($data->action === "edit") {
-            $this->database->table('registereddates')->where('id=?', $this->id)->update([
+            $this->database->table('reservations')->where('id=?', $this->id)->update([
                 'firstname' => $data->firstname,
                 'lastname' => $data->lastname,
                 'email' => $data->email,
@@ -80,7 +80,7 @@ final class ReservationsPresenter extends SecurePresenter
     }
 
     public function deleteFormSucceeded(Form $form, \stdClass $data): void {
-        $this->database->table('registereddates')->where('id=?', $this->id)->delete();
+        $this->database->table('reservations')->where('id=?', $this->id)->delete();
         $this->redirect('Reservations:show');
     }
 

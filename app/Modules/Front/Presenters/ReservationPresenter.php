@@ -64,7 +64,7 @@ final class ReservationPresenter extends BasePresenter
 
     public function actionConfirmation($uuid) {
         $this->template->uuid = $uuid;
-        $reservation = $this->database->table("registereddates")->where("uuid=?", $uuid)->fetch();
+        $reservation = $this->database->table("reservations")->where("uuid=?", $uuid)->fetch();
         $this->template->reservation = $reservation;
     }
 
@@ -105,7 +105,7 @@ final class ReservationPresenter extends BasePresenter
         $uuid = Uuid::uuid4();
         if ($data->dateType == "default") {
             $times = $this->availableDates->getAvailableStartingHours($data->date, $duration );
-            $status = $this->database->table("registereddates")->insert([
+            $status = $this->database->table("reservations")->insert([
                 "uuid" => $uuid,
                 "date" => $data->date,
                 "service_id" => $service_id,
