@@ -1,5 +1,5 @@
 {
-	"name": "nette/web-project",
+	"name": "rezervak",
 	"description": "Nette: Standard Web Project",
 	"keywords": ["nette"],
 	"type": "project",
@@ -19,8 +19,7 @@
 		"nette/utils": "^4.0",
 		"latte/latte": "^3.0",
 		"tracy/tracy": "^2.9",
-		"ramsey/uuid": "^4.7",
-		"dibi/dibi": "^5.0"
+		"ramsey/uuid": "^4.7"
 	},
 	"require-dev": {
 		"nette/tester": "^2.4",

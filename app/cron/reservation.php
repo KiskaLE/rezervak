@@ -4,7 +4,6 @@
 namespace App\Cron;
 
 use App;
-use Dibi;
 
 # Autoloading tříd přes Composer - tedy i naší Bootstrap třídy
 require __DIR__ . '/../vendor/autoload.php';

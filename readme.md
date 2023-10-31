@@ -58,6 +58,8 @@ fix resrvations on mobile
 
 Connect Fio API
 
+Add better working hours setting
+
 
 
 

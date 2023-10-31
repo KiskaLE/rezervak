@@ -21,25 +21,29 @@ final class PaymentPresenter extends BasePresenter
 
     public function actionDefault($uuid) {
         $reservation = $this->database->table("reservations")->where("uuid=?", $uuid)->fetch();
-        $this->template->service = $reservation;
-        //TODO set time in admin settings
-        $time = 15;
-        $isLate = strtotime(strval($reservation->created_at)) < strtotime(date("Y-m-d H:i:s"). ' -'.$time.' minutes');
-        //confirm reservation
-        if ($reservation->status == "UNVERIFIED" && !$isLate) {
-            $this->confirm($uuid, $reservation, "reservations");
-            $this->database->table("payments")->insert([
-                "price" => $reservation->ref("services", "service_id")->price,
-                "reservation_id" => $reservation->id
-            ]);
-            $this->redirect("this");
-        }
+        if ($reservation) {
+            $this->template->service = $reservation;
+            //TODO set time in admin settings
+            $time = 15;
+            $isLate = strtotime(strval($reservation->created_at)) < strtotime(date("Y-m-d H:i:s"). ' -'.$time.' minutes');
+            //confirm reservation
+            if ($reservation->status == "UNVERIFIED" && !$isLate) {
+                $this->confirm($uuid, $reservation, "reservations");
+                $this->database->table("payments")->insert([
+                    "price" => $reservation->ref("services", "service_id")->price,
+                    "reservation_id" => $reservation->id
+                ]);
+                $this->redirect("this");
+            }
 
-        $payments = $this->database->table("payments")->where("reservation_id=?", $reservation->id)->fetchAll();
-        foreach ($payments as $payment) {
-            $this->paymentsHelper->generatePaymentCode($payment->id);
+            $payments = $this->database->table("payments")->where("reservation_id=?", $reservation->id)->fetchAll();
+            foreach ($payments as $payment) {
+                $this->paymentsHelper->generatePaymentCode($payment->id);
+            }
+            $this->template->payments = $payments;
+        } else {
+            $this->redirect("Payment:notFound");
         }
-        $this->template->payments = $payments;
     }
 
     public function actionBackup($uuid) {
