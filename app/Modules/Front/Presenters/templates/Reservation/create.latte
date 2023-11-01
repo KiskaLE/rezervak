@@ -1,94 +1,105 @@
 {block content}
 <div class="page-wrapper">
-        <div id="reservation-steps">
-                <span onclick="goToTab(0)" class="step"></span>
-                <span onclick="goToTab(1)" class="step"></span>
-                <span onclick="goToTab(2)" class="step"></span>
-                <span onclick="goToTab(3)" class="step"></span>
-                <span onclick="goToTab(4)" class="step"></span>
-        </div>
-        <div class="reservationForm-wrapper">
-            <form n:name="form" id="regForm" >
-                <div class="tab">
-                    <h1>Vyberte službu</h1>
+    <div id="reservation-steps">
+        <span onclick="goToTab(0)" class="step"></span>
+        <span onclick="goToTab(1)" class="step"></span>
+        <span onclick="goToTab(2)" class="step"></span>
+        <span onclick="goToTab(3)" class="step"></span>
+        <span onclick="goToTab(4)" class="step"></span>
+    </div>
+    <div class="reservationForm-wrapper">
+        <form n:name="form" id="regForm">
+            <div class="tab">
+                <h1>Vyberte službu</h1>
+                <div class="select-wrapper">
                     {var $i = 0}
                     {foreach $services as $service}
-                        <div><p onclick="setService({$i})" class="button">{$service->name}</p></div>
+                        <div><p onclick="setService({$i})" class="button">{$service->name} - {$service->price} Kč</p></div>
                         {do $i++}
                     {/foreach}
-                    <input n:name="service" class="multiform">
                 </div>
-                <div class="tab">
-                    <h1>Vyberte termín</h1>
+                <input n:name="service" class="multiform">
+            </div>
+            <div class="tab">
+                <h1>Vyberte termín</h1>
+                <div class="calender-wrapper">
                     <table>
-                        <div id="calendar-nav"><img src="{$basePath}/assets/front/icons/arrow-prev-small-svgrepo-com.svg" alt="previous" onclick="calNext(-1)"  id="prev-month"><h2 id="calendar-month"></h2><img src="{$basePath}/assets/front/icons/arrow-next-small-svgrepo-com.svg" alt="next" onclick="calNext(1)" id="next-month"></div>
+                        <div id="calendar-nav"><img
+                                    src="{$basePath}/assets/front/icons/arrow-prev-small-svgrepo-com.svg" alt="previous"
+                                    onclick="calNext(-1)" id="prev-month">
+                            <h2 id="calendar-month"></h2><img
+                                    src="{$basePath}/assets/front/icons/arrow-next-small-svgrepo-com.svg" alt="next"
+                                    onclick="calNext(1)" id="next-month"></div>
                         <thead>
-                            <tr>
-                                <th>Po</th>
-                                <th>Út</th>
-                                <th>St</th>
-                                <th>Čt</th>
-                                <th>Pa</th>
-                                <th>So</th>
-                                <th>Ne</th>
-                            </tr>
+                        <tr>
+                            <th>Po</th>
+                            <th>Út</th>
+                            <th>St</th>
+                            <th>Čt</th>
+                            <th>Pa</th>
+                            <th>So</th>
+                            <th>Ne</th>
+                        </tr>
                         </thead>
                         <tbody id="calendar">
                         </tbody>
                     </table>
-                    <input n:name="date" class="multiform">
                 </div>
-                <div class="tab">
-                    <h1>Vyberte čas</h1>
-                    <div class="time-wrapper">
-                        <input n:name="time" value="{$times ? $times[0] : ""}" id="time">
-                        <input n:name="dateType">
+                <input n:name="date" class="multiform">
+            </div>
+            <div class="tab">
+                <h1>Vyberte čas</h1>
+                <div class="time-wrapper">
+                    <input n:name="time" value="{$times ? $times[0] : ""}" id="time">
+                    <input n:name="dateType">
 
-                            {snippet content}
-                        <div class="time">
-                                {var $i = 0}
-                                {foreach $times as $time }
-                                        <p onclick="setTime({$i},'default')" class="button" >{$time}</p>
+                    {snippet content}
+                        <div class="time select-wrapper">
+                            {var $i = 0}
+                                {foreach $times as $time}
+                                <p onclick="setTime({$i},'default')" class="button">{$time}</p>
                                 {do $i++}
-                                {/foreach}
+                            {/foreach}
 
                         </div>
-                                <div class="time">
-                                    <h2 n:if="$backupTimes">Náhradní čas:</h2>
-                                    {var $j = 0}
+                        <div class="time">
+                            <h2 n:if="$backupTimes">Náhradní čas:</h2>
+                            {var $j = 0}
                                     {foreach $backupTimes as $time}
-                                        <p onclick="setTime({$j},'backup')" class="button backup">{$time->start}</p>
-                                        {do $j++}
-                                    {/foreach}
-                                </div>
-                            {/snippet}
+                                <p onclick="setTime({$j},'backup')" class="button backup">{$time->start}</p>
+                                {do $j++}
+                            {/foreach}
+                        </div>
+                    {/snippet}
 
-                    </div>
                 </div>
-                <div class="tab">
-                    <h1>Zadejte osobní údaje</h1>
-                    <p><label for="">Jméno:</label><input n:name="firstname" class="multiform"></p>
-                    <p><label for="">Příjmení:</label><input n:name="lastname" class="multiform"></p>
-                    <p><label for="">Tel.:</label><input n:name="phone" class="multiform"></p>
-                    <p><label for="">E-mail:</label><input n:name="email" class="multiform"></p>
-                    <p><label for="">Adresa a č.p.</label><input n:name="address" class="multiform"></p>
-                    <p><label for="">PSČ:</label><input n:name="code" class="multiform"></p>
-                    <p><label for="">Město:</label><input n:name="city" class="multiform"></p>
+            </div>
+            <div class="tab">
+                <h1>Zadejte osobní údaje</h1>
+                <div class="info-form">
+                    <div><label for="">Jméno:</label><input n:name="firstname" class="multiform"></div>
+                    <div><label for="">Příjmení:</label><input n:name="lastname" class="multiform"></div>
+                    <div><label for="">Tel.:</label><input n:name="phone" class="multiform"></div>
+                    <div><label for="">E-mail:</label><input n:name="email" class="multiform"></div>
+                    <div><label for="">Adresa a č.p.</label><input n:name="address" class="multiform"></div>
+                    <div><label for="">PSČ:</label><input n:name="code" class="multiform"></div>
+                    <div><label for="">Město:</label><input n:name="city" class="multiform"></div>
                 </div>
-                <div class="tab">
-                    <h1>Souhrn</h1>
-                    <div  id="recap"></div></div>
+            </div>
+            <div class="tab">
+                <h1>Souhrn</h1>
+                <div id="recap"></div>
+                <div><label for="">Slevový kód</label><input n:name="dicountCode"><span id="verify-code" onclick="verify">Ověřit</span></div>
+            </div>
+            <div class="nav-buttons">
+                <button class="button xl" id="prevBtn" type="button" onclick="nextPrev(-1)">Zpět</button>
+                <button class="button xl" id="nextBtn" type="button" onclick="nextPrev(1)">Další</button>
+            </div>
 
-                <div style="overflow:auto;">
-                    <div style="float:right;">
-                        <button class="button" id="prevBtn" type="button" onclick="nextPrev(-1)">Zpět</button>
-                        <button class="button" id="nextBtn" type="button" onclick="nextPrev(1)">Další</button>
-                    </div>
-                </div>
-            </form>
-        </div>
+        </form>
+    </div>
 
-        <script src="{$basePath}/assets/front/js/multistepForm.js"></script>
+    <script src="{$basePath}/assets/front/js/multistepForm.js"></script>
 
 </div>
 

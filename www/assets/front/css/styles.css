@@ -41,7 +41,7 @@ body {
 }
 
 .body-container {
-  width: 1100px;
+  max-width: 1100px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -126,12 +126,42 @@ body {
   border-radius: 5px;
   transition-duration: 100ms;
   cursor: pointer;
+  margin: 0;
 }
 
 .button:hover {
   background-color: var(--blue);
   color: white;
   box-shadow: var(--shadow);
+}
+
+.button.xl {
+  font-size: 20px;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
+.nav-buttons {
+  padding: 15px 0;
+}
+.nav-buttons button {
+  background-color: white;
+  width: 100%;
+}
+
+.select-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.info-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.info-form div input {
+  box-sizing: border-box;
 }
 
 .backup {
@@ -163,7 +193,7 @@ body {
   height: 50px;
 }
 #calendar-nav h2 {
-  width: 150px;
+  width: 100%;
   text-align: center;
 }
 
@@ -200,6 +230,22 @@ body {
   gap: 20px;
 }
 
+@media (max-width: 500px) {
+  .button {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .tab {
+    width: 90vw;
+  }
+  #calendar-nav {
+    justify-content: center;
+  }
+  .calender-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+}
 #recap {
   gap: 50px;
 }
@@ -226,7 +272,6 @@ input.invalid {
 /* Hide all steps by default: */
 .tab {
   display: none;
-  width: 100%;
 }
 
 /* Make circles that indicate the steps of the form: */

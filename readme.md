@@ -31,14 +31,17 @@ neon-bootstrap-admin
 
 ## Front
 
-backup reservation flow
+x backup reservation flow
 
-optimize reservation flow on mobile
+x optimize reservation flow on mobile
+
+fix reservation flow on PC
 
 Create Email templates
 
-Design Copletation pages
+Design Completation pages
 
+Možnost zadat slevový kód
 
 
 

@@ -10,18 +10,19 @@ function showTab(n) {
     let x = document.getElementsByClassName("tab");
     x[n].style.display = "block";
     // ... and fix the Previous/Next buttons:
+    document.getElementById("prevBtn").style.display = "none";
     if (n == 0) {
         document.getElementById("prevBtn").style.display = "none";
     }
-    if (n < 2) {
+    if (n < 3) {
         document.getElementById("nextBtn").style.display = "none";
     } else {
-        document.getElementById("prevBtn").style.display = "inline";
-        document.getElementById("nextBtn").style.display = "inline";
+        // document.getElementById("prevBtn").style.display = "inline";
+         document.getElementById("nextBtn").style.display = "inline";
     }
-    if (n == 1) {
-        document.getElementById("prevBtn").style.display = "inline";
-    }
+    // if (n == 1) {
+    //     document.getElementById("prevBtn").style.display = "inline";
+    // }
     if (n == (x.length - 1)) {
         document.getElementById("nextBtn").innerHTML = "Odeslat";
     } else {
@@ -102,7 +103,7 @@ function validateForm() {
                 valid = false;
             }
         } else if (name == "firstname" || name == "lastname" || name == "city") {
-            if (value.match(/\d+/)){
+            if (value.match(/\d+/) || value.length == 0) {
                 y[i].className += " invalid";
                 valid = false;
             }
@@ -349,6 +350,17 @@ async function createCalendar(month, year) {
 
 
 
+    }
+
+    async function verify() {
+        const code = document.querySelector("[name='discountCode']").value;
+        let naja = window.Naja;
+        const req = await naja.makeRequest("GET", "/reservation/create", {run: "verifyCode"}, {
+            fetch: {
+                credentials: 'include',
+            },
+        })
+        return Promise.resolve(req.availableDates);
     }
 
 

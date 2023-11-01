@@ -42,11 +42,12 @@ body {
 }
 
 .body-container {
-  width: 1100px;
+  max-width: 1100px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .page-wrapper {
   display: flex;
   flex-direction: column;
@@ -57,12 +58,14 @@ body {
 .items-table {
   border: 1px black solid;
   border-collapse: collapse;
+
   th,
   td {
     border: 1px black solid;
     border-collapse: collapse;
     padding: 5px;
   }
+
   .table-header {
     background-color: #0d7eff;
   }
@@ -73,6 +76,7 @@ body {
   width: 100%;
   justify-content: space-evenly;
   padding: 10px 0;
+
   .step {
     height: 50px;
     width: 50px;
@@ -80,6 +84,7 @@ body {
     border-radius: 50%;
     display: inline-block;
   }
+
   .step.active {
     opacity: 1;
     border: blue 3px solid;
@@ -87,6 +92,7 @@ body {
     cursor: pointer;
 
   }
+
   .step.finish {
     opacity: 0.5;
     background-color: var(--blue);
@@ -113,15 +119,16 @@ body {
 #confirmation {
   max-width: 800px;
   height: fit-content;
+
   h1 {
     text-align: center;
     font-size: 70px;
   }
+
   p {
     font-size: 25px;
   }
 }
-
 
 
 .button {
@@ -130,11 +137,44 @@ body {
   border-radius: 5px;
   transition-duration: 100ms;
   cursor: pointer;
+  margin: 0;
 }
+
 .button:hover {
   background-color: var(--blue);
   color: white;
   box-shadow: var(--shadow);
+}
+
+.button.xl {
+  font-size: 20px;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
+.nav-buttons {
+  padding: 15px 0;
+  button {
+    background-color: white;
+    width: 100%;
+  }
+}
+
+.select-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.info-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  div {
+    input {
+      box-sizing: border-box;
+    }
+  }
 }
 
 .backup {
@@ -154,6 +194,7 @@ body {
 .w-screen {
   width: 100vw;
 }
+
 .w-full {
   width: 100%;
 }
@@ -164,8 +205,9 @@ body {
   img {
     height: 50px;
   }
+
   h2 {
-    width: 150px;
+    width: 100%;
     text-align: center;
   }
 }
@@ -184,15 +226,19 @@ body {
     color: white;
     transition-duration: 100ms;
   }
+
   th.available:hover {
     cursor: pointer;
   }
+
   th {
     padding: 5px;
     border-radius: 5px;
   }
+
   .week {
   }
+
   .available:hover {
     background-color: var(--blue);
     filter: brightness(1.2);
@@ -206,6 +252,7 @@ body {
       display: flex;
     }
   }
+
   .time {
     display: flex;
     flex-flow: wrap;
@@ -213,12 +260,33 @@ body {
   }
 }
 
+@media (max-width: 500px) {
+  .button {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .tab {
+    width: 90vw;
+  }
+
+  #calendar-nav {
+    justify-content: center;
+  }
+  .calender-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 #recap {
-  gap:50px;
+  gap: 50px;
+
   h2 {
     font-size: 20px;
   }
 }
+
+
 
 /* Style the form */
 #regForm {
@@ -242,7 +310,6 @@ input.invalid {
 /* Hide all steps by default: */
 .tab {
   display: none;
-  width: 100%;
 }
 
 /* Make circles that indicate the steps of the form: */

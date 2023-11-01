@@ -18,9 +18,10 @@ final class ReservationPresenter extends BasePresenter
 
     public function __construct(
         private Nette\Database\Explorer $database,
-        private AvailableDates $availableDates,
-        private Mailer $mailer
-    ){
+        private AvailableDates          $availableDates,
+        private Mailer                  $mailer
+    )
+    {
 
     }
 
@@ -42,38 +43,50 @@ final class ReservationPresenter extends BasePresenter
         $this->template->services = $services;
         $this->redrawControl("content");
     }
-    public function actionCreate($run, $day, $service_id) {
+
+    public function actionCreate($run, $day, $service_id)
+    {
 
         if ($this->isAjax()) {
-            if ($run === "fetch") {
-                //TODO number of Days stored in database
-                $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates(30, 60)]);
-            } else if ($run === "setDate") {
-                $service = $this->database->table("services")->where("id=?", $service_id+1)->fetch();
-                $duration = $service->duration;
-                $availableTimes = $this->availableDates->getAvailableStartingHours($day, intval($duration) );
-                $availableBackup = $this->availableDates->getBackupHours($day, intval($duration) );
-                $this->template->times = $availableTimes;
-                $this->template->backupTimes = $availableBackup;
-                $this->redrawControl("content");
+            switch ($run) {
+                case "fetch":
+                    //TODO number of Days stored in database
+                    $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates(30, 60)]);
+                    break;
+                case "setDate":
+                    $service = $this->database->table("services")->where("id=?", $service_id + 1)->fetch();
+                    $duration = $service->duration;
+                    $availableTimes = $this->availableDates->getAvailableStartingHours($day, intval($duration));
+                    $availableBackup = $this->availableDates->getBackupHours($day, intval($duration));
+                    $this->template->times = $availableTimes;
+                    $this->template->backupTimes = $availableBackup;
+                    $this->redrawControl("content");
+                case "verifyCode":
+                    //TODO verify code
+                    break;
             }
             $this->payload->postGet = true;
             $this->payload->url = $this->link("Reservation:create");
         }
     }
 
-    public function actionConfirmation($uuid) {
+    public
+    function actionConfirmation($uuid)
+    {
         $this->template->uuid = $uuid;
         $reservation = $this->database->table("reservations")->where("uuid=?", $uuid)->fetch();
         $this->template->reservation = $reservation;
     }
 
-    public function actionBackup($uuid) {
+    public
+    function actionBackup($uuid)
+    {
         $reservation = $this->database->table("backup_reservations")->where("uuid=?", $uuid)->fetch();
         $this->template->reservation = $reservation;
     }
 
-    protected function createComponentForm(): Form
+    protected
+    function createComponentForm(): Form
     {
         $services = $this->database->table("services")->fetchAll();
         $this->services = $services;
@@ -92,19 +105,22 @@ final class ReservationPresenter extends BasePresenter
         $form->addText("code", "PSČ:")->setRequired();
         $form->addText("city", "Město:")->setRequired();
 
+        $form->addText("dicountCode", "Kód slevy:");
         $form->addSubmit("submit");
 
         $form->onSuccess[] = [$this, "formSucceeded"];
         return $form;
     }
 
-    public function formSucceeded(Form $form, $data): void {
-        $service_id = $this->services[$data->service+1]->id;
+    public
+    function formSucceeded(Form $form, $data): void
+    {
+        $service_id = $this->services[$data->service + 1]->id;
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = intval($service->duration);
         $uuid = Uuid::uuid4();
         if ($data->dateType == "default") {
-            $times = $this->availableDates->getAvailableStartingHours($data->date, $duration );
+            $times = $this->availableDates->getAvailableStartingHours($data->date, $duration);
             $status = $this->database->table("reservations")->insert([
                 "uuid" => $uuid,
                 "date" => $data->date,
@@ -121,12 +137,12 @@ final class ReservationPresenter extends BasePresenter
             ]);
             if ($status) {
                 $this->mailer->sendConfirmationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:default", strval($uuid)));
-                $this->redirect("Reservation:confirmation" , ["uuid" => strval($uuid)]);
+                $this->redirect("Reservation:confirmation", ["uuid" => strval($uuid)]);
             } else {
                 $this->flashMessage("Nepovedlo se uložit rezervaci.");
             }
         } else if ($data->dateType == "backup") {
-            $times = $this->availableDates->getBackupHours($data->date, $service->duration );
+            $times = $this->availableDates->getBackupHours($data->date, $service->duration);
             $status = $this->database->table("backup_reservations")->insert([
                 "uuid" => $uuid,
                 "date" => $data->date,
@@ -143,7 +159,7 @@ final class ReservationPresenter extends BasePresenter
             ]);
             if ($status) {
                 $this->mailer->sendBackupConfiramationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:backup", strval($uuid)));
-                $this->redirect("Reservation:backup" , ["uuid" => strval($uuid)]);
+                $this->redirect("Reservation:backup", ["uuid" => strval($uuid)]);
             } else {
                 $this->flashMessage("Nepovedlo se uložit rezervaci.");
             }
