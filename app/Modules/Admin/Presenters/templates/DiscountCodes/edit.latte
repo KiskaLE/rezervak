@@ -1,0 +1,8 @@
+{block content}
+<h1>Úprava kódu - {$discountCode->code}</h1>
+<form n:name="form">
+    <input n:name="action" value="edit">
+    <div><label for="">Kód</label><input n:name="code" value="{$discountCode->code}"></div>
+    <div><input n:name="active" {if $discountCode->active}checked="checked"{/if}><label for="">Aktivní</label></div>
+    <div><input n:name="save"></div>
+</form>

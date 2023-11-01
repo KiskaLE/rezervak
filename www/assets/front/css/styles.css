@@ -253,6 +253,18 @@ body {
   font-size: 20px;
 }
 
+.discount-code-wrapper div {
+  display: flex;
+  gap: 10px;
+}
+.discount-code-wrapper div .button {
+  width: fit-content;
+}
+
+footer {
+  height: 100px;
+}
+
 /* Style the form */
 /* Style the input fields */
 input {
@@ -267,6 +279,10 @@ input {
 /* Mark input boxes that gets an error on validation: */
 input.invalid {
   background-color: #ffdddd;
+}
+
+input.valid {
+  background-color: #23DC3D;
 }
 
 /* Hide all steps by default: */

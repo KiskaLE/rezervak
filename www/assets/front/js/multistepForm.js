@@ -5,6 +5,7 @@ let showMonth = new Date().getMonth();
 let showYear = new Date().getFullYear();
 
 
+
 function showTab(n) {
     // This function will display the specified tab of the form ...
     let x = document.getElementsByClassName("tab");
@@ -127,12 +128,13 @@ function validateForm() {
                 y[i].className += " invalid";
                 valid = false;
             }
-        } else if (name = "dateType") {
+        } else if (name == "dateType") {
             if (!(value == "default" || value == "backup")) {
                 y[i].className += " invalid";
                 valid = false;
             }
-
+        } else if (name == "discountCode") {
+            //TODO validate discount code
         }
     }
     // If the valid status is true, mark the step as finished and valid:
@@ -352,16 +354,27 @@ async function createCalendar(month, year) {
 
     }
 
-    async function verify() {
-        const code = document.querySelector("[name='discountCode']").value;
-        let naja = window.Naja;
-        const req = await naja.makeRequest("GET", "/reservation/create", {run: "verifyCode"}, {
-            fetch: {
-                credentials: 'include',
-            },
-        })
-        return Promise.resolve(req.availableDates);
+
+}
+
+async function verify() {
+    const code = document.querySelector("[name='dicountCode']").value;
+    console.log(code)
+    let naja = window.Naja;
+    const res = await naja.makeRequest("GET", "/reservation/create", {run: "verifyCode", discountCode: code}, {
+        fetch: {
+            credentials: 'include',
+        },
+    })
+    console.log(res)
+    if (res.status == false) {
+        document.querySelector("[name='dicountCode']").className = "invalid";
+        return Promise.resolve(res.availableDates);
     }
+    document.querySelector("[name='dicountCode']").className = "valid";
+    //show code success
 
 
+
+    return Promise.resolve(res.availableDates);
 }

@@ -44,26 +44,29 @@ final class ReservationPresenter extends BasePresenter
         $this->redrawControl("content");
     }
 
-    public function actionCreate($run, $day, $service_id)
+    public function actionCreate($run, $day, $service_id, $discountCode = "")
     {
 
         if ($this->isAjax()) {
-            switch ($run) {
-                case "fetch":
-                    //TODO number of Days stored in database
-                    $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates(30, 60)]);
-                    break;
-                case "setDate":
-                    $service = $this->database->table("services")->where("id=?", $service_id + 1)->fetch();
-                    $duration = $service->duration;
-                    $availableTimes = $this->availableDates->getAvailableStartingHours($day, intval($duration));
-                    $availableBackup = $this->availableDates->getBackupHours($day, intval($duration));
-                    $this->template->times = $availableTimes;
-                    $this->template->backupTimes = $availableBackup;
-                    $this->redrawControl("content");
-                case "verifyCode":
-                    //TODO verify code
-                    break;
+            if ($run == "fetch") {
+                //TODO number of Days stored in database
+                $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates(30, 60)]);
+            }else if ($run == "setDate") {
+                $service = $this->database->table("services")->where("id=?", $service_id + 1)->fetch();
+                $duration = $service->duration;
+                $availableTimes = $this->availableDates->getAvailableStartingHours($day, intval($duration));
+                $availableBackup = $this->availableDates->getBackupHours($day, intval($duration));
+                $this->template->times = $availableTimes;
+                $this->template->backupTimes = $availableBackup;
+                $this->redrawControl("content");
+            } else if ($run == "verifyCode") {
+                //TODO verify code
+                $discount = $this->database->table("discount_codes")->where("code=? AND active=1", $discountCode)->fetch();
+                if ($discount) {
+                    $this->sendJson(["status" => true, "type" => $discount->type, "discount" => ["type" => $discount->type, "value" => $discount->value]]);
+                }else {
+                    $this->sendJson(["status" => false]);
+                }
             }
             $this->payload->postGet = true;
             $this->payload->url = $this->link("Reservation:create");

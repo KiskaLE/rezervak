@@ -14,7 +14,8 @@
                 <div class="select-wrapper">
                     {var $i = 0}
                     {foreach $services as $service}
-                        <div><p onclick="setService({$i})" class="button">{$service->name} - {$service->price} Kč</p></div>
+                        <div><p onclick="setService({$i})" class="button">{$service->name} - {$service->price} Kč</p>
+                        </div>
                         {do $i++}
                     {/foreach}
                 </div>
@@ -89,7 +90,11 @@
             <div class="tab">
                 <h1>Souhrn</h1>
                 <div id="recap"></div>
-                <div><label for="">Slevový kód</label><input n:name="dicountCode"><span id="verify-code" onclick="verify">Ověřit</span></div>
+                <div class="discount-code-wrapper">
+                    <label for="">Slevový kód</label>
+                    <div><input n:name="dicountCode">
+                        <p id="verify-code" class="button xl" onclick="verify()">Ověřit</p></div>
+                </div>
             </div>
             <div class="nav-buttons">
                 <button class="button xl" id="prevBtn" type="button" onclick="nextPrev(-1)">Zpět</button>
