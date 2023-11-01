@@ -5,18 +5,22 @@ declare(strict_types=1);
 
 namespace App\Modules\admin\Presenters;
 
+use mysql_xdevapi\Exception;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Utils\Json;
 
 
 final class DiscountCodesPresenter extends SecurePresenter
 {
 
     private $id;
+
     public function __construct(
         private Nette\Database\Explorer $database
     )
-    {}
+    {
+    }
 
     public function beforeRender()
     {
@@ -24,12 +28,14 @@ final class DiscountCodesPresenter extends SecurePresenter
 
     }
 
-    public function actionShow() {
+    public function actionShow()
+    {
         $discountCodes = $this->database->table("discount_codes")->where("user_id=?", $this->user->id)->fetchAll();
         $this->template->discountCodes = $discountCodes;
     }
 
-    public function actionEdit(int $id) {
+    public function actionEdit(int $id)
+    {
         $this->id = $id;
         $discountCode = $this->database->table("discount_codes")->where("id=?", $id)->fetch();
         $this->template->discountCode = $discountCode;
@@ -37,10 +43,14 @@ final class DiscountCodesPresenter extends SecurePresenter
 
     protected function createComponentForm(): Form
     {
+        $services = $this->database->table("services")->fetchAll();
         $form = new Form;
-        $form->addHidden("action");
-        $form->addText("code", "Code");
         $form->addCheckbox("active", "Aktivní");
+        $form->addText("code", "Code")->setRequired();
+        $form->addHidden("action");
+        for ($i = 1; $i <= count($services); $i++) {
+            $form->addCheckbox(strval("service" . $services[$i]->id), $services[$i]->name);
+        }
         $form->addSubmit("save", "Vytvořit");
 
         $form->onSuccess[] = [$this, "formSucceeded"];
@@ -50,20 +60,42 @@ final class DiscountCodesPresenter extends SecurePresenter
 
     public function formSucceeded(Form $form, $values)
     {
+        $services = $this->database->table("services")->fetchAll();
         $show = $values->active ? 1 : 0;
         $status = false;
+        $enabled = [];
+
+        for ($i = 1; $i <= count($services); $i++) {
+            $value = $values["service" . $i];
+            if ($value) {
+                $enabled[] = $services[$i]->id;
+            }
+        }
+        $json = Json::encode($enabled);
         switch ($values->action) {
             case "create":
                 $status = $this->database->table("discount_codes")->insert([
                     "user_id" => $this->user->id,
                     "code" => $values->code,
                     "active" => $show,
+                    "type" => 0,
+                    "services" => $json
                 ]);
                 break;
             case "edit":
                 $status = $this->database->table("discount_codes")->where("id=?", $this->id)->update([
                     "code" => $values->code,
                     "active" => $show,
+                ]);
+                break;
+            default:
+                //TODO for test
+                $status = $this->database->table("discount_codes")->insert([
+                    "user_id" => $this->user->id,
+                    "code" => $values->code,
+                    "active" => $show,
+                    "type" => 0,
+                    "services" => $json
                 ]);
                 break;
         }
