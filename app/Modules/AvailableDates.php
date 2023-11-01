@@ -36,7 +36,7 @@ class AvailableDates {
     public function getBackupHours(string $date, int $duration) : array{
         $workingHours = $this->database->table("workinghours")->where("weekday=?", $this->getDay($date))->fetch();
         $backupHours = [];
-        $backupDates = $this->database->query("SELECT reservations.* FROM reservations LEFT JOIN services ON reservations.service_id = services.id WHERE `status`='VERIFIED' AND date='$date' AND duration='$duration'")->fetchAll();
+        $backupDates = $this->database->query("SELECT reservations.* FROM reservations LEFT JOIN services ON reservations.service_id = services.id WHERE date='$date' AND duration='$duration'")->fetchAll();
 
         return $backupDates;
     }
