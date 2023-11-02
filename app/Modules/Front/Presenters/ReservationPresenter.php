@@ -110,7 +110,7 @@ final class ReservationPresenter extends BasePresenter
         $service_id = $data->service;
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = intval($service->duration);
-        $uuid = Uuid::uuid4();
+        $uuid = strval(Uuid::uuid4());
 
         if ($data->dateType == "default") {
             $times = $this->availableDates->getAvailableStartingHours($data->date, $duration);
@@ -167,8 +167,15 @@ final class ReservationPresenter extends BasePresenter
 
         return $reservation;
     }
-
-    private function setDate($service_id, $day)
+    /**
+     * Sets the date for a given service ID and day.
+     *
+     * @param int $service_id The ID of the service.
+     * @param string $day The day for which to set the date.
+     * @throws Exception If the service cannot be fetched from the database.
+     * @return void
+     */
+    private function setDate(int $service_id, string $day): void
     {
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = $service->duration;
@@ -178,8 +185,15 @@ final class ReservationPresenter extends BasePresenter
         $this->template->backupTimes = $availableBackup;
         $this->redrawControl("content");
     }
-
-    private function verifyDiscountCode($service_id, $discountCode)
+    /**
+     * Verifies a discount code for a given service.
+     *
+     * @param int $service_id The ID of the service.
+     * @param string $discountCode The discount code to verify.
+     * @throws None
+     * @return void
+     */
+    private function verifyDiscountCode(int $service_id, string $discountCode): void
     {
         $discount = $this->discountCodes->isCodeValid($service_id, $discountCode);
         if ($discount) {

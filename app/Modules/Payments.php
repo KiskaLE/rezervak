@@ -62,4 +62,20 @@ final class Payments
         $code = $payment->id . str_replace(":", "", explode(" ", $payment->created_at)[1]);
         return $code;
     }
+
+    /**
+     * Retrieves the payments associated with the given reservation.
+     *
+     * @param mixed $reservation The reservation object.
+     * @throws Some_Exception_Class A description of the exception that can be thrown.
+     * @return array The array of payment objects.
+     */
+    public function getPayments($reservation)
+    {
+        $payments = $this->database->table("payments")->where("reservation_id=?", $reservation->id)->fetchAll();
+        foreach ($payments as $payment) {
+            $this->payments->generatePaymentCode($payment->id);
+        }
+        return $payments;
+    }
 }

@@ -27,7 +27,7 @@ final class PaymentPresenter extends BasePresenter
                 $this->redirect("Payment:notFound");
             }
             $this->template->service = $reservation;
-            $this->template->payments = $this->getPayments($reservation);
+            $this->template->payments = $this->payments->getPayments($reservation);
 
         } else {
             $this->redirect("Payment:notFound");
@@ -43,15 +43,6 @@ final class PaymentPresenter extends BasePresenter
         }
         $this->template->service = $reservation;
 
-    }
-
-    private function getPayments($reservation)
-    {
-        $payments = $this->database->table("payments")->where("reservation_id=?", $reservation->id)->fetchAll();
-        foreach ($payments as $payment) {
-            $this->payments->generatePaymentCode($payment->id);
-        }
-        return $payments;
     }
 
     private function confirm($uuid, $table): void
