@@ -7,6 +7,8 @@
         <thead>
         <tr>
             <th>Kód</th>
+            <th>Hodnota</th>
+            <th>Typ</th>
             <th>Aktivní</th>
             <th>Akce</th>
         </tr>
@@ -15,6 +17,8 @@
         {foreach $discountCodes as $discountCode}
             <tr>
                 <th>{$discountCode->code}</th>
+                <th>{$discountCode->value}</th>
+                <th>{$discountCode->type == 0 ? "cena" : "procento" }</th>
                 <th>{$discountCode->active ? 'Ano' : 'Ne'}</th>
                 <th><a class="btn btn-default btn-sm btn-icon icon-left" n:href="DiscountCodes:edit $discountCode->id"><i
                                 class="entypo-pencil"></i>Upravit</a></th>

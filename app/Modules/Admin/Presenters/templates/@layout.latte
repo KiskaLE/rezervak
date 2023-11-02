@@ -204,7 +204,10 @@
 		</div>
 
 	</div>
-<main n:snippet="main"  class="main-content">{include content}</main>
+<main n:snippet="main"  class="main-content">
+	<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+	{include content}
+</main>
 
 
 
