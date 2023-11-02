@@ -44,7 +44,7 @@ final class ReservationPresenter extends BasePresenter
         $this->redrawControl("content");
     }
 
-    public function actionCreate($run, $day, $service_id, $discountCode = "", $service = 0)
+    public function actionCreate($run, $day, $service_id, $discountCode = "")
     {
 
         if ($this->isAjax()) {
@@ -60,10 +60,12 @@ final class ReservationPresenter extends BasePresenter
                 $this->template->backupTimes = $availableBackup;
                 $this->redrawControl("content");
             } else if ($run == "verifyCode") {
-                //TODO verify code
                 //TODO add user id
+                $valid = true;
                 $discount = $this->database->table("discount_codes")->where("code=? AND active=1", $discountCode)->fetch();
-                if ($discount) {
+                $discountServices = Nette\Utils\Json::decode($discount->services);
+                in_array($service_id, $discountServices) ?: $valid = false;
+                if ($valid) {
                     $this->sendJson(["status" => true, "type" => $discount->type, "discount" => ["type" => $discount->type, "value" => $discount->value]]);
                 }else {
                     $this->sendJson(["status" => false]);
@@ -119,10 +121,11 @@ final class ReservationPresenter extends BasePresenter
     public
     function formSucceeded(Form $form, $data): void
     {
-        $service_id = $this->services[$data->service + 1]->id;
+        $service_id = $data->service;
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = intval($service->duration);
         $uuid = Uuid::uuid4();
+
         if ($data->dateType == "default") {
             $times = $this->availableDates->getAvailableStartingHours($data->date, $duration);
             $status = $this->database->table("reservations")->insert([

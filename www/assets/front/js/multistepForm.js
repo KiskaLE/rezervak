@@ -363,7 +363,7 @@ async function verify() {
     console.log(service)
     console.log(code)
     let naja = window.Naja;
-    const res = await naja.makeRequest("GET", "/reservation/create", {run: "verifyCode", discountCode: code, service: service}, {
+    const res = await naja.makeRequest("GET", "/reservation/create", {run: "verifyCode", discountCode: code, service_id: service}, {
         fetch: {
             credentials: 'include',
         },

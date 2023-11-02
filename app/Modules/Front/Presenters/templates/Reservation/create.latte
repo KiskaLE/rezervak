@@ -9,18 +9,22 @@
     </div>
     <div class="reservationForm-wrapper">
         <form n:name="form" id="regForm">
+
+
             <div class="tab">
                 <h1>Vyberte službu</h1>
                 <div class="select-wrapper">
                     {var $i = 0}
                     {foreach $services as $service}
-                        <div><p onclick="setService({$i})" class="button">{$service->name} - {$service->price} Kč</p>
+                        <div><p onclick="setService({$service->id})" class="button">{$service->name} - {$service->price} Kč</p>
                         </div>
                         {do $i++}
                     {/foreach}
                 </div>
                 <input n:name="service" class="multiform">
             </div>
+
+
             <div class="tab">
                 <h1>Vyberte termín</h1>
                 <div class="calender-wrapper">
@@ -48,6 +52,8 @@
                 </div>
                 <input n:name="date" class="multiform">
             </div>
+
+
             <div class="tab">
                 <h1>Vyberte čas</h1>
                 <div class="time-wrapper">
@@ -75,6 +81,8 @@
 
                 </div>
             </div>
+
+
             <div class="tab">
                 <h1>Zadejte osobní údaje</h1>
                 <div class="info-form">
@@ -87,6 +95,8 @@
                     <div><label for="">Město:</label><input n:name="city" class="multiform"></div>
                 </div>
             </div>
+
+
             <div class="tab">
                 <h1>Souhrn</h1>
                 <div id="recap"></div>
