@@ -9,8 +9,7 @@ class AvailableDates {
     public function __construct(
         private Nette\Database\Explorer $database
     )
-    {
-    }
+    {}
 
     public function getAvailableDates(int $duration ,int $numberOfDays): array{
        $date = date("Y-m-d");
@@ -34,9 +33,11 @@ class AvailableDates {
      * @return array The array of backup hours.
      */
     public function getBackupHours(string $date, int $duration) : array{
-        bdump($duration);
-        $backupDates = $this->database->query("SELECT reservations.*, services.duration FROM reservations LEFT JOIN services ON reservations.service_id = services.id WHERE date='$date' AND services.duration='$duration'")->fetchAll();
-
+        $backupDatesRows = $this->database->query("SELECT reservations.*, services.duration FROM reservations LEFT JOIN services ON reservations.service_id = services.id WHERE date='$date' AND services.duration='$duration'")->fetchAll();
+        $backupDates = [];
+        foreach ($backupDatesRows as $row) {
+            $backupDates[] = $row->start;
+        }
         return $backupDates;
     }
     /**
