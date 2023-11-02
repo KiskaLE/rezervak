@@ -24,5 +24,7 @@ class SecurePresenter extends BasePresenter
         }else{
             $this->redirect("Sign:in");
         }
+
+        $this->redrawControl();
     }
 }

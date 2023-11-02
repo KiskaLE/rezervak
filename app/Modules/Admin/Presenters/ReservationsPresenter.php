@@ -13,23 +13,41 @@ final class ReservationsPresenter extends SecurePresenter
 {
 
     private int $id;
+
     public function __construct(
         private Nette\Database\Explorer $database,
     )
     {
     }
 
-    public function actionShow() {
-        $reservations = $this->database->table("registereddates")->order("date ASC")->fetchAll();
+    public function actionShow()
+    {
+        $reservations = $this->database->table("reservations")->where("date>=? AND status='VERIFIED'", date("Y-m-d"))->order("date ASC")->fetchAll();
         $this->template->reservations = $reservations;
     }
-    public function  actionEdit(int $id) {
+
+    public function actionEdit(int $id)
+    {
         $this->id = $id;
-        $reservation = $this->database->table("registereddates")->get($id);
+        $reservation = $this->database->table("reservations")->get($id);
         $this->template->reservation = $reservation;
     }
 
-    protected function createComponentForm(): Form {
+    public function actionDetail(int $id) {
+        $reservation = $this->database->table("reservations")->get($id);
+        $this->template->reservation = $reservation;
+    }
+
+    public function actionDelete(int $id)
+    {
+        $this->id = $id;
+        $reservation = $this->database->table("reservations")->where("id=?", $id)->fetch();
+        $this->template->reservation = $reservation;
+
+    }
+
+    protected function createComponentForm(): Form
+    {
         $form = new Form;
 
         $form->addHidden("action")->setRequired();
@@ -46,10 +64,11 @@ final class ReservationsPresenter extends SecurePresenter
         return $form;
     }
 
-    public function formSucceeded(Form $form,\stdClass $data): void {
+    public function formSucceeded(Form $form, \stdClass $data): void
+    {
 
         if ($data->action === "edit") {
-            $this->database->table('registereddates')->where('id=?', $this->id)->update([
+            $this->database->table('reservations')->where('id=?', $this->id)->update([
                 'firstname' => $data->firstname,
                 'lastname' => $data->lastname,
                 'email' => $data->email,
@@ -59,6 +78,22 @@ final class ReservationsPresenter extends SecurePresenter
             ]);
         }
 
+        $this->redirect('Reservations:show');
+    }
+
+    protected function createComponentDeleteForm(string $name): Form
+    {
+        $form = new Form;
+        $form->addSubmit("submit", "delete");
+
+        $form->onSuccess[] = [$this, "deleteFormSucceeded"];
+
+        return $form;
+    }
+
+    public function deleteFormSucceeded(Form $form, \stdClass $data): void
+    {
+        $this->database->table('reservations')->where('id=?', $this->id)->delete();
         $this->redirect('Reservations:show');
     }
 

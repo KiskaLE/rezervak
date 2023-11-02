@@ -3,6 +3,7 @@ services:
 	- App\Modules\Authenticator
 	- App\Modules\AvailableDates
 	- App\Modules\Mailer
+	- App\Modules\Payments
 
 
 search:

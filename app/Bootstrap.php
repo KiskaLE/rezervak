@@ -30,4 +30,9 @@ class Bootstrap
 
 		return $configurator;
 	}
+
+    public static function bootForCron(): Configurator
+    {
+        return self::boot();
+    }
 }

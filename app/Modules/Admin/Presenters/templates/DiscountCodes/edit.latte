@@ -1,0 +1,15 @@
+{block content}
+<h1>Úprava kódu - {$discountCode->code}</h1>
+<form n:name="editForm">
+    <div><input n:name="active" {if $discountCode->active}checked="checked"{/if}><label for="">Aktivní</label></div>
+    <div><label for="">Typ:</label><span> {$discountCode->type == 0 ? "cena" : "procento" }</span></div>
+    <div><label for="">Kód:</label><input n:name="code" value="{$discountCode->code}"></div>
+    <div><label for="">Hodnota: </label><input n:name="value" value="{$discountCode->value}"></div>
+    {var $i = 1}
+    <div n:inner-foreach="$services as $service" >
+        {var $checked = in_array( $service->id, $selectedServices)}
+        <div><input n:name="service{$i}" {if $checked}checked="checked"{/if} ><label for="">{$service->name}</label></div>
+        {do $i++}
+    </div>
+    <div><input n:name="save"></div>
+</form>

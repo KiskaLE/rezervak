@@ -5,23 +5,25 @@ let showMonth = new Date().getMonth();
 let showYear = new Date().getFullYear();
 
 
+
 function showTab(n) {
     // This function will display the specified tab of the form ...
     let x = document.getElementsByClassName("tab");
     x[n].style.display = "block";
     // ... and fix the Previous/Next buttons:
+    document.getElementById("prevBtn").style.display = "none";
     if (n == 0) {
         document.getElementById("prevBtn").style.display = "none";
     }
-    if (n < 2) {
+    if (n < 3) {
         document.getElementById("nextBtn").style.display = "none";
     } else {
-        document.getElementById("prevBtn").style.display = "inline";
-        document.getElementById("nextBtn").style.display = "inline";
+        // document.getElementById("prevBtn").style.display = "inline";
+         document.getElementById("nextBtn").style.display = "inline";
     }
-    if (n == 1) {
-        document.getElementById("prevBtn").style.display = "inline";
-    }
+    // if (n == 1) {
+    //     document.getElementById("prevBtn").style.display = "inline";
+    // }
     if (n == (x.length - 1)) {
         document.getElementById("nextBtn").innerHTML = "Odeslat";
     } else {
@@ -91,10 +93,6 @@ function validateForm() {
         let name = y[i].name;
         let value = y[i].value;
         y[i].className = "multiform";
-        if (value == "") {
-            y[i].className += " invalid";
-            valid = false;
-        }
         if (name == "service" || name == "time") {
             if (!value.match(/\d+/)) {
                 y[i].className += " invalid";
@@ -106,7 +104,7 @@ function validateForm() {
                 valid = false;
             }
         } else if (name == "firstname" || name == "lastname" || name == "city") {
-            if (value.match(/\d+/)){
+            if (value.match(/\d+/) || value.length == 0) {
                 y[i].className += " invalid";
                 valid = false;
             }
@@ -125,11 +123,18 @@ function validateForm() {
                 y[i].className += " invalid";
                 valid = false;
             }
-        } else if (name = "code") {
+        } else if (name == "code") {
             if (!value.match(/^\d{5}$/)) {
                 y[i].className += " invalid";
                 valid = false;
             }
+        } else if (name == "dateType") {
+            if (!(value == "default" || value == "backup")) {
+                y[i].className += " invalid";
+                valid = false;
+            }
+        } else if (name == "discountCode") {
+            //TODO validate discount code
         }
     }
     // If the valid status is true, mark the step as finished and valid:
@@ -166,38 +171,15 @@ function recap(){
     // generate text from data
     for (let i = 0; i < data.length; i++) {
         const div = document.createElement("div");
+        const h2 = document.createElement("h2");
         const p = document.createElement("p");
-        p.innerHTML = data[i].name + ": " + data[i].value;
+        h2.innerHTML = data[i].name;
+        p.innerHTML =data[i].value;
+        div.appendChild(h2);
         div.appendChild(p);
         container.appendChild(div);
     }
 
-
-
-  /*
-    let datas = $('#regForm').serialize();
-    datas = datas.split("&");
-    //remove last element (_sumbit)
-    datas.pop();
-    for (let i = 0; i < datas.length; i++) {
-        let data = datas[i].split("=");
-        const div = document.createElement("div");
-        const p = document.createElement("p");
-        if (i == 0) {
-            //p.innerHTML = getOption("service", data[1]);
-        }else if (i == 1){
-            //p.innerHTML = getOption("time", data[1]);
-        }else {
-            p.innerHTML = data[1];
-        }
-
-        const h2 = document.createElement("h2");
-        h2.innerHTML = data[0];
-        div.appendChild(h2);
-        div.appendChild(p);
-        document.getElementById("recap").appendChild(div);
-    }
-    */
 }
 
 function getOption(name, number) {
@@ -230,8 +212,9 @@ function setService(id) {
     nextPrev(1);
 }
 
-function setTime(id) {
+function setTime(id, type) {
     document.querySelector("[name='time']").value = id;
+    document.querySelector("[name='dateType']").value = type;
     nextPrev(1);
 }
 
@@ -304,7 +287,7 @@ async function createCalendar(month, year) {
         //create last month days
         for (let i = 0; i < getDayIndexMondaySunday(firstDateOfMonth); i++) {
             const th = document.createElement("th");
-            th.className = "day unavailable";
+            th.className = "";
             days.push(th);
         }
         //week
@@ -334,8 +317,8 @@ async function createCalendar(month, year) {
             } else {
                 th.className += " available"
                 th.addEventListener("click", () => {
-                    document.querySelector("[name='date']").value = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-                    document.querySelector("#nextBtn").click();
+                    document.querySelector("[name='date']").value = date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0');
+                    nextPrev(1);
                 });
             }
             days.push(th);
@@ -372,4 +355,30 @@ async function createCalendar(month, year) {
     }
 
 
+}
+
+async function verify() {
+    const code = document.querySelector("[name='dicountCode']").value;
+    const service = document.querySelector("[name='service']").value;
+    if (code != null && service != null) {
+        if (code.length != 0) {
+            console.log(service)
+            console.log(code)
+            let naja = window.Naja;
+            const res = await naja.makeRequest("GET", "/reservation/create", {run: "verifyCode", discountCode: code, service_id: service}, {
+                fetch: {
+                    credentials: 'include',
+                },
+            })
+            if (res.status == false) {
+                document.querySelector("[name='dicountCode']").className = "invalid";
+            }else {
+                document.querySelector("[name='dicountCode']").className = "valid";
+            }
+            //show code success
+        }else {
+            document.querySelector("[name='dicountCode']").className = "invalid";
+        }
+
+    }
 }

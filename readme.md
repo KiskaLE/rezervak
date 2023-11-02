@@ -20,16 +20,53 @@ via a web browser. See [security warning](https://nette.org/security-warning).**
 
 naja
 
+## CSS
+color pallete: https://colorhunt.co/palette/f3f9fb474f8551e3d4f3ecd3
+
 ## Admin template
 
 neon-bootstrap-admin
 
 # TODO
 
-add
-if ($this->isAjax()) {
-$this->sendJson(...);
-}
-// ...
+## Front
 
-to ReservationPresenter actionCreate
+x backup reservation flow
+
+x optimize reservation flow on mobile
+
+fix reservation flow on PC
+
+Create Email templates
+
+Design Completation pages
+
+x Možnost zadat slevový kód
+
+
+
+## Admin
+
+Write cron that deletes old reservations
+
+Write cron to check payment
+
+Create detail view of reservations
+
+Create Dashboard
+
+fix animations
+
+fix resrvations on mobile
+
+Connect Fio API
+
+Add better working hours setting
+
+x Vytvoření slevových kodů
+
+
+
+
+
+

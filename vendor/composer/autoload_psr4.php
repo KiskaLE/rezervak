@@ -7,5 +7,8 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Symfony\\Thanks\\' => array($vendorDir . '/symfony/thanks/src'),
+    'Ramsey\\Uuid\\' => array($vendorDir . '/ramsey/uuid/src'),
+    'Ramsey\\Collection\\' => array($vendorDir . '/ramsey/collection/src'),
+    'Brick\\Math\\' => array($vendorDir . '/brick/math/src'),
     'App\\' => array($baseDir . '/app'),
 );
