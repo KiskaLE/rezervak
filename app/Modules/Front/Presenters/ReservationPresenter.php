@@ -51,8 +51,8 @@ final class ReservationPresenter extends BasePresenter
             if ($run == "fetch") {
                 //TODO number of Days stored in database
                 $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates(30, 60)]);
-            }else if ($run == "setDate") {
-                $service = $this->database->table("services")->where("id=?", $service_id + 1)->fetch();
+            } else if ($run == "setDate") {
+                $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
                 $duration = $service->duration;
                 $availableTimes = $this->availableDates->getAvailableStartingHours($day, intval($duration));
                 $availableBackup = $this->availableDates->getBackupHours($day, intval($duration));
@@ -67,7 +67,7 @@ final class ReservationPresenter extends BasePresenter
                 in_array($service_id, $discountServices) ?: $valid = false;
                 if ($valid) {
                     $this->sendJson(["status" => true, "type" => $discount->type, "discount" => ["type" => $discount->type, "value" => $discount->value]]);
-                }else {
+                } else {
                     $this->sendJson(["status" => false]);
                 }
             }
@@ -128,7 +128,7 @@ final class ReservationPresenter extends BasePresenter
 
         if ($data->dateType == "default") {
             $times = $this->availableDates->getAvailableStartingHours($data->date, $duration);
-            $status = $this->database->table("reservations")->insert([
+            $reservation = $this->database->table("reservations")->insert([
                 "uuid" => $uuid,
                 "date" => $data->date,
                 "service_id" => $service_id,
@@ -142,7 +142,8 @@ final class ReservationPresenter extends BasePresenter
                 "city" => $data->city,
                 "created_at" => date("Y-m-d H:i:s")
             ]);
-            if ($status) {
+            if ($reservation) {
+                $this->createPayment($reservation, $data->dicountCode);
                 $this->mailer->sendConfirmationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:default", strval($uuid)));
                 $this->redirect("Reservation:confirmation", ["uuid" => strval($uuid)]);
             } else {
@@ -150,7 +151,7 @@ final class ReservationPresenter extends BasePresenter
             }
         } else if ($data->dateType == "backup") {
             $times = $this->availableDates->getBackupHours($data->date, $service->duration);
-            $status = $this->database->table("backup_reservations")->insert([
+            $reservation = $this->database->table("backup_reservations")->insert([
                 "uuid" => $uuid,
                 "date" => $data->date,
                 "service_id" => $service_id,
@@ -164,13 +165,46 @@ final class ReservationPresenter extends BasePresenter
                 "city" => $data->city,
                 "created_at" => date("Y-m-d H:i:s")
             ]);
-            if ($status) {
+            if ($reservation) {
+                $this->createPayment($reservation);
                 $this->mailer->sendBackupConfiramationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:backup", strval($uuid)));
                 $this->redirect("Reservation:backup", ["uuid" => strval($uuid)]);
             } else {
                 $this->flashMessage("Nepovedlo se uložit rezervaci.");
             }
         }
+
+    }
+
+    private function createPayment($reservation, $discountCode = null)
+    {
+        $discountCodeRow = $this->database->table("discount_codes")->where("code=? AND active=1", $discountCode)->fetch();
+        $discountServices = Nette\Utils\Json::decode($discountCodeRow->services);
+        in_array($reservation->service_id, $discountServices) ?: $discountCodeRow = null;
+
+        $price = $reservation->ref("services", "service_id")->price;
+        if ($discountCodeRow) {
+            $discountType = $discountCodeRow->type;
+            $discountValue = $discountCodeRow->value;
+            if ($discountType == 0) {
+                if ($discountValue >= $price) {
+                    $price = 0;
+                }else {
+                    $price = $price - $discountValue;
+                }
+            } else if ($discountType == 1) {
+                if ($discountValue >=100) {
+                    $price = 0;
+                }else {
+                    $price = $price * $discountValue / 100;
+                }
+            }
+        }
+        $this->database->table("payments")->insert([
+            "price" => $price,
+            "reservation_id" => $reservation->id
+        ]);
+
     }
 
 }

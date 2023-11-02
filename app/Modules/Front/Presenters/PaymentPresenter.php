@@ -12,29 +12,21 @@ final class PaymentPresenter extends BasePresenter
 {
     public function __construct(
         private Nette\Database\Explorer $database,
-        private Payments $paymentsHelper
+        private Payments                $paymentsHelper
     )
     {
         parent::__construct();
 
     }
 
-    public function actionDefault($uuid) {
+    public function actionDefault($uuid)
+    {
         $reservation = $this->database->table("reservations")->where("uuid=?", $uuid)->fetch();
         if ($reservation) {
             $this->template->service = $reservation;
             //TODO set time in admin settings
-            $time = 15;
-            $isLate = strtotime(strval($reservation->created_at)) < strtotime(date("Y-m-d H:i:s"). ' -'.$time.' minutes');
-            //confirm reservation
-            if ($reservation->status == "UNVERIFIED" && !$isLate) {
-                $this->confirm($uuid, $reservation, "reservations");
-                $this->database->table("payments")->insert([
-                    "price" => $reservation->ref("services", "service_id")->price,
-                    "reservation_id" => $reservation->id
-                ]);
-                $this->redirect("this");
-            }
+            $this->verify($reservation, $uuid);
+
 
             $payments = $this->database->table("payments")->where("reservation_id=?", $reservation->id)->fetchAll();
             foreach ($payments as $payment) {
@@ -46,12 +38,13 @@ final class PaymentPresenter extends BasePresenter
         }
     }
 
-    public function actionBackup($uuid) {
+    public function actionBackup($uuid)
+    {
         $reservation = $this->database->table("backup_reservations")->where("uuid=?", $uuid)->fetch();
         $this->template->service = $reservation;
         //TODO set time in admin settings
         $time = 15;
-        $isLate = strtotime(strval($reservation->created_at)) < strtotime(date("Y-m-d H:i:s"). ' -'.$time.' minutes');
+        $isLate = strtotime(strval($reservation->created_at)) < strtotime(date("Y-m-d H:i:s") . ' -' . $time . ' minutes');
         if ($reservation->status == "UNVERIFIED" && !$isLate) {
             $this->confirm($uuid, $reservation, "backup_reservations");
             $this->redirect("this");
@@ -59,12 +52,30 @@ final class PaymentPresenter extends BasePresenter
 
     }
 
-    private function confirm($uuid, $service, $table) {
+    private function confirm($uuid, $service, $table)
+    {
         $status = $this->database->table($table)->where("uuid=?", $uuid)->update([
             "status" => "VERIFIED"
         ]);
         //create payment table row
 
+    }
+
+    private function verify($reservation, $uuid)
+    {
+        $time = 15;
+        $isLate = strtotime(strval($reservation->created_at)) < strtotime(date("Y-m-d H:i:s") . ' -' . $time . ' minutes');
+        //confirm reservation
+        if ($reservation->status == "UNVERIFIED" && !$isLate) {
+            $this->confirm($uuid, $reservation, "reservations");
+            /*
+            $this->database->table("payments")->insert([
+                "price" => $reservation->ref("services", "service_id")->price,
+                "reservation_id" => $reservation->id
+            ]);
+            */
+            $this->redirect("this");
+        }
     }
 
 }
