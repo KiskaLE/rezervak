@@ -359,14 +359,15 @@ async function createCalendar(month, year) {
 
 async function verify() {
     const code = document.querySelector("[name='dicountCode']").value;
+    const service = document.querySelector("[name='service']").value;
+    console.log(service)
     console.log(code)
     let naja = window.Naja;
-    const res = await naja.makeRequest("GET", "/reservation/create", {run: "verifyCode", discountCode: code}, {
+    const res = await naja.makeRequest("GET", "/reservation/create", {run: "verifyCode", discountCode: code, service: service}, {
         fetch: {
             credentials: 'include',
         },
     })
-    console.log(res)
     if (res.status == false) {
         document.querySelector("[name='dicountCode']").className = "invalid";
         return Promise.resolve(res.availableDates);

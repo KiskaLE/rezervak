@@ -44,7 +44,7 @@ final class ReservationPresenter extends BasePresenter
         $this->redrawControl("content");
     }
 
-    public function actionCreate($run, $day, $service_id, $discountCode = "")
+    public function actionCreate($run, $day, $service_id, $discountCode = "", $service = 0)
     {
 
         if ($this->isAjax()) {
@@ -61,6 +61,7 @@ final class ReservationPresenter extends BasePresenter
                 $this->redrawControl("content");
             } else if ($run == "verifyCode") {
                 //TODO verify code
+                //TODO add user id
                 $discount = $this->database->table("discount_codes")->where("code=? AND active=1", $discountCode)->fetch();
                 if ($discount) {
                     $this->sendJson(["status" => true, "type" => $discount->type, "discount" => ["type" => $discount->type, "value" => $discount->value]]);
