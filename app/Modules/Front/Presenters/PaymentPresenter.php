@@ -63,17 +63,12 @@ final class PaymentPresenter extends BasePresenter
 
     private function verify($reservation, $uuid)
     {
+        //TODO set in admin settings
         $time = 15;
         $isLate = strtotime(strval($reservation->created_at)) < strtotime(date("Y-m-d H:i:s") . ' -' . $time . ' minutes');
         //confirm reservation
         if ($reservation->status == "UNVERIFIED" && !$isLate) {
             $this->confirm($uuid, $reservation, "reservations");
-            /*
-            $this->database->table("payments")->insert([
-                "price" => $reservation->ref("services", "service_id")->price,
-                "reservation_id" => $reservation->id
-            ]);
-            */
             $this->redirect("this");
         }
     }

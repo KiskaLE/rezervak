@@ -8,6 +8,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use App\Modules\AvailableDates;
 use App\Modules\Mailer;
+use App\Modules\Payments;
 use Ramsey\Uuid\Uuid;
 
 
@@ -19,7 +20,8 @@ final class ReservationPresenter extends BasePresenter
     public function __construct(
         private Nette\Database\Explorer $database,
         private AvailableDates          $availableDates,
-        private Mailer                  $mailer
+        private Mailer                  $mailer,
+        private Payments                $payments
     )
     {
 
@@ -101,7 +103,6 @@ final class ReservationPresenter extends BasePresenter
         $form->addhidden("service")->setRequired();
         $form->addHidden("dateType")->setRequired();
         $form->addHidden("date")->setRequired();
-        //$form->addSelect("time", "Čas:", $this->hours)->setRequired();
         $form->addHidden("time")->setRequired();
         $form->addText("firstname", "Jmeno:")->setRequired();
         $form->addText("lastname", "Příjmení:")->setRequired();
@@ -143,7 +144,7 @@ final class ReservationPresenter extends BasePresenter
                 "created_at" => date("Y-m-d H:i:s")
             ]);
             if ($reservation) {
-                $this->createPayment($reservation, $data->dicountCode);
+                $this->payments->createPayment($reservation, $data->dicountCode);
                 $this->mailer->sendConfirmationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:default", strval($uuid)));
                 $this->redirect("Reservation:confirmation", ["uuid" => strval($uuid)]);
             } else {
@@ -166,44 +167,13 @@ final class ReservationPresenter extends BasePresenter
                 "created_at" => date("Y-m-d H:i:s")
             ]);
             if ($reservation) {
-                $this->createPayment($reservation);
+                $this->payments->createPayment($reservation, $data->dicountCode);
                 $this->mailer->sendBackupConfiramationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:backup", strval($uuid)));
                 $this->redirect("Reservation:backup", ["uuid" => strval($uuid)]);
             } else {
                 $this->flashMessage("Nepovedlo se uložit rezervaci.");
             }
         }
-
-    }
-
-    private function createPayment($reservation, $discountCode = null)
-    {
-        $discountCodeRow = $this->database->table("discount_codes")->where("code=? AND active=1", $discountCode)->fetch();
-        $discountServices = Nette\Utils\Json::decode($discountCodeRow->services);
-        in_array($reservation->service_id, $discountServices) ?: $discountCodeRow = null;
-
-        $price = $reservation->ref("services", "service_id")->price;
-        if ($discountCodeRow) {
-            $discountType = $discountCodeRow->type;
-            $discountValue = $discountCodeRow->value;
-            if ($discountType == 0) {
-                if ($discountValue >= $price) {
-                    $price = 0;
-                }else {
-                    $price = $price - $discountValue;
-                }
-            } else if ($discountType == 1) {
-                if ($discountValue >=100) {
-                    $price = 0;
-                }else {
-                    $price = $price * $discountValue / 100;
-                }
-            }
-        }
-        $this->database->table("payments")->insert([
-            "price" => $price,
-            "reservation_id" => $reservation->id
-        ]);
 
     }
 
