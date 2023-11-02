@@ -41,7 +41,7 @@ Create Email templates
 
 Design Completation pages
 
-Možnost zadat slevový kód
+x Možnost zadat slevový kód
 
 
 
@@ -63,7 +63,7 @@ Connect Fio API
 
 Add better working hours setting
 
-Vytvoření slevových kodů
+x Vytvoření slevových kodů
 
 
 
