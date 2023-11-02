@@ -8,6 +8,8 @@ use Nette;
 use Nette\Application\UI\Form;
 use App\Modules\AvailableDates;
 use App\Modules\Mailer;
+use App\Modules\Payments;
+use App\Modules\DiscountCodes;
 use Ramsey\Uuid\Uuid;
 
 
@@ -19,7 +21,9 @@ final class ReservationPresenter extends BasePresenter
     public function __construct(
         private Nette\Database\Explorer $database,
         private AvailableDates          $availableDates,
-        private Mailer                  $mailer
+        private Mailer                  $mailer,
+        private Payments                $payments,
+        private DiscountCodes           $discountCodes,
     )
     {
 
@@ -52,24 +56,9 @@ final class ReservationPresenter extends BasePresenter
                 //TODO number of Days stored in database
                 $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates(30, 60)]);
             } else if ($run == "setDate") {
-                $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
-                $duration = $service->duration;
-                $availableTimes = $this->availableDates->getAvailableStartingHours($day, intval($duration));
-                $availableBackup = $this->availableDates->getBackupHours($day, intval($duration));
-                $this->template->times = $availableTimes;
-                $this->template->backupTimes = $availableBackup;
-                $this->redrawControl("content");
+                $this->setDate($service_id, $day);
             } else if ($run == "verifyCode") {
-                //TODO add user id
-                $valid = true;
-                $discount = $this->database->table("discount_codes")->where("code=? AND active=1", $discountCode)->fetch();
-                $discountServices = Nette\Utils\Json::decode($discount->services);
-                in_array($service_id, $discountServices) ?: $valid = false;
-                if ($valid) {
-                    $this->sendJson(["status" => true, "type" => $discount->type, "discount" => ["type" => $discount->type, "value" => $discount->value]]);
-                } else {
-                    $this->sendJson(["status" => false]);
-                }
+                $this->verifyDiscountCode($service_id, $discountCode);
             }
             $this->payload->postGet = true;
             $this->payload->url = $this->link("Reservation:create");
@@ -91,8 +80,7 @@ final class ReservationPresenter extends BasePresenter
         $this->template->reservation = $reservation;
     }
 
-    protected
-    function createComponentForm(): Form
+    protected function createComponentForm(): Form
     {
         $services = $this->database->table("services")->fetchAll();
         $this->services = $services;
@@ -101,7 +89,6 @@ final class ReservationPresenter extends BasePresenter
         $form->addhidden("service")->setRequired();
         $form->addHidden("dateType")->setRequired();
         $form->addHidden("date")->setRequired();
-        //$form->addSelect("time", "Čas:", $this->hours)->setRequired();
         $form->addHidden("time")->setRequired();
         $form->addText("firstname", "Jmeno:")->setRequired();
         $form->addText("lastname", "Příjmení:")->setRequired();
@@ -118,32 +105,18 @@ final class ReservationPresenter extends BasePresenter
         return $form;
     }
 
-    public
-    function formSucceeded(Form $form, $data): void
+    public function formSucceeded(Form $form, $data): void
     {
         $service_id = $data->service;
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = intval($service->duration);
-        $uuid = Uuid::uuid4();
+        $uuid = strval(Uuid::uuid4());
 
         if ($data->dateType == "default") {
             $times = $this->availableDates->getAvailableStartingHours($data->date, $duration);
-            $reservation = $this->database->table("reservations")->insert([
-                "uuid" => $uuid,
-                "date" => $data->date,
-                "service_id" => $service_id,
-                "start" => $times[$data->time],
-                "firstname" => $data->firstname,
-                "lastname" => $data->lastname,
-                "phone" => $data->phone,
-                "email" => $data->email,
-                "address" => $data->address,
-                "code" => $data->code,
-                "city" => $data->city,
-                "created_at" => date("Y-m-d H:i:s")
-            ]);
+            $reservation = $this->insertReservation($uuid, $data, "reservations", $times);
             if ($reservation) {
-                $this->createPayment($reservation, $data->dicountCode);
+                $this->payments->createPayment($reservation, $data->dicountCode);
                 $this->mailer->sendConfirmationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:default", strval($uuid)));
                 $this->redirect("Reservation:confirmation", ["uuid" => strval($uuid)]);
             } else {
@@ -151,22 +124,10 @@ final class ReservationPresenter extends BasePresenter
             }
         } else if ($data->dateType == "backup") {
             $times = $this->availableDates->getBackupHours($data->date, $service->duration);
-            $reservation = $this->database->table("backup_reservations")->insert([
-                "uuid" => $uuid,
-                "date" => $data->date,
-                "service_id" => $service_id,
-                "start" => $times[$data->time]->start,
-                "firstname" => $data->firstname,
-                "lastname" => $data->lastname,
-                "phone" => $data->phone,
-                "email" => $data->email,
-                "address" => $data->address,
-                "code" => $data->code,
-                "city" => $data->city,
-                "created_at" => date("Y-m-d H:i:s")
-            ]);
+            $reservation = $this->insertReservation($uuid, $data, "backup_reservations", $times);
             if ($reservation) {
-                $this->createPayment($reservation);
+                $this->payments->createPayment($reservation, $data->dicountCode);
+                //TODO change to to $data->email
                 $this->mailer->sendBackupConfiramationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:backup", strval($uuid)));
                 $this->redirect("Reservation:backup", ["uuid" => strval($uuid)]);
             } else {
@@ -176,35 +137,70 @@ final class ReservationPresenter extends BasePresenter
 
     }
 
-    private function createPayment($reservation, $discountCode = null)
+    /**
+     * Inserts a reservation into the specified table.
+     *
+     * @param string $uuid The UUID of the reservation.
+     * @param object $data The reservation data.
+     * @param string $insertTable The table to insert the reservation into.
+     * @param array $times The array of available times.
+     * @return mixed The inserted reservation data.
+     */
+    private function insertReservation(string $uuid, $data, string $insertTable, $times)
     {
-        $discountCodeRow = $this->database->table("discount_codes")->where("code=? AND active=1", $discountCode)->fetch();
-        $discountServices = Nette\Utils\Json::decode($discountCodeRow->services);
-        in_array($reservation->service_id, $discountServices) ?: $discountCodeRow = null;
+        $service_id = $data->service;
 
-        $price = $reservation->ref("services", "service_id")->price;
-        if ($discountCodeRow) {
-            $discountType = $discountCodeRow->type;
-            $discountValue = $discountCodeRow->value;
-            if ($discountType == 0) {
-                if ($discountValue >= $price) {
-                    $price = 0;
-                }else {
-                    $price = $price - $discountValue;
-                }
-            } else if ($discountType == 1) {
-                if ($discountValue >=100) {
-                    $price = 0;
-                }else {
-                    $price = $price * $discountValue / 100;
-                }
-            }
-        }
-        $this->database->table("payments")->insert([
-            "price" => $price,
-            "reservation_id" => $reservation->id
+        $reservation = $this->database->table($insertTable)->insert([
+            "uuid" => $uuid,
+            "date" => $data->date,
+            "service_id" => $service_id,
+            "start" => $times[$data->time],
+            "firstname" => $data->firstname,
+            "lastname" => $data->lastname,
+            "phone" => $data->phone,
+            "email" => $data->email,
+            "address" => $data->address,
+            "code" => $data->code,
+            "city" => $data->city,
+            "created_at" => date("Y-m-d H:i:s")
         ]);
 
+        return $reservation;
+    }
+    /**
+     * Sets the date for a given service ID and day.
+     *
+     * @param int $service_id The ID of the service.
+     * @param string $day The day for which to set the date.
+     * @throws Exception If the service cannot be fetched from the database.
+     * @return void
+     */
+    private function setDate(int $service_id, string $day): void
+    {
+        $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
+        $duration = $service->duration;
+        $availableTimes = $this->availableDates->getAvailableStartingHours($day, intval($duration));
+        $availableBackup = $this->availableDates->getBackupHours($day, intval($duration));
+        $this->template->times = $availableTimes;
+        $this->template->backupTimes = $availableBackup;
+        $this->redrawControl("content");
+    }
+    /**
+     * Verifies a discount code for a given service.
+     *
+     * @param int $service_id The ID of the service.
+     * @param string $discountCode The discount code to verify.
+     * @throws None
+     * @return void
+     */
+    private function verifyDiscountCode(int $service_id, string $discountCode): void
+    {
+        $discount = $this->discountCodes->isCodeValid($service_id, $discountCode);
+        if ($discount) {
+            $this->sendJson(["status" => true, "type" => $discount->type, "discount" => ["type" => $discount->type, "value" => $discount->value]]);
+        } else {
+            $this->sendJson(["status" => false]);
+        }
     }
 
 }
