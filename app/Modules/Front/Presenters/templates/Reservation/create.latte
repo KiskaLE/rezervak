@@ -16,7 +16,8 @@
                 <div class="select-wrapper">
                     {var $i = 0}
                     {foreach $services as $service}
-                        <div><p onclick="setService({$service->id})" class="button">{$service->name} - {$service->price} Kč</p>
+                        <div><p onclick="setService({$service->id})" class="button">{$service->name} - {$service->price}
+                                Kč</p>
                         </div>
                         {do $i++}
                     {/foreach}
@@ -35,7 +36,7 @@
                             <h2 id="calendar-month"></h2><img
                                     src="{$basePath}/assets/front/icons/arrow-next-small-svgrepo-com.svg" alt="next"
                                     onclick="calNext(1)" id="next-month"></div>
-                        <thead>
+                        <thead class="calendar-head">
                         <tr>
                             <th>Po</th>
                             <th>Út</th>
@@ -69,13 +70,15 @@
                             {/foreach}
 
                         </div>
-                        <div class="time">
+                        <div class="time backup-time">
                             <h2 n:if="$backupTimes">Náhradní čas:</h2>
-                            {var $j = 0}
+                            <div>
+                                {var $j = 0}
                                     {foreach $backupTimes as $time}
-                                <p onclick="setTime({$j},'backup')" class="button backup">{$time->start}</p>
-                                {do $j++}
-                            {/foreach}
+                                    <p onclick="setTime({$j},'backup')" class="button backup">{$time}</p>
+                                    {do $j++}
+                                {/foreach}
+                            </div>
                         </div>
                     {/snippet}
 

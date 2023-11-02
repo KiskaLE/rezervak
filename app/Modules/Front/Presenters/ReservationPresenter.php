@@ -56,7 +56,7 @@ final class ReservationPresenter extends BasePresenter
                 //TODO number of Days stored in database
                 $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates(30, 60)]);
             } else if ($run == "setDate") {
-                $this->setDate($service_id, $day);
+                $this->setDate(intval($service_id), $day);
             } else if ($run == "verifyCode") {
                 $this->verifyDiscountCode($service_id, $discountCode);
             }

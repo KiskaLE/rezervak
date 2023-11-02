@@ -9,6 +9,10 @@ html {
   --shadow-clicked: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
 }
 
+.body-container {
+  width: 100%;
+}
+
 .text-highlight {
   color: var(--highlight-red);
 }
@@ -101,7 +105,6 @@ body {
 }
 
 .reservationForm-wrapper {
-  max-width: 500px;
   display: flex;
   flex-direction: column;
 
@@ -154,6 +157,7 @@ body {
 
 .nav-buttons {
   padding: 15px 0;
+
   button {
     background-color: white;
     width: 100%;
@@ -170,6 +174,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
+
   div {
     input {
       box-sizing: border-box;
@@ -199,22 +204,35 @@ body {
   width: 100%;
 }
 
+.calendar-head {
+  tr {
+    border-bottom: 2px solid black;
+  }
+}
+
 #calendar-nav {
   display: flex;
 
   img {
-    height: 50px;
+    height: 70px;
   }
 
-  h2 {
+  #calendar-month {
     width: 100%;
+    min-width: 170px;
     text-align: center;
   }
 }
 
+
 #calendar {
+
   th.day {
     border: 1px var(--blue) solid;
+  }
+
+  th.weekend {
+    color: red;
   }
 
   th.unavailable {
@@ -232,8 +250,8 @@ body {
   }
 
   th {
-    padding: 5px;
-    border-radius: 5px;
+    padding: 15px;
+    border-radius: 10px;
   }
 
   .week {
@@ -246,7 +264,19 @@ body {
   }
 }
 
+.backup-time {
+  display: flex;
+  flex-direction: column !important;
+
+  div {
+    display: flex;
+    gap: 10px;
+  }
+}
+
 .time-wrapper {
+  padding: 0 180px;
+
   div {
     div {
       display: flex;
@@ -256,15 +286,48 @@ body {
   .time {
     display: flex;
     flex-flow: wrap;
-    gap: 20px;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+
+    p {
+      height: fit-content;
+    }
   }
 }
 
+.calender-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 @media (max-width: 500px) {
+
+  .time {
+    flex-direction: column;
+  }
+
+  .time-wrapper {
+    padding: 0;
+  }
+
+  .select-wrapper {
+    flex-direction: column;
+  }
+  .backup-time {
+    flex-direction: column;
+    div {
+      flex-direction: column;
+      width: 100%;
+    }
+  }
   .button {
     width: 100%;
     box-sizing: border-box;
   }
+
   .tab {
     width: 90vw;
   }
@@ -272,11 +335,22 @@ body {
   #calendar-nav {
     justify-content: center;
   }
+
   .calender-wrapper {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
   }
+
+  #calendar {
+    th {
+      padding: 3vw;
+      border-radius: 5px;
+    }
+  }
+
 }
 
 #recap {
@@ -291,6 +365,7 @@ body {
   div {
     display: flex;
     gap: 10px;
+
     .button {
       width: fit-content;
     }
