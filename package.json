@@ -16,6 +16,7 @@
     "webpack-dev-server": "^4.15.1"
   },
   "dependencies": {
+    "chart.js": "^4.4.0",
     "naja": "^2.5.0",
     "nette-forms": "^3.3.2"
   }
