@@ -20,17 +20,30 @@ final class HomePresenter extends SecurePresenter
     public function beforeRender()
     {
         parent::beforeRender();
-        bdump($this->user->identity->getData()["name"]);
 
     }
 
-    public function actionDefault()
-    {
+    public function renderDefault() {
         $numberOfReservationsToday = $this->database->table("reservations")->where("date=?", date("Y-m-d"))->count();
         $this->template->numberOfReservationsToday = $numberOfReservationsToday;
 
         $numberOfReservations = $this->database->table("reservations")->where("date>=? AND status='VERIFIED'", date("Y-m-d"))->count();
         $this->template->numberOfReservations = $numberOfReservations;
+}
+
+    public function actionDefault($run)
+    {
+        if ($this->isAjax()) {
+            if ($run == "getChartData") {
+                $this->getChartData();
+            }
+        }
+    }
+
+    private function getChartData() {
+        $reservations = $this->database->table("reservations")->where("date>=? AND status='VERIFIED'", date("Y-m-d"))->fetchAll();
+        bdump($reservations);
+        $data = [];
     }
 
 
