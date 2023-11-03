@@ -74,7 +74,7 @@ final class Payments
     {
         $payments = $this->database->table("payments")->where("reservation_id=?", $reservation->id)->fetchAll();
         foreach ($payments as $payment) {
-            $this->payments->generatePaymentCode($payment->id);
+            $this->generatePaymentCode($payment->id);
         }
         return $payments;
     }

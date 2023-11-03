@@ -29,4 +29,8 @@ class DiscountCodes
         }
         return $discountCodeRow;
     }
+
+    public function getService(int $service_id) {
+        return $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
+    }
 }

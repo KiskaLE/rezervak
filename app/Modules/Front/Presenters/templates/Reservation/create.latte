@@ -16,7 +16,7 @@
                 <div class="select-wrapper">
                     {var $i = 0}
                     {foreach $services as $service}
-                        <div><p onclick="setService({$service->id}, {$service->name})" class="button">{$service->name} - {$service->price}
+                        <div><p onclick="setService({$service->id}, {$service->name}, {$service->price})" class="button">{$service->name} - {$service->price}
                                 Kč</p>
                         </div>
                         {do $i++}
@@ -102,10 +102,22 @@
 
             <div class="tab">
                 <h1>Souhrn</h1>
-                <div id="recap"></div>
+                <div id="recap">
+                    <div><h2>Služba:</h2><p id="service"></p></div>
+                    <div><h2>Datum:</h2><p id="date"></p></div>
+                    <div><h2>Čas:</h2><p id="time"></p></div>
+                    <div><h2>Jméno:</h2><p id="firstname"></p></div>
+                    <div><h2>Přijmení:</h2><p id="lastname"></p></div>
+                    <div><h2>Telefon:</h2><p id="phone"></p></div>
+                    <div><h2>E-mail:</h2><p id="email"></p></div>
+                    <div><h2>Adresa:</h2><p id="address"></p></div>
+                    <div><h2>PSČ:</h2><p id="code"></p></div>
+                    <div><h2>Město:</h2><p id="city"></p></div>
+                    <div><h2>Cena:</h2><p id="price"></p></div>
+                </div>
                 <div class="discount-code-wrapper">
                     <label for="">Slevový kód</label>
-                    <div><input n:name="dicountCode">
+                    <div><input n:name="dicountCode" onfocusout="verify()">
                         <p id="verify-code" class="button xl" onclick="verify()">Ověřit</p></div>
                 </div>
             </div>

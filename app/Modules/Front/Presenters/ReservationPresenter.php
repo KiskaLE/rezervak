@@ -200,10 +200,26 @@ final class ReservationPresenter extends BasePresenter
     private function verifyDiscountCode(int $service_id, string $discountCode): void
     {
         $discount = $this->discountCodes->isCodeValid($service_id, $discountCode);
+        $service = $this->discountCodes->getService(intval($service_id));
+        $price = $service->price;
         if ($discount) {
-            $this->sendJson(["status" => true, "type" => $discount->type, "discount" => ["type" => $discount->type, "value" => $discount->value]]);
+
+            if ($discount->type == 0) {
+                if ($discount->value >= $price) {
+                    $price = 0;
+                } else {
+                    $price = $service->price - $discount->value;
+                }
+            } else {
+                if ($discount->value >= 100) {
+                    $price = 0;
+                } else {
+                    $price = $service->price  * $discount->value / 100;
+                }
+            }
+            $this->sendJson(["status" => true, "price" => $price]);
         } else {
-            $this->sendJson(["status" => false]);
+            $this->sendJson(["status" => false, "price" => $price]);
         }
     }
 

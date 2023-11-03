@@ -3,7 +3,7 @@ let tabCounter = 0;
 showTab(currentTab); // Display the current tab
 let showMonth = new Date().getMonth();
 let showYear = new Date().getFullYear();
-createRecap();
+//createRecap();
 
 
 function showTab(n) {
@@ -242,10 +242,11 @@ function setRecap() {
         })
     }
 
-    function setService(id, name) {
+    function setService(id, name, price) {
         document.querySelector("[name='service']").value = id;
-        const recap = document.querySelector("#service");
+        const recap = document.querySelector("#service");;
         recap.innerHTML = name;
+        document.querySelector("#price").innerHTML = price;
         nextPrev(1);
     }
 
@@ -399,10 +400,12 @@ function setRecap() {
     }
 
     async function verify() {
-        const code = document.querySelector("[name='dicountCode']").value;
+        let code = document.querySelector("[name='dicountCode']").value;
         const service = document.querySelector("[name='service']").value;
-        if (code != null && service != null) {
-            if (code.length != 0) {
+        if (service != null) {
+            if (code == null) {
+                code = "";
+            }
                 console.log(service)
                 console.log(code)
                 let naja = window.Naja;
@@ -416,14 +419,14 @@ function setRecap() {
                     },
                 })
                 if (res.status == false) {
-                    document.querySelector("[name='dicountCode']").className = "invalid";
+                    if (code.length > 0) {
+                        document.querySelector("[name='dicountCode']").className = "invalid";
+                    }
                 } else {
                     document.querySelector("[name='dicountCode']").className = "valid";
                 }
+                document.querySelector("#price").innerHTML = res.price;
                 //show code success
-            } else {
-                document.querySelector("[name='dicountCode']").className = "invalid";
-            }
-
         }
+
     }
