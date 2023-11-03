@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="{$basePath}/assets/css/neon-forms.css">
     <link rel="stylesheet" href="{$basePath}/assets/css/custom.css">
     <link rel="stylesheet" href="{$basePath}/assets/css/styles.css">
+    <link rel="stylesheet" href="{$basePath}/assets/admin/css/style.css">
     <script src="{$basePath}/assets/js/jquery-1.11.3.min.js"></script>
     <script src="{$basePath}/assets/bundle.js"></script>
 
@@ -45,14 +46,14 @@
 
                 <!-- logo -->
                 <div class="logo">
-                    <a href="index.html" class="ajax">
+                    <a href="index.html" class="">
                         <img src="assets/images/logo@2x.png" width="120" alt=""/>
                     </a>
                 </div>
 
                 <!-- logo collapse icon -->
                 <div class="sidebar-collapse">
-                    <a href="#" class="sidebar-collapse-icon ajax">
+                    <a href="#" class="sidebar-collapse-icon">
                         <!-- add class "with-animation" if you want sidebar to have animation during expanding/collapsing transition -->
                         <i class="entypo-menu"></i>
                     </a>
@@ -61,7 +62,7 @@
 
                 <!-- open/close menu icon (do not remove if you want to enable menu on mobile devices) -->
                 <div class="sidebar-mobile-menu visible-xs">
-                    <a href="#" class="with-animation ajax"><!-- add class "with-animation" to support animation -->
+                    <a href="#" class="with-animation "><!-- add class "with-animation" to support animation -->
                         <i class="entypo-menu"></i>
                     </a>
                 </div>
@@ -73,35 +74,35 @@
                 <!-- add class "multiple-expanded" to allow multiple submenus to open -->
                 <!-- class "auto-inherit-active-class" will automatically add "active" class for parent elements who are marked already with class "active" -->
                 <li>
-                    <a n:href="Home:" class="ajax">
+                    <a n:href="Home:" class="">
                         <i class="entypo-gauge"></i>
                         <span class="title">Dashboard</span>
                     </a>
                 </li>
                 <li>
-                    <a n:href="Reservations:show" class="ajax">
+                    <a n:href="Reservations:show" class="">
                         <i class="entypo-gause"></i>
                         <span class="title">Rezervace</span>
                     </a>
                 </li>
                 <li class="has-sub">
-                    <a href="" class="ajax">
+                    <a href="" class="">
                         <i class="entypo-gause"></i>
                         <span class="title">Nastavení</span>
                     </a>
                     <ul>
                         <li>
-                            <a n:href="Workhours:show" class="ajax">
+                            <a n:href="Workhours:show" class="">
                                 <span class="title">Pracovní doba</span>
                             </a>
                         </li>
                         <li>
-                            <a n:href="Services:show" class="ajax">
+                            <a n:href="Services:show" class="">
                                 <span class="title">Služby</span>
                             </a>
                         </li>
                         <li>
-                            <a n:href="DiscountCodes:show" class="ajax">
+                            <a n:href="DiscountCodes:show" class="">
                                 <span class="title">Slevové kódy</span>
                             </a>
                         </li>
@@ -255,8 +256,7 @@
 
 
     {block scripts}
-        <script src="https://unpkg.com/nette-forms@3/src/assets/netteForms.js"></script>
-        <script src="{$basePath}/assets/admin/js/chart.js"></script>
+        <script defer src="https://unpkg.com/nette-forms@3/src/assets/netteForms.js"></script>
     {/block}
 </body>
 </html>

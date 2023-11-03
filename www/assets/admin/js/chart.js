@@ -1,44 +1,50 @@
 
 
-(async function() {
-    const data = await getData();
+document.addEventListener("DOMContentLoaded", () => {
+    (async function () {
 
-    new window.Chart(
-        document.getElementById('reservation'),
-        {
-            type: 'line',
-            options: {
-                animation: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        enabled: false
+        const data = await getData();
+
+        new window.Chart(
+            document.getElementById('reservation'),
+            {
+                type: 'bar',
+                options: {
+                    animation: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: false
+                        }
                     }
+                },
+                data: {
+                    labels: data.map(row => row.date),
+                    datasets: [
+                        {
+                            label: 'Rezervace',
+                            data: data.map(row => row.value)
+                        }
+                    ]
                 }
-            },
-            data: {
-                labels: data.map(row => row.year),
-                datasets: [
-                    {
-                        label: 'Rezervace',
-                        data: data.map(row => row.count)
-                    }
-                ]
             }
-        }
-    );
-})();
+        );
+    })();
+
+})
 
 
 async function getData() {
     const naja = window.Naja
-    const res = await naja.makeRequest("GET", "/admin/home", {
+    const res = await naja.makeRequest("GET", "/admin", {
         run: "getChartData"
     }, {
         fetch: {
             credentials: 'include',
         },
     })
+    console.log(res);
+    return Promise.resolve(res);
 }
