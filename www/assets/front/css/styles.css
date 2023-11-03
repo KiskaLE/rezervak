@@ -304,10 +304,16 @@ body {
   }
 }
 #recap {
-  gap: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
-#recap h2 {
+#recap div h2 {
   font-size: 20px;
+  margin: 0;
+}
+#recap div p {
+  margin: 0;
 }
 
 .discount-code-wrapper div {

@@ -354,10 +354,17 @@ body {
 }
 
 #recap {
-  gap: 50px;
-
-  h2 {
-    font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  div {
+    h2 {
+      font-size: 20px;
+      margin: 0;
+    }
+    p {
+      margin: 0;
+    }
   }
 }
 
