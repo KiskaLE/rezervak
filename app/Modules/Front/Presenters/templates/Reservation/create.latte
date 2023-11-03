@@ -16,7 +16,7 @@
                 <div class="select-wrapper">
                     {var $i = 0}
                     {foreach $services as $service}
-                        <div><p onclick="setService({$service->id})" class="button">{$service->name} - {$service->price}
+                        <div><p onclick="setService({$service->id}, {$service->name})" class="button">{$service->name} - {$service->price}
                                 Kč</p>
                         </div>
                         {do $i++}
@@ -51,21 +51,21 @@
                         </tbody>
                     </table>
                 </div>
-                <input n:name="date" class="multiform">
+                <input n:name="date" class="multiform data">
             </div>
 
 
             <div class="tab">
                 <h1>Vyberte čas</h1>
                 <div class="time-wrapper">
-                    <input n:name="time" value="{$times ? $times[0] : ""}" id="time">
+                    <input n:name="time" value="{$times ? $times[0] : ""}" id="timeInput" class="multiform">
                     <input n:name="dateType">
 
                     {snippet content}
                         <div class="time select-wrapper">
                             {var $i = 0}
                                 {foreach $times as $time}
-                                <p onclick="setTime({$i},'default')" class="button">{$time}</p>
+                                <p onclick="setTime({$i},'default', {$time})" class="button">{$time}</p>
                                 {do $i++}
                             {/foreach}
 
@@ -75,7 +75,7 @@
                             <div>
                                 {var $j = 0}
                                     {foreach $backupTimes as $time}
-                                    <p onclick="setTime({$j},'backup')" class="button backup">{$time}</p>
+                                    <p onclick="setTime({$j},'backup', {$time})" class="button backup">{$time}</p>
                                     {do $j++}
                                 {/foreach}
                             </div>
@@ -89,13 +89,13 @@
             <div class="tab">
                 <h1>Zadejte osobní údaje</h1>
                 <div class="info-form">
-                    <div><label for="">Jméno:</label><input n:name="firstname" class="multiform"></div>
-                    <div><label for="">Příjmení:</label><input n:name="lastname" class="multiform"></div>
-                    <div><label for="">Tel.:</label><input n:name="phone" class="multiform"></div>
-                    <div><label for="">E-mail:</label><input n:name="email" class="multiform"></div>
-                    <div><label for="">Adresa a č.p.</label><input n:name="address" class="multiform"></div>
-                    <div><label for="">PSČ:</label><input n:name="code" class="multiform"></div>
-                    <div><label for="">Město:</label><input n:name="city" class="multiform"></div>
+                    <div><label for="">Jméno:</label><input n:name="firstname" class="multiform data"></div>
+                    <div><label for="">Příjmení:</label><input n:name="lastname" class="multiform data"></div>
+                    <div><label for="">Tel.:</label><input n:name="phone" class="multiform data"></div>
+                    <div><label for="">E-mail:</label><input n:name="email" class="multiform data"></div>
+                    <div><label for="">Adresa a č.p.</label><input n:name="address" class="multiform data"></div>
+                    <div><label for="">PSČ:</label><input n:name="code" class="multiform data"></div>
+                    <div><label for="">Město:</label><input n:name="city" class="multiform data"></div>
                 </div>
             </div>
 
