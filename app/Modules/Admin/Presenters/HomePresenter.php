@@ -25,7 +25,7 @@ final class HomePresenter extends SecurePresenter
 
     public function renderDefault()
     {
-        $numberOfReservationsToday = $this->database->table("reservations")->where("date=?", date("Y-m-d"))->count();
+        $numberOfReservationsToday = $this->database->table("reservations")->where("date=? AND status='VERIFIED'", date("Y-m-d"))->count();
         $this->template->numberOfReservationsToday = $numberOfReservationsToday;
 
         $numberOfReservations = $this->database->table("reservations")->where("date>=? AND status='VERIFIED'", date("Y-m-d"))->count();

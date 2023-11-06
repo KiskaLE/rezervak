@@ -4,14 +4,14 @@
     <table class="table dataTable table-bordered">
         <thead>
         <tr>
-            <th>Date</th>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Service</th>
-            <th>Status</th>
-            <th>Action</th>
+            <th>Datum</th>
+            <th>Čas</th>
+            <th>Jméno</th>
+            <th>Příjmení</th>
+            <th>E-mail</th>
+            <th>Tel.</th>
+            <th>Služba</th>
+            <th>Akce</th>
         </tr>
         </thead>
         {foreach $reservations as $reservation}
@@ -22,14 +22,13 @@
                 <th>{$reservation->email}</th>
                 <th>{$reservation->phone}</th>
                 <th>{$reservation->ref("services", "service_id")->name}</th>
-                <th>{$reservation->status}</th>
                 <th>
                     <a class="btn btn-default btn-sm btn-icon icon-left " n:href="Reservations:detail $reservation->id"><i
                                 class="entypo-eye"></i>Detail</a>
                     <a class="btn btn-default btn-sm btn-icon icon-left " n:href="Reservations:edit $reservation->id"><i
-                                class="entypo-pencil"></i>Edit</a>
+                                class="entypo-pencil"></i>Upravit</a>
                     <a class="btn btn-default btn-sm btn-icon icon-left " n:href="Reservations:delete $reservation->id"><i
-                                class="entypo-cancel"></i>Delete</a></th>
+                                class="entypo-cancel"></i>Smazat</a></th>
             </tr>
         {/foreach}
     </table>

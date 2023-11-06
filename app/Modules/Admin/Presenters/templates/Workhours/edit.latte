@@ -2,32 +2,63 @@
 
 <h1>Edit - {switch $day->weekday}
         {case 0}
-        Monday
+        Pondělí
         {case 1}
-        Tuesday
+        Úterý
         {case 2}
-        Wednesday
+        Středa
         {case 3}
-        Thursday
+        Čtvrtek
         {case 4}
-        Friday
+        Pátek
         {case 5}
-        Saturday
+        Sobota
         {case 6}
-        Sunday
+        Neděle
     {/switch}</h1>
-<form n:name="editForm">
-    <div class="dataTable-wrapper table-edit">
-        <table class="table table-bordered dataTable">
+<div><a n:href="Workhours:show" class="btn btn-default"><i class="entypo-back"></i></a></div>
+<div>
+    <form n:name="editForm">
+        <div class="dataTable-wrapper table-edit col-lg-2 col-sm-2">
+            <table class="table table-bordered dataTable">
+                <tr>
+                    <th>Start</th>
+                    <th>Stop</th>
+                </tr>
+                <tr>
+                    <th><input n:name="start" type="time" value="{$day->start}"></th>
+                    <th><input n:name="stop" type="time" value="{$day->stop}"></th>
+                </tr>
+            </table>
+            <input class="btn btn-default" n:name="submit">
+        </div>
+
+    </form>
+</div>
+<div>
+    <div class="dataTable-wrapper col-lg-5">
+        <h2>Přestávky</h2>
+        <table n:if="$breaks" class="table dataTable table-bordered">
+            <thead>
             <tr>
-                <th>Start</th>
-                <th>Stop</th>
+                <th>Začátek</th>
+                <th>Konec</th>
+                <th>Akce</th>
             </tr>
-            <tr>
-                <th><input  n:name="start" type="time" value="{$day->start}"></th>
-                <th><input  n:name="stop" type="time" value="{$day->stop}"></th>
+            </thead>
+            <tbody>
+            <tr n:foreach="$breaks as $break">
+                <th>{$break->start}</th>
+                <th>{$break->end}</th>
+                <th><a class="btn btn-default btn-sm btn-icon icon-left" n:href="Workhours:editBreak $day->id, $break->id"><i
+                                class="entypo-pencil"></i>Edit</a>
+                    <a class="btn btn-default btn-sm btn-icon icon-left " n:href="WorkHours:deleteBreak $break->id, $day->id"><i
+                                class="entypo-cancel"></i>Smazat</a></th>
             </tr>
+            </tbody>
         </table>
-        <input class="btn btn-default" n:name="submit">
+        <div><a n:href="Workhours:createBreak $day->id" class="btn btn-default"><i class="entypo-plus"></i></a></div>
     </div>
-</form>
+
+
+</div>
