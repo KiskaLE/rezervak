@@ -1,5 +1,5 @@
 {block content}
-<h1>edit-Show</h1>
+<h1>Pracovní doba</h1>
 <div class="content-wrapper">
     <div class="dataTable-wrapper">
         <table class="table dataTable table-bordered">
@@ -32,7 +32,7 @@
                         {/switch}</th>
                     <th>{$day->start}</th>
                     <th>{$day->stop}</th>
-                    <th><a class="btn btn-default btn-sm btn-icon icon-left" n:href="Workhours:edit $day->id"><i class="entypo-pencil"></i>Edit</a></th>
+                    <th><a class="btn btn-default btn-sm btn-icon icon-left" n:href="Workhours:edit $day->id"><i class="entypo-pencil"></i>Úprava</a></th>
                 </tr>
             {/foreach}
         </table>
