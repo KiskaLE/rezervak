@@ -22,7 +22,7 @@ final class ServicesPresenter extends SecurePresenter
     }
 
     public function renderShow() {
-        $services = $this->database->table("services")->fetchAll();
+        $services = $this->database->table("services")->where("user_id", $this->user->id)->fetchAll();
         $this->template->services = $services;
 }
     public function actionEdit($id) {
@@ -61,7 +61,8 @@ final class ServicesPresenter extends SecurePresenter
             $this->database->table("services")->insert([
                 "name" => $data->name,
                 "price" => $data->price,
-                "duration" => $data->duration
+                "duration" => $data->duration,
+                "user_id" => $this->user->id
             ]);
         }
 

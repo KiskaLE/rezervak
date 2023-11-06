@@ -17,6 +17,8 @@ final class ReservationPresenter extends BasePresenter
 {
 
     private $services;
+    private $user_uuid;
+    private $user;
 
     public function __construct(
         private Nette\Database\Explorer $database,
@@ -26,7 +28,6 @@ final class ReservationPresenter extends BasePresenter
         private DiscountCodes           $discountCodes,
     )
     {
-
     }
 
     protected function startup()
@@ -48,38 +49,41 @@ final class ReservationPresenter extends BasePresenter
         $this->redrawControl("content");
     }
 
-    public function actionCreate($run, $day, $service_id, $discountCode = "")
+    public function actionCreate( $u, $run, $day, $service_id, $discountCode = "")
     {
-
+        $this->user_uuid = $u;
+        $this->user = $this->database->table("users")->where("uuid=?", $u)->fetch();
         if ($this->isAjax()) {
             if ($run == "fetch") {
-                //TODO number of Days stored in database
-                $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates(30, 60)]);
+                $user_settings = $this->user->ref("settings", "settings_id");
+                $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
+                $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates($u, $service->duration, $user_settings->number_of_days)]);
             } else if ($run == "setDate") {
-                $this->setDate(intval($service_id), $day);
+                $this->setDate($u, intval($service_id), $day);
             } else if ($run == "verifyCode") {
-                $this->verifyDiscountCode(intval($service_id), $discountCode);
+                $this->verifyDiscountCode($this->user->id ,intval($service_id), $discountCode);
             } else if ($run == "getServiceName") {
                 $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
                 $this->sendJson(["serviceName" => $service->name]);
             }
             $this->payload->postGet = true;
-            $this->payload->url = $this->link("Reservation:create");
+            $this->payload->url = $this->link("Reservation:create", $u);
         }
+
     }
 
     public
-    function actionConfirmation($uuid)
+    function actionConfirmation($r)
     {
-        $this->template->uuid = $uuid;
-        $reservation = $this->database->table("reservations")->where("uuid=?", $uuid)->fetch();
+        $this->template->uuid = $r;
+        $reservation = $this->database->table("reservations")->where("uuid=?", $r)->fetch();
         $this->template->reservation = $reservation;
     }
 
     public
-    function actionBackup($uuid)
+    function actionBackup($r)
     {
-        $reservation = $this->database->table("backup_reservations")->where("uuid=?", $uuid)->fetch();
+        $reservation = $this->database->table("backup_reservations")->where("uuid=?", $r)->fetch();
         $this->template->reservation = $reservation;
     }
 
@@ -117,12 +121,12 @@ final class ReservationPresenter extends BasePresenter
         $email = $data->email;
 
         if ($data->dateType == "default") {
-            $times = $this->availableDates->getAvailableStartingHours($data->date, $duration);
+            $times = $this->availableDates->getAvailableStartingHours($this->user_uuid ,$data->date, $duration);
             $reservation = $this->insertReservation($uuid, $data, "reservations", $times);
             if ($reservation) {
                 $this->payments->createPayment($reservation, $data->dicountCode);
                 $this->mailer->sendConfirmationMail($email, $this->link("Payment:default", $uuid));
-                $this->redirect("Reservation:confirmation", ["uuid" => $uuid]);
+                $this->redirect("Reservation:confirmation", ["r" => $uuid]);
             } else {
                 $this->flashMessage("Nepovedlo se uložit rezervaci.");
             }
@@ -131,9 +135,8 @@ final class ReservationPresenter extends BasePresenter
             $reservation = $this->insertReservation($uuid, $data, "backup_reservations", $times);
             if ($reservation) {
                 $this->payments->createPayment($reservation, $data->dicountCode);
-                //TODO change to to $data->email
                 $this->mailer->sendBackupConfiramationMail($email, $this->link("Payment:backup", $uuid));
-                $this->redirect("Reservation:backup", ["uuid" => $uuid]);
+                $this->redirect("Reservation:backup", ["r" => $uuid]);
             } else {
                 $this->flashMessage("Nepovedlo se uložit rezervaci.");
             }
@@ -166,7 +169,8 @@ final class ReservationPresenter extends BasePresenter
             "address" => $data->address,
             "code" => $data->code,
             "city" => $data->city,
-            "created_at" => date("Y-m-d H:i:s")
+            "created_at" => date("Y-m-d H:i:s"),
+            "user_id" => $this->user->id,
         ]);
 
         return $reservation;
@@ -179,11 +183,11 @@ final class ReservationPresenter extends BasePresenter
      * @throws Exception If the service cannot be fetched from the database.
      * @return void
      */
-    private function setDate(int $service_id, string $day): void
+    private function setDate(string $u, int $service_id, string $day): void
     {
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = $service->duration;
-        $availableTimes = $this->availableDates->getAvailableStartingHours($day, intval($duration));
+        $availableTimes = $this->availableDates->getAvailableStartingHours($u, $day, intval($duration));
         $availableBackup = $this->availableDates->getBackupHours($day, intval($duration));
         $this->template->times = $availableTimes;
         $this->template->backupTimes = $availableBackup;
@@ -197,9 +201,9 @@ final class ReservationPresenter extends BasePresenter
      * @throws None
      * @return void
      */
-    private function verifyDiscountCode(int $service_id, string $discountCode): void
+    private function verifyDiscountCode(int $user_id, int $service_id, string $discountCode): void
     {
-        $discount = $this->discountCodes->isCodeValid($service_id, $discountCode);
+        $discount = $this->discountCodes->isCodeValid($user_id ,$service_id, $discountCode);
         $service = $this->discountCodes->getService(intval($service_id));
         $price = $service->price;
         if ($discount) {

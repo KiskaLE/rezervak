@@ -76,7 +76,7 @@ final class WorkhoursPresenter extends SecurePresenter
         $day = $this->database->table("workinghours")->where("id=?", $this->id)->fetch();
         $dayStart = strtotime($day->start);
         $dayEnd = strtotime($day->stop);
-        //TODO compare
+
         if (strtotime($data->start) >= $dayStart && strtotime($data->stop) <= $dayEnd) {
             $start = strtotime($data->start);
             $stop = strtotime($data->stop);
@@ -123,7 +123,7 @@ final class WorkhoursPresenter extends SecurePresenter
         $day = $this->database->table("workinghours")->where("id=?", $this->edit_id)->fetch();
         $dayStart = strtotime($day->start);
         $dayEnd = strtotime($day->stop);
-        //TODO compare
+
         if (strtotime($data->start) >= $dayStart && strtotime($data->stop) <= $dayEnd) {
             $start = strtotime($data->start);
             $stop = strtotime($data->stop);
@@ -152,7 +152,6 @@ final class WorkhoursPresenter extends SecurePresenter
 
     protected function createComponentCreateForm(): Form
     {
-        //todo check if stop is later than start
         $form = new Form;
         //Monday
         $form->addText("mo_start")->setRequired();

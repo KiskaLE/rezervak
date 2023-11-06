@@ -15,13 +15,13 @@ class AvailableDates
     {
     }
 
-    public function getAvailableDates(int $duration, int $numberOfDays): array
+    public function getAvailableDates(string $u, int $duration, int $numberOfDays): array
     {
         $date = date("Y-m-d");
         $available = [];
         //add one day to curDay
         for ($i = 0; $i < $numberOfDays; $i++) {
-            if (!$this->getAvailableStartingHours($date, $duration) == []) {
+            if (!$this->getAvailableStartingHours($u, $date, $duration) == []) {
                 $available[] = $date;
             }
             $date = date('Y-m-d', strtotime($date . ' +1 days'));
@@ -54,27 +54,28 @@ class AvailableDates
      * @param int $duration The duration in minutes of each available date.
      * @return array An array of available starting hours.
      */
-    public function getAvailableStartingHours(string $date, int $duration): array
+    public function getAvailableStartingHours(string $u, string $date, int $duration): array
     {
+        $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
+        $user_settings = $user->ref("settings", "settings_id");
+        $user_id = $user->id;
         $available = [];
-        $workingHours = $this->database->table("workinghours")->where("weekday=?", $this->getDay($date))->fetch();
+        $workingHours = $this->database->table("workinghours")->where("user_id=? AND weekday=?", [$user_id, $this->getDay($date)])->fetch();
         $breaks = $workingHours->related("breaks")->fetchAll();
         $dayStartMinutes = $this->convertTimeToMinutes($workingHours->start);
         $dayEndMinutes = $this->convertTimeToMinutes($workingHours->stop);
-        //todo interval set in admin
-        $interval = 30;
+        $interval = $user_settings->sample_rate;
         $unverified = $this->database->table($this->table)->where("date=? AND status=?", [$date, "UNVERIFIED"])->fetchAll();
         $bookedArray = $this->database->table($this->table)->where("date=? AND status=?", [$date, "VERIFIED"])->fetchAll();
         //add unverified dates that still can be verified
         foreach ($unverified as $row) {
-            //todo set time in admin settings
-            $isLate = strtotime(strval($row->created_at)) < strtotime(date("Y-m-d H:i:s") . ' -15 minutes');
+            $verification_time = $user_settings->verification_time;
+            $isLate = strtotime(strval($row->created_at)) < strtotime(date("Y-m-d H:i:s") . ' -'. $verification_time.' minutes');
             if (!$isLate) {
                 $bookedArray[] = $row;
             }
         }
         //add breaks in booked array
-        bdump($breaks);
         while ($dayStartMinutes < $dayEndMinutes) {
             $sv = true;
             //check for breaks

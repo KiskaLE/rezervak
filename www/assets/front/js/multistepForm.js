@@ -3,7 +3,8 @@ let tabCounter = 0;
 showTab(currentTab); // Display the current tab
 let showMonth = new Date().getMonth();
 let showYear = new Date().getFullYear();
-//createRecap();
+let address = new URL(window.location.href);
+let searchParams = address.searchParams;
 
 
 function showTab(n) {
@@ -208,7 +209,7 @@ function setRecap() {
 
     async function getTime(time_id) {
         let naja = window.Naja;
-        const res = await naja.makeRequest("GET", "/reservation/create", {run: "getTime", time_id: time_id}, {
+        const res = await naja.makeRequest("GET", "/reservation/create", {u: searchParams.get("u") ,run: "getTime", time_id: time_id}, {
             fetch: {
                 credentials: 'include',
             },
@@ -235,7 +236,7 @@ function setRecap() {
         const day = document.querySelector("[name='date']").value;
         const service = document.querySelector("[name='service']").value;
         let naja = window.Naja;
-        naja.makeRequest("GET", "/reservation/create", {run: "setDate", day: day, service_id: service}, {
+        naja.makeRequest("GET", "/reservation/create", {u: searchParams.get("u") ,run: "setDate", day: day, service_id: service}, {
             fetch: {
                 credentials: 'include',
             },
@@ -386,7 +387,8 @@ function setRecap() {
 
         async function getAvailableDays() {
             let naja = window.Naja;
-            const req = await naja.makeRequest("GET", "/reservation/create", {run: "fetch"}, {
+            const service_id = document.querySelector("[name='service']").value;
+            const req = await naja.makeRequest("GET", `/reservation/create`, {u: searchParams.get("u") ,run: "fetch", service_id: service_id}, {
                 fetch: {
                     credentials: 'include',
                 },
@@ -410,6 +412,7 @@ function setRecap() {
                 console.log(code)
                 let naja = window.Naja;
                 const res = await naja.makeRequest("GET", "/reservation/create", {
+                    u: searchParams.get("u") ,
                     run: "verifyCode",
                     discountCode: code,
                     service_id: service
