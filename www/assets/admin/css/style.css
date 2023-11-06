@@ -1,0 +1,17 @@
+#reservation {
+  max-width: 800px;
+  height: 300px;
+}
+
+.main-content {
+  display: flex !important;
+  flex-direction: column;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+}
+
+/*# sourceMappingURL=style.css.map */

@@ -16,7 +16,8 @@
                 <div class="select-wrapper">
                     {var $i = 0}
                     {foreach $services as $service}
-                        <div><p onclick="setService({$service->id})" class="button">{$service->name} - {$service->price} Kč</p>
+                        <div><p onclick="setService({$service->id}, {$service->name}, {$service->price})" class="button">{$service->name} - {$service->price}
+                                Kč</p>
                         </div>
                         {do $i++}
                     {/foreach}
@@ -35,7 +36,7 @@
                             <h2 id="calendar-month"></h2><img
                                     src="{$basePath}/assets/front/icons/arrow-next-small-svgrepo-com.svg" alt="next"
                                     onclick="calNext(1)" id="next-month"></div>
-                        <thead>
+                        <thead class="calendar-head">
                         <tr>
                             <th>Po</th>
                             <th>Út</th>
@@ -50,32 +51,34 @@
                         </tbody>
                     </table>
                 </div>
-                <input n:name="date" class="multiform">
+                <input n:name="date" class="multiform data">
             </div>
 
 
             <div class="tab">
                 <h1>Vyberte čas</h1>
                 <div class="time-wrapper">
-                    <input n:name="time" value="{$times ? $times[0] : ""}" id="time">
+                    <input n:name="time" value="{$times ? $times[0] : ""}" id="timeInput" class="multiform">
                     <input n:name="dateType">
 
                     {snippet content}
                         <div class="time select-wrapper">
                             {var $i = 0}
                                 {foreach $times as $time}
-                                <p onclick="setTime({$i},'default')" class="button">{$time}</p>
+                                <p onclick="setTime({$i},'default', {$time})" class="button">{$time}</p>
                                 {do $i++}
                             {/foreach}
 
                         </div>
-                        <div class="time">
+                        <div class="time backup-time">
                             <h2 n:if="$backupTimes">Náhradní čas:</h2>
-                            {var $j = 0}
+                            <div>
+                                {var $j = 0}
                                     {foreach $backupTimes as $time}
-                                <p onclick="setTime({$j},'backup')" class="button backup">{$time->start}</p>
-                                {do $j++}
-                            {/foreach}
+                                    <p onclick="setTime({$j},'backup', {$time})" class="button backup">{$time}</p>
+                                    {do $j++}
+                                {/foreach}
+                            </div>
                         </div>
                     {/snippet}
 
@@ -86,23 +89,35 @@
             <div class="tab">
                 <h1>Zadejte osobní údaje</h1>
                 <div class="info-form">
-                    <div><label for="">Jméno:</label><input n:name="firstname" class="multiform"></div>
-                    <div><label for="">Příjmení:</label><input n:name="lastname" class="multiform"></div>
-                    <div><label for="">Tel.:</label><input n:name="phone" class="multiform"></div>
-                    <div><label for="">E-mail:</label><input n:name="email" class="multiform"></div>
-                    <div><label for="">Adresa a č.p.</label><input n:name="address" class="multiform"></div>
-                    <div><label for="">PSČ:</label><input n:name="code" class="multiform"></div>
-                    <div><label for="">Město:</label><input n:name="city" class="multiform"></div>
+                    <div><label for="">Jméno:</label><input n:name="firstname" class="multiform data"></div>
+                    <div><label for="">Příjmení:</label><input n:name="lastname" class="multiform data"></div>
+                    <div><label for="">Tel.:</label><input n:name="phone" class="multiform data"></div>
+                    <div><label for="">E-mail:</label><input n:name="email" class="multiform data"></div>
+                    <div><label for="">Adresa a č.p.</label><input n:name="address" class="multiform data"></div>
+                    <div><label for="">PSČ:</label><input n:name="code" class="multiform data"></div>
+                    <div><label for="">Město:</label><input n:name="city" class="multiform data"></div>
                 </div>
             </div>
 
 
             <div class="tab">
                 <h1>Souhrn</h1>
-                <div id="recap"></div>
+                <div id="recap">
+                    <div><h2>Služba:</h2><p id="service"></p></div>
+                    <div><h2>Datum:</h2><p id="date"></p></div>
+                    <div><h2>Čas:</h2><p id="time"></p></div>
+                    <div><h2>Jméno:</h2><p id="firstname"></p></div>
+                    <div><h2>Přijmení:</h2><p id="lastname"></p></div>
+                    <div><h2>Telefon:</h2><p id="phone"></p></div>
+                    <div><h2>E-mail:</h2><p id="email"></p></div>
+                    <div><h2>Adresa:</h2><p id="address"></p></div>
+                    <div><h2>PSČ:</h2><p id="code"></p></div>
+                    <div><h2>Město:</h2><p id="city"></p></div>
+                    <div><h2>Cena:</h2><p id="price"></p></div>
+                </div>
                 <div class="discount-code-wrapper">
                     <label for="">Slevový kód</label>
-                    <div><input n:name="dicountCode">
+                    <div><input n:name="dicountCode" onfocusout="verify()">
                         <p id="verify-code" class="button xl" onclick="verify()">Ověřit</p></div>
                 </div>
             </div>

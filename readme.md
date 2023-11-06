@@ -35,7 +35,7 @@ x backup reservation flow
 
 x optimize reservation flow on mobile
 
-fix reservation flow on PC
+x fix reservation flow on PC
 
 Create Email templates
 
@@ -47,17 +47,17 @@ x Možnost zadat slevový kód
 
 ## Admin
 
-Write cron that deletes old reservations
+x Write cron that deletes old reservations
 
-Write cron to check payment
+x Write cron to check payment
 
 Create detail view of reservations
 
 Create Dashboard
 
-fix animations
+x fix animations
 
-fix resrvations on mobile
+x fix resrvations on mobile
 
 Connect Fio API
 

@@ -56,9 +56,12 @@ final class ReservationPresenter extends BasePresenter
                 //TODO number of Days stored in database
                 $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates(30, 60)]);
             } else if ($run == "setDate") {
-                $this->setDate($service_id, $day);
+                $this->setDate(intval($service_id), $day);
             } else if ($run == "verifyCode") {
-                $this->verifyDiscountCode($service_id, $discountCode);
+                $this->verifyDiscountCode(intval($service_id), $discountCode);
+            } else if ($run == "getServiceName") {
+                $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
+                $this->sendJson(["serviceName" => $service->name]);
             }
             $this->payload->postGet = true;
             $this->payload->url = $this->link("Reservation:create");
@@ -105,20 +108,21 @@ final class ReservationPresenter extends BasePresenter
         return $form;
     }
 
-    public function formSucceeded(Form $form, $data): void
+    public function formSucceeded(Form $form,\stdClass $data): void
     {
         $service_id = $data->service;
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = intval($service->duration);
         $uuid = strval(Uuid::uuid4());
+        $email = $data->email;
 
         if ($data->dateType == "default") {
             $times = $this->availableDates->getAvailableStartingHours($data->date, $duration);
             $reservation = $this->insertReservation($uuid, $data, "reservations", $times);
             if ($reservation) {
                 $this->payments->createPayment($reservation, $data->dicountCode);
-                $this->mailer->sendConfirmationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:default", strval($uuid)));
-                $this->redirect("Reservation:confirmation", ["uuid" => strval($uuid)]);
+                $this->mailer->sendConfirmationMail($email, $this->link("Payment:default", $uuid));
+                $this->redirect("Reservation:confirmation", ["uuid" => $uuid]);
             } else {
                 $this->flashMessage("Nepovedlo se uložit rezervaci.");
             }
@@ -128,8 +132,8 @@ final class ReservationPresenter extends BasePresenter
             if ($reservation) {
                 $this->payments->createPayment($reservation, $data->dicountCode);
                 //TODO change to to $data->email
-                $this->mailer->sendBackupConfiramationMail("vojtech.kylar@securitynet.cz", $this->link("Payment:backup", strval($uuid)));
-                $this->redirect("Reservation:backup", ["uuid" => strval($uuid)]);
+                $this->mailer->sendBackupConfiramationMail($email, $this->link("Payment:backup", $uuid));
+                $this->redirect("Reservation:backup", ["uuid" => $uuid]);
             } else {
                 $this->flashMessage("Nepovedlo se uložit rezervaci.");
             }
@@ -196,10 +200,26 @@ final class ReservationPresenter extends BasePresenter
     private function verifyDiscountCode(int $service_id, string $discountCode): void
     {
         $discount = $this->discountCodes->isCodeValid($service_id, $discountCode);
+        $service = $this->discountCodes->getService(intval($service_id));
+        $price = $service->price;
         if ($discount) {
-            $this->sendJson(["status" => true, "type" => $discount->type, "discount" => ["type" => $discount->type, "value" => $discount->value]]);
+
+            if ($discount->type == 0) {
+                if ($discount->value >= $price) {
+                    $price = 0;
+                } else {
+                    $price = $service->price - $discount->value;
+                }
+            } else {
+                if ($discount->value >= 100) {
+                    $price = 0;
+                } else {
+                    $price = $service->price  * $discount->value / 100;
+                }
+            }
+            $this->sendJson(["status" => true, "price" => $price]);
         } else {
-            $this->sendJson(["status" => false]);
+            $this->sendJson(["status" => false, "price" => $price]);
         }
     }
 

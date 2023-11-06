@@ -9,6 +9,10 @@ html {
   --shadow-clicked: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
 }
 
+.body-container {
+  width: 100%;
+}
+
 .text-highlight {
   color: var(--highlight-red);
 }
@@ -94,7 +98,6 @@ body {
 }
 
 .reservationForm-wrapper {
-  max-width: 500px;
   display: flex;
   flex-direction: column;
 }
@@ -186,19 +189,27 @@ body {
   width: 100%;
 }
 
+.calendar-head tr {
+  border-bottom: 2px solid black;
+}
+
 #calendar-nav {
   display: flex;
 }
 #calendar-nav img {
-  height: 50px;
+  height: 70px;
 }
-#calendar-nav h2 {
+#calendar-nav #calendar-month {
   width: 100%;
+  min-width: 170px;
   text-align: center;
 }
 
 #calendar th.day {
   border: 1px var(--blue) solid;
+}
+#calendar th.weekend {
+  color: red;
 }
 #calendar th.unavailable {
   background-color: white;
@@ -212,8 +223,8 @@ body {
   cursor: pointer;
 }
 #calendar th {
-  padding: 5px;
-  border-radius: 5px;
+  padding: 15px;
+  border-radius: 10px;
 }
 #calendar .available:hover {
   background-color: var(--blue);
@@ -221,16 +232,56 @@ body {
   color: white;
 }
 
+.backup-time {
+  display: flex;
+  flex-direction: column !important;
+}
+.backup-time div {
+  display: flex;
+  gap: 10px;
+}
+
+.time-wrapper {
+  padding: 0 180px;
+}
 .time-wrapper div div {
   display: flex;
 }
 .time-wrapper .time {
   display: flex;
   flex-flow: wrap;
-  gap: 20px;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+.time-wrapper .time p {
+  height: fit-content;
+}
+
+.calender-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 @media (max-width: 500px) {
+  .time {
+    flex-direction: column;
+  }
+  .time-wrapper {
+    padding: 0;
+  }
+  .select-wrapper {
+    flex-direction: column;
+  }
+  .backup-time {
+    flex-direction: column;
+  }
+  .backup-time div {
+    flex-direction: column;
+    width: 100%;
+  }
   .button {
     width: 100%;
     box-sizing: border-box;
@@ -244,13 +295,25 @@ body {
   .calender-wrapper {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  #calendar th {
+    padding: 3vw;
+    border-radius: 5px;
   }
 }
 #recap {
-  gap: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
-#recap h2 {
+#recap div h2 {
   font-size: 20px;
+  margin: 0;
+}
+#recap div p {
+  margin: 0;
 }
 
 .discount-code-wrapper div {
