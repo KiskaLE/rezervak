@@ -1,25 +1,30 @@
 <?php
+
 namespace App\Modules;
 
 use Nette;
 
-class AvailableDates {
+class AvailableDates
+{
 
     private string $table = "reservations";
+
     public function __construct(
         private Nette\Database\Explorer $database
     )
-    {}
+    {
+    }
 
-    public function getAvailableDates(int $duration ,int $numberOfDays): array{
-       $date = date("Y-m-d");
-       $available = [];
+    public function getAvailableDates(int $duration, int $numberOfDays): array
+    {
+        $date = date("Y-m-d");
+        $available = [];
         //add one day to curDay
         for ($i = 0; $i < $numberOfDays; $i++) {
-            if (!$this->getAvailableStartingHours($date, $duration ) == []) {
+            if (!$this->getAvailableStartingHours($date, $duration) == []) {
                 $available[] = $date;
             }
-            $date = date('Y-m-d', strtotime($date. ' +1 days'));
+            $date = date('Y-m-d', strtotime($date . ' +1 days'));
         }
         return $available;
 
@@ -32,7 +37,8 @@ class AvailableDates {
      * @param int $duration The duration for which to retrieve the backup hours.
      * @return array The array of backup hours.
      */
-    public function getBackupHours(string $date, int $duration) : array{
+    public function getBackupHours(string $date, int $duration): array
+    {
         $backupDatesRows = $this->database->query("SELECT reservations.*, services.duration FROM reservations LEFT JOIN services ON reservations.service_id = services.id WHERE date='$date' AND services.duration='$duration'")->fetchAll();
         $backupDates = [];
         foreach ($backupDatesRows as $row) {
@@ -40,6 +46,7 @@ class AvailableDates {
         }
         return $backupDates;
     }
+
     /**
      * Retrieves an array of available dates based on the provided parameters.
      *
@@ -47,33 +54,47 @@ class AvailableDates {
      * @param int $duration The duration in minutes of each available date.
      * @return array An array of available starting hours.
      */
-    public function getAvailableStartingHours(string $date, int $duration): array{
-        $workingHours = $this->database->table("workinghours")->where("weekday=?", $this->getDay($date))->fetch();
+    public function getAvailableStartingHours(string $date, int $duration): array
+    {
         $available = [];
+        $workingHours = $this->database->table("workinghours")->where("weekday=?", $this->getDay($date))->fetch();
+        $breaks = $workingHours->related("breaks")->fetchAll();
         $dayStartMinutes = $this->convertTimeToMinutes($workingHours->start);
         $dayEndMinutes = $this->convertTimeToMinutes($workingHours->stop);
         //todo interval set in admin
         $interval = 30;
         $unverified = $this->database->table($this->table)->where("date=? AND status=?", [$date, "UNVERIFIED"])->fetchAll();
         $bookedArray = $this->database->table($this->table)->where("date=? AND status=?", [$date, "VERIFIED"])->fetchAll();
-        //adds unverified dates that still can be verified
+        //add unverified dates that still can be verified
         foreach ($unverified as $row) {
             //todo set time in admin settings
-            $isLate = strtotime(strval($row->created_at)) < strtotime(date("Y-m-d H:i:s"). ' -15 minutes');
+            $isLate = strtotime(strval($row->created_at)) < strtotime(date("Y-m-d H:i:s") . ' -15 minutes');
             if (!$isLate) {
                 $bookedArray[] = $row;
             }
         }
-
+        //add breaks in booked array
+        bdump($breaks);
         while ($dayStartMinutes < $dayEndMinutes) {
             $sv = true;
-            foreach ($bookedArray as $booked) {
-                $service = $booked->ref("services", "service_id");
-                $start = $this->convertTimeToMinutes($booked->start);
-                $duration2 = intval($service->duration);
+            //check for breaks
+            foreach ($breaks as $break) {
+                $start = $this->convertTimeToMinutes($break->start);
+                $duration2 = $this->convertTimeToMinutes($break->end) - $this->convertTimeToMinutes($break->start);
                 if (!$this->isPossible($dayStartMinutes, $duration, $start, $duration2)) {
                     $sv = false;
                     break;
+                }
+            }
+            if ($sv) {
+                foreach ($bookedArray as $booked) {
+                    $service = $booked->ref("services", "service_id");
+                    $start = $this->convertTimeToMinutes($booked->start);
+                    $duration2 = intval($service->duration);
+                    if (!$this->isPossible($dayStartMinutes, $duration, $start, $duration2)) {
+                        $sv = false;
+                        break;
+                    }
                 }
             }
             if ($sv) {
@@ -83,6 +104,7 @@ class AvailableDates {
         }
         return $available;
     }
+
     /**
      * Determines if two intervals of time do not collide with each other.
      *
@@ -92,38 +114,45 @@ class AvailableDates {
      * @param int $duration2 The duration of the second interval.
      * @return bool Returns true if the intervals do not collide, false otherwise.
      */
-    private function isPossible(int $start1, int $duration1, int $start2, int $duration2):bool {
-        return !($start1 + $duration1-1 >= $start2 && $start2 + $duration2-1 >= $start1);
+    private function isPossible(int $start1, int $duration1, int $start2, int $duration2): bool
+    {
+        return !($start1 + $duration1 - 1 >= $start2 && $start2 + $duration2 - 1 >= $start1);
 
     }
+
     /**
      * Converts the given time from the format '9:30' to minutes.
      *
      * @param string $time The time in the format '9:30'.
      * @return int The time converted to minutes.
      */
-    private function convertTimeToMinutes(string $time):int {
+    private function convertTimeToMinutes(string $time): int
+    {
         $split = explode(":", $time);
         return intval($split[0]) * 60 + intval($split[1]);
     }
+
     /**
      * Converts minutes to time in hours and minutes format.
      *
      * @param int $minutes The number of minutes to convert.
      * @return string The time in hours and minutes format (e.g. "2:30").
      */
-    private function convertMinutesToTime(int $minutes):string {
+    private function convertMinutesToTime(int $minutes): string
+    {
         $hours = floor($minutes / 60);
         $minutes = $minutes % 60;
         return $hours . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT);
     }
+
     /**
      * A function to get the day of the week from a given date.
      *
      * @param string $date The date in the format YYYY-MM-DD.
      * @return int The day of the week, where 0 represents Monday and 6 represents Sunday.
      */
-    private function getDay(string $date):string {
-        return date('N', strtotime($date))-1;
+    private function getDay(string $date): string
+    {
+        return date('N', strtotime($date)) - 1;
     }
 }
