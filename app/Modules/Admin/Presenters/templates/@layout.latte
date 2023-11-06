@@ -203,7 +203,8 @@
         </div>
 
     </div>
-    <main n:snippet="main" class="main-content">
+    <div class="main-content">
+
         <div n:if="$user->isLoggedIn() && $user->roles[0] === 'ADMIN'" class="row">
             <div class="clearfix col-md-6 col-sm-8 clearfix">
                 <ul class="user-info pull-left pull-none-xsm">
@@ -222,8 +223,15 @@
             <hr>
         </div>
         <div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+
         {include content}
-    </main>
+        <footer class="main">
+
+            © 2015 <strong>Neon</strong> Admin Theme by <a href="http://laborator.co" target="_blank">Laborator</a>
+
+        </footer>
+    </div>
+
 
 
 

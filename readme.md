@@ -55,9 +55,9 @@ Create detail view of reservations
 
 Create Dashboard
 
-fix animations
+x fix animations
 
-fix resrvations on mobile
+x fix resrvations on mobile
 
 Connect Fio API
 

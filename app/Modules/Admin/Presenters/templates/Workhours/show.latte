@@ -1,39 +1,40 @@
 {block content}
 <h1>edit-Show</h1>
-<div class="dataTable-wrapper">
-    <table class="table dataTable table-bordered">
-        <thead>
-        <tr>
-            <th>Weekday</th>
-            <th>Start</th>
-            <th>Stop</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-
-        {foreach $days as $day}
+<div class="content-wrapper">
+    <div class="dataTable-wrapper">
+        <table class="table dataTable table-bordered">
+            <thead>
             <tr>
-                <th>{switch $day->weekday}
-                    {case 0}
-                        Monday
-                    {case 1}
-                        Tuesday
-                    {case 2}
-                        Wednesday
-                    {case 3}
-                        Thursday
-                    {case 4}
-                        Friday
-                    {case 5}
-                        Saturday
-                    {case 6}
-                        Sunday
-                    {/switch}</th>
-                <th>{$day->start}</th>
-                <th>{$day->stop}</th>
-                <th><a class="btn btn-default btn-sm btn-icon icon-left" n:href="Workhours:edit $day->id"><i class="entypo-pencil"></i>Edit</a></th>
+                <th>Weekday</th>
+                <th>Start</th>
+                <th>Stop</th>
+                <th>Actions</th>
             </tr>
-        {/foreach}
-    </table>
-</div>
+            </thead>
 
+            {foreach $days as $day}
+                <tr>
+                    <th>{switch $day->weekday}
+                        {case 0}
+                            Monday
+                        {case 1}
+                            Tuesday
+                        {case 2}
+                            Wednesday
+                        {case 3}
+                            Thursday
+                        {case 4}
+                            Friday
+                        {case 5}
+                            Saturday
+                        {case 6}
+                            Sunday
+                        {/switch}</th>
+                    <th>{$day->start}</th>
+                    <th>{$day->stop}</th>
+                    <th><a class="btn btn-default btn-sm btn-icon icon-left" n:href="Workhours:edit $day->id"><i class="entypo-pencil"></i>Edit</a></th>
+                </tr>
+            {/foreach}
+        </table>
+    </div>
+</div>

@@ -108,12 +108,11 @@ final class WorkhoursPresenter extends SecurePresenter
 
     protected function createComponentEditBreakForm(): Form
     {
-        $id = $this->edit_id;
+        $id = $this->id;
         $break = $this->database->table("breaks")->where("id=?", $id)->fetch();
-        bdump($break);
         $form = new Form;
-        $form->addText("start")->setRequired()->setHtmlAttribute("type", "time")->setValue($break->start);
-        $form->addText("stop")->setRequired()->setHtmlAttribute("type", "time")->setValue($break->end);
+        $form->addText("start")->setRequired()->setHtmlAttribute("type", "time")->setDefaultValue($break->start);
+        $form->addText("stop")->setRequired()->setHtmlAttribute("type", "time")->setDefaultValue($break->end);
         $form->addSubmit("submit");
         $form->onSuccess[] = [$this, "editBreakSuccess"];
         return $form;
@@ -121,7 +120,7 @@ final class WorkhoursPresenter extends SecurePresenter
 
     public function editBreakSuccess(Form $form, $data)
     {
-        $day = $this->database->table("workinghours")->where("id=?", $this->id)->fetch();
+        $day = $this->database->table("workinghours")->where("id=?", $this->edit_id)->fetch();
         $dayStart = strtotime($day->start);
         $dayEnd = strtotime($day->stop);
         //TODO compare
@@ -135,7 +134,7 @@ final class WorkhoursPresenter extends SecurePresenter
                     "start" => $data->start,
                     "end" => $data->stop,
                 ]);
-                $this->redirect("Workhours:edit", $this->id);
+                $this->redirect("Workhours:edit", $this->edit_id);
             }
         } else {
             $this->flashMessage("Přestávka musí být v rozsahu {$day->start} - {$day->stop} hodin", "error");

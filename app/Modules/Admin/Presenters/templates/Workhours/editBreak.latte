@@ -1,5 +1,15 @@
 {block content}
-<div><a n:href="Workhours:edit $id" class="btn btn-default"><i class="entypo-back"></i></a></div>
+<h1>Editace Přestávky</h1>
+<div><a n:href="Workhours:edit $edit_id" class="btn btn-default"><i class="entypo-back"></i></a></div>
+<div class="content-wrapper">
 
-{control editBreakForm}
 
+
+    <form n:name="editBreakForm">
+        <div>
+            <input n:name="start">
+            <input n:name="stop">
+        </div>
+        <div><input n:name="submit" class="btn btn-default"></div>
+    </form>
+</div>
