@@ -36,7 +36,7 @@ final class DiscountCodesPresenter extends SecurePresenter
     public function actionEdit(int $id)
     {
         $this->id = $id;
-        $services = $this->database->table("services")->fetchAll();
+        $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
         $this->template->services = $services;
         $discountCode = $this->database->table("discount_codes")->where("id=?", $id)->fetch();
         $selectedServices = Json::decode($discountCode->services);
@@ -46,7 +46,7 @@ final class DiscountCodesPresenter extends SecurePresenter
 
     public function actionCreate()
     {
-        $services = $this->database->table("services")->fetchAll();
+        $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
         $this->template->services = $services;
     }
 
@@ -106,7 +106,7 @@ final class DiscountCodesPresenter extends SecurePresenter
     protected function createComponentEditForm(): Form
     {
         $types = [0 => "Částka", 1 => "Procento"];
-        $services = $this->database->table("services")->fetchAll();
+        $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
         $form = new Form;
         $form->addCheckbox("active", "Aktivní");
         $form->addText("code", "Code")->setRequired();
@@ -124,7 +124,7 @@ final class DiscountCodesPresenter extends SecurePresenter
     }
 
     public function editFormSucceeded(Form $form, $values) {
-        $services = $this->database->table("services")->fetchAll();
+        $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
         $show = $values->active ? 1 : 0;
         $status = false;
         $enabled = [];

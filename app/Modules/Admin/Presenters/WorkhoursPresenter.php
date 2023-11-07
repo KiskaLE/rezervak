@@ -218,7 +218,7 @@ final class WorkhoursPresenter extends SecurePresenter
         $form = new Form;
         $form->addText("start")->setRequired();
         $form->addText("stop")->setRequired();
-        $form->addSubmit("submit");
+        $form->addSubmit("submit", "Uložit");
 
         $form->onSuccess[] = [$this, "editSuccess"];
 
@@ -236,7 +236,7 @@ final class WorkhoursPresenter extends SecurePresenter
                 "start" => $data->start,
                 "stop" => $data->stop,
             ]);
-            $this->redirect("Workhours:show");
+            $this->flashMessage("Uloženo", "success");
         }
 
     }

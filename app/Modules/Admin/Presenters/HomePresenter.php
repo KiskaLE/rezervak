@@ -44,7 +44,7 @@ final class HomePresenter extends SecurePresenter
 
     private function getChartData()
     {
-        $reservations = $this->database->table("reservations")->where(" status='VERIFIED'")->fetchAll();
+        $reservations = $this->database->table("reservations")->where(" status='VERIFIED' AND user_id=?", $this->user->id)->fetchAll();
         $sortedArray = [];
         foreach ($reservations as $row) {
             $date = strval($row->date);

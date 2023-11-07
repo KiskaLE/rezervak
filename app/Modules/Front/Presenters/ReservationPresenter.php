@@ -43,13 +43,9 @@ final class ReservationPresenter extends BasePresenter
     protected function beforeRender()
     {
         parent::beforeRender();
-
-        $services = $this->database->table("services")->fetchAll();
-        $this->template->services = $services;
-        $this->redrawControl("content");
     }
 
-    public function actionCreate( $u, $run, $day, $service_id, $discountCode = "")
+    public function actionCreate($u, $run, $day, $service_id, $discountCode = "")
     {
         $this->user_uuid = $u;
         $this->user = $this->database->table("users")->where("uuid=?", $u)->fetch();
@@ -69,6 +65,10 @@ final class ReservationPresenter extends BasePresenter
             $this->payload->postGet = true;
             $this->payload->url = $this->link("Reservation:create", $u);
         }
+
+        $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
+        $this->template->services = $services;
+        $this->redrawControl("content");
 
     }
 
