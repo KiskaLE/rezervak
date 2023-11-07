@@ -15,6 +15,13 @@ final class SignPresenter extends BasePresenter {
 
     }
 
+    protected function beforeRender()
+    {
+        parent::beforeRender();
+        $this->setLayout("login");
+    }
+
+
     public function actionOut() {
         $this->getUser()->logout();
         $this->redirect("Sign:in");
@@ -35,7 +42,7 @@ final class SignPresenter extends BasePresenter {
             $this->getUser()->setAuthenticator($this->authenticator)->login($data->username, $data->password);
             $this->redirect("Home:");
         } catch (Nette\Security\AuthenticationException $e) {
-            $form->addError('incorect username or password');
+            $this->flashMessage("Špatný email nebo heslo.", "alert-danger");
         }
 
 
@@ -53,16 +60,13 @@ final class SignPresenter extends BasePresenter {
 
     public function createFormSucceeded(Form $form, \stdClass $data): void {
         $error = false;
-        try {
-            $this->authenticator->createUser($data->username, $data->password);
-
-        } catch (\Throwable $th) {
-            $form->addError("Account already exists");
-            $error = true;
-        }
+            if (!$this->authenticator->createUser($data->username, $data->password)) {
+                $error = true;
+            }
         if (!$error) {
             $this->redirect("Sign:in");
         }
+        $this->flashMessage("Účet s tímto emailem již existuje.", "alert-danger");
 
 
     }

@@ -51,7 +51,8 @@ final class ReservationPresenter extends BasePresenter
         $this->user = $this->database->table("users")->where("uuid=?", $u)->fetch();
         if ($this->isAjax()) {
             if ($run == "fetch") {
-                $user_settings = $this->user->ref("settings", "settings_id");
+                $user_settings = $this->user->related("settings")->fetch();
+                bdump($user_settings);
                 $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
                 $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates($u, $service->duration, $user_settings->number_of_days)]);
             } else if ($run == "setDate") {
@@ -128,7 +129,7 @@ final class ReservationPresenter extends BasePresenter
                 $this->mailer->sendConfirmationMail($email, $this->link("Payment:default", $uuid));
                 $this->redirect("Reservation:confirmation", ["r" => $uuid]);
             } else {
-                $this->flashMessage("Nepovedlo se uložit rezervaci.");
+                $this->flashMessage("Nepovedlo se uložit rezervaci.", "alert-danger");
             }
         } else if ($data->dateType == "backup") {
             $times = $this->availableDates->getBackupHours($data->date, $service->duration);
@@ -138,7 +139,7 @@ final class ReservationPresenter extends BasePresenter
                 $this->mailer->sendBackupConfiramationMail($email, $this->link("Payment:backup", $uuid));
                 $this->redirect("Reservation:backup", ["r" => $uuid]);
             } else {
-                $this->flashMessage("Nepovedlo se uložit rezervaci.");
+                $this->flashMessage("Nepovedlo se uložit rezervaci.", "alert-danger");
             }
         }
 

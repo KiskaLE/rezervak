@@ -81,7 +81,7 @@ final class WorkhoursPresenter extends SecurePresenter
             $start = strtotime($data->start);
             $stop = strtotime($data->stop);
             if ($start > $stop) {
-                $this->flashMessage("Začátek nemůže být větší než konec", "error");
+                $this->flashMessage("Začátek nemůže být větší než konec", "alert-danger");
             } else {
                 $this->database->table("breaks")->insert([
                     "start" => $data->start,
@@ -92,7 +92,7 @@ final class WorkhoursPresenter extends SecurePresenter
                 $this->redirect("Workhours:edit", $this->id);
             }
         } else {
-            $this->flashMessage("Přestávka musí být v rozsahu {$day->start} - {$day->stop} hodin", "error");
+            $this->flashMessage("Přestávka musí být v rozsahu {$day->start} - {$day->stop} hodin", "alert-danger");
         }
     }
 
@@ -128,7 +128,7 @@ final class WorkhoursPresenter extends SecurePresenter
             $start = strtotime($data->start);
             $stop = strtotime($data->stop);
             if ($start > $stop) {
-                $this->flashMessage("Začátek nemůže být větší než konec", "error");
+                $this->flashMessage("Začátek nemůže být větší než konec", "alert-danger");
             } else {
                 $this->database->table("breaks")->where("id=?", $this->id)->update([
                     "start" => $data->start,
@@ -137,7 +137,7 @@ final class WorkhoursPresenter extends SecurePresenter
                 $this->redirect("Workhours:edit", $this->edit_id);
             }
         } else {
-            $this->flashMessage("Přestávka musí být v rozsahu {$day->start} - {$day->stop} hodin", "error");
+            $this->flashMessage("Přestávka musí být v rozsahu {$day->start} - {$day->stop} hodin", "alert-danger");
         }
     }
 
@@ -230,13 +230,13 @@ final class WorkhoursPresenter extends SecurePresenter
         $start = strtotime($data->start);
         $stop = strtotime($data->stop);
         if ($start > $stop) {
-            $this->flashMessage("Začátek nemůže být větší než konec", "error");
+            $this->flashMessage("Začátek nemůže být větší než konec", "alert-danger");
         } else {
             $this->database->table("workinghours")->where("id=?", $this->id)->update([
                 "start" => $data->start,
                 "stop" => $data->stop,
             ]);
-            $this->flashMessage("Uloženo", "success");
+            $this->flashMessage("Uloženo", "alert-success");
         }
 
     }

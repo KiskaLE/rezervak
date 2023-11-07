@@ -47,7 +47,7 @@ foreach ($admins as $admin) {
         if (($database->query("SELECT * FROM reservations WHERE date='$backup->date' AND start='$backup->start' AND created_at > '$verificationTime' AND user_id='$admin->id'")->fetch())) {
             continue;
         };
-        $status = $database->transaction(function ($database, $backup) {
+        $status = $database->transaction(function ($database) use ($backup) {
             // insert into table
             $database->query("
                 INSERT INTO reservations (`uuid`,`user_id` ,`date`,`service_id`,`start`,`firstname`,`lastname`,`email`,`phone`,`address`,`code`,`city`,`status`,`payment_id`) SELECT `uuid`,`user_id`, `date`, `service_id`, `start`, `firstname`, `lastname`, `email`, `phone`, `address`, `code`, `city`, `status`, `payment_id` FROM backup_reservations WHERE id=?;

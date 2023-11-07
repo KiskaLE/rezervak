@@ -3,8 +3,7 @@ namespace App\Modules;
 
 use Nette;
 use Nette\Security\SimpleIdentity;
-use Nette\Security\User;
-use Symfony\Thanks\Command\FundCommand;
+use Ramsey\Uuid\Uuid;
 
 final class Authenticator implements Nette\Security\Authenticator {
     public function __construct(
@@ -49,12 +48,34 @@ final class Authenticator implements Nette\Security\Authenticator {
     public function createUser($username, $password): string {
         $passwordHash = $this->passwords->hash($password);
         $database = $this->database;
-
-        $database->table("users")->insert([
-            "username" => $username,
-            "password" => $passwordHash
-        ]);
-
-        return $username;
+        //TODO verify user
+        try {
+            $database->transaction(function ($database) use ($username, $passwordHash) {
+                //create user
+                $uuid = Uuid::uuid4();
+                $userRow = $database->table("users")->insert([
+                    "username" => $username,
+                    "password" => $passwordHash,
+                    "uuid" => $uuid,
+                    "role" => "ADMIN",
+                ]);
+                $user_id = $userRow->id;
+                //create user settings
+                $settingsRow = $database->table("settings")->insert([
+                    "user_id" => $user_id
+                ]);
+                $settings_id = $settingsRow->id;
+                //create workinghours
+                for ($i = 0; $i < 7; $i++) {
+                    $database->table("workinghours")->insert([
+                        "weekday" => $i,
+                        "user_id" => $user_id
+                    ]);
+                }
+            });
+        } catch (\Throwable $te) {
+            return false;
+        }
+        return true;
     }
 }

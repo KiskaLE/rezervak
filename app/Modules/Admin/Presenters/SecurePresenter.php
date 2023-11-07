@@ -22,6 +22,9 @@ class SecurePresenter extends BasePresenter
 
         if ($this->user->getRoles()[0] === "ADMIN"){
         }else{
+            if (!$this->user->getRoles()[0] === "UNVERIFIED") {
+                $this->flashMessage("Ověrte svůj email", "alert-danger");
+            }
             $this->redirect("Sign:in");
         }
 
