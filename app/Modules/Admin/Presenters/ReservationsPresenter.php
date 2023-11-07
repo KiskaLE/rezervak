@@ -22,7 +22,7 @@ final class ReservationsPresenter extends SecurePresenter
 
     public function actionShow()
     {
-        $reservations = $this->database->table("reservations")->where("date>=? AND status='VERIFIED'", date("Y-m-d"))->order("date ASC")->fetchAll();
+        $reservations = $this->database->table("reservations")->where("date>=? AND user_id=? AND status='VERIFIED'", [date("Y-m-d"), $this->user->id])->order("date ASC")->fetchAll();
         $this->template->reservations = $reservations;
     }
 

@@ -10,6 +10,8 @@ use App\Modules\Payments;
 
 final class PaymentPresenter extends BasePresenter
 {
+
+    private $user;
     public function __construct(
         private Nette\Database\Explorer $database,
         private Payments $payments
@@ -21,6 +23,7 @@ final class PaymentPresenter extends BasePresenter
     public function actionDefault($uuid)
     {
         $reservation = $this->database->table("reservations")->where("uuid=?", $uuid)->fetch();
+        $this->user = $reservation->ref("users", "user_id");
         if ($reservation) {
             $this->verify($reservation, $uuid, "reservations");
             if ($reservation->status != "VERIFIED") {
@@ -57,8 +60,8 @@ final class PaymentPresenter extends BasePresenter
 
     private function verify($reservation, $uuid, $table)
     {
-        //TODO set in admin settings
-        $time = 15;
+        $user_settings = $this->user->ref("settings", "settings_id");
+        $time = $user_settings->verification_time;
         $isLate = strtotime(strval($reservation->created_at)) < strtotime(date("Y-m-d H:i:s") . ' -' . $time . ' minutes');
         //confirm reservation
         if ($reservation->status == "UNVERIFIED" && !$isLate) {
