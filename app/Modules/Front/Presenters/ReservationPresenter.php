@@ -129,7 +129,7 @@ final class ReservationPresenter extends BasePresenter
                 $this->mailer->sendConfirmationMail($email, $this->link("Payment:default", $uuid));
                 $this->redirect("Reservation:confirmation", ["r" => $uuid]);
             } else {
-                $this->flashMessage("Nepovedlo se uložit rezervaci.");
+                $this->flashMessage("Nepovedlo se uložit rezervaci.", "alert-danger");
             }
         } else if ($data->dateType == "backup") {
             $times = $this->availableDates->getBackupHours($data->date, $service->duration);
@@ -139,7 +139,7 @@ final class ReservationPresenter extends BasePresenter
                 $this->mailer->sendBackupConfiramationMail($email, $this->link("Payment:backup", $uuid));
                 $this->redirect("Reservation:backup", ["r" => $uuid]);
             } else {
-                $this->flashMessage("Nepovedlo se uložit rezervaci.");
+                $this->flashMessage("Nepovedlo se uložit rezervaci.", "alert-danger");
             }
         }
 

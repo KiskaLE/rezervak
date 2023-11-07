@@ -49,29 +49,33 @@ final class Authenticator implements Nette\Security\Authenticator {
         $passwordHash = $this->passwords->hash($password);
         $database = $this->database;
         //TODO verify user
-        $database->transaction(function ($database) use ($username, $passwordHash) {
-            //create user
-            $uuid = Uuid::uuid4();
-            $userRow = $database->table("users")->insert([
-                "username" => $username,
-                "password" => $passwordHash,
-                "uuid" => $uuid,
-                "role" => "ADMIN",
-            ]);
-            $user_id = $userRow->id;
-            //create user settings
-            $settingsRow = $database->table("settings")->insert([
-                "user_id" => $user_id
-            ]);
-            $settings_id = $settingsRow->id;
-            //create workinghours
-            for ($i = 0; $i < 7; $i++) {
-                $database->table("workinghours")->insert([
-                    "weekday" => $i,
+        try {
+            $database->transaction(function ($database) use ($username, $passwordHash) {
+                //create user
+                $uuid = Uuid::uuid4();
+                $userRow = $database->table("users")->insert([
+                    "username" => $username,
+                    "password" => $passwordHash,
+                    "uuid" => $uuid,
+                    "role" => "ADMIN",
+                ]);
+                $user_id = $userRow->id;
+                //create user settings
+                $settingsRow = $database->table("settings")->insert([
                     "user_id" => $user_id
                 ]);
-            }
-        });
-        return $username;
+                $settings_id = $settingsRow->id;
+                //create workinghours
+                for ($i = 0; $i < 7; $i++) {
+                    $database->table("workinghours")->insert([
+                        "weekday" => $i,
+                        "user_id" => $user_id
+                    ]);
+                }
+            });
+        } catch (\Throwable $te) {
+            return false;
+        }
+        return true;
     }
 }

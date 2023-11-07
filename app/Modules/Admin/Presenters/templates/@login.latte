@@ -15,10 +15,11 @@
     <link rel="stylesheet" href="{$basePath}/assets/css/neon-theme.css">
     <link rel="stylesheet" href="{$basePath}/assets/css/neon-forms.css">
     <link rel="stylesheet" href="{$basePath}/assets/css/custom.css">
-    <link rel="stylesheet" href="{$basePath}/assets/css/styles.css">
     <link rel="stylesheet" href="{$basePath}/assets/admin/css/style.css">
     <script src="{$basePath}/assets/js/jquery-1.11.3.min.js"></script>
     <script src="{$basePath}/assets/bundle.js"></script>
+
+    <script src="{$basePath}/assets/admin/js/flashmessages.js"></script>
 
     <!--[if lt IE 9]><script src="{$basePath}/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 
@@ -35,15 +36,10 @@
 
 <body class="page-body  page-fade" data-url="http://neon.dev">
 
-<div class="page-container">
+<div class="page-container login-page">
     <div class="main-content">
-        <div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+        <div n:foreach="$flashes as $flash" n:class="flash, $flash->type" id="flash-messages">{$flash->message}</div>
         {include content}
-        <footer class="main">
-
-            © 2015 <strong>Neon</strong> Admin Theme by <a href="http://laborator.co" target="_blank">Laborator</a>
-
-        </footer>
     </div>
 
 

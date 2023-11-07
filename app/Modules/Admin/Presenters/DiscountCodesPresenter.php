@@ -95,10 +95,10 @@ final class DiscountCodesPresenter extends SecurePresenter
                 "services" => $json
             ]);
         } catch (\Throwable $th) {
-            $this->flashMessage("Nepodarilo se vytvořit, kód nesmí být duplicitní", "error");
+            $this->flashMessage("Nepodarilo se vytvořit, kód nesmí být duplicitní", "alert-danger");
         }
         if ($status) {
-            $this->flashMessage("Vytvořeno", "success");
+            $this->flashMessage("Vytvořeno", "alert-success");
             $this->redirect("DiscountCodes:show");
         }
     }
@@ -145,10 +145,10 @@ final class DiscountCodesPresenter extends SecurePresenter
                 "services" => $json
             ]);
         } catch (\Throwable $th) {
-            $this->flashMessage("Nepodarilo se uložit", "error");
+            $this->flashMessage("Nepodarilo se uložit", "alert-danger");
         }
         if ($status) {
-            $this->flashMessage("Uloženo", "success");
+            $this->flashMessage("Uloženo", "alert-success");
             $this->redirect("DiscountCodes:show");
         }
 
