@@ -15,6 +15,13 @@ final class SignPresenter extends BasePresenter {
 
     }
 
+    protected function beforeRender()
+    {
+        parent::beforeRender();
+        $this->setLayout("login");
+    }
+
+
     public function actionOut() {
         $this->getUser()->logout();
         $this->redirect("Sign:in");
@@ -53,13 +60,7 @@ final class SignPresenter extends BasePresenter {
 
     public function createFormSucceeded(Form $form, \stdClass $data): void {
         $error = false;
-        try {
             $this->authenticator->createUser($data->username, $data->password);
-
-        } catch (\Throwable $th) {
-            $form->addError("Account already exists");
-            $error = true;
-        }
         if (!$error) {
             $this->redirect("Sign:in");
         }

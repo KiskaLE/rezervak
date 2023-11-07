@@ -57,7 +57,7 @@ class AvailableDates
     public function getAvailableStartingHours(string $u, string $date, int $duration): array
     {
         $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
-        $user_settings = $user->ref("settings", "settings_id");
+        $user_settings = $user->related("settings")->fetch();
         $user_id = $user->id;
         $available = [];
         $workingHours = $this->database->table("workinghours")->where("user_id=? AND weekday=?", [$user_id, $this->getDay($date)])->fetch();

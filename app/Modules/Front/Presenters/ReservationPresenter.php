@@ -51,7 +51,8 @@ final class ReservationPresenter extends BasePresenter
         $this->user = $this->database->table("users")->where("uuid=?", $u)->fetch();
         if ($this->isAjax()) {
             if ($run == "fetch") {
-                $user_settings = $this->user->ref("settings", "settings_id");
+                $user_settings = $this->user->related("settings")->fetch();
+                bdump($user_settings);
                 $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
                 $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates($u, $service->duration, $user_settings->number_of_days)]);
             } else if ($run == "setDate") {
