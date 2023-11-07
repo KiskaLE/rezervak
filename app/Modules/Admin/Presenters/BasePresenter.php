@@ -22,4 +22,5 @@ class BasePresenter extends Presenter
     {
         parent::beforeRender();
     }
+
 }
