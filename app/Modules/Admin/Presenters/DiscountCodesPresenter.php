@@ -53,14 +53,16 @@ final class DiscountCodesPresenter extends SecurePresenter
     protected function createComponentForm(): Form
     {
         $types = [0 => "Částka", 1 => "Procento"];
-        $services = $this->database->table("services")->fetchAll();
+        $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
         $form = new Form;
         $form->addCheckbox("active", "Aktivní");
         $form->addText("code", "Code")->setRequired();
         $form->addSelect("type", "Typ", $types)->setRequired();
         $form->addText("value", "Hodnota")->setHtmlAttribute("type", "number")->setRequired();
-        for ($i = 1; $i <= count($services); $i++) {
-            $form->addCheckbox(strval("service" . $services[$i]->id), $services[$i]->name);
+        $i = 1;
+        foreach ($services as $service) {
+            $form->addCheckbox(strval("service".$i), $service->name);
+            $i++;
         }
         $form->addSubmit("save", "Vytvořit");
 
@@ -75,13 +77,13 @@ final class DiscountCodesPresenter extends SecurePresenter
         $show = $values->active ? 1 : 0;
         $status = false;
         $enabled = [];
-        for ($i = 1; $i <= count($services); $i++) {
+        $i = 1;
+        foreach ($services as $service) {
             $value = $values["service" . $i];
             if ($value) {
-                $enabled[] = $services[$i]->id;
+                $enabled[] = $service->id;
             }
         }
-        bdump($values);
         $json = Json::encode($enabled);
         try {
             $status = $this->database->table("discount_codes")->insert([
@@ -109,8 +111,10 @@ final class DiscountCodesPresenter extends SecurePresenter
         $form->addCheckbox("active", "Aktivní");
         $form->addText("code", "Code")->setRequired();
         $form->addText("value", "Hodnota")->setHtmlAttribute("type", "number")->setRequired();
-        for ($i = 1; $i <= count($services); $i++) {
-            $form->addCheckbox(strval("service" . $services[$i]->id), $services[$i]->name);
+        $i = 1;
+        foreach ($services as $service) {
+            $form->addCheckbox(strval("service".$i), $service->name);
+            $i++;
         }
         $form->addSubmit("save", "Uložit");
 
@@ -120,15 +124,15 @@ final class DiscountCodesPresenter extends SecurePresenter
     }
 
     public function editFormSucceeded(Form $form, $values) {
-        bdump($values);
         $services = $this->database->table("services")->fetchAll();
         $show = $values->active ? 1 : 0;
         $status = false;
         $enabled = [];
-        for ($i = 1; $i <= count($services); $i++) {
+        $i = 1;
+        foreach ($services as $service) {
             $value = $values["service" . $i];
             if ($value) {
-                $enabled[] = $services[$i]->id;
+                $enabled[] = $service->id;
             }
         }
         $json = Json::encode($enabled);

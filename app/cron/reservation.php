@@ -16,4 +16,3 @@ $container = App\Bootstrap::bootForCron()
 $db = $container->getByType(Nette\Database\Connection::class);
 
 # Kousek kódu, který chceme vykonat
-bdump($db->table("services")->fetchAll());

@@ -31,39 +31,27 @@ neon-bootstrap-admin
 
 ## Front
 
-x backup reservation flow
-
-x optimize reservation flow on mobile
-
-x fix reservation flow on PC
 
 Create Email templates
 
 Design Completation pages
 
-x Možnost zadat slevový kód
 
 
 
 ## Admin
 
-x Write cron that deletes old reservations
-
-x Write cron to check payment
 
 Create detail view of reservations
 
 Create Dashboard
 
-x fix animations
-
-x fix resrvations on mobile
 
 Connect Fio API
 
 Add better working hours setting
 
-x Vytvoření slevových kodů
+re-do crons 
 
 
 

@@ -19,9 +19,10 @@ class DiscountCodes
      * @param string $discountCode The discount code to validate.
      * @return array The discount code row if valid, an empty array otherwise.
      */
-    public function isCodeValid(int $user_id ,$service_id, string $discountCode)
+    public function isCodeValid(int $user_id ,int $service_id, string $discountCode)
     {
-        $discountCodeRow = $this->database->table("discount_codes")->where("code=? AND user_id=? AND active=1", [$discountCode, $user_id])->fetch();
+        //TODO fix this
+        $discountCodeRow = $this->database->table("discount_codes")->where("user_id=? AND code=? AND active=1", [strval($user_id), $discountCode])->fetch();
         if ($discountCodeRow) {
             $discountServices = Nette\Utils\Json::decode($discountCodeRow->services);
             in_array($service_id, $discountServices) ?: $discountCodeRow = [];
