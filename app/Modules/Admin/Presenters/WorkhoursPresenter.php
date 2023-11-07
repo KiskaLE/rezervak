@@ -143,9 +143,13 @@ final class WorkhoursPresenter extends SecurePresenter
 
     public function deleteBreakSuccess(Form $form, $data)
     {
-        //TODO exceptins
-        $this->database->table("breaks")->where("id=?", $this->id)->delete();
-        $this->redirect("Workhours:edit", $this->edit_id);
+        try {
+            $this->database->table("breaks")->where("id=?", $this->id)->delete();
+            $this->redirect("Workhours:edit", $this->edit_id);
+            $this->flashMessage( "Smazáno", "alert-success");
+        } catch (\Throwable $th) {
+            $this->flashMessage( "Nepodarilo se smazat", "alert-danger");
+        }
 
     }
 

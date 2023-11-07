@@ -21,7 +21,6 @@ class DiscountCodes
      */
     public function isCodeValid(int $user_id ,int $service_id, string $discountCode)
     {
-        //TODO fix this
         $discountCodeRow = $this->database->table("discount_codes")->where("user_id=? AND code=? AND active=1", [strval($user_id), $discountCode])->fetch();
         if ($discountCodeRow) {
             $discountServices = Nette\Utils\Json::decode($discountCodeRow->services);

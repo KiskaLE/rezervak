@@ -41,7 +41,6 @@ foreach ($admins as $admin) {
     $backups = $database->query("SELECT * FROM backup_reservations WHERE status='VERIFIED' AND user_id = '$admin->id' ORDER BY created_at ASC");
 
 
-    //TODO set by user settings
     $verificationTime = date("Y-m-d H:i:s", strtotime("-" . $admin->verification_time . " minutes"));
     foreach ($backups as $backup) {
         if (($database->query("SELECT * FROM reservations WHERE date='$backup->date' AND start='$backup->start' AND created_at > '$verificationTime' AND user_id='$admin->id'")->fetch())) {
