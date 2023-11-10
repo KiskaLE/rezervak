@@ -16,6 +16,7 @@
             </tr>
             </thead>
             {foreach $reservations as $reservation}
+                {dump $reservation}
                 <tr>
                     <th>{$reservation->date|date:"d.m.Y"}</th>
                     <th>{$reservation->start}</th>
