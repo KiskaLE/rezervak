@@ -22,7 +22,14 @@ final class ReservationsPresenter extends SecurePresenter
 
     public function actionShow()
     {
-        $reservations = $this->database->table("reservations")->where("date>=? AND user_id=? AND status='VERIFIED'", [date("Y-m-d"), $this->user->id])->order("date ASC")->fetchAll();
+        //$reservations = $this->database->query("SELECT reservations.* FROM `reservations` LEFT JOIN payments ON reservations.id = payments.reservation_id WHERE reservations.status='VERIFIED' AND payments.status=1 AND reservations.user_id=?;", $this->user->id)->fetchAll();
+        //$reservations = $this->database->table("reservations")->select("payments")->where("date>=? AND user_id=? AND status='VERIFIED'", [date("Y-m-d"), $this->user->id])->fetchAll();
+        $reservations = $this->database->table('reservations')
+            ->select('reservations.*',)
+            ->where('reservations.status=?', 'VERIFIED')
+            ->where('user_id=?', $this->user->id)
+            ->where(':payments.status=?', 1)->fetchAll();
+        bdump($reservations);
         $this->template->reservations = $reservations;
     }
 
@@ -33,7 +40,8 @@ final class ReservationsPresenter extends SecurePresenter
         $this->template->reservation = $reservation;
     }
 
-    public function actionDetail(int $id) {
+    public function actionDetail(int $id)
+    {
         $reservation = $this->database->table("reservations")->get($id);
         $this->template->reservation = $reservation;
     }

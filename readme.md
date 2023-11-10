@@ -41,15 +41,13 @@ Design Completation pages
 
 ## Admin
 
-
-Create detail view of reservations
+Upravit design user row
 
 Create Dashboard
 
 
 Connect Fio API
 
-Add better working hours setting
 
 re-do crons 
 

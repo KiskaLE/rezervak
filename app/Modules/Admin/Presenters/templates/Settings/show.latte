@@ -1,9 +1,95 @@
 {block content}
-<h1>Nastavení</h1>
+<h1>Nastavení účtu</h1>
 
 <div class="content-wrapper">
 
     <div>
+        <form n:name="basicSettingsForm" id="basicForm">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="panel panel-primary" data-collapsed="0">
+
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                Základní nastavení
+                            </div>
+
+                            <div class="panel-options">
+                                <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
+                            </div>
+                        </div>
+
+                        <div class="panel-body" style="display: block;">
+
+                            <div class="form-group">
+                                <label for="field-1" class="col-sm-3 control-label">Čas rozdělení kalendáře</label>
+
+                                <div class="col-sm-5">
+                                    <input n:name="sampleRate" class="form-control">
+                                    <span class="description">Zde zadejte v jakém intervalu se bude váš kalendář rozdělovat.</span>
+                                    <span class="input-error" id="sampleRateError">Čas musí být větší než 0.</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="field-2" class="col-sm-3 control-label">Platební informace</label>
+
+                                <div class="col-sm-5">
+                                    <input n:name="paymentInfo" class="form-control">
+                                    <span class="description">Zde zadejte číslo vašeho bankovního účtu.</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="field-3" class="col-sm-3 control-label">Čas na ověření rezervace</label>
+
+                                <div class="col-sm-5">
+                                    <input n:name="verificationTime" class="form-control">
+                                    <span class="description">Zde zadejte dobu na ověření rezervace v minutách.</span>
+                                    <span class="input-error"
+                                          id="verificationTimeError">Čas musí být větší než 0.</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="field-4" class="col-sm-3 control-label">Počet dní</label>
+
+                                <div class="col-sm-5">
+                                    <input n:name="numberOfDays" class="form-control">
+                                    <span class="description">Zde zadejte kolik dní je možno rezervovat do budoucnosti.</span>
+                                    <span class="input-error" id="numberOfDaysError">Čas musí být větší než 0.</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="field-4" class="col-sm-3 control-label">Čas na zaplacení rezervace</label>
+
+                                <div class="col-sm-5">
+                                    <input n:name="timeToPay" class="form-control">
+                                    <span class="description">Zde zadejte čas v hodinách na zaplacení rezervace.</span>
+                                    <span class="input-error" id="timeToPayError">Čas musí být větší než 0.</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group default-padding">
+                <div id="btn-submit" class="btn btn-success">Uložit změny</div>
+                <div class="btn" onclick="location.reload()">Zrušit změny</div>
+            </div>
+        </form>
+    </div>
+
+    <script src="{$basePath}/assets/admin/js/settingsFormValidation.js"></script>
+
+
+    <!--
+
     <h2>Sample Rate</h2>
         <form n:name="sampleRateForm">
             <div><input n:name="sampleRate"></div>
@@ -43,3 +129,4 @@
         </form>
     </div>
 </div>
+-->

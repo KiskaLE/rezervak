@@ -1,12 +1,29 @@
-@charset "UTF-8";
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Source+Code+Pro:wght@500&display=swap");
 html {
-  --main: #ßEFFFFB;
-  --secondary: #50D890;
-  --blue: #4F98CA;
-  --text: #272727;
-  --shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-  --shadow-clicked: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+  --text: rgb(9, 9, 27);
+  --background: rgb(255, 255, 255);
+  --primary: rgb(54, 86, 247);
+  --secondary: rgb(29, 27, 39);
+  --accent: rgb(107, 186, 163);
+  /*
+    --text: #090101;
+    --background: #ffffff;
+    --primary: #87e52a;
+    --secondary: #a4f4f4;
+    --accent: #6616b6;
+  */
+  --shadow: var(--primary) 0px 10px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
+  --shadow-secondary: var(--secondary) 0px 4px 12px;
+  font-size: 16px;
+  /*
+  --text: #0e0a06;
+   --background: #f9f5f1;
+   --primary: #305473;
+   --secondary: #ebddd0;
+   --accent: #477ba9;
+
+   --shadow-clicked: rgba(50, 50, 93, 0.25) 0px 30px 60 px - 12 px inset, rgba(0, 0, 0, 0.3) 0px 18px 36 px - 18 px inset;
+   */
 }
 
 .body-container {
@@ -31,13 +48,14 @@ bold {
 }
 
 h1 {
-  color: var(--blue);
+  color: var(--accent);
   margin-bottom: 50px;
 }
 
 body {
-  background-color: var(--main);
-  font-family: "Inter", sans-serif;
+  font-family: "Jost", sans-serif;
+  font-family: "Source Code Pro", monospace;
+  background-color: var(--background);
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -69,7 +87,7 @@ body {
   padding: 5px;
 }
 .items-table .table-header {
-  background-color: #0d7eff;
+  background-color: inherit;
 }
 
 #reservation-steps {
@@ -81,19 +99,19 @@ body {
 #reservation-steps .step {
   height: 50px;
   width: 50px;
-  border: var(--blue) 3px solid;
+  border: var(--accent) 3px solid;
   border-radius: 50%;
   display: inline-block;
 }
 #reservation-steps .step.active {
   opacity: 1;
-  border: blue 3px solid;
-  background-color: var(--blue);
+  border: var(--primary) 3px solid;
+  background-color: var(--primary);
   cursor: pointer;
 }
 #reservation-steps .step.finish {
   opacity: 0.5;
-  background-color: var(--blue);
+  background-color: var(--accent);
   cursor: pointer;
 }
 
@@ -125,15 +143,15 @@ body {
 
 .button {
   padding: 5px 10px;
-  border: 1px var(--blue) solid;
+  border: none !important;
   border-radius: 5px;
-  transition-duration: 100ms;
+  transition-duration: 300ms;
   cursor: pointer;
   margin: 0;
 }
 
 .button:hover {
-  background-color: var(--blue);
+  transform: translateY(-3px);
   color: white;
   box-shadow: var(--shadow);
 }
@@ -148,7 +166,6 @@ body {
   padding: 15px 0;
 }
 .nav-buttons button {
-  background-color: white;
   width: 100%;
 }
 
@@ -163,16 +180,32 @@ body {
   flex-direction: column;
   gap: 10px;
 }
-.info-form div input {
-  box-sizing: border-box;
-}
 
 .backup {
-  background-color: yellow;
+  background-color: var(--secondary);
+  border: none;
+}
+
+.backup:hover {
+  box-shadow: var(--shadow-secondary) !important;
+}
+
+.primary {
+  background-color: var(--primary) !important;
+  color: var(--text-light);
+}
+
+.secondary {
+  background-color: var(--secondary);
+  color: var(--text-light);
+  border: none;
+}
+
+.secondary:hover {
+  box-shadow: var(--shadow-secondary) !important;
 }
 
 .service-button:hover {
-  background-color: #0d7eff;
   color: white;
   cursor: pointer;
 }
@@ -205,9 +238,6 @@ body {
   text-align: center;
 }
 
-#calendar th.day {
-  border: 1px var(--blue) solid;
-}
 #calendar th.weekend {
   color: red;
 }
@@ -215,23 +245,18 @@ body {
   background-color: white;
 }
 #calendar th.available {
-  background-color: var(--blue);
+  background-color: var(--primary);
   color: white;
-  transition-duration: 100ms;
+  transition-duration: 300ms;
 }
 #calendar th.available:hover {
   cursor: pointer;
+  background-color: var(--secondary);
 }
 #calendar th {
-  padding: 15px;
-  border-radius: 10px;
+  padding: 25px;
+  border-radius: 20px;
 }
-#calendar .available:hover {
-  background-color: var(--blue);
-  filter: brightness(1.2);
-  color: white;
-}
-
 .backup-time {
   display: flex;
   flex-direction: column !important;
@@ -334,9 +359,11 @@ input {
   padding: 10px;
   width: 100%;
   font-size: 17px;
-  font-family: Raleway;
-  border: 1px solid #0d7eff;
+  color: var(--text);
   border-radius: 10px;
+  box-sizing: border-box;
+  border: 2px solid var(--secondary) !important;
+  background-color: inherit;
 }
 
 /* Mark input boxes that gets an error on validation: */
@@ -345,7 +372,7 @@ input.invalid {
 }
 
 input.valid {
-  background-color: #23DC3D;
+  background-color: rgba(96, 248, 117, 0.6);
 }
 
 /* Hide all steps by default: */
@@ -358,7 +385,7 @@ input.valid {
 .step.active {
   opacity: 1;
   border: none;
-  background-color: var(--blue);
+  background-color: var(--primary) !important;
 }
 
 /* Mark the steps that are finished and valid: */

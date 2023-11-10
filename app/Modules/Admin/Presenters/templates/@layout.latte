@@ -210,10 +210,10 @@
     </div>
     <div class="main-content">
 
-        <div n:if="$user->isLoggedIn() && $user->roles[0] === 'ADMIN'" class="row">
+        <div n:if="$user->isLoggedIn() && $user->roles[0] === 'ADMIN'" class="row" id="user-info">
             <div class="clearfix col-md-6 col-sm-8 clearfix">
                 <ul class="user-info pull-left pull-none-xsm">
-                    <li class="profile-info"><a href="">
+                    <li class="profile-info"><a id="user-name" href="">
                             <img src="" alt="" class="img-circle" width="44">{$user->getIdentity()->getData()["name"]}
                         </a></li>
                 </ul>

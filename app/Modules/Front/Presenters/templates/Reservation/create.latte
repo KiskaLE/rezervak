@@ -16,7 +16,7 @@
                 <div class="select-wrapper">
                     {var $i = 0}
                     {foreach $services as $service}
-                        <div><p onclick="setService({$service->id}, {$service->name}, {$service->price})" class="button">{$service->name} - {$service->price}
+                        <div><p onclick="setService({$service->id}, {$service->name}, {$service->price})" class="button xl primary">{$service->name} - {$service->price}
                                 Kč</p>
                         </div>
                         {do $i++}
@@ -65,7 +65,7 @@
                         <div class="time select-wrapper">
                             {var $i = 0}
                                 {foreach $times as $time}
-                                <p onclick="setTime({$i},'default', {$time})" class="button">{$time}</p>
+                                <p onclick="setTime({$i},'default', {$time})" class="button xl primary">{$time}</p>
                                 {do $i++}
                             {/foreach}
 
@@ -75,7 +75,7 @@
                             <div>
                                 {var $j = 0}
                                     {foreach $backupTimes as $time}
-                                    <p onclick="setTime({$j},'backup', {$time})" class="button backup">{$time}</p>
+                                    <p onclick="setTime({$j},'backup', {$time})" class="button secondary">{$time}</p>
                                     {do $j++}
                                 {/foreach}
                             </div>
@@ -117,13 +117,13 @@
                 </div>
                 <div class="discount-code-wrapper">
                     <label for="">Slevový kód</label>
-                    <div><input n:name="dicountCode" onfocusout="verify()">
-                        <p id="verify-code" class="button xl" onclick="verify()">Ověřit</p></div>
+                    <div><input n:name="dicountCode" onfocusout="verify()" autocomplete="off">
+                        <p id="verify-code" class="button secondary xl" onclick="verify()">Ověřit</p></div>
                 </div>
             </div>
             <div class="nav-buttons">
                 <button class="button xl" id="prevBtn" type="button" onclick="nextPrev(-1)">Zpět</button>
-                <button class="button xl" id="nextBtn" type="button" onclick="nextPrev(1)">Další</button>
+                <button class="button xl primary" id="nextBtn" type="button" onclick="nextPrev(1)">Další</button>
             </div>
 
         </form>
