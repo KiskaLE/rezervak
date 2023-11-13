@@ -1,8 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Source+Code+Pro:wght@500&display=swap");
 html {
-  --text: rgb(9, 9, 27);
-  --background: rgb(255, 255, 255);
-  --primary: rgb(54, 86, 247);
+  --text-dark: rgb(29, 27, 39);
+  --text-light: rgb(248, 248, 255);
+  --background: rgb(248, 248, 255);
+  --primary: rgb(55, 86, 247);
   --secondary: rgb(29, 27, 39);
   --accent: rgb(107, 186, 163);
   /*
@@ -131,6 +132,7 @@ body {
 
 #confirmation {
   max-width: 800px;
+  height: -moz-fit-content;
   height: fit-content;
 }
 #confirmation h1 {
@@ -257,6 +259,7 @@ body {
   padding: 25px;
   border-radius: 20px;
 }
+
 .backup-time {
   display: flex;
   flex-direction: column !important;
@@ -280,6 +283,7 @@ body {
   align-items: center;
 }
 .time-wrapper .time p {
+  height: -moz-fit-content;
   height: fit-content;
 }
 
@@ -346,6 +350,7 @@ body {
   gap: 10px;
 }
 .discount-code-wrapper div .button {
+  width: -moz-fit-content;
   width: fit-content;
 }
 
@@ -353,7 +358,6 @@ footer {
   height: 100px;
 }
 
-/* Style the form */
 /* Style the input fields */
 input {
   padding: 10px;
@@ -389,5 +393,55 @@ input.valid {
 }
 
 /* Mark the steps that are finished and valid: */
+/* Service cards */
+.service-card {
+  padding: 40px;
+  border-radius: 30px;
+  max-width: 400px;
+}
+.service-card .card-title {
+  margin-bottom: 25px;
+}
+.service-card .card-title h2 {
+  font-size: 2.375rem;
+  font-weight: bolder;
+  letter-spacing: -2px;
+  margin: 0;
+}
+.service-card .card-text p {
+  font-size: 1.263rem;
+  margin: 0;
+  line-height: 1.875rem;
+}
+.service-card .card-price {
+  padding: 10px 0;
+  font-size: 1.789rem;
+  color: var(--accent);
+}
+.service-card .card-button {
+  border-radius: 27px;
+  height: 60px;
+  background-color: var(--primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.service-card .card-button span {
+  font-size: 1.671rem;
+  font-weight: bold;
+  color: var(--text-light);
+}
 
-/*# sourceMappingURL=styles.css.map */
+.service-primary {
+  background-color: var(--background) !important;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.service-secondary {
+  background-color: var(--secondary);
+  box-shadow: rgba(100, 100, 111, 0.7) 0px 7px 29px 0px;
+}
+.service-secondary p, .service-secondary h2 {
+  color: white !important;
+}/*# sourceMappingURL=styles.css.map */

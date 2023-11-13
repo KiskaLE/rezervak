@@ -16,8 +16,11 @@
                 <div class="select-wrapper">
                     {var $i = 0}
                     {foreach $services as $service}
-                        <div><p onclick="setService({$service->id}, {$service->name}, {$service->price})" class="button xl primary">{$service->name} - {$service->price}
-                                Kč</p>
+                        <div class="service-card {$i == 0%2 ? 'service-primary' : 'service-secondary'}">
+                            <div class="card-title"><h2>{$service->name}</h2></div>
+                            <div class="card-text"><p>{$service->description}</p></div>
+                            <div class="card-price"><span>{$service->price}</span><span> Kč</span></div>
+                            <div class="card-button" onclick="setService({$service->id}, {$service->name}, {$service->price})"><span>Rezervovat</span></div>
                         </div>
                         {do $i++}
                     {/foreach}

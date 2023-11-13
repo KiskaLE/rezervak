@@ -3,12 +3,12 @@
 html {
 
 
-  --text: rgb(9, 9, 27);
-  --background: rgb(255, 255, 255);
-  --primary: rgb(54, 86, 247);
+  --text-dark: rgb(29, 27, 39);
+  --text-light: rgb(248, 248, 255);
+  --background: rgb(248, 248, 255);
+  --primary: rgb(55, 86, 247);
   --secondary: rgb(29, 27, 39);
   --accent: rgb(107, 186, 163);
-
 
 
 
@@ -274,9 +274,6 @@ body {
 
 #calendar {
 
-  th.day {
-  }
-
   th.weekend {
     color: red;
   }
@@ -300,10 +297,6 @@ body {
     padding: 25px;
     border-radius: 20px;
   }
-
-  .week {
-  }
-
 }
 
 .backup-time {
@@ -429,9 +422,6 @@ footer {
 }
 
 
-/* Style the form */
-#regForm {
-}
 
 /* Style the input fields */
 input {
@@ -470,3 +460,60 @@ input.valid {
 
 /* Mark the steps that are finished and valid: */
 
+/* Service cards */
+
+.service-card {
+  padding: 40px;
+  border-radius: 30px;
+  max-width: 400px;
+  .card-title {
+    margin-bottom: 25px;
+    h2 {
+      font-size: 2.375rem;
+      font-weight: bolder;
+      letter-spacing: -2px;
+      margin: 0;
+    }
+  }
+  .card-text {
+    p {
+      font-size: 1.263rem;
+      margin: 0;
+      line-height: 1.875rem;
+    }
+  }
+
+  .card-price {
+    padding: 10px 0;
+    font-size: 1.789rem;
+    color: var(--accent);
+  }
+
+  .card-button {
+    border-radius: 27px;
+    height: 60px;
+    background-color: var(--primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    span {
+      font-size: 1.671rem;
+      font-weight: bold;
+      color: var(--text-light);
+    }
+  }
+}
+
+.service-primary {
+  background-color: var(--background) !important;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.service-secondary {
+  background-color: var(--secondary);
+  box-shadow: rgba(100, 100, 111, 0.7) 0px 7px 29px 0px;
+  p, h2 {
+    color: white !important;
+  }
+}
