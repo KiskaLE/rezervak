@@ -1,30 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Source+Code+Pro:wght@500&display=swap");
-html {
+:root {
   --text-dark: rgb(29, 27, 39);
   --text-light: rgb(248, 248, 255);
   --background: rgb(248, 248, 255);
   --primary: rgb(55, 86, 247);
   --secondary: rgb(29, 27, 39);
   --accent: rgb(107, 186, 163);
-  /*
-    --text: #090101;
-    --background: #ffffff;
-    --primary: #87e52a;
-    --secondary: #a4f4f4;
-    --accent: #6616b6;
-  */
   --shadow: var(--primary) 0px 10px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
   --shadow-secondary: var(--secondary) 0px 4px 12px;
   font-size: 16px;
-  /*
-  --text: #0e0a06;
-   --background: #f9f5f1;
-   --primary: #305473;
-   --secondary: #ebddd0;
-   --accent: #477ba9;
-
-   --shadow-clicked: rgba(50, 50, 93, 0.25) 0px 30px 60 px - 12 px inset, rgba(0, 0, 0, 0.3) 0px 18px 36 px - 18 px inset;
-   */
 }
 
 .body-container {
@@ -49,8 +33,11 @@ bold {
 }
 
 h1 {
-  color: var(--accent);
+  color: var(--primary);
+  font-size: 3.5rem;
   margin-bottom: 50px;
+  font-weight: bolder;
+  letter-spacing: -2px;
 }
 
 body {
@@ -100,19 +87,19 @@ body {
 #reservation-steps .step {
   height: 50px;
   width: 50px;
-  border: var(--accent) 3px solid;
+  border: var(--secondary) 3px solid;
   border-radius: 50%;
   display: inline-block;
 }
 #reservation-steps .step.active {
-  opacity: 1;
+  opacity: 1 !important;
   border: var(--primary) 3px solid;
   background-color: var(--primary);
   cursor: pointer;
 }
 #reservation-steps .step.finish {
   opacity: 0.5;
-  background-color: var(--accent);
+  background-color: var(--secondary);
   cursor: pointer;
 }
 
@@ -132,7 +119,6 @@ body {
 
 #confirmation {
   max-width: 800px;
-  height: -moz-fit-content;
   height: fit-content;
 }
 #confirmation h1 {
@@ -155,7 +141,6 @@ body {
 .button:hover {
   transform: translateY(-3px);
   color: white;
-  box-shadow: var(--shadow);
 }
 
 .button.xl {
@@ -173,8 +158,10 @@ body {
 
 .select-wrapper {
   display: flex;
-  flex-direction: column;
-  gap: 15px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 50px;
 }
 
 .info-form {
@@ -263,6 +250,7 @@ body {
 .backup-time {
   display: flex;
   flex-direction: column !important;
+  padding: 10px 0;
 }
 .backup-time div {
   display: flex;
@@ -283,7 +271,6 @@ body {
   align-items: center;
 }
 .time-wrapper .time p {
-  height: -moz-fit-content;
   height: fit-content;
 }
 
@@ -303,6 +290,7 @@ body {
   }
   .select-wrapper {
     flex-direction: column;
+    gap: 30px;
   }
   .backup-time {
     flex-direction: column;
@@ -350,7 +338,6 @@ body {
   gap: 10px;
 }
 .discount-code-wrapper div .button {
-  width: -moz-fit-content;
   width: fit-content;
 }
 
@@ -387,8 +374,6 @@ input.valid {
 /* Make circles that indicate the steps of the form: */
 /* Mark the active step: */
 .step.active {
-  opacity: 1;
-  border: none;
   background-color: var(--primary) !important;
 }
 
@@ -396,7 +381,7 @@ input.valid {
 /* Service cards */
 .service-card {
   padding: 40px;
-  border-radius: 30px;
+  border-radius: 15px;
   max-width: 400px;
 }
 .service-card .card-title {
@@ -419,29 +404,38 @@ input.valid {
   color: var(--accent);
 }
 .service-card .card-button {
-  border-radius: 27px;
+  border-radius: 10px;
   height: 60px;
   background-color: var(--primary);
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  cursor: pointer;
+  transition: 300ms;
 }
 .service-card .card-button span {
   font-size: 1.671rem;
   font-weight: bold;
   color: var(--text-light);
 }
+.service-card .card-button:hover {
+  transform: translateY(-3px);
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  filter: brightness(1.05);
+}
 
 .service-primary {
   background-color: var(--background) !important;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
 
 .service-secondary {
   background-color: var(--secondary);
-  box-shadow: rgba(100, 100, 111, 0.7) 0px 7px 29px 0px;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
-.service-secondary p, .service-secondary h2 {
+.service-secondary p,
+.service-secondary h2 {
   color: white !important;
-}/*# sourceMappingURL=styles.css.map */
+}
+
+/*# sourceMappingURL=styles.css.map */

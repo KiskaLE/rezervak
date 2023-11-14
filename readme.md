@@ -36,6 +36,10 @@ Create Email templates
 
 Design Completation pages
 
+fix that user cant reserve full day as backup
+
+přepsat crony
+
 
 
 

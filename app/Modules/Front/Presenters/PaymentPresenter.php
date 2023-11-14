@@ -39,9 +39,9 @@ final class PaymentPresenter extends BasePresenter
 
     public function actionBackup($uuid)
     {
-        $reservation = $this->database->table("backup_reservations")->where("uuid=?", $uuid)->fetch();
+        $reservation = $this->database->table("reservations")->where("uuid=?", $uuid)->fetch();
         $this->user = $reservation->ref("users", "user_id");
-        $this->verify($reservation, $uuid, "backup_reservations");
+        $this->verify($reservation, $uuid, "reservations");
         if ($reservation->status != "VERIFIED") {
             $this->redirect("Payment:notFound");
         }

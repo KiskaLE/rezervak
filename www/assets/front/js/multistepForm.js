@@ -74,12 +74,18 @@ function nextPrev(n) {
 function goToTab(n) {
     let x = document.getElementsByClassName("tab");
     // activeted tabs
-    const activeTabs = document.getElementsByClassName("step finish");
+    const tabs = document.querySelectorAll(".step")
 
-    if (n <= activeTabs.length) {
+    if (n < currentTab) {
         x[currentTab].style.display = "none";
         currentTab = n;
         showTab(currentTab);
+    }
+    //remove active from tabs berore active tab
+    for (let i = 0; i < tabs.length; i++) {
+        if (i >= n) {
+            tabs[i].classList.remove("finish");
+        }
     }
 }
 
@@ -194,242 +200,254 @@ function setRecap() {
     }
 }
 
-    async function getServiceName(service_id) {
+async function getServiceName(service_id) {
+    let naja = window.Naja;
+    const res = await naja.makeRequest("GET", "/reservation/create", {
+        run: "getServiceName",
+        service_id: service_id
+    }, {
+        fetch: {
+            credentials: 'include',
+        },
+    })
+    return Promise.resolve(res.serviceName)
+}
+
+async function getTime(time_id) {
+    let naja = window.Naja;
+    const res = await naja.makeRequest("GET", "/reservation/create", {
+        u: searchParams.get("u"),
+        run: "getTime",
+        time_id: time_id
+    }, {
+        fetch: {
+            credentials: 'include',
+        },
+    })
+    console.log(res.time)
+    return Promise.resolve(res.time)
+}
+
+function getOption(name, number) {
+    //get all select options into array
+    let selectElement = document.getElementsByName(name)[0];
+    let options = selectElement.options;
+    let optionsArray = [];
+    for (let i = 0; i < options.length; i++) {
+        optionsArray.push(options[i].text);
+    }
+
+    return optionsArray[parseInt(number)];
+}
+
+
+function changeDay() {
+    const button = document.querySelector("#load-day");
+    const day = document.querySelector("[name='date']").value;
+    const service = document.querySelector("[name='service']").value;
+    let naja = window.Naja;
+    naja.makeRequest("GET", "/reservation/create", {
+        u: searchParams.get("u"),
+        run: "setDate",
+        day: day,
+        service_id: service
+    }, {
+        fetch: {
+            credentials: 'include',
+        },
+    })
+}
+
+function setService(id, name, price) {
+    document.querySelector("[name='service']").value = id;
+    const recap = document.querySelector("#service");
+    ;
+    recap.innerHTML = name;
+    document.querySelector("#price").innerHTML = price;
+    nextPrev(1);
+}
+
+function setTime(id, type, time) {
+    document.querySelector("[name='time']").value = id;
+    document.querySelector("[name='dateType']").value = type;
+    const recap = document.querySelector("#time");
+    recap.innerHTML = time;
+    nextPrev(1);
+}
+
+
+function calNext(n) {
+    showMonth += n;
+    if (showMonth < 0) {
+        showMonth = 11;
+        showYear--;
+    } else if (showMonth > 11) {
+        showMonth = 0;
+        showYear++;
+    }
+    console.log(showMonth, showYear)
+    createCalendar(showMonth, showYear);
+}
+
+async function createCalendar(month, year) {
+    const container = document.querySelector("#calendar");
+    const calendarTitle = document.querySelector("#calendar-month")
+    const curDate = new Date();
+    const curMonth = curDate.getMonth();
+    const firstDateOfMonth = new Date(year, month, 1);
+    const lastDayOfMonth = new Date(year, month + 1, 0);
+    const availableDays = await getAvailableDays();
+
+    calendarTitle.innerHTML = "";
+    container.innerHTML = "";
+    let curMonthName = "";
+    switch (month) {
+        case 0:
+            curMonthName = "Leden";
+            break;
+        case 1:
+            curMonthName = "Únor";
+            break;
+        case 2:
+            curMonthName = "Březen";
+            break;
+        case 3:
+            curMonthName = "Duben";
+            break;
+        case 4:
+            curMonthName = "Květen";
+            break;
+        case 5:
+            curMonthName = "Červen";
+            break;
+        case 6:
+            curMonthName = "Červenec";
+            break;
+        case 7:
+            curMonthName = "Srpen";
+            break;
+        case 8:
+            curMonthName = "Záři";
+            break;
+        case 9:
+            curMonthName = "Říjen";
+            break;
+        case 10:
+            curMonthName = "Listopad";
+            break;
+        case 11:
+            curMonthName = "Prosinec";
+    }
+    calendarTitle.innerHTML = curMonthName + " " + year;
+
+    //days in calendar
+    let days = [];
+    //create last month days
+    for (let i = 0; i < getDayIndexMondaySunday(firstDateOfMonth); i++) {
+        const th = document.createElement("th");
+        th.className = "";
+        days.push(th);
+    }
+    //week
+    for (let i = 1; i < lastDayOfMonth.getDate() + 1; i++) {
+        const date = new Date(year, month, i);
+        const th = document.createElement("th");
+        th.innerHTML = i;
+        th.className = "day";
+        if (date <= curDate) {
+            th.className += " unavailable";
+            days.push(th);
+            continue;
+        }
+
+        if (date.getDay() === 0 || date.getDay() === 6) {
+            th.className += " weekend";
+        }
+        let isFull = true;
+        for (let j = 0; j < availableDays.length; j++) {
+            if (availableDays[j] == date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0')) {
+                isFull = false;
+                break;
+            }
+        }
+        if (isFull) {
+            th.className += " unavailable"
+        } else {
+            th.className += " available"
+            th.addEventListener("click", () => {
+                document.querySelector("[name='date']").value = date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0');
+                nextPrev(1);
+            });
+        }
+        days.push(th);
+    }
+
+    //split days into weeks
+    let week = document.createElement("tr");
+    for (let i = 0; i < days.length; i++) {
+        if (i % 7 === 0) {
+            container.appendChild(week);
+            week = document.createElement("tr");
+            week.className = "week";
+        }
+        week.appendChild(days[i]);
+        if (i === days.length - 1) {
+            container.appendChild(week);
+        }
+    }
+    ;
+
+    function getDayIndexMondaySunday(date) {
+        return date.getDay() === 0 ? 6 : date.getDay() - 1
+    }
+
+    async function getAvailableDays() {
         let naja = window.Naja;
-        const res = await naja.makeRequest("GET", "/reservation/create", {
-            run: "getServiceName",
+        const service_id = document.querySelector("[name='service']").value;
+        const req = await naja.makeRequest("GET", `/reservation/create`, {
+            u: searchParams.get("u"),
+            run: "fetch",
             service_id: service_id
         }, {
             fetch: {
                 credentials: 'include',
             },
         })
-        return Promise.resolve(res.serviceName)
+        return Promise.resolve(req.availableDates);
+
+
     }
 
-    async function getTime(time_id) {
+
+}
+
+async function verify() {
+    let code = document.querySelector("[name='dicountCode']").value;
+    const service = document.querySelector("[name='service']").value;
+    if (service != null) {
+        if (code == null) {
+            code = "";
+        }
+        console.log(service)
+        console.log(code)
         let naja = window.Naja;
-        const res = await naja.makeRequest("GET", "/reservation/create", {u: searchParams.get("u") ,run: "getTime", time_id: time_id}, {
+        const res = await naja.makeRequest("GET", "/reservation/create", {
+            u: searchParams.get("u"),
+            run: "verifyCode",
+            discountCode: code,
+            service_id: service
+        }, {
             fetch: {
                 credentials: 'include',
             },
         })
-        console.log(res.time)
-        return Promise.resolve(res.time)
+        if (res.status == false) {
+            document.querySelector("[name='dicountCode']").className = "invalid";
+        } else {
+            document.querySelector("[name='dicountCode']").className = "valid";
+        }
+        document.querySelector("#price").innerHTML = res.price;
+        //show code success
     }
 
-    function getOption(name, number) {
-        //get all select options into array
-        let selectElement = document.getElementsByName(name)[0];
-        let options = selectElement.options;
-        let optionsArray = [];
-        for (let i = 0; i < options.length; i++) {
-            optionsArray.push(options[i].text);
-        }
-
-        return optionsArray[parseInt(number)];
-    }
-
-
-    function changeDay() {
-        const button = document.querySelector("#load-day");
-        const day = document.querySelector("[name='date']").value;
-        const service = document.querySelector("[name='service']").value;
-        let naja = window.Naja;
-        naja.makeRequest("GET", "/reservation/create", {u: searchParams.get("u") ,run: "setDate", day: day, service_id: service}, {
-            fetch: {
-                credentials: 'include',
-            },
-        })
-    }
-
-    function setService(id, name, price) {
-        document.querySelector("[name='service']").value = id;
-        const recap = document.querySelector("#service");;
-        recap.innerHTML = name;
-        document.querySelector("#price").innerHTML = price;
-        nextPrev(1);
-    }
-
-    function setTime(id, type, time) {
-        document.querySelector("[name='time']").value = id;
-        document.querySelector("[name='dateType']").value = type;
-        const recap = document.querySelector("#time");
-        recap.innerHTML = time;
-        nextPrev(1);
-    }
-
-
-    function calNext(n) {
-        showMonth += n;
-        if (showMonth < 0) {
-            showMonth = 11;
-            showYear--;
-        } else if (showMonth > 11) {
-            showMonth = 0;
-            showYear++;
-        }
-        console.log(showMonth, showYear)
-        createCalendar(showMonth, showYear);
-    }
-
-    async function createCalendar(month, year) {
-        const container = document.querySelector("#calendar");
-        const calendarTitle = document.querySelector("#calendar-month")
-        const curDate = new Date();
-        const curMonth = curDate.getMonth();
-        const firstDateOfMonth = new Date(year, month, 1);
-        const lastDayOfMonth = new Date(year, month + 1, 0);
-        const availableDays = await getAvailableDays();
-
-        calendarTitle.innerHTML = "";
-        container.innerHTML = "";
-        let curMonthName = "";
-        switch (month) {
-            case 0:
-                curMonthName = "Leden";
-                break;
-            case 1:
-                curMonthName = "Únor";
-                break;
-            case 2:
-                curMonthName = "Březen";
-                break;
-            case 3:
-                curMonthName = "Duben";
-                break;
-            case 4:
-                curMonthName = "Květen";
-                break;
-            case 5:
-                curMonthName = "Červen";
-                break;
-            case 6:
-                curMonthName = "Červenec";
-                break;
-            case 7:
-                curMonthName = "Srpen";
-                break;
-            case 8:
-                curMonthName = "Záři";
-                break;
-            case 9:
-                curMonthName = "Říjen";
-                break;
-            case 10:
-                curMonthName = "Listopad";
-                break;
-            case 11:
-                curMonthName = "Prosinec";
-        }
-        calendarTitle.innerHTML = curMonthName + " " + year;
-
-        //days in calendar
-        let days = [];
-        //create last month days
-        for (let i = 0; i < getDayIndexMondaySunday(firstDateOfMonth); i++) {
-            const th = document.createElement("th");
-            th.className = "";
-            days.push(th);
-        }
-        //week
-        for (let i = 1; i < lastDayOfMonth.getDate() + 1; i++) {
-            const date = new Date(year, month, i);
-            const th = document.createElement("th");
-            th.innerHTML = i;
-            th.className = "day";
-            if (date <= curDate) {
-                th.className += " unavailable";
-                days.push(th);
-                continue;
-            }
-
-            if (date.getDay() === 0 || date.getDay() === 6) {
-                th.className += " weekend";
-            }
-            let isFull = true;
-            for (let j = 0; j < availableDays.length; j++) {
-                if (availableDays[j] == date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0')) {
-                    isFull = false;
-                    break;
-                }
-            }
-            if (isFull) {
-                th.className += " unavailable"
-            } else {
-                th.className += " available"
-                th.addEventListener("click", () => {
-                    document.querySelector("[name='date']").value = date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0');
-                    nextPrev(1);
-                });
-            }
-            days.push(th);
-        }
-
-        //split days into weeks
-        let week = document.createElement("tr");
-        for (let i = 0; i < days.length; i++) {
-            if (i % 7 === 0) {
-                container.appendChild(week);
-                week = document.createElement("tr");
-                week.className = "week";
-            }
-            week.appendChild(days[i]);
-            if (i === days.length - 1) {
-                container.appendChild(week);
-            }
-        }
-        ;
-
-        function getDayIndexMondaySunday(date) {
-            return date.getDay() === 0 ? 6 : date.getDay() - 1
-        }
-
-        async function getAvailableDays() {
-            let naja = window.Naja;
-            const service_id = document.querySelector("[name='service']").value;
-            const req = await naja.makeRequest("GET", `/reservation/create`, {u: searchParams.get("u") ,run: "fetch", service_id: service_id}, {
-                fetch: {
-                    credentials: 'include',
-                },
-            })
-            return Promise.resolve(req.availableDates);
-
-
-        }
-
-
-    }
-
-    async function verify() {
-        let code = document.querySelector("[name='dicountCode']").value;
-        const service = document.querySelector("[name='service']").value;
-        if (service != null) {
-            if (code == null) {
-                code = "";
-            }
-                console.log(service)
-                console.log(code)
-                let naja = window.Naja;
-                const res = await naja.makeRequest("GET", "/reservation/create", {
-                    u: searchParams.get("u") ,
-                    run: "verifyCode",
-                    discountCode: code,
-                    service_id: service
-                }, {
-                    fetch: {
-                        credentials: 'include',
-                    },
-                })
-                if (res.status == false) {
-                    if (code.length > 0) {
-                        document.querySelector("[name='dicountCode']").className = "invalid";
-                    }
-                } else {
-                    document.querySelector("[name='dicountCode']").className = "valid";
-                }
-                document.querySelector("#price").innerHTML = res.price;
-                //show code success
-        }
-
-    }
+}

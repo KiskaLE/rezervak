@@ -27,6 +27,7 @@ final class ReservationsPresenter extends SecurePresenter
         $reservations = $this->database->table('reservations')
             ->select('reservations.*',)
             ->where('reservations.status=?', 'VERIFIED')
+            ->where("reservations.type=?", 0)
             ->where('user_id=?', $this->user->id)
             ->where(':payments.status=?', 1)->fetchAll();
         bdump($reservations);

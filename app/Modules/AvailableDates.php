@@ -65,8 +65,8 @@ class AvailableDates
         $dayStartMinutes = $this->convertTimeToMinutes($workingHours->start);
         $dayEndMinutes = $this->convertTimeToMinutes($workingHours->stop);
         $interval = $user_settings->sample_rate;
-        $unverified = $this->database->table($this->table)->where("date=? AND status=?", [$date, "UNVERIFIED"])->fetchAll();
-        $bookedArray = $this->database->table($this->table)->where("date=? AND status=?", [$date, "VERIFIED"])->fetchAll();
+        $unverified = $this->database->table($this->table)->where("date=? AND status=? AND type=0", [$date, "UNVERIFIED"])->fetchAll();
+        $bookedArray = $this->database->table($this->table)->where("date=? AND status=? AND type=0", [$date, "VERIFIED"])->fetchAll();
         //add unverified dates that still can be verified
         foreach ($unverified as $row) {
             $verification_time = $user_settings->verification_time;
