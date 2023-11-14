@@ -1,11 +1,13 @@
 version: "3"
 services:
   www:
-    image: httpd:latest
+    image: php:8.1-apache
     ports:
       - 8001:80
     volumes:
-      - ./:/usr/local/apache2/htdocs
+      - ./:/var/www/html/
+      - ./docker/apache/sites-enabled:/etc/apache2/sites-enabled
+      - ./docker/apache/php:/usr/local/etc/php
   db:
     image: mysql:latest
     ports:
