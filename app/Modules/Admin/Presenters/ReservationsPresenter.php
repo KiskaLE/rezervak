@@ -30,7 +30,6 @@ final class ReservationsPresenter extends SecurePresenter
             ->where("reservations.type=?", 0)
             ->where('user_id=?', $this->user->id)
             ->where(':payments.status=?', 1)->fetchAll();
-        bdump($reservations);
         $this->template->reservations = $reservations;
     }
 

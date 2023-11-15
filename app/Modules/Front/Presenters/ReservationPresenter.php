@@ -132,7 +132,7 @@ final class ReservationPresenter extends BasePresenter
                 $this->flashMessage("Nepovedlo se uložit rezervaci.", "alert-danger");
             }
         } else if ($data->dateType == "backup") {
-            $times = $this->availableDates->getBackupHours($data->date, $service->duration);
+            $times = $this->availableDates->getBackupHours($this->user_uuid,$data->date, $service->duration);
             $reservation = $this->insertReservation($uuid, $data, "backup", $times);
             bdump($reservation);
             if ($reservation) {
@@ -191,7 +191,7 @@ final class ReservationPresenter extends BasePresenter
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = $service->duration;
         $availableTimes = $this->availableDates->getAvailableStartingHours($u, $day, intval($duration));
-        $availableBackup = $this->availableDates->getBackupHours($day, intval($duration));
+        $availableBackup = $this->availableDates->getBackupHours($u ,$day, intval($duration));
         $this->template->times = $availableTimes;
         $this->template->backupTimes = $availableBackup;
         $this->redrawControl("content");

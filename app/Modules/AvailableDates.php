@@ -30,6 +30,15 @@ class AvailableDates
 
     }
 
+    public function isTimeAvailable(string $u, string $date,string $start, int $duration): bool {
+        $times = $this->getAvailableStartingHours($u, $date, $duration);
+        //if you find start in times array return true
+        if (in_array($start, $times)) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Retrieves the backup hours for a given date and duration.
      *
@@ -37,9 +46,12 @@ class AvailableDates
      * @param int $duration The duration for which to retrieve the backup hours.
      * @return array The array of backup hours.
      */
-    public function getBackupHours(string $date, int $duration): array
+    public function getBackupHours(string $u, string $date, int $duration): array
     {
-        $backupDatesRows = $this->database->query("SELECT reservations.*, services.duration FROM reservations LEFT JOIN services ON reservations.service_id = services.id WHERE date='$date' AND services.duration='$duration'")->fetchAll();
+        $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
+        $verificationTime = $user->related("settings")->fetch()->verification_time;
+        $time = date("Y-m-d H:i:s", strtotime("-" . $verificationTime . " minutes"));
+       $backupDatesRows = $this->database->query("SELECT reservations.*, services.duration FROM reservations LEFT JOIN services ON reservations.service_id = services.id WHERE reservations.user_id=$user->id AND date='$date' AND services.duration='$duration' AND type=0 AND (status='VERIFIED' OR reservations.created_at > '$time')")->fetchAll();
         $backupDates = [];
         foreach ($backupDatesRows as $row) {
             $backupDates[] = $row->start;
