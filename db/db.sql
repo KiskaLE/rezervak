@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Nov 15, 2023 at 11:48 AM
+-- Generation Time: Nov 15, 2023 at 01:04 PM
 -- Server version: 8.2.0
 -- PHP Version: 8.2.12
 
@@ -62,7 +62,8 @@ CREATE TABLE `payments` (
   `reservation_id` int DEFAULT NULL,
   `price` int NOT NULL,
   `status` tinyint NOT NULL DEFAULT '0',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 -- --------------------------------------------------------
@@ -87,6 +88,7 @@ CREATE TABLE `reservations` (
   `city` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
   `status` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL DEFAULT 'UNVERIFIED',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `type` tinyint NOT NULL COMMENT '0 - default 1 - backup'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
 
@@ -112,6 +114,7 @@ CREATE TABLE `reservations_delated` (
   `city` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
   `status` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL DEFAULT 'UNVERIFIED',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `type` tinyint NOT NULL COMMENT '0 - default 1 - backup'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
 
