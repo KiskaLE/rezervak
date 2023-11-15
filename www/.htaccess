@@ -13,7 +13,7 @@ Require all granted
 	RewriteEngine On
 
 	# Uncomment the next line if you want to set the base URL for rewrites
-	# RewriteBase /
+ RewriteBase /
 
 	# Force usage of HTTPS (secure connection). Uncomment if you have SSL setup.
 	# RewriteCond %{HTTPS} !on
