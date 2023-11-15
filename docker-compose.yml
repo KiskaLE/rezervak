@@ -1,7 +1,7 @@
 version: "3"
 services:
   www:
-    image: 25017a23d8d28a82c679edbc875976fbc78f48620015988bb5ffb5a045668130
+    image: vojtakylar/rezervakapache:1.0
     ports:
       - 8001:80
     volumes:

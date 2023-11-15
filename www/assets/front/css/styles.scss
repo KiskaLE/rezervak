@@ -311,56 +311,6 @@ body {
   justify-content: center;
 }
 
-@media (max-width: 500px) {
-  .time {
-    flex-direction: column;
-  }
-
-  .time-wrapper {
-    padding: 0;
-  }
-
-  .select-wrapper {
-    flex-direction: column;
-
-    gap: 30px;
-  }
-  .backup-time {
-    flex-direction: column;
-
-    div {
-      flex-direction: column;
-      width: 100%;
-    }
-  }
-  .button {
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .tab {
-    width: 90vw;
-  }
-
-  #calendar-nav {
-    justify-content: center;
-  }
-
-  .calender-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  #calendar {
-    th {
-      padding: 3vw;
-      border-radius: 5px;
-    }
-  }
-}
-
 #recap {
   display: flex;
   flex-direction: column;
@@ -490,5 +440,63 @@ input.valid {
   p,
   h2 {
     color: white !important;
+  }
+}
+
+
+
+
+@media (max-width: 500px) {
+
+  .service-card {
+    width: 100%;
+  }
+  
+  .time {
+    flex-direction: column;
+  }
+
+  .time-wrapper {
+    padding: 0;
+  }
+
+  .select-wrapper {
+    flex-direction: column;
+
+    gap: 30px;
+  }
+  .backup-time {
+    flex-direction: column;
+
+    div {
+      flex-direction: column;
+      width: 100%;
+    }
+  }
+  .button {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .tab {
+    width: 90vw;
+  }
+
+  #calendar-nav {
+    justify-content: center;
+  }
+
+  .calender-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #calendar {
+    th {
+      padding: 3vw;
+      border-radius: 5px;
+    }
   }
 }

@@ -26,11 +26,13 @@ class SettingsPresenter extends SecurePresenter
         parent::startup();
     }
 
-    public function actionShow()
+    public function renderShow()
     {
         $settings = $this->database->table('settings')->where("user_id=?", $this->user->id)->fetch();
         $this->settings = $settings;
         $this->template->settings = $settings;
+        $user_uuid = $this->database->table('users')->where("id=?", $this->user->id)->fetch()->uuid;
+        $this->template->userPath = $user_uuid;
     }
 
 
