@@ -1,15 +1,27 @@
 {block content}
-<h1>Editace Přestávky</h1>
-<div><a n:href="Workhours:edit $edit_id" class="btn btn-default"><i class="entypo-back"></i></a></div>
 <div class="content-wrapper">
-
-
-
-    <form n:name="editBreakForm">
-        <div>
-            <input n:name="start">
-            <input n:name="stop">
+    <h1>Editace přestávky</h1>
+    <div class="col-md-9 col-lg-9 col-sm-9">
+        <div class="row">
+            <a n:href="Workhours:edit $edit_id" class="btn btn-default" class="btn btn-default">Zpět</i></a>
         </div>
-        <div><input n:name="submit" class="btn btn-default"></div>
-    </form>
+        <div class="row">
+            <form n:name="editBreakForm">
+                <div>
+                    <input n:name="start" >
+                    <input n:name="stop">
+                    <div id="timeSlider" data-start="{$day->start}" data-stop="{$day->stop}"></div>
+                    <span id="timeDisplay"></span>
+
+
+                    <script src="{$basePath}/assets/admin/js/slider.js"></script>
+                </div>
+                <br>
+                <div class="form-group default-padding">
+                    <input n:name="submit" class="btn btn-success">
+                </div>
+
+            </form>
+        </div>
+    </div>
 </div>

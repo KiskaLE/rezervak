@@ -1,9 +1,10 @@
 version: "3"
 services:
   www:
-    image: vojtakylar/rezervakapache:1.0
+    image: apacherezervak:1.1
     ports:
       - 8001:80
+      - 465:465
     volumes:
       - ./:/var/www/html/
       - ./docker/apache/sites-enabled:/etc/apache2/sites-enabled

@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: db
--- Generation Time: Nov 15, 2023 at 01:04 PM
--- Server version: 8.2.0
--- PHP Version: 8.2.12
+-- Počítač: db
+-- Vytvořeno: Čtv 16. lis 2023, 14:27
+-- Verze serveru: 8.2.0
+-- Verze PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `rezervak`
+-- Databáze: `rezervak`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `breaks`
+-- Struktura tabulky `breaks`
 --
 
 CREATE TABLE `breaks` (
@@ -32,13 +32,15 @@ CREATE TABLE `breaks` (
   `start` varchar(10) COLLATE utf8mb4_czech_ci NOT NULL,
   `end` varchar(10) COLLATE utf8mb4_czech_ci NOT NULL,
   `workinghour_id` int NOT NULL,
-  `type` tinyint NOT NULL
+  `type` tinyint NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `discount_codes`
+-- Struktura tabulky `discount_codes`
 --
 
 CREATE TABLE `discount_codes` (
@@ -54,7 +56,7 @@ CREATE TABLE `discount_codes` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `payments`
+-- Struktura tabulky `payments`
 --
 
 CREATE TABLE `payments` (
@@ -69,7 +71,7 @@ CREATE TABLE `payments` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `reservations`
+-- Struktura tabulky `reservations`
 --
 
 CREATE TABLE `reservations` (
@@ -95,7 +97,7 @@ CREATE TABLE `reservations` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `reservations_delated`
+-- Struktura tabulky `reservations_delated`
 --
 
 CREATE TABLE `reservations_delated` (
@@ -121,7 +123,7 @@ CREATE TABLE `reservations_delated` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `services`
+-- Struktura tabulky `services`
 --
 
 CREATE TABLE `services` (
@@ -130,13 +132,16 @@ CREATE TABLE `services` (
   `name` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
   `description` varchar(255) COLLATE utf8mb3_czech_ci DEFAULT NULL,
   `price` int NOT NULL,
-  `duration` int NOT NULL
+  `duration` int NOT NULL,
+  `hidden` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1-hidden\r\n0-visible',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `settings`
+-- Struktura tabulky `settings`
 --
 
 CREATE TABLE `settings` (
@@ -152,7 +157,7 @@ CREATE TABLE `settings` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Struktura tabulky `users`
 --
 
 CREATE TABLE `users` (
@@ -168,7 +173,7 @@ CREATE TABLE `users` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `workinghours`
+-- Struktura tabulky `workinghours`
 --
 
 CREATE TABLE `workinghours` (
@@ -180,18 +185,18 @@ CREATE TABLE `workinghours` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
 
 --
--- Indexes for dumped tables
+-- Indexy pro exportované tabulky
 --
 
 --
--- Indexes for table `breaks`
+-- Indexy pro tabulku `breaks`
 --
 ALTER TABLE `breaks`
   ADD PRIMARY KEY (`id`),
   ADD KEY `workinghour_id` (`workinghour_id`);
 
 --
--- Indexes for table `discount_codes`
+-- Indexy pro tabulku `discount_codes`
 --
 ALTER TABLE `discount_codes`
   ADD PRIMARY KEY (`id`),
@@ -199,14 +204,14 @@ ALTER TABLE `discount_codes`
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `payments`
+-- Indexy pro tabulku `payments`
 --
 ALTER TABLE `payments`
   ADD PRIMARY KEY (`id`),
   ADD KEY `reservation_id` (`reservation_id`) USING BTREE;
 
 --
--- Indexes for table `reservations`
+-- Indexy pro tabulku `reservations`
 --
 ALTER TABLE `reservations`
   ADD PRIMARY KEY (`id`),
@@ -215,7 +220,7 @@ ALTER TABLE `reservations`
   ADD KEY `user_id_2` (`user_id`);
 
 --
--- Indexes for table `reservations_delated`
+-- Indexy pro tabulku `reservations_delated`
 --
 ALTER TABLE `reservations_delated`
   ADD PRIMARY KEY (`id`),
@@ -224,28 +229,28 @@ ALTER TABLE `reservations_delated`
   ADD KEY `user_id_2` (`user_id`);
 
 --
--- Indexes for table `services`
+-- Indexy pro tabulku `services`
 --
 ALTER TABLE `services`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `settings`
+-- Indexy pro tabulku `settings`
 --
 ALTER TABLE `settings`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `users`
+-- Indexy pro tabulku `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`username`);
 
 --
--- Indexes for table `workinghours`
+-- Indexy pro tabulku `workinghours`
 --
 ALTER TABLE `workinghours`
   ADD PRIMARY KEY (`id`),
@@ -253,106 +258,106 @@ ALTER TABLE `workinghours`
   ADD KEY `workinghours_ibfk_1` (`user_id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT pro tabulky
 --
 
 --
--- AUTO_INCREMENT for table `breaks`
+-- AUTO_INCREMENT pro tabulku `breaks`
 --
 ALTER TABLE `breaks`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `discount_codes`
+-- AUTO_INCREMENT pro tabulku `discount_codes`
 --
 ALTER TABLE `discount_codes`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `payments`
+-- AUTO_INCREMENT pro tabulku `payments`
 --
 ALTER TABLE `payments`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `reservations`
+-- AUTO_INCREMENT pro tabulku `reservations`
 --
 ALTER TABLE `reservations`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `reservations_delated`
+-- AUTO_INCREMENT pro tabulku `reservations_delated`
 --
 ALTER TABLE `reservations_delated`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `services`
+-- AUTO_INCREMENT pro tabulku `services`
 --
 ALTER TABLE `services`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `settings`
+-- AUTO_INCREMENT pro tabulku `settings`
 --
 ALTER TABLE `settings`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT pro tabulku `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `workinghours`
+-- AUTO_INCREMENT pro tabulku `workinghours`
 --
 ALTER TABLE `workinghours`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- Constraints for dumped tables
+-- Omezení pro exportované tabulky
 --
 
 --
--- Constraints for table `breaks`
+-- Omezení pro tabulku `breaks`
 --
 ALTER TABLE `breaks`
   ADD CONSTRAINT `breaks_ibfk_1` FOREIGN KEY (`workinghour_id`) REFERENCES `workinghours` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `discount_codes`
+-- Omezení pro tabulku `discount_codes`
 --
 ALTER TABLE `discount_codes`
   ADD CONSTRAINT `discount_codes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `payments`
+-- Omezení pro tabulku `payments`
 --
 ALTER TABLE `payments`
   ADD CONSTRAINT `payments_ibfk_2` FOREIGN KEY (`reservation_id`) REFERENCES `reservations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `reservations`
+-- Omezení pro tabulku `reservations`
 --
 ALTER TABLE `reservations`
   ADD CONSTRAINT `reservations_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`),
   ADD CONSTRAINT `reservations_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `services`
+-- Omezení pro tabulku `services`
 --
 ALTER TABLE `services`
   ADD CONSTRAINT `services_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `settings`
+-- Omezení pro tabulku `settings`
 --
 ALTER TABLE `settings`
   ADD CONSTRAINT `settings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `workinghours`
+-- Omezení pro tabulku `workinghours`
 --
 ALTER TABLE `workinghours`
   ADD CONSTRAINT `workinghours_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

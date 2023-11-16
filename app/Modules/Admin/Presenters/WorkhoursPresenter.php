@@ -13,6 +13,7 @@ final class WorkhoursPresenter extends SecurePresenter
 {
     private $id;
     private $edit_id;
+    private $day;
 
     public function __construct(
         private Nette\Database\Explorer $database,
@@ -31,6 +32,7 @@ final class WorkhoursPresenter extends SecurePresenter
     {
         $this->id = $id;
         $day = $this->database->table("workinghours")->where("user_id=? AND id=?", [$this->user->id, $id])->fetch();
+        $this->day = $day;
         $this->template->day = $day;
         //breaks
         $breaks = $day->related("breaks")->fetchAll();
@@ -41,14 +43,19 @@ final class WorkhoursPresenter extends SecurePresenter
     {
         $this->template->id = $id;
         $this->id = $id;
+        $day = $this->database->table("workinghours")->where("user_id=? AND id=?", [$this->user->id, $id])->fetch();
+        $this->template->day = $day;
 
     }
 
-    public function actionEditBreak($id, $edit_id) {
+    public function actionEditBreak($id, $edit_id)
+    {
         $this->template->id = $id;
         $this->id = $id;
         $this->edit_id = $edit_id;
         $this->template->edit_id = $edit_id;
+        $day = $this->database->table("workinghours")->where(":breaks.id=?", $id)->fetch();
+        $this->template->day = $day;
     }
 
     public function actionDeleteBreak($id, $edit_id)
@@ -62,9 +69,9 @@ final class WorkhoursPresenter extends SecurePresenter
     protected function createComponentCreateBreakForm(): Form
     {
         $form = new Form;
-        $form->addText("start")->setRequired()->setHtmlAttribute("type", "time");
-        $form->addText("stop")->setRequired()->setHtmlAttribute("type", "time");
-        $form->addSubmit("submit");
+        $form->addhidden("start")->setRequired();
+        $form->addhidden("stop")->setRequired();
+        $form->addSubmit("submit", "Uložit");
 
         $form->onSuccess[] = [$this, "createBreakSuccess"];
 
@@ -89,6 +96,7 @@ final class WorkhoursPresenter extends SecurePresenter
                     "workinghour_id" => $this->id,
                     "type" => 0
                 ]);
+                $this->flashMessage("Přestávka byla úspešně vytvořena", "alert-success");
                 $this->redirect("Workhours:edit", $this->id);
             }
         } else {
@@ -111,8 +119,12 @@ final class WorkhoursPresenter extends SecurePresenter
         $id = $this->id;
         $break = $this->database->table("breaks")->where("id=?", $id)->fetch();
         $form = new Form;
-        $form->addText("start")->setRequired()->setHtmlAttribute("type", "time")->setDefaultValue($break->start);
-        $form->addText("stop")->setRequired()->setHtmlAttribute("type", "time")->setDefaultValue($break->end);
+        $form->addhidden("start")
+            ->setRequired()
+            ->setDefaultValue($break->start);
+        $form->addhidden("stop")
+            ->setRequired()
+            ->setDefaultValue($break->end);
         $form->addSubmit("submit");
         $form->onSuccess[] = [$this, "editBreakSuccess"];
         return $form;
@@ -145,12 +157,11 @@ final class WorkhoursPresenter extends SecurePresenter
     {
         try {
             $this->database->table("breaks")->where("id=?", $this->id)->delete();
-            $this->redirect("Workhours:edit", $this->edit_id);
-            $this->flashMessage( "Smazáno", "alert-success");
+            $this->flashMessage("Smazáno", "alert-success");
         } catch (\Throwable $th) {
-            $this->flashMessage( "Nepodarilo se smazat", "alert-danger");
+            $this->flashMessage("Nepodarilo se smazat", "alert-danger");
         }
-
+        $this->redirect("Workhours:edit", $this->edit_id);
     }
 
 
@@ -220,8 +231,12 @@ final class WorkhoursPresenter extends SecurePresenter
     protected function createComponentEditForm(): Form
     {
         $form = new Form;
-        $form->addText("start")->setRequired();
-        $form->addText("stop")->setRequired();
+        $form->addHidden("start")
+            ->setDefaultValue($this->day->start)
+            ->setRequired();
+        $form->addHidden("stop")
+            ->setDefaultValue($this->day->stop)
+            ->setRequired();
         $form->addSubmit("submit", "Uložit");
 
         $form->onSuccess[] = [$this, "editSuccess"];

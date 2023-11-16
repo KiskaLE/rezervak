@@ -26,7 +26,7 @@ class SettingsPresenter extends SecurePresenter
         parent::startup();
     }
 
-    public function renderShow()
+    public function actionShow()
     {
         $settings = $this->database->table('settings')->where("user_id=?", $this->user->id)->fetch();
         $this->settings = $settings;

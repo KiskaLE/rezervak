@@ -1,25 +1,33 @@
 {block content}
 <h1>Services</h1>
 
-<div class="table-wrapper">
-    <table class="table dataTable table-bordered">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Duration</th>
-                <th>Actions</th>
-        </tr>
-        </thead>
-        {foreach $services as $service}
-            <tr>
-                <th>{$service->name}</th>
-                <th>{$service->price}</th>
-                <th>{$service->duration}</th>
-                <th><a class="btn btn-default btn-sm btn-icon icon-left " n:href="Services:edit $service->id"><i class="entypo-pencil"></i>Edit</a></th>
-            </tr>
-        {/foreach}
-    </table>
-
-    <div><a n:href="Services:create" class="btn btn-default">Create</a></div>
+<div class="content-wrapper">
+    <div class="col-lg-8 col-md-8">
+        <div class="row"><a n:href="Services:create" class="btn btn-default">Create</a></div>
+        <div class="row">
+                <table class="table dataTable table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Název</th>
+                        <th>Popis</th>
+                        <th>Cena</th>
+                        <th>Doba trvání [min]</th>
+                        <th>Akce</th>
+                    </tr>
+                    </thead>
+                    {foreach $services as $service}
+                        <tr>
+                            <th class="text-left">{$service->name}</th>
+                            <th class="text-left">{$service->description}</th>
+                            <th class="text-right">{$service->price} Kč</th>
+                            <th class="text-right">{$service->duration} min</th>
+                            <th>
+                                <a class="btn btn-default btn-sm btn-icon icon-left " n:href="Services:edit $service->id"><i
+                                            class="entypo-pencil"></i>Upravit</a><a class="btn btn-default btn-sm btn-icon icon-left" n:href="Services:actionHide $service->id"><i
+                                            class="entypo-eye"></i>{!$service->hidden ? "Skrýt" : "Zobrazit"}</a></th>
+                        </tr>
+                    {/foreach}
+                </table>
+        </div>
+    </div>
 </div>

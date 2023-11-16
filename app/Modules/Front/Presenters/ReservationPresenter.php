@@ -67,7 +67,8 @@ final class ReservationPresenter extends BasePresenter
             $this->payload->url = $this->link("Reservation:create", $u);
         }
 
-        $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
+        $services = $this->database->table("services")->where("user_id=? AND hidden=?", [$this->user->id, 0])
+            ->fetchAll();
         $this->template->services = $services;
         $this->redrawControl("content");
 
@@ -90,8 +91,6 @@ final class ReservationPresenter extends BasePresenter
 
     protected function createComponentForm(): Form
     {
-        $services = $this->database->table("services")->fetchAll();
-        $this->services = $services;
 
         $form = new Form;
         $form->addhidden("service")->setRequired();
@@ -221,7 +220,7 @@ final class ReservationPresenter extends BasePresenter
                 if ($discount->value >= 100) {
                     $price = 0;
                 } else {
-                    $price = $service->price  * $discount->value / 100;
+                    $price = $price - $service->price  * $discount->value / 100;
                 }
             }
             $this->sendJson(["status" => true, "price" => $price]);

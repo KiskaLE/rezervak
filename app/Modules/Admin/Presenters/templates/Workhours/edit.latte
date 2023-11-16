@@ -1,62 +1,75 @@
 {block content}
-<h1>Edit - {switch $day->weekday}
-        {case 0}
-        Pondělí
-        {case 1}
-        Úterý
-        {case 2}
-        Středa
-        {case 3}
-        Čtvrtek
-        {case 4}
-        Pátek
-        {case 5}
-        Sobota
-        {case 6}
-        Neděle
-    {/switch}</h1>
-<div><a n:href="Workhours:show" class="btn btn-default"><i class="entypo-back"></i></a></div>
-
 <div class="content-wrapper">
-    <form n:name="editForm">
-        <div class="dataTable-wrapper table-edit col-lg-2 col-sm-2">
-            <table class="table table-bordered dataTable">
-                <tr>
-                    <th>Start</th>
-                    <th>Stop</th>
-                </tr>
-                <tr>
-                    <th><input n:name="start" type="time" value="{$day->start}"></th>
-                    <th><input n:name="stop" type="time" value="{$day->stop}"></th>
-                </tr>
-            </table>
-            <input class="btn btn-default" n:name="submit">
+    <h1>Edit - {switch $day->weekday}
+            {case 0}
+            Pondělí
+            {case 1}
+            Úterý
+            {case 2}
+            Středa
+            {case 3}
+            Čtvrtek
+            {case 4}
+            Pátek
+            {case 5}
+            Sobota
+            {case 6}
+            Neděle
+        {/switch}</h1>
+
+    <div class="col-lg-8 col-md-8">
+        <div class="row">
+            <a n:href="Workhours:show" class="btn btn-default">Zpět</i></a>
         </div>
 
-    </form>
 
-    <div class="col-lg-5">
-        <h3>Přestávky</h3>
-        <table n:if="$breaks" class="table dataTable table-bordered">
-            <thead>
-            <tr>
-                <th>Začátek</th>
-                <th>Konec</th>
-                <th>Akce</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr n:foreach="$breaks as $break">
-                <th>{$break->start}</th>
-                <th>{$break->end}</th>
-                <th>
-                    <a class="btn btn-default btn-sm btn-icon icon-left" n:href="Workhours:editBreak $break->id, $day->id"><i
-                                class="entypo-pencil"></i>Úprava</a>
-                    <a class="btn btn-default btn-sm btn-icon icon-left " n:href="WorkHours:deleteBreak $break->id, $day->id"><i
-                                class="entypo-cancel"></i>Smazat</a></th>
-            </tr>
-            </tbody>
-        </table>
-        <div><a n:href="Workhours:createBreak $day->id" class="btn btn-default"><i class="entypo-plus"></i></a></div>
+        <div class="row">
+            <h2>Pracovní doba <span id="timeDisplay"></span></h2>
+            <form n:name="editForm">
+                <div>
+                    <input n:name="start" >
+                    <input n:name="stop">
+                    <div id="timeSlider"></div>
+                    <span id="timeDisplay"></span>
+
+                    <!-- noUiSlider JavaScript -->
+                    <script src="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.js"></script>
+                    <script src="{$basePath}/assets/admin/js/slider.js"></script>
+                </div>
+                <br>
+                <div class="form-group default-padding">
+                    <input n:name="submit" class="btn btn-success">
+                    <div class="btn" onclick="location.reload()">Zrušit změny</div>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="row">
+            <h2>Přestávky</h2>
+            <table n:if="$breaks" class="table dataTable table-bordered">
+                <thead>
+                <tr>
+                    <th>Začátek</th>
+                    <th>Konec</th>
+                    <th>Akce</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr n:foreach="$breaks as $break">
+                    <th>{$break->start}</th>
+                    <th>{$break->end}</th>
+                    <th>
+                        <a class="btn btn-default btn-sm btn-icon icon-left" n:href="Workhours:editBreak $break->id, $day->id"><i
+                                    class="entypo-pencil"></i>Úprava</a>
+                        <a class="btn btn-default btn-sm btn-icon icon-left " n:href="WorkHours:deleteBreak $break->id, $day->id"><i
+                                    class="entypo-cancel"></i>Smazat</a></th>
+                </tr>
+                </tbody>
+            </table>
+            <div>
+                <a n:href="Workhours:createBreak $day->id" class="btn btn-default"><i class="entypo-plus"></i></a>
+            </div>
+        </div>
     </div>
 </div>
