@@ -96,7 +96,7 @@ final class WorkhoursPresenter extends SecurePresenter
                     "workinghour_id" => $this->id,
                     "type" => 0
                 ]);
-                $this->flashMessage("Přestávka byla úspešně vytvořena", "alert-success");
+                $this->flashMessage("Přestávka byla úspešně vytvořenag", "alert-success");
                 $this->redirect("Workhours:edit", $this->id);
             }
         } else {

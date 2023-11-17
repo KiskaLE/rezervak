@@ -1,7 +1,7 @@
-version: "3"
+version: "3.8"
 services:
   www:
-    image: apacherezervak:1.1
+    image: vojtakylar/rezervakapache:latest
     ports:
       - 8001:80
       - 465:465
