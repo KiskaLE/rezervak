@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: db
--- Generation Time: Nov 20, 2023 at 08:15 AM
+-- Host: db:3306
+-- Generation Time: Nov 20, 2023 at 06:57 PM
 -- Server version: 8.2.0
 -- PHP Version: 8.2.12
 
@@ -29,8 +29,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `breaks` (
                           `id` int NOT NULL,
-                          `start` varchar(10) COLLATE utf8mb4_czech_ci NOT NULL,
-                          `end` varchar(10) COLLATE utf8mb4_czech_ci NOT NULL,
+                          `start` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci NOT NULL,
+                          `end` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci NOT NULL,
                           `workinghour_id` int NOT NULL,
                           `type` tinyint NOT NULL,
                           `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -46,7 +46,7 @@ CREATE TABLE `breaks` (
 CREATE TABLE `discount_codes` (
                                   `id` int NOT NULL,
                                   `user_id` int NOT NULL,
-                                  `code` varchar(50) COLLATE utf8mb4_czech_ci NOT NULL,
+                                  `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci NOT NULL,
                                   `value` int NOT NULL,
                                   `active` tinyint(1) NOT NULL,
                                   `type` tinyint NOT NULL COMMENT '0-price\r\n1-%',
@@ -76,19 +76,19 @@ CREATE TABLE `payments` (
 
 CREATE TABLE `reservations` (
                                 `id` int NOT NULL,
-                                `uuid` char(36) COLLATE utf8mb3_czech_ci NOT NULL,
+                                `uuid` char(36) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
                                 `user_id` int NOT NULL,
                                 `date` date NOT NULL,
                                 `service_id` int NOT NULL,
-                                `start` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
-                                `firstname` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
-                                `lastname` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
-                                `email` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
-                                `phone` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
-                                `address` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
-                                `code` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
-                                `city` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
-                                `status` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL DEFAULT 'UNVERIFIED',
+                                `start` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                                `firstname` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                                `lastname` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                                `email` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                                `phone` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                                `address` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                                `code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                                `city` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                                `status` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT 'UNVERIFIED',
                                 `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                 `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                 `type` tinyint NOT NULL COMMENT '0 - default 1 - backup'
@@ -102,19 +102,19 @@ CREATE TABLE `reservations` (
 
 CREATE TABLE `reservations_delated` (
                                         `id` int NOT NULL,
-                                        `uuid` char(36) COLLATE utf8mb3_czech_ci NOT NULL,
+                                        `uuid` char(36) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
                                         `user_id` int NOT NULL,
                                         `date` date NOT NULL,
                                         `service_id` int NOT NULL,
-                                        `start` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
-                                        `firstname` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
-                                        `lastname` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
-                                        `email` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
-                                        `phone` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
-                                        `address` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
-                                        `code` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
-                                        `city` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
-                                        `status` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL DEFAULT 'UNVERIFIED',
+                                        `start` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                                        `firstname` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                                        `lastname` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                                        `email` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                                        `phone` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                                        `address` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                                        `code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                                        `city` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                                        `status` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT 'UNVERIFIED',
                                         `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                         `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                         `type` tinyint NOT NULL COMMENT '0 - default 1 - backup'
@@ -129,8 +129,8 @@ CREATE TABLE `reservations_delated` (
 CREATE TABLE `services` (
                             `id` int NOT NULL,
                             `user_id` int NOT NULL,
-                            `name` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
-                            `description` varchar(255) COLLATE utf8mb3_czech_ci DEFAULT NULL,
+                            `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                            `description` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
                             `price` int NOT NULL,
                             `duration` int NOT NULL,
                             `hidden` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1-hidden\r\n0-visible',
@@ -148,7 +148,7 @@ CREATE TABLE `settings` (
                             `id` int NOT NULL,
                             `user_id` int NOT NULL,
                             `sample_rate` int NOT NULL DEFAULT '30',
-                            `payment_info` varchar(255) COLLATE utf8mb4_czech_ci DEFAULT NULL,
+                            `payment_info` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci DEFAULT NULL,
                             `verification_time` int NOT NULL DEFAULT '15',
                             `number_of_days` int NOT NULL DEFAULT '30',
                             `time_to_pay` int NOT NULL DEFAULT '24' COMMENT 'in hours'
@@ -162,12 +162,12 @@ CREATE TABLE `settings` (
 
 CREATE TABLE `users` (
                          `id` int NOT NULL,
-                         `uuid` char(36) COLLATE utf8mb3_czech_ci NOT NULL,
-                         `username` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
-                         `password` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL,
-                         `firstname` varchar(255) COLLATE utf8mb3_czech_ci DEFAULT NULL,
-                         `lastname` varchar(255) COLLATE utf8mb3_czech_ci DEFAULT NULL,
-                         `role` varchar(50) COLLATE utf8mb3_czech_ci NOT NULL DEFAULT 'UNVERIFIED'
+                         `uuid` char(36) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                         `username` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                         `password` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                         `firstname` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
+                         `lastname` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
+                         `role` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT 'UNVERIFIED'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
 
 -- --------------------------------------------------------
@@ -179,10 +179,27 @@ CREATE TABLE `users` (
 CREATE TABLE `workinghours` (
                                 `id` int NOT NULL,
                                 `weekday` tinyint NOT NULL COMMENT '0- monday 1-tuesday 2-wednesday 3- thursday 4- friday 5-saturday 6- sunday	',
-                                `start` varchar(255) COLLATE utf8mb3_czech_ci DEFAULT '00:00',
-                                `stop` varchar(255) COLLATE utf8mb3_czech_ci NOT NULL DEFAULT '00:00',
+                                `start` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT '00:00',
+                                `stop` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT '00:00',
                                 `user_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `workinghours_exceptions`
+--
+
+CREATE TABLE `workinghours_exceptions` (
+                                           `id` int NOT NULL,
+                                           `uuid` char(36) NOT NULL,
+                                           `name` varchar(255) NOT NULL,
+                                           `start` datetime NOT NULL,
+                                           `end` datetime NOT NULL,
+                                           `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                           `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                           `user_id` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Indexes for dumped tables
@@ -258,6 +275,14 @@ ALTER TABLE `workinghours`
   ADD KEY `workinghours_ibfk_1` (`user_id`);
 
 --
+-- Indexes for table `workinghours_exceptions`
+--
+ALTER TABLE `workinghours_exceptions`
+    ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uuid` (`uuid`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -316,6 +341,12 @@ ALTER TABLE `workinghours`
     MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `workinghours_exceptions`
+--
+ALTER TABLE `workinghours_exceptions`
+    MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -361,6 +392,12 @@ ALTER TABLE `settings`
 --
 ALTER TABLE `workinghours`
     ADD CONSTRAINT `workinghours_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `workinghours_exceptions`
+--
+ALTER TABLE `workinghours_exceptions`
+    ADD CONSTRAINT `user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
