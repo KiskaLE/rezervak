@@ -4,9 +4,9 @@
 
 <h1>Front</h1>
 <h2><a href="{$baseUrl}/admin">admin</a></h2>
-{foreach $users as $user}
+{foreach $users as $userRow}
     <div>
-        <a n:href="Reservation:create $user->uuid">rezervace {$user->username}</a>
+        <a n:href="Reservation:create $userRow->uuid">rezervace {$userRow->username}</a>
     </div>
 {/foreach}
 

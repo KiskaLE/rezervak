@@ -79,6 +79,7 @@ class AvailableDates
         $interval = $user_settings->sample_rate;
         $unverified = $this->database->table($this->table)->where("date=? AND status=? AND type=0", [$date, "UNVERIFIED"])->fetchAll();
         $bookedArray = $this->database->table($this->table)->where("date=? AND status=? AND type=0", [$date, "VERIFIED"])->fetchAll();
+        $exceptionsArray = $this->getExceptions($u);
         //add unverified dates that still can be verified
         foreach ($unverified as $row) {
             $verification_time = $user_settings->verification_time;
@@ -105,6 +106,16 @@ class AvailableDates
                     $start = $this->convertTimeToMinutes($booked->start);
                     $duration2 = intval($service->duration);
                     if (!$this->isPossible($dayStartMinutes, $duration, $start, $duration2)) {
+                        $sv = false;
+                        break;
+                    }
+                }
+            }
+            if ($sv) {
+                foreach ($exceptionsArray as $exception) {
+                    $start = strtotime($date." ".$this->convertMinutesToTime($dayStartMinutes));
+                    ;
+                    if (strtotime($exception->start) <= $start && strtotime($exception->end) >= $start) {
                         $sv = false;
                         break;
                     }
@@ -168,4 +179,12 @@ class AvailableDates
     {
         return date('N', strtotime($date)) - 1;
     }
+
+    private function getExceptions(string $u): array{
+        $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
+        $now = date("Y-m-d H:i:s");
+        $exceptions = $this->database->table("workinghours_exceptions")->where("user_id=?  AND end >=?", [$user->id, $now])->fetchAll();
+        return $exceptions;
+    }
 }
+

@@ -39,4 +39,32 @@
             </table>
         </div>
     </div>
+    <h1>Volno</h1>
+    <div class="row col-lg-9">
+        <a n:href="Workhours:createException" class="btn btn-default">Nový</a>
+    </div>
+    <div n:snippet="exceptions" class="row col-lg-9">
+        <div class="dataTable-wrapper">
+            <table class="table dataTable table-bordered">
+                <thead>
+                <tr>
+                    <th>Název</th>
+                    <th>Začátek</th>
+                    <th>Konec</th>
+                    <th>Akce</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr n:foreach="$exceptions as $row">
+                        <th>{$row->name}</th>
+                        <th>{$row->start|date: "d.m.Y H:i"}</th>
+                        <th>{$row->end|date: "d.m.Y H:i"}</th>
+                        <th><a class="btn btn-default btn-sm btn-icon icon-left" n:href="Workhours:editException $row->uuid"><i class="entypo-pencil"></i>Úprava</a>
+                            <a class="btn btn-default btn-sm btn-icon icon-left" n:href="deleteException! $row->uuid" onclick="deleteException(event)" ><i class="entypo-pencil"></i>Smazat</a></th>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
 </div>

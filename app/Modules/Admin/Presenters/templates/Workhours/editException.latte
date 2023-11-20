@@ -1,0 +1,49 @@
+{block content}
+<h1>Úprava</h1>
+<div><a n:href="Workhours:show" class="btn btn-default">Zpět</a></div>
+<div class="content-wrapper">
+    <div class="col-lg-8 col-md-8">
+        <div class="row">
+            <form n:name="editExceptionForm">
+                <div class="row">
+
+                    <div class="panel panel-primary" data-collapsed="0">
+
+                        <div class="panel-body" style="display: block;">
+
+                            <div class="form-group">
+                                <label for="field-1" class="col-sm-3 control-label">Název</label>
+
+                                <div class="">
+                                    <input n:name="name" class="form-control">
+                                    <span class="description"></span>
+                                    <span class="input-error" id="sampleRateError"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="field-1" class="col-sm-3 control-label">Datum</label>
+
+                                <div class="">
+                                    <input n:name="date" data-start="{$exception->start|date:'d/m/Y H:i'}" data-end="{$exception->end|date:'d.m.Y H:i'}" id="date-start" class="form-control">
+                                    <span class="description"></span>
+                                    <span class="input-error" id="sampleRateError"></span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="form-group default-padding">
+                    <input id="btn-submit" class="btn btn-success" n:name="submit">
+                    <div class="btn" onclick="location.reload()">Zrušit změny</div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="{$basePath}/assets/admin/js/datePicker.js"></script>
