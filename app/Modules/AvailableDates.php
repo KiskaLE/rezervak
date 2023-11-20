@@ -30,7 +30,8 @@ class AvailableDates
 
     }
 
-    public function isTimeAvailable(string $u, string $date,string $start, int $duration): bool {
+    public function isTimeAvailable(string $u, string $date, string $start, int $duration): bool
+    {
         $times = $this->getAvailableStartingHours($u, $date, $duration);
         //if you find start in times array return true
         if (in_array($start, $times)) {
@@ -51,7 +52,7 @@ class AvailableDates
         $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
         $verificationTime = $user->related("settings")->fetch()->verification_time;
         $time = date("Y-m-d H:i:s", strtotime("-" . $verificationTime . " minutes"));
-       $backupDatesRows = $this->database->query("SELECT reservations.*, services.duration FROM reservations LEFT JOIN services ON reservations.service_id = services.id WHERE reservations.user_id=$user->id AND date='$date' AND services.duration='$duration' AND type=0 AND (status='VERIFIED' OR reservations.created_at > '$time')")->fetchAll();
+        $backupDatesRows = $this->database->query("SELECT reservations.*, services.duration FROM reservations LEFT JOIN services ON reservations.service_id = services.id WHERE reservations.user_id=$user->id AND date='$date' AND services.duration='$duration' AND type=0 AND (status='VERIFIED' OR reservations.created_at > '$time')")->fetchAll();
         $backupDates = [];
         foreach ($backupDatesRows as $row) {
             $backupDates[] = $row->start;
@@ -83,7 +84,7 @@ class AvailableDates
         //add unverified dates that still can be verified
         foreach ($unverified as $row) {
             $verification_time = $user_settings->verification_time;
-            $isLate = strtotime(strval($row->created_at)) < strtotime(date("Y-m-d H:i:s") . ' -'. $verification_time.' minutes');
+            $isLate = strtotime(strval($row->created_at)) < strtotime(date("Y-m-d H:i:s") . ' -' . $verification_time . ' minutes');
             if (!$isLate) {
                 $bookedArray[] = $row;
             }
@@ -113,8 +114,7 @@ class AvailableDates
             }
             if ($sv) {
                 foreach ($exceptionsArray as $exception) {
-                    $start = strtotime($date." ".$this->convertMinutesToTime($dayStartMinutes));
-                    ;
+                    $start = strtotime($date . " " . $this->convertMinutesToTime($dayStartMinutes));;
                     if (strtotime($exception->start) <= $start && strtotime($exception->end) >= $start) {
                         $sv = false;
                         break;
@@ -180,11 +180,39 @@ class AvailableDates
         return date('N', strtotime($date)) - 1;
     }
 
-    private function getExceptions(string $u): array{
+    private function getExceptions(string $u): array
+    {
         $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
         $now = date("Y-m-d H:i:s");
         $exceptions = $this->database->table("workinghours_exceptions")->where("user_id=?  AND end >=?", [$user->id, $now])->fetchAll();
         return $exceptions;
+    }
+
+    public function getReservationsConflictsIds(int $id): array
+    {
+        $user = $this->database->table("users")->where("id=?", $id)->fetch();
+        $reservations = $user->related("reservations")->where("date>=?", date("Y-m-d H:i:s"))->fetchAll();
+        $exceptions = $user->related("workinghours_exceptions")->where("end>=?", date("Y-m-d H:i:s"))->fetchAll();
+        $conflicts = [];
+        foreach ($reservations as $row) {
+            $start = strtotime($row->start);
+            foreach ($exceptions as $exception) {
+                if (strtotime($exception->start) <= $start && strtotime($exception->end) >= $start) {
+                    $conflicts[] = $exception->id;
+                }
+            }
+        }
+        return $conflicts;
+
+    }
+
+    public function getConflictedReservations($uuid):array
+    {
+        $exception = $this->database->table("workinghours_exceptions")->where("uuid=?", $uuid)->fetch();
+        bdump($exception);
+        $reservations = $this->database->table("reservations")->where("user_id=? AND date>=? AND date<=?", [$exception->user_id, $exception->start, $exception->end])->fetchAll();
+        return $reservations;
+
     }
 }
 

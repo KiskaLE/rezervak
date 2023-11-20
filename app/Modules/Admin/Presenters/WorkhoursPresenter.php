@@ -8,6 +8,7 @@ namespace App\Modules\admin\Presenters;
 use Nette;
 use Nette\Application\UI\Form;
 use Ramsey\Uuid\Uuid;
+use App\Modules\AvailableDates;
 
 
 final class WorkhoursPresenter extends SecurePresenter
@@ -20,7 +21,9 @@ final class WorkhoursPresenter extends SecurePresenter
 
     public function __construct(
         private Nette\Database\Explorer $database,
-        private Nette\Security\User     $user)
+        private Nette\Security\User     $user,
+        private AvailableDates          $availableDates
+    )
     {
 
     }
@@ -32,6 +35,18 @@ final class WorkhoursPresenter extends SecurePresenter
         //exceptions
         $exceptions = $this->database->table("workinghours_exceptions")->where("user_id=? AND end>=?", [$this->user->id, date("Y-m-d H:i")])->fetchAll();
         $this->template->exceptions = $exceptions;
+
+        //exceptions conflicts
+        $conflicts = $this->availableDates->getReservationsConflictsIds($this->user->id);
+        $this->template->conflicts = $conflicts;
+        bdump($conflicts);
+
+    }
+
+    public function renderExcerptionsConflicts($id)
+    {
+        $reservations = $this->availableDates->getConflictedReservations($id);
+        $this->template->reservations = $reservations;
     }
 
     public function actionEdit($id)
@@ -72,16 +87,18 @@ final class WorkhoursPresenter extends SecurePresenter
         $this->id = $id;
     }
 
-    public function actionEditException($id) {
+    public function actionEditException($id)
+    {
         $this->exceptionUuid = $id;
         $exception = $this->database->table("workinghours_exceptions")->where("uuid=?", $id)->fetch();
         $this->template->exception = $exception;
     }
 
-    public function handleDeleteException($uuid) {
-            $this->database->table("workinghours_exceptions")->where("uuid=?", $uuid)->delete();
-            $this->flashMessage("Smazano", "alert-success");
-            $this->redirect(":show");
+    public function handleDeleteException($uuid)
+    {
+        $this->database->table("workinghours_exceptions")->where("uuid=?", $uuid)->delete();
+        $this->flashMessage("Smazano", "alert-success");
+        $this->redirect(":show");
         $this->redirect(":show");
     }
 
@@ -303,7 +320,8 @@ final class WorkhoursPresenter extends SecurePresenter
         return $form;
     }
 
-    public function createExceptionSuccess(Form $form, $data) {
+    public function createExceptionSuccess(Form $form, $data)
+    {
         $uuid = Uuid::uuid4();
         $datesStartAndEnd = explode("-", trim($data->date));
 
@@ -311,12 +329,12 @@ final class WorkhoursPresenter extends SecurePresenter
         $start = explode(" ", trim($datesStartAndEnd[0]));
         $dateStart = explode("/", $start[0]);
         $timeStart = $start[1];
-        $start = trim($dateStart[2]."-".$dateStart[1]."-".$dateStart[0]." ".$timeStart);
+        $start = trim($dateStart[2] . "-" . $dateStart[1] . "-" . $dateStart[0] . " " . $timeStart);
         //end
         $end = explode(" ", trim($datesStartAndEnd[1]));
         $dateEnd = explode("/", $end[0]);
         $timeEnd = $end[1];
-        $end = trim($dateEnd[2]."-".$dateEnd[1]."-".$dateEnd[0]." ".$timeEnd);
+        $end = trim($dateEnd[2] . "-" . $dateEnd[1] . "-" . $dateEnd[0] . " " . $timeEnd);
 
         $this->database->table("workinghours_exceptions")->insert([
             "uuid" => $uuid,
@@ -349,19 +367,20 @@ final class WorkhoursPresenter extends SecurePresenter
         return $form;
     }
 
-    public function editExceptionSuccess(Form $form, $data) {
+    public function editExceptionSuccess(Form $form, $data)
+    {
         $datesStartAndEnd = explode("-", trim($data->date));
 
         //start
         $start = explode(" ", trim($datesStartAndEnd[0]));
         $dateStart = explode("/", $start[0]);
         $timeStart = $start[1];
-        $start = trim($dateStart[2]."-".$dateStart[1]."-".$dateStart[0]." ".$timeStart).":00";
+        $start = trim($dateStart[2] . "-" . $dateStart[1] . "-" . $dateStart[0] . " " . $timeStart) . ":00";
         //end
         $end = explode(" ", trim($datesStartAndEnd[1]));
         $dateEnd = explode("/", $end[0]);
         $timeEnd = $end[1];
-        $end = trim($dateEnd[2]."-".$dateEnd[1]."-".$dateEnd[0]." ".$timeEnd)."00";
+        $end = trim($dateEnd[2] . "-" . $dateEnd[1] . "-" . $dateEnd[0] . " " . $timeEnd) . "00";
 
         $this->database->table("workinghours_exceptions")->where("uuid=?", $this->exceptionUuid)->update([
             "name" => $data->name,

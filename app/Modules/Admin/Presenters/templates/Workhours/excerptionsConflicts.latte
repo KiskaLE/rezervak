@@ -1,0 +1,41 @@
+{block content}
+<div class="content-wrapper">
+    <h1>Konflikty</h1>
+    <div class="row">
+        <div class="table-wrapper">
+            <table class="table dataTable table-bordered">
+                <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>Čas</th>
+                    <th>Jméno</th>
+                    <th>Příjmení</th>
+                    <th>E-mail</th>
+                    <th>Tel.</th>
+                    <th>Služba</th>
+                    <th>Akce</th>
+                </tr>
+                </thead>
+                {foreach $reservations as $reservation}
+                    {dump $reservation}
+                    <tr>
+                        <th>{$reservation->date|date:"d.m.Y"}</th>
+                        <th>{$reservation->start}</th>
+                        <th>{$reservation->firstname}</th>
+                        <th>{$reservation->lastname}</th>
+                        <th>{$reservation->email}</th>
+                        <th>{$reservation->phone}</th>
+                        <th>{$reservation->ref("services", "service_id")->name}</th>
+                        <th>
+                            <a class="btn btn-default btn-sm btn-icon icon-left " n:href="Reservations:detail $reservation->id"><i
+                                        class="entypo-eye"></i>Detail</a>
+                            <a class="btn btn-default btn-sm btn-icon icon-left " n:href="Reservations:edit $reservation->id"><i
+                                        class="entypo-pencil"></i>Upravit</a>
+                            <a class="btn btn-default btn-sm btn-icon icon-left " n:href="Reservations:delete $reservation->id"><i
+                                        class="entypo-cancel"></i>Smazat</a></th>
+                    </tr>
+                {/foreach}
+            </table>
+        </div>
+    </div>
+</div>

@@ -33,7 +33,8 @@
                             {/switch}</th>
                         <th class="text-right">{$day->start}</th>
                         <th class="text-right">{$day->stop}</th>
-                        <th><a class="btn btn-default btn-sm btn-icon icon-left" n:href="Workhours:edit $day->id"><i class="entypo-pencil"></i>Úprava</a></th>
+                        <th><a class="btn btn-default btn-sm btn-icon icon-left" n:href="Workhours:edit $day->id"><i
+                                        class="entypo-pencil"></i>Úprava</a></th>
                     </tr>
                 {/foreach}
             </table>
@@ -55,13 +56,18 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <tr n:foreach="$exceptions as $row">
-                        <th>{$row->name}</th>
-                        <th>{$row->start|date: "d.m.Y H:i"}</th>
-                        <th>{$row->end|date: "d.m.Y H:i"}</th>
-                        <th><a class="btn btn-default btn-sm btn-icon icon-left" n:href="Workhours:editException $row->uuid"><i class="entypo-pencil"></i>Úprava</a>
-                            <a class="btn btn-default btn-sm btn-icon icon-left" n:href="deleteException! $row->uuid" onclick="deleteException(event)" ><i class="entypo-pencil"></i>Smazat</a></th>
-                    </tr>
+                <tr n:foreach="$exceptions as $row">
+                    <th>{$row->name}</th>
+                    <th>{$row->start|date: "d.m.Y H:i"}</th>
+                    <th>{$row->end|date: "d.m.Y H:i"}</th>
+                    <th>
+                        <a class="btn btn-default btn-sm btn-icon icon-left" n:href="Workhours:editException $row->uuid"><i
+                                    class="entypo-pencil"></i>Úprava</a>
+                        <a class="btn btn-default btn-sm btn-icon icon-left" n:href="deleteException! $row->uuid"
+                           onclick="deleteException(event)"><i class="entypo-pencil"></i>Smazat</a>
+                        <a n:if="in_array($row->id, $conflicts)" n:href="excerptionsConflicts $row->uuid" class="btn btn-danger btn-sm btn-icon icon-left"><i class="entypo-eye"></i>Konflikt</a>
+                    </th>
+                </tr>
                 </tbody>
 
             </table>
