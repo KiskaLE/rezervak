@@ -197,7 +197,8 @@ class SettingsPresenter extends SecurePresenter
         } catch (\Throwable $th) {
             $this->flashMessage("Nepodarilo se uložit změny!", "alert-danger");
         }
-        $this->redirect("this");
+            $this->redirect("this");
+
 
     }
 

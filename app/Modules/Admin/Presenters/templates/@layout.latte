@@ -26,11 +26,10 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
     <!-- /DatePicker -->
 
     <script src="{$basePath}/assets/bundle.js"></script>
-    <script src="{$basePath}/assets/admin/js/flashmessages.js"></script>
 
     <!--[if lt IE 9]><script src="{$basePath}/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 
@@ -149,8 +148,12 @@
             </div>
             <hr>
         </div>
-        <div n:foreach="$flashes as $flash" n:class="flash, $flash->type" id="flash-messages">{$flash->message}</div>
+        {snippet flashMessages}
+            <div n:foreach="$flashes as $flash" n:class="flash, $flash->type"
+                    id="flash-messages">{$flash->message}</div>
 
+            <script src="{$basePath}/assets/admin/js/flashmessages.js"></script>
+        {/snippet}
         <main n:snippet="main">{include content}</main>
 
         <footer class="main">
