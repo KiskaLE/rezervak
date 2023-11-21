@@ -7,6 +7,8 @@ use Nette\Application\UI\Presenter;
 class BasePresenter extends Presenter
 {
 
+    public $backlink;
+
 
     public function __construct()
     {

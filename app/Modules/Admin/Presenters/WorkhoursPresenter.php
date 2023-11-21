@@ -28,6 +28,13 @@ final class WorkhoursPresenter extends SecurePresenter
 
     }
 
+    protected function beforeRender()
+    {
+        parent::beforeRender();
+        $this->backlink = $this->storeRequest();
+        $this->template->backlink = $this->backlink;
+    }
+
     public function renderShow()
     {
         $days = $this->database->table("workinghours")->where("user_id=?", $this->user->id)->fetchAll();

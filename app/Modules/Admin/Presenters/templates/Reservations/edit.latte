@@ -1,10 +1,9 @@
 {block content}
 <h1>Upravit</h1>
 
-<div><a class="btn btn-default " n:href="Reservations:show">Zpět</a></div>
+<div><a class="btn btn-default " n:href="back! show">Zpět</a></div>
 <div class="col-lg-5">
     <form n:name="form">
-        <input n:name="action" value="edit">
         <div class="form-group">
             <label class="col-sm-3 control-label" n:name="firstname">Jméno</label>
             <div class="col-sm-8"><input class="form-control" n:name="firstname" value="{$reservation->firstname}">
