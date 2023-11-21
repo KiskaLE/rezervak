@@ -16,3 +16,11 @@ function deleteException(event) {
         event.preventDefault()
     }
 }
+
+function deleteCode(event) {
+    const res = confirm('Opravdu chcete smazat tento kód?');
+    if (!res) {
+        event.preventDefault()
+    }
+}
+

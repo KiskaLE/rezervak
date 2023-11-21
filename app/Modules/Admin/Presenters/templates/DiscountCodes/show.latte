@@ -21,7 +21,9 @@
                 <th>{$discountCode->type == 0 ? "cena" : "procento" }</th>
                 <th>{$discountCode->active ? 'Ano' : 'Ne'}</th>
                 <th><a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="DiscountCodes:edit $discountCode->id"><i
-                                class="entypo-pencil"></i>Upravit</a></th>
+                                class="entypo-pencil"></i>Upravit</a>
+                    <a class="btn btn-danger btn-sm btn-icon icon-left ajax" n:href="delete! $discountCode->uuid"
+                       onclick="deleteCode(event)"><i class="entypo-pencil"></i>Smazat</a></th>
             </tr>
         {/foreach}
     </table>

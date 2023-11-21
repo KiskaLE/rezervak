@@ -8,6 +8,7 @@ namespace App\Modules\admin\Presenters;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\Json;
+use Ramsey\Uuid\Uuid;
 
 
 final class DiscountCodesPresenter extends SecurePresenter
@@ -50,6 +51,12 @@ final class DiscountCodesPresenter extends SecurePresenter
         $this->template->services = $services;
     }
 
+    public function handleDelete( $uuid)
+    {
+        $this->database->table("discount_codes")->where("uuid=?", $uuid)->delete();
+        $this->redirect("this");
+    }
+
     protected function createComponentForm(): Form
     {
         $types = [0 => "Částka", 1 => "Procento"];
@@ -61,7 +68,7 @@ final class DiscountCodesPresenter extends SecurePresenter
         $form->addText("value", "Hodnota")->setHtmlAttribute("type", "number")->setRequired();
         $i = 1;
         foreach ($services as $service) {
-            $form->addCheckbox(strval("service".$i), $service->name);
+            $form->addCheckbox(strval("service" . $i), $service->name);
             $i++;
         }
         $form->addSubmit("save", "Vytvořit");
@@ -73,6 +80,7 @@ final class DiscountCodesPresenter extends SecurePresenter
 
     public function formSucceeded(Form $form, $values)
     {
+        $uuid = Uuid::uuid4();
         $services = $this->database->table("services")->fetchAll();
         $show = $values->active ? 1 : 0;
         $status = false;
@@ -87,6 +95,7 @@ final class DiscountCodesPresenter extends SecurePresenter
         $json = Json::encode($enabled);
         try {
             $status = $this->database->table("discount_codes")->insert([
+                "uuid" => $uuid,
                 "user_id" => $this->user->id,
                 "code" => $values->code,
                 "value" => $values->value,
@@ -113,7 +122,7 @@ final class DiscountCodesPresenter extends SecurePresenter
         $form->addText("value", "Hodnota")->setHtmlAttribute("type", "number")->setRequired();
         $i = 1;
         foreach ($services as $service) {
-            $form->addCheckbox(strval("service".$i), $service->name);
+            $form->addCheckbox(strval("service" . $i), $service->name);
             $i++;
         }
         $form->addSubmit("save", "Uložit");
@@ -123,7 +132,8 @@ final class DiscountCodesPresenter extends SecurePresenter
         return $form;
     }
 
-    public function editFormSucceeded(Form $form, $values) {
+    public function editFormSucceeded(Form $form, $values)
+    {
         $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
         $show = $values->active ? 1 : 0;
         $status = false;
