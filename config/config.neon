@@ -2,6 +2,6 @@ mail:
     smtp: true
     host: 'smtp.gmail.com'
     port: 465
-    username: rezervakinfo@gmail.com
-    password: rezervakheslo23#
+    username: test
+    password: test
     secure: ssl
