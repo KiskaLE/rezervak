@@ -195,7 +195,7 @@ class AvailableDates
         $exceptions = $user->related("workinghours_exceptions")->where("end>=?", date("Y-m-d H:i:s"))->fetchAll();
         $conflicts = [];
         foreach ($reservations as $row) {
-            $start = strtotime($row->start);
+            $start = strtotime(explode(" ", $row->date)[0]." ".$row->start);
             foreach ($exceptions as $exception) {
                 if (strtotime($exception->start) <= $start && strtotime($exception->end) >= $start) {
                     $conflicts[] = $exception->id;
@@ -209,9 +209,17 @@ class AvailableDates
     public function getConflictedReservations($uuid):array
     {
         $exception = $this->database->table("workinghours_exceptions")->where("uuid=?", $uuid)->fetch();
-        bdump($exception);
-        $reservations = $this->database->table("reservations")->where("user_id=? AND date>=? AND date<=?", [$exception->user_id, $exception->start, $exception->end])->fetchAll();
-        return $reservations;
+        $exceptionStart = strtotime($exception->start);
+        $exceptionEnd = strtotime($exception->end);
+        $reservations = $this->database->table("reservations")->where("user_id=?", $exception->user_id)->fetchAll();
+        $conflicts = [];
+        foreach ($reservations as $reservation) {
+            $start = strtotime(explode(" ", $reservation->date)[0]." ".$reservation->start);
+            if ($exceptionStart <= $start && $exceptionEnd >= $start) {
+                $conflicts[] = $reservation;
+            }
+        }
+        return $conflicts;
 
     }
 }

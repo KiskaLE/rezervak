@@ -46,7 +46,6 @@ final class WorkhoursPresenter extends SecurePresenter
         //exceptions conflicts
         $conflicts = $this->availableDates->getReservationsConflictsIds($this->user->id);
         $this->template->conflicts = $conflicts;
-        bdump($conflicts);
 
     }
 
