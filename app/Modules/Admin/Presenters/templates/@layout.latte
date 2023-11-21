@@ -92,7 +92,7 @@
                     </a>
                 </li>
                 <li>
-                    <a n:href="Reservations:show" class="">
+                    <a n:href="Reservations:show" class="ajax">
                         <i class="entypo-newspaper"></i>
                         <span class="title">Rezervace</span>
                     </a>
@@ -104,22 +104,22 @@
                     </a>
                     <ul>
                         <li>
-                            <a n:href="Settings:show" class="">
+                            <a n:href="Settings:show" class="ajax">
                                 <span class="title">Uživatel</span>
                             </a>
                         </li>
                         <li>
-                            <a n:href="Workhours:show" class="">
+                            <a n:href="Workhours:show" class="ajax">
                                 <span class="title">Pracovní doba</span>
                             </a>
                         </li>
                         <li>
-                            <a n:href="Services:show" class="">
+                            <a n:href="Services:show" class="ajax">
                                 <span class="title">Služby</span>
                             </a>
                         </li>
                         <li>
-                            <a n:href="DiscountCodes:show" class="">
+                            <a n:href="DiscountCodes:show" class="ajax">
                                 <span class="title">Slevové kódy</span>
                             </a>
                         </li>
@@ -151,7 +151,7 @@
         </div>
         <div n:foreach="$flashes as $flash" n:class="flash, $flash->type" id="flash-messages">{$flash->message}</div>
 
-        <main>{include content}</main>
+        <main n:snippet="main">{include content}</main>
 
         <footer class="main">
 

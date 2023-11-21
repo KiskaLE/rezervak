@@ -1,6 +1,6 @@
 {block content}
 <h1>Slevové kódy</h1>
-<div><a class="btn btn-blue" n:href="DiscountCodes:create">Vytvořit</a>
+<div><a class="btn btn-blue ajax" n:href="DiscountCodes:create">Vytvořit</a>
 </div>
 <div class="dataTable-wrapper">
     <table class="table dataTable table-bordered">
@@ -20,7 +20,7 @@
                 <th>{$discountCode->value}</th>
                 <th>{$discountCode->type == 0 ? "cena" : "procento" }</th>
                 <th>{$discountCode->active ? 'Ano' : 'Ne'}</th>
-                <th><a class="btn btn-default btn-sm btn-icon icon-left" n:href="DiscountCodes:edit $discountCode->id"><i
+                <th><a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="DiscountCodes:edit $discountCode->id"><i
                                 class="entypo-pencil"></i>Upravit</a></th>
             </tr>
         {/foreach}

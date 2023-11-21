@@ -19,7 +19,7 @@
 
     <div class="col-lg-8 col-md-8">
         <div class="row">
-            <a n:href="Workhours:show" class="btn btn-default">Zpět</i></a>
+            <a n:href="Workhours:show" class="btn btn-default ajax">Zpět</i></a>
         </div>
 
 
@@ -60,15 +60,15 @@
                     <th>{$break->start}</th>
                     <th>{$break->end}</th>
                     <th>
-                        <a class="btn btn-default btn-sm btn-icon icon-left" n:href="Workhours:editBreak $break->id, $day->id"><i
-                                    class="entypo-pencil"></i>Úprava</a>
-                        <a class="btn btn-default btn-sm btn-icon icon-left " n:href="WorkHours:deleteBreak $break->id, $day->id"><i
-                                    class="entypo-cancel"></i>Smazat</a></th>
+                        <a class="btn btn-default btn-sm btn-icon icon-left ajax" n:href="Workhours:editBreak $break->id, $day->id"><i
+                                    class="entypo-pencil ajax"></i>Úprava</a>
+                        <a class="btn btn-default btn-sm btn-icon icon-left ajax" n:href="WorkHours:deleteBreak $break->id, $day->id"><i
+                                    class="entypo-cancel ajax"></i>Smazat</a></th>
                 </tr>
                 </tbody>
             </table>
             <div>
-                <a n:href="Workhours:createBreak $day->id" class="btn btn-default"><i class="entypo-plus"></i></a>
+                <a n:href="Workhours:createBreak $day->id" class="btn btn-default ajax"><i class="entypo-plus"></i></a>
             </div>
         </div>
     </div>

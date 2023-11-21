@@ -33,7 +33,7 @@
                             {/switch}</th>
                         <th class="text-right">{$day->start}</th>
                         <th class="text-right">{$day->stop}</th>
-                        <th><a class="btn btn-green btn-sm btn-icon icon-left" n:href="Workhours:edit $day->id"><i
+                        <th><a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="Workhours:edit $day->id"><i
                                         class="entypo-pencil"></i>Úprava</a></th>
                     </tr>
                 {/foreach}
@@ -42,7 +42,7 @@
     </div>
     <h1>Volno</h1>
     <div class="row col-lg-9">
-        <a n:href="Workhours:createException" class="btn btn-blue">Nový</a>
+        <a n:href="Workhours:createException" class="btn btn-blue ajax">Nový</a>
     </div>
     <div n:snippet="exceptions" class="row col-lg-9">
         <div class="dataTable-wrapper">
@@ -61,11 +61,11 @@
                     <th>{$row->start|date: "d.m.Y H:i"}</th>
                     <th>{$row->end|date: "d.m.Y H:i"}</th>
                     <th>
-                        <a class="btn btn-green btn-sm btn-icon icon-left" n:href="Workhours:editException $row->uuid"><i
+                        <a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="Workhours:editException $row->uuid"><i
                                     class="entypo-pencil"></i>Úprava</a>
-                        <a class="btn btn-danger btn-sm btn-icon icon-left" n:href="deleteException! $row->uuid"
+                        <a class="btn btn-danger btn-sm btn-icon icon-left ajax" n:href="deleteException! $row->uuid"
                            onclick="deleteException(event)"><i class="entypo-pencil"></i>Smazat</a>
-                        <a n:if="in_array($row->id, $conflicts)" n:href="excerptionsConflicts $row->uuid" class="btn btn-danger btn-sm btn-icon icon-left"><i class="entypo-eye"></i>Konflikt</a>
+                        <a n:if="in_array($row->id, $conflicts)" n:href="excerptionsConflicts $row->uuid" class="btn btn-danger btn-sm btn-icon icon-left ajax"><i class="entypo-eye"></i>Konflikt</a>
                     </th>
                 </tr>
                 </tbody>
