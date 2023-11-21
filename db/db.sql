@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db:3306
--- Generation Time: Nov 20, 2023 at 06:57 PM
+-- Generation Time: Nov 21, 2023 at 12:09 PM
 -- Server version: 8.2.0
 -- PHP Version: 8.2.12
 
@@ -45,6 +45,7 @@ CREATE TABLE `breaks` (
 
 CREATE TABLE `discount_codes` (
                                   `id` int NOT NULL,
+                                  `uuid` char(36) COLLATE utf8mb4_czech_ci NOT NULL,
                                   `user_id` int NOT NULL,
                                   `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci NOT NULL,
                                   `value` int NOT NULL,
@@ -218,6 +219,7 @@ ALTER TABLE `breaks`
 ALTER TABLE `discount_codes`
     ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `unique_code` (`code`,`user_id`) USING BTREE,
+  ADD UNIQUE KEY `uuid` (`uuid`),
   ADD KEY `user_id` (`user_id`);
 
 --
