@@ -30,9 +30,9 @@
                         <th>{$reservation->status == "VERIFIED" ? "Ano" : "Ne"}</th>
 
                         <th>
-                            <a class="btn btn-default btn-sm btn-icon icon-left ajax" n:href="Reservations:detail $reservation->id, backlink => $backlink"><i
+                            <a class="btn btn-default btn-sm btn-icon icon-left ajax" n:href="Reservations:detail $reservation->uuid, backlink => $backlink"><i
                                         class="entypo-eye"></i>Detail</a>
-                            <a class="btn btn-danger btn-sm btn-icon icon-left ajax" n:href="Reservations:delete $reservation->id, backlink => $backlink"><i
+                            <a class="btn btn-danger btn-sm btn-icon icon-left ajax" n:href="Reservations:delete $reservation->uuid, backlink => $backlink"><i
                                         class="entypo-cancel"></i>Smazat</a></th>
                     </tr>
                 {/foreach}

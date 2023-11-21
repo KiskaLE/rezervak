@@ -13,7 +13,7 @@ use Nette\Application\UI\InvalidLinkException;
 final class ReservationsPresenter extends SecurePresenter
 {
 
-    private int $id;
+    private $uuid;
 
     public function __construct(
         private Nette\Database\Explorer $database,
@@ -40,40 +40,39 @@ final class ReservationsPresenter extends SecurePresenter
         $this->template->reservations = $reservations;
     }
 
-    public function actionEdit(int $id, $backlink)
+    public function actionEdit($id, $backlink)
     {
         $this->backlink = $backlink;
-        $this->id = $id;
-        $reservation = $this->database->table("reservations")->get($id);
+        $this->uuid = $id;
+        $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
         $this->template->reservation = $reservation;
     }
 
-    public function actionDetail(int $id, $backlink)
+    public function actionDetail($id, $backlink)
     {
         $this->backlink = $backlink;
-        $reservation = $this->database->table("reservations")->get($id);
-        $this->template->reservation = $reservation;
-
-    }
-
-    public function actionDelete(int $id, $backlink)
-    {
-        $this->backlink = $backlink;
-        $this->id = $id;
-        $reservation = $this->database->table("reservations")->where("id=?", $id)->fetch();
+        $this->uuid = $id;
+        $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
         $this->template->reservation = $reservation;
 
     }
 
-    protected function createComponentForm(): Form
+    public function actionDelete($id, $backlink)
+    {
+        $this->backlink = $backlink;
+        $this->uuid = $id;
+        $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
+        $this->template->reservation = $reservation;
+
+    }
+
+    protected function createComponentEditForm(): Form
     {
         $form = new Form;
         $form->addText('firstname')->setRequired();
         $form->addText('lastname')->setRequired();
         $form->addText('email')->setRequired();
         $form->addText('phone')->setRequired();
-        $form->addText('service_id')->setRequired();
-        $form->addText('status')->setRequired();
         $form->addSubmit('submit', 'Save');
 
         $form->onSuccess[] = [$this, 'formSucceeded'];
@@ -83,18 +82,17 @@ final class ReservationsPresenter extends SecurePresenter
 
     public function formSucceeded(Form $form, \stdClass $data): void
     {
-        $this->database->table('reservations')->where('id=?', $this->id)->update([
+        $this->database->table('reservations')->where('uuid=?', $this->uuid)->update([
             'firstname' => $data->firstname,
             'lastname' => $data->lastname,
             'email' => $data->email,
             'phone' => $data->phone,
-            'service_id' => $data->service_id,
-            'status' => $data->status,
         ]);
         if ($this->backlink) {
-            $this->redirect($this->backlink);
+            $this->restoreRequest($this->backlink);
         }
-        $this->redirect('Reservations:show');
+        $this->flashMessage("Uloženo", "alert-success");
+        $this->redirect('show');
     }
 
     protected function createComponentDeleteForm(string $name): Form
@@ -109,7 +107,7 @@ final class ReservationsPresenter extends SecurePresenter
 
     public function deleteFormSucceeded(Form $form, \stdClass $data): void
     {
-        $this->database->table('reservations')->where('id=?', $this->id)->delete();
+        $this->database->table('reservations')->where('uuid=?', $this->uuid)->delete();
         $this->restoreRequest($this->backlink);
         if ($this->backlink) {
             $this->redirect($this->backlink);
