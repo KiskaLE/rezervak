@@ -35,6 +35,10 @@ final class WorkhoursPresenter extends SecurePresenter
         $this->template->backlink = $this->backlink;
     }
 
+    public function renderBasicPageTemplate()
+    {
+    }
+
     public function renderShow()
     {
         $days = $this->database->table("workinghours")->where("user_id=?", $this->user->id)->fetchAll();
@@ -108,77 +112,17 @@ final class WorkhoursPresenter extends SecurePresenter
         $this->redirect(":show");
     }
 
-    protected function createComponentCreateForm(): Form
-    {
-        $form = new Form;
-        //Monday
-        $form->addText("mo_start")->setRequired();
-        $form->addText("mo_stop")->setRequired();
-        //tuesday
-        $form->addText("tu_start")->setRequired();
-        $form->addText("tu_stop")->setRequired();
-        //wednesday
-        $form->addText("we_start")->setRequired();
-        $form->addText("we_stop")->setRequired();
-        //thursday
-        $form->addText("th_start")->setRequired();
-        $form->addText("th_stop")->setRequired();
-        //friday
-        $form->addText("fr_start")->setRequired();
-        $form->addText("fr_stop")->setRequired();
-        //saturday
-        $form->addText("sa_start")->setRequired();
-        $form->addText("sa_stop")->setRequired();
-        //sunday
-        $form->addText("su_start")->setRequired();
-        $form->addText("su_stop")->setRequired();
-
-        $form->addSubmit("submit", "Create");
-
-        $form->onSuccess[] = [$this, "createSuccess"];
-
-        return $form;
-    }
-
-    public function createSuccess(Form $form, $data)
-    {
-        //combines start and end
-        $count = 0;
-        $daysTimes = [];
-        $days = [];
-        foreach ($data as $time) {
-            $daysTimes[] = $time;
-            if ($count < 1) {
-                $count++;
-            } else {
-                $count = 0;
-                $days[] = $daysTimes;
-                $daysTimes = [];
-            }
-        }
-        //writes into database
-        $i = 0;
-        foreach ($days as $day) {
-            $this->database->table("workinghours")->insert([
-                "weekday" => $i,
-                "start" => $day[0],
-                "stop" => $day[1],
-                "user_id" => $this->user->id,
-            ]);
-            $i++;
-        }
-        $this->redirect("Workhours:show");
-    }
-
 
     protected function createComponentEditForm(): Form
     {
         $form = new Form;
-        $form->addHidden("start")
+        $form->addText("start")
             ->setDefaultValue($this->day->start)
+            ->setHtmlAttribute("type", "time")
             ->setRequired();
-        $form->addHidden("stop")
+        $form->addText("stop")
             ->setDefaultValue($this->day->stop)
+            ->setHtmlAttribute("type", "time")
             ->setRequired();
         $form->addSubmit("submit", "Uložit");
 
@@ -212,8 +156,12 @@ final class WorkhoursPresenter extends SecurePresenter
     protected function createComponentCreateBreakForm(): Form
     {
         $form = new Form;
-        $form->addhidden("start")->setRequired();
-        $form->addhidden("stop")->setRequired();
+        $form->addText("start")
+            ->setHtmlAttribute("type", "time")
+            ->setRequired();
+        $form->addText("stop")
+            ->setHtmlAttribute("type", "time")
+            ->setRequired();
         $form->addSubmit("submit", "Uložit");
 
         $form->onSuccess[] = [$this, "createBreakSuccess"];
@@ -273,13 +221,15 @@ final class WorkhoursPresenter extends SecurePresenter
         $id = $this->id;
         $break = $this->database->table("breaks")->where("id=?", $id)->fetch();
         $form = new Form;
-        $form->addhidden("start")
+        $form->addText("start")
+            ->setHtmlAttribute("type", "time")
             ->setRequired()
             ->setDefaultValue($break->start);
-        $form->addhidden("stop")
+        $form->addText("stop")
+            ->setHtmlAttribute("type", "time")
             ->setRequired()
             ->setDefaultValue($break->end);
-        $form->addSubmit("submit");
+        $form->addSubmit("submit", "Uložit");
         $form->onSuccess[] = [$this, "editBreakSuccess"];
         return $form;
     }
@@ -300,6 +250,7 @@ final class WorkhoursPresenter extends SecurePresenter
                     "start" => $data->start,
                     "end" => $data->stop,
                 ]);
+                $this->flashMessage("Uloženo", "alert-success");
                 $this->redirect("Workhours:edit", $this->editId);
             }
         } else {
