@@ -35,10 +35,6 @@ final class WorkhoursPresenter extends SecurePresenter
         $this->template->backlink = $this->backlink;
     }
 
-    public function renderBasicPageTemplate()
-    {
-    }
-
     public function renderShow()
     {
         $days = $this->database->table("workinghours")->where("user_id=?", $this->user->id)->fetchAll();

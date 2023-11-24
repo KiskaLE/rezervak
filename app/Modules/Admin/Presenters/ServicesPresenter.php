@@ -73,10 +73,6 @@ final class ServicesPresenter extends SecurePresenter
             ->setDefaultValue($this->service->description)
             ->setMaxLength(255)
             ->setRequired();
-        $form->addText("duration", "Duration")
-            ->setDefaultValue($this->service->duration)
-            ->setHtmlAttribute("type", "number")
-            ->setRequired();
         $form->addText("price", "Price")
             ->setDefaultValue($this->service->price)
             ->setHtmlAttribute("type", "number")
@@ -94,6 +90,8 @@ final class ServicesPresenter extends SecurePresenter
                 "price" => $data->price,
                 "description" => $data->description
             ]);
+
+            $this->flashMessage("Uloženo", "alert-success");
 
         $this->redirect("Services:show");
     }

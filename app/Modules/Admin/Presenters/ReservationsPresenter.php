@@ -14,6 +14,7 @@ final class ReservationsPresenter extends SecurePresenter
 {
 
     private $uuid;
+    private $reservation;
 
     public function __construct(
         private Nette\Database\Explorer $database,
@@ -45,6 +46,7 @@ final class ReservationsPresenter extends SecurePresenter
         $this->backlink = $backlink;
         $this->uuid = $id;
         $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
+        $this->reservation = $reservation;
         $this->template->reservation = $reservation;
     }
 
@@ -69,10 +71,18 @@ final class ReservationsPresenter extends SecurePresenter
     protected function createComponentEditForm(): Form
     {
         $form = new Form;
-        $form->addText('firstname')->setRequired();
-        $form->addText('lastname')->setRequired();
-        $form->addText('email')->setRequired();
-        $form->addText('phone')->setRequired();
+        $form->addText('firstname')
+            ->setDefaultValue($this->reservation->firstname)
+            ->setRequired();
+        $form->addText('lastname')
+            ->setDefaultValue($this->reservation->lastname)
+            ->setRequired();
+        $form->addText('email')
+            ->setDefaultValue($this->reservation->email)
+            ->setRequired();
+        $form->addText('phone')
+            ->setDefaultValue($this->reservation->phone)
+            ->setRequired();
         $form->addSubmit('submit', 'Save');
 
         $form->onSuccess[] = [$this, 'formSucceeded'];
@@ -117,7 +127,6 @@ final class ReservationsPresenter extends SecurePresenter
 
     public function handleBack($default)
     {
-        bdump($default);
         if ($this->backlink) {
             $this->restoreRequest($this->backlink);
         }

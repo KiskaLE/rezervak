@@ -37,6 +37,27 @@
 }
 //page end
 
+//form start
+
+.form-checkbox {
+  padding: 0 20px;
+  input {
+    width: 20px;
+    height: 20px;
+  }
+  span {
+    position: relative;
+    top: -3px;
+    font-size: 1.8rem;
+  }
+
+  span:before {
+    content: " ";
+  }
+
+}
+
+//form end
 .flex-row.flex-row {
   display: flex;
 }

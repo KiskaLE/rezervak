@@ -1,33 +1,47 @@
 {block content}
-<h1>Služby</h1>
+<div class="row page-header"><h1>Služby</h1></div>
 
-<div class="content-wrapper">
-        <div class="row"><a n:href="Services:create" class="btn btn-blue ajax">Vytvořit</a></div>
-        <div class="row">
-                <table class="table dataTable table-bordered">
-                    <thead>
-                    <tr>
-                        <th>Název</th>
-                        <th>Popis</th>
-                        <th>Cena</th>
-                        <th>Doba trvání [min]</th>
-                        <th>Akce</th>
-                    </tr>
-                    </thead>
-                    {foreach $services as $service}
-                        <tr>
-                            <th class="text-left">{$service->name}</th>
-                            <th class="text-left">{$service->description}</th>
-                            <th class="text-right">{$service->price} Kč</th>
-                            <th class="text-right">{$service->duration} min</th>
-                            <th>
-                                <a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="Services:edit $service->id"><i
-                                            class="entypo-pencil"></i>Upravit</a>
-                                <a class="btn {!$service->hidden ? "btn-gold" : "btn-default"} btn-sm btn-icon icon-left ajax" n:href="Services:actionHide $service->id"><i
-                                            class="entypo-eye"></i>{!$service->hidden ? "Skrýt" : "Zobrazit"}</a>
-                            </th>
-                        </tr>
-                    {/foreach}
-                </table>
+<!--table-->
+<div class="row">
+    <h2></h2>
+    <table class="table dataTable table-bordered">
+        <!--akce tabulky-->
+        <div class="table-header">
+            <a n:href="Services:create" class="btn btn-blue ajax">Vytvořit službu</i></a>
         </div>
+        <br>
+        <!--/akce tabulky-->
+        <!--head-->
+        <thead>
+        <tr>
+            <th>Název</th>
+            <th>Popis</th>
+            <th>Cena</th>
+            <th>Doba trvání [min]</th>
+            <th>Akce</th>
+        </tr>
+        </thead>
+        <!--/head-->
+        <!--body-->
+        <tbody>
+        {foreach $services as $service}
+            <tr>
+                <th class="text-left">{$service->name}</th>
+                <th class="text-left">{$service->description}</th>
+                <th class="text-right">{$service->price} Kč</th>
+                <th class="text-right">{$service->duration} min</th>
+                <th>
+                    <a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="Services:edit $service->id"><i
+                                class="entypo-pencil"></i>Upravit</a>
+                    <a class="btn {!$service->hidden ? "btn-gold" : "btn-default"} btn-sm btn-icon icon-left ajax" n:href="Services:actionHide $service->id"><i
+                                class="entypo-eye"></i>{!$service->hidden ? "Skrýt" : "Zobrazit"}</a>
+                </th>
+            </tr>
+        {/foreach}
+        </tbody>
+        <!--/body-->
+    </table>
+
 </div>
+
+<!--/table-->

@@ -129,8 +129,8 @@
         </div>
 
     </div>
-    <div class="main-content">
-
+    <main n:snippet="main" class="main-content">
+        <div class="content-wrapper">
         <div n:if="$user->isLoggedIn() && $user->roles[0] === 'ADMIN'" class="row" id="user-info">
             <div class="clearfix col-md-6 col-sm-8 clearfix">
                 <ul class="user-info pull-left pull-none-xsm">
@@ -154,7 +154,10 @@
 
             <script src="{$basePath}/assets/admin/js/flashmessages.js"></script>
         {/snippet}
-        <main n:snippet="main">{include content}</main>
+        {include content}
+
+        </div>
+
 
         <footer class="main">
 
@@ -162,7 +165,7 @@
 
         </footer>
 
-    </div>
+    </main>
 
 
     <link rel="stylesheet" href="{$basePath}/assets/js/jvectormap/jquery-jvectormap-1.2.2.css">

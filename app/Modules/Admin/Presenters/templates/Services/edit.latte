@@ -1,90 +1,61 @@
 {block content}
-
-
-
-<div class="content-wrapper">
-    <h1>Úprava - {$service->name}</h1>
-
-
-    <div class="col-lg-8 col-md-8">
-        <div class="row"><a class="btn btn-default ajax" n:href="Services:show">Zpět</a></div>
-        <form n:name="editForm" class="ajax">
-            <div class="row">
-                <div class="">
-
-                    <div class="panel panel-primary" data-collapsed="0">
-
-                        <div class="panel-body" style="display: block;">
-
-                            <div class="form-group">
-                                <label for="field-1" class="col-sm-3 control-label">Název</label>
-                                <div class="">
-                                    <input class="form-control" n:name="name">
-                                    <span class="description"></span>
-                                    <span class="input-error" id="sampleRateError">Název je povinný</span>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="field-3" class="col-sm-3 control-label">Cena [Kč]</label>
-
-                                <div class="">
-                                    <input class="form-control" type="number" n:name="price">
-                                    <span class="description">Zadejte cenu v Kč</span>
-                                    <span class="input-error"
-                                          id="verificationTimeError">Čas musí být větší než 0.</span>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="field-4" class="col-sm-3 control-label">Popis</label>
-
-                                <div class="">
-                                    <textarea class="form-control" n:name="description"></textarea>
-                                    <span class="description">Zadejte popis služby (max 255 znaků)</span>
-                                    <span class="input-error" id="numberOfDaysError">Čas musí být větší než 0.</span>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-            <div class="form-group default-padding">
-                <input n:name="submit" class="btn btn-success">
-                <a n:href="this" class="btn ajax" >Zrušit změny</a>
-            </div>
-        </form>
-    </div>
+<div class="row page-header"><h1>Služby</h1></div>
+<!--navigace-->
+<div class="row navbar">
+    <a n:href="show" class="btn btn-default ajax" class="btn btn-default">Zpět</i></a>
 </div>
-
-<!--
+<!--/navigace-->
+<!--form-->
 <div class="row">
+    <h2>Služba  {$service->name}</h2>
+    <!--content-->
+    <form n:name="editForm" class="ajax">
 
-    <div class="content-wrapper">
-        <form n:name="editForm">
-            <div class="form-group">
-                <label class="col-sm-3 control-label" n:name="name">Název:</label>
-                <div class="col-sm-8"><input class="form-control" n:name="name"></div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label" n:name="duration"  >Doba trvání:</label>
-                <div class="col-sm-8"><input class="form-control" type="number" n:name="duration"></div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label" n:name="price"  >Cena:</label>
-                <div class="col-sm-8"><input class="form-control" type="number" n:name="price"></div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label" n:name="description">Popis:</label>
-                <div class="col-sm-8"><textarea class="form-control" n:name="description"></textarea></div>
-            </div>
-            <input class="btn btn-default" n:name="submit">
+        <div class="panel panel-primary" data-collapsed="0">
+            <!--body-->
+            <div class="panel-body" style="display: block;">
+                <!--input-->
+                <div class="form-group">
+                    <label for="field-1" class="col-sm-3 control-label">Název</label>
 
-        </form>
-    </div>
+                    <div class="">
+                        <input n:name="name" class="form-control">
+                        <span class="description"></span>
+                    </div>
+                </div>
+                <!--/input-->
+                <!--input-->
+                <div class="form-group">
+                    <label for="field-1" class="col-sm-3 control-label">Cena [Kč]</label>
+
+                    <div class="">
+                        <input n:name="price" class="form-control">
+                        <span class="description">Zadejte cenu v Kč</span>
+                    </div>
+                </div>
+                <!--/input-->
+                <!--input-->
+                <div class="form-group">
+                    <label for="field-1" class="col-sm-3 control-label">Popis</label>
+
+                    <div class="">
+                        <textarea class="form-control" n:name="description"></textarea>
+                        <span class="description">Zadejte popis služby (max 255 znaků)</span>
+                    </div>
+                </div>
+                <!--/input-->
+                <!--submit-->
+                <div class="form-group default-padding">
+                    <input n:name="submit" id="btn-submit" class="btn btn-success">
+                    <a n:href="this" class="btn ajax">Zrušit změny</a>
+                </div>
+                <!--/submit-->
+            </div>
+            <!--/body-->
+        </div>
+
+    </form>
+
 </div>
 
--->
+<!--/form-->

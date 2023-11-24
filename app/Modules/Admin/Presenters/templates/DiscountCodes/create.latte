@@ -1,15 +1,78 @@
 {block content}
-<h1>Vytvořit nový kód</h1>
-<div><a n:href="DiscountCodes:show" class="btn btn-default ajax">Zpět</i></a></div>
-<form n:name="form" class="ajax">
-    <div><input n:name="active"><label for="">Aktivní</label></div>
-    <div><select n:name="type"></select></div>
-    <div><label for="">Kód:</label><input n:name="code"></div>
-    <div><label for="">Hodnota:</label><input n:name="value"></div>
-    {var $i = 1}
-    <div n:inner-foreach="$services as $service" >
-        <div><input n:name="service{$i}"><label for="">{$service->name}</label></div>
-        {do $i++}
-    </div>
-    <div><input n:name="save"></div>
-</form>
+<div class="row page-header"><h1>Slevové kódy</h1></div>
+<!--navigace-->
+<div class="row navbar">
+    <a n:href="show" class="btn btn-default ajax" class="btn btn-default">Zpět</i></a>
+</div>
+<!--/navigace-->
+<!--form-->
+<div class="row">
+    <h2>Nový kód</h2>
+    <!--content-->
+    <form n:name="form" class="ajax">
+
+        <div class="panel panel-primary" data-collapsed="0">
+            <!--body-->
+            <div class="panel-body" style="display: block;">
+                <!--select-->
+                <div class="form-group">
+                    <label for="field-1" class="col-sm-3 control-label">Typ slevy</label>
+
+                    <div class="">
+                        <select n:name="type" class="form-control"></select>
+                        <span class="description"></span>
+                    </div>
+                </div>
+                <!--/select-->
+                <!--input-->
+                <div class="form-group">
+                    <label for="field-1" class="col-sm-3 control-label">Kód</label>
+
+                    <div class="">
+                        <input n:name="code" class="form-control">
+                        <span class="description"></span>
+                    </div>
+                </div>
+                <!--/input-->
+                <!--input-->
+                <div class="form-group">
+                    <label for="field-1" class="col-sm-3 control-label">Hodnota</label>
+
+                    <div class="">
+                        <input n:name="value" class="form-control">
+                        <span class="description">Zadejte hodnotu v CZK</span>
+                    </div>
+                </div>
+                <!--/input-->
+                <!--checkbox-->
+                <div class="form-group">
+                    <label for="field-1" class="col-sm-3 control-label">Vyberte služby</label>
+                    <br>
+                    <div style="max-height: 100px; overflow-y: scroll;">
+                        {var $i = 1}
+                        <div n:foreach="$services as $service" class="">
+                            <div class="form-checkbox"><input n:name="service{$i}" ><span>{$service->name}</span></div>
+                            <span class="description"></span>
+                            {do $i++}
+                        </div>
+                    </div>
+
+                </div>
+                <!--/checkbox-->
+
+
+                <!--submit-->
+                <div class="form-group default-padding">
+                    <input n:name="save" id="btn-submit" class="btn btn-success">
+                    <a n:href="this" class="btn ajax">Zrušit změny</a>
+                </div>
+                <!--/submit-->
+            </div>
+            <!--/body-->
+        </div>
+
+    </form>
+
+</div>
+
+<!--/form-->

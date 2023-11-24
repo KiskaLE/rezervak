@@ -1,9 +1,56 @@
-main {
+.main-content.main-content {
+  background-color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 0 20px;
+}
+
+.content-wrapper.content-wrapper {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 1200px;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  padding: 20px;
+  align-items: center;
   gap: 20px;
+  padding: 0 20px;
+}
+
+.content-center {
+  min-height: 70vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar {
+  width: 100%;
+}
+
+.page-header.page-header {
+  text-align: left;
+}
+
+.form-checkbox {
+  padding: 0 20px;
+}
+.form-checkbox input {
+  width: 20px;
+  height: 20px;
+}
+.form-checkbox span {
+  position: relative;
+  top: -3px;
+  font-size: 1.8rem;
+}
+.form-checkbox span:before {
+  content: " ";
+}
+
+.flex-row.flex-row {
+  display: flex;
 }
 
 .form-group {
@@ -18,22 +65,17 @@ main {
 
 .row {
   width: 100%;
+  gap: 10px;
 }
 
-.main-content {
-  background-color: #303641;
-  min-height: 100vh;
+.row-center {
   display: flex;
   flex-direction: column;
-}
-
-.content-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding: 20px 0;
-  gap: 20px;
+}
+
+.row-box {
+  width: 75%;
 }
 
 .login-container {
@@ -129,6 +171,19 @@ main {
 .noUi-connect.noUi-connect {
   background: #ffd700; /* Color for the lower part of the slider */
   border-radius: 10px; /* Rounded corners for the filled part */
+}
+
+.time-picker-wrapper {
+  display: flex;
+  gap: 10px;
+}
+.time-picker-wrapper span {
+  font-size: 2.3rem;
+}
+.time-picker-wrapper img {
+  width: 20px;
+  position: relative;
+  top: -2px;
 }
 
 /*# sourceMappingURL=style.css.map */
