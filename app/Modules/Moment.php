@@ -34,7 +34,7 @@ class Moment
      */
     public function getTimezoneTimeFromUTCTime($time, $timezone)
     {
-        $m = new \Moment\Moment($time);
+        $m = new \Moment\Moment($time, "UTC");
         $m->setTimezone($timezone);
         return $m->format("Y-m-d H:i:s");
     }
