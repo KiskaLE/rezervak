@@ -8,6 +8,7 @@ class BasePresenter extends Presenter
 {
 
     public $backlink;
+    public $timezones;
 
 
     public function __construct()
@@ -18,6 +19,7 @@ class BasePresenter extends Presenter
     protected function startup()
     {
         parent::startup();
+        $this->timezones = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
         // Your code here
     }
     protected function beforeRender()

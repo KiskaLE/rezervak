@@ -4,7 +4,7 @@
     "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
     "This file is @generated automatically"
   ],
-  "content-hash": "99ab50ac1717f873d04bf8f8ec93a468",
+  "content-hash": "69344e5244e836f31e6be8acd68a84d9",
   "packages": [
     {
       "name": "brick/math",
@@ -35,7 +35,9 @@
         }
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["MIT"],
+      "license": [
+        "MIT"
+      ],
       "description": "Arbitrary-precision arithmetic library",
       "keywords": [
         "Arbitrary-precision",
@@ -60,68 +62,61 @@
       "time": "2023-01-15T23:15:59+00:00"
     },
     {
-      "name": "dibi/dibi",
-      "version": "v5.0.0",
+      "name": "fightbulc/moment",
+      "version": "1.34",
       "source": {
         "type": "git",
-        "url": "https://github.com/dg/dibi.git",
-        "reference": "82c45c30763d1f3932907fea46ff27a594d7ba7e"
+        "url": "https://github.com/fightbulc/moment.php.git",
+        "reference": "c813018ff87dfe77353f838908fc644cc5536b50"
       },
       "dist": {
         "type": "zip",
-        "url": "https://api.github.com/repos/dg/dibi/zipball/82c45c30763d1f3932907fea46ff27a594d7ba7e",
-        "reference": "82c45c30763d1f3932907fea46ff27a594d7ba7e",
+        "url": "https://api.github.com/repos/fightbulc/moment.php/zipball/c813018ff87dfe77353f838908fc644cc5536b50",
+        "reference": "c813018ff87dfe77353f838908fc644cc5536b50",
         "shasum": ""
       },
       "require": {
-        "php": "8.0 - 8.3"
-      },
-      "replace": {
-        "dg/dibi": "*"
+        "php": ">=5.3.0"
       },
       "require-dev": {
-        "nette/di": "^3.1",
-        "nette/tester": "^2.5",
-        "phpstan/phpstan": "^1.0",
-        "tracy/tracy": "^2.9"
+        "phpunit/phpunit": "^4.8.36 || ^5.5 || ^6.5 || ^7.5 || ^9.0"
       },
       "type": "library",
-      "extra": {
-        "branch-alias": {
-          "dev-master": "5.0-dev"
-        }
-      },
       "autoload": {
-        "classmap": ["src/"]
+        "psr-4": {
+          "Moment\\": "src/"
+        }
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "MIT"
+      ],
       "authors": [
         {
-          "name": "David Grudl",
-          "homepage": "https://davidgrudl.com"
+          "name": "Tino Ehrich",
+          "email": "tino@bigpun.me",
+          "role": "developer"
         }
       ],
-      "description": "Dibi is Database Abstraction Library for PHP",
-      "homepage": "https://dibiphp.com",
+      "description": "Parse, validate, manipulate, and display dates in PHP w/ i18n support. Inspired by moment.js",
       "keywords": [
-        "access",
-        "database",
-        "dbal",
-        "mssql",
-        "mysql",
-        "odbc",
-        "oracle",
-        "pdo",
-        "postgresql",
-        "sqlite",
-        "sqlsrv"
+        "date",
+        "display",
+        "format",
+        "i18n",
+        "locale",
+        "manipulate",
+        "moment",
+        "parse",
+        "time",
+        "translation",
+        "validate"
       ],
       "support": {
-        "issues": "https://github.com/dg/dibi/issues",
-        "source": "https://github.com/dg/dibi/tree/v5.0.0"
+        "issues": "https://github.com/fightbulc/moment.php/issues",
+        "source": "https://github.com/fightbulc/moment.php/tree/1.34"
       },
-      "time": "2023-08-09T14:38:02+00:00"
+      "time": "2023-01-26T21:18:59+00:00"
     },
     {
       "name": "latte/latte",
@@ -160,7 +155,9 @@
         "nette/php-generator": "to use tag {templatePrint}",
         "nette/utils": "to use filter |webalize"
       },
-      "bin": ["bin/latte-lint"],
+      "bin": [
+        "bin/latte-lint"
+      ],
       "type": "library",
       "extra": {
         "branch-alias": {
@@ -168,10 +165,16 @@
         }
       },
       "autoload": {
-        "classmap": ["src/"]
+        "classmap": [
+          "src/"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-3.0-only"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -252,10 +255,16 @@
         }
       },
       "autoload": {
-        "classmap": ["src/"]
+        "classmap": [
+          "src/"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-3.0-only"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -334,10 +343,16 @@
         }
       },
       "autoload": {
-        "classmap": ["src/"]
+        "classmap": [
+          "src/"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-3.0-only"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -350,7 +365,11 @@
       ],
       "description": "🅱  Nette Bootstrap: the simple way to configure and bootstrap your Nette application.",
       "homepage": "https://nette.org",
-      "keywords": ["bootstrapping", "configurator", "nette"],
+      "keywords": [
+        "bootstrapping",
+        "configurator",
+        "nette"
+      ],
       "support": {
         "issues": "https://github.com/nette/bootstrap/issues",
         "source": "https://github.com/nette/bootstrap/tree/v3.2.1"
@@ -393,10 +412,16 @@
         }
       },
       "autoload": {
-        "classmap": ["src/"]
+        "classmap": [
+          "src/"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-3.0-only"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -409,7 +434,13 @@
       ],
       "description": "⏱ Nette Caching: library with easy-to-use API and many cache backends.",
       "homepage": "https://nette.org",
-      "keywords": ["cache", "journal", "memcached", "nette", "sqlite"],
+      "keywords": [
+        "cache",
+        "journal",
+        "memcached",
+        "nette",
+        "sqlite"
+      ],
       "support": {
         "issues": "https://github.com/nette/caching/issues",
         "source": "https://github.com/nette/caching/tree/v3.2.2"
@@ -446,10 +477,16 @@
         }
       },
       "autoload": {
-        "classmap": ["src/"]
+        "classmap": [
+          "src/"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-3.0-only"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -462,7 +499,10 @@
       ],
       "description": "⚛ Nette Component Model",
       "homepage": "https://nette.org",
-      "keywords": ["components", "nette"],
+      "keywords": [
+        "components",
+        "nette"
+      ],
       "support": {
         "issues": "https://github.com/nette/component-model/issues",
         "source": "https://github.com/nette/component-model/tree/v3.0.3"
@@ -506,10 +546,16 @@
         }
       },
       "autoload": {
-        "classmap": ["src/"]
+        "classmap": [
+          "src/"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-3.0-only"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -575,10 +621,16 @@
         }
       },
       "autoload": {
-        "classmap": ["src/"]
+        "classmap": [
+          "src/"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-3.0-only"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -630,7 +682,11 @@
         }
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-3.0-only"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -643,7 +699,12 @@
       ],
       "description": "🔍 Nette Finder: find files and directories with an intuitive API.",
       "homepage": "https://nette.org",
-      "keywords": ["filesystem", "glob", "iterator", "nette"],
+      "keywords": [
+        "filesystem",
+        "glob",
+        "iterator",
+        "nette"
+      ],
       "support": {
         "issues": "https://github.com/nette/finder/issues",
         "source": "https://github.com/nette/finder/tree/v3.0.0"
@@ -688,10 +749,16 @@
         }
       },
       "autoload": {
-        "classmap": ["src/"]
+        "classmap": [
+          "src/"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-3.0-only"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -757,10 +824,16 @@
         }
       },
       "autoload": {
-        "classmap": ["src/"]
+        "classmap": [
+          "src/"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-3.0-only"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -826,10 +899,16 @@
         }
       },
       "autoload": {
-        "classmap": ["src/"]
+        "classmap": [
+          "src/"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-3.0-only"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -842,7 +921,13 @@
       ],
       "description": "📧 Nette Mail: handy email creation and transfer library for PHP with both text and MIME-compliant support.",
       "homepage": "https://nette.org",
-      "keywords": ["mail", "mailer", "mime", "nette", "smtp"],
+      "keywords": [
+        "mail",
+        "mailer",
+        "mime",
+        "nette",
+        "smtp"
+      ],
       "support": {
         "issues": "https://github.com/nette/mail/issues",
         "source": "https://github.com/nette/mail/tree/v4.0.1"
@@ -872,7 +957,9 @@
         "phpstan/phpstan": "^1.0",
         "tracy/tracy": "^2.7"
       },
-      "bin": ["bin/neon-lint"],
+      "bin": [
+        "bin/neon-lint"
+      ],
       "type": "library",
       "extra": {
         "branch-alias": {
@@ -880,10 +967,16 @@
         }
       },
       "autoload": {
-        "classmap": ["src/"]
+        "classmap": [
+          "src/"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-3.0-only"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -896,7 +989,13 @@
       ],
       "description": "🍸 Nette NEON: encodes and decodes NEON file format.",
       "homepage": "https://ne-on.org",
-      "keywords": ["export", "import", "neon", "nette", "yaml"],
+      "keywords": [
+        "export",
+        "import",
+        "neon",
+        "nette",
+        "yaml"
+      ],
       "support": {
         "issues": "https://github.com/nette/neon/issues",
         "source": "https://github.com/nette/neon/tree/v3.4.1"
@@ -938,10 +1037,16 @@
         }
       },
       "autoload": {
-        "classmap": ["src/"]
+        "classmap": [
+          "src/"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-3.0-only"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -954,7 +1059,12 @@
       ],
       "description": "🐘 Nette PHP Generator: generates neat PHP code for you. Supports new PHP 8.3 features.",
       "homepage": "https://nette.org",
-      "keywords": ["code", "nette", "php", "scaffolding"],
+      "keywords": [
+        "code",
+        "nette",
+        "php",
+        "scaffolding"
+      ],
       "support": {
         "issues": "https://github.com/nette/php-generator/issues",
         "source": "https://github.com/nette/php-generator/tree/v4.1.1"
@@ -992,10 +1102,16 @@
         }
       },
       "autoload": {
-        "classmap": ["src/"]
+        "classmap": [
+          "src/"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-3.0-only"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -1008,7 +1124,13 @@
       ],
       "description": "🍀 Nette RobotLoader: high performance and comfortable autoloader that will search and autoload classes within your application.",
       "homepage": "https://nette.org",
-      "keywords": ["autoload", "class", "interface", "nette", "trait"],
+      "keywords": [
+        "autoload",
+        "class",
+        "interface",
+        "nette",
+        "trait"
+      ],
       "support": {
         "issues": "https://github.com/nette/robot-loader/issues",
         "source": "https://github.com/nette/robot-loader/tree/v4.0.1"
@@ -1046,10 +1168,16 @@
         }
       },
       "autoload": {
-        "classmap": ["src/"]
+        "classmap": [
+          "src/"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-3.0-only"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -1062,7 +1190,9 @@
       ],
       "description": "Nette Routing: two-ways URL conversion",
       "homepage": "https://nette.org",
-      "keywords": ["nette"],
+      "keywords": [
+        "nette"
+      ],
       "support": {
         "issues": "https://github.com/nette/routing/issues",
         "source": "https://github.com/nette/routing/tree/v3.0.5"
@@ -1099,10 +1229,16 @@
         }
       },
       "autoload": {
-        "classmap": ["src/"]
+        "classmap": [
+          "src/"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-3.0-only"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -1115,7 +1251,10 @@
       ],
       "description": "📐 Nette Schema: validating data structures against a given Schema.",
       "homepage": "https://nette.org",
-      "keywords": ["config", "nette"],
+      "keywords": [
+        "config",
+        "nette"
+      ],
       "support": {
         "issues": "https://github.com/nette/schema/issues",
         "source": "https://github.com/nette/schema/tree/v1.2.5"
@@ -1159,10 +1298,16 @@
         }
       },
       "autoload": {
-        "classmap": ["src/"]
+        "classmap": [
+          "src/"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-3.0-only"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -1175,7 +1320,12 @@
       ],
       "description": "🔑 Nette Security: provides authentication, authorization and a role-based access control management via ACL (Access Control List)",
       "homepage": "https://nette.org",
-      "keywords": ["Authentication", "acl", "authorization", "nette"],
+      "keywords": [
+        "Authentication",
+        "acl",
+        "authorization",
+        "nette"
+      ],
       "support": {
         "issues": "https://github.com/nette/security/issues",
         "source": "https://github.com/nette/security/tree/v3.1.7"
@@ -1224,10 +1374,16 @@
         }
       },
       "autoload": {
-        "classmap": ["src/"]
+        "classmap": [
+          "src/"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-3.0-only"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -1316,7 +1472,9 @@
         }
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["MIT"],
+      "license": [
+        "MIT"
+      ],
       "authors": [
         {
           "name": "Ben Ramsey",
@@ -1325,7 +1483,14 @@
         }
       ],
       "description": "A PHP library for representing and manipulating collections.",
-      "keywords": ["array", "collection", "hash", "map", "queue", "set"],
+      "keywords": [
+        "array",
+        "collection",
+        "hash",
+        "map",
+        "queue",
+        "set"
+      ],
       "support": {
         "issues": "https://github.com/ramsey/collection/issues",
         "source": "https://github.com/ramsey/collection/tree/2.0.0"
@@ -1401,15 +1566,23 @@
         }
       },
       "autoload": {
-        "files": ["src/functions.php"],
+        "files": [
+          "src/functions.php"
+        ],
         "psr-4": {
           "Ramsey\\Uuid\\": "src/"
         }
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["MIT"],
+      "license": [
+        "MIT"
+      ],
       "description": "A PHP library for generating and working with universally unique identifiers (UUIDs).",
-      "keywords": ["guid", "identifier", "uuid"],
+      "keywords": [
+        "guid",
+        "identifier",
+        "uuid"
+      ],
       "support": {
         "issues": "https://github.com/ramsey/uuid/issues",
         "source": "https://github.com/ramsey/uuid/tree/4.7.4"
@@ -1465,11 +1638,17 @@
         }
       },
       "autoload": {
-        "files": ["src/Tracy/functions.php"],
-        "classmap": ["src"]
+        "files": [
+          "src/Tracy/functions.php"
+        ],
+        "classmap": [
+          "src"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause"],
+      "license": [
+        "BSD-3-Clause"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -1482,7 +1661,13 @@
       ],
       "description": "😎  Tracy: the addictive tool to ease debugging PHP code for cool developers. Friendly design, logging, profiler, advanced features like debugging AJAX calls or CLI support. You will love it.",
       "homepage": "https://tracy.nette.org",
-      "keywords": ["Xdebug", "debug", "debugger", "nette", "profiler"],
+      "keywords": [
+        "Xdebug",
+        "debug",
+        "debugger",
+        "nette",
+        "profiler"
+      ],
       "support": {
         "issues": "https://github.com/nette/tracy/issues",
         "source": "https://github.com/nette/tracy/tree/v2.10.5"
@@ -1512,7 +1697,9 @@
         "ext-simplexml": "*",
         "phpstan/phpstan": "^1.0"
       },
-      "bin": ["src/tester"],
+      "bin": [
+        "src/tester"
+      ],
       "type": "library",
       "extra": {
         "branch-alias": {
@@ -1520,10 +1707,16 @@
         }
       },
       "autoload": {
-        "classmap": ["src/"]
+        "classmap": [
+          "src/"
+        ]
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+      "license": [
+        "BSD-3-Clause",
+        "GPL-2.0-only",
+        "GPL-3.0-only"
+      ],
       "authors": [
         {
           "name": "David Grudl",
@@ -1589,7 +1782,9 @@
         }
       },
       "notification-url": "https://packagist.org/downloads/",
-      "license": ["MIT"],
+      "license": [
+        "MIT"
+      ],
       "authors": [
         {
           "name": "Nicolas Grekas",
@@ -1627,5 +1822,5 @@
     "php": ">= 8.0"
   },
   "platform-dev": [],
-  "plugin-api-version": "2.3.0"
+  "plugin-api-version": "2.6.0"
 }
