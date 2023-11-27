@@ -72,10 +72,8 @@ class AvailableDates
     {
         $availableTimes = array();
         $verifiedReservations = $this->database->table("reservations")->where("user_id=? AND start BETWEEN ? AND ? AND status='VERIFIED' AND type=0", [$this->user_id, $start, $end])->fetchAll();
-        bdump($verifiedReservations);
         $verificationTime = strtotime(date("Y-m-d H:i:s") . ' -' . $this->user_settings->verification_time . ' minutes');
         $unverifiedReservations = $this->database->table("reservations")->where("user_id=? AND start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? ", [$this->user_id, $start, $end, $verificationTime])->fetchAll();
-        bdump($start." ".$end);
         $start = strtotime($start);
         $end = strtotime($end);
         while ($start < $end) {
@@ -158,11 +156,9 @@ class AvailableDates
 
 
         $breaks = $workingHours->related("breaks")->fetchAll();
-        bdump($workingHours);
         $startTime = $this->moment->getUTCTime($date . " " . $workingHours->start, $user_settings->time_zone);
         $endTime = $this->moment->getUTCTime($date . " " . $workingHours->stop, $user_settings->time_zone);
-        bdump($startTime);
-        bdump($endTime);
+    
 
         $dayStartMinutes = $this->convertTimeToMinutes($workingHours->start);
         $dayEndMinutes = $this->convertTimeToMinutes($workingHours->stop);
