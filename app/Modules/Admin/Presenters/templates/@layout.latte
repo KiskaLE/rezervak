@@ -6,7 +6,7 @@
     <link rel="icon" href="{$basePath}/assets/images/favicon.ico">
 
     <title n:snippet="title">title</title>
-
+    <!-- Neon -->
     <link rel="stylesheet" href="{$basePath}/assets/js/jquery-ui/css/no-theme/jquery-ui-1.10.3.custom.min.css">
     <link rel="stylesheet" href="{$basePath}/assets/css/font-icons/entypo/css/entypo.css">
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic">
@@ -17,8 +17,19 @@
     <link rel="stylesheet" href="{$basePath}/assets/css/custom.css">
     <link rel="stylesheet" href="{$basePath}/assets/admin/css/style.css">
     <script src="{$basePath}/assets/js/jquery-1.11.3.min.js"></script>
+    <!-- /Neon -->
+    <!-- noUiSlider -->
+    <link href="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.js"></script>
+    <!-- /noUiSlider -->
+    <!-- DatePicker -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+    <!-- /DatePicker -->
+
     <script src="{$basePath}/assets/bundle.js"></script>
-    <script src="{$basePath}/assets/admin/js/flashmessages.js"></script>
 
     <!--[if lt IE 9]><script src="{$basePath}/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 
@@ -76,11 +87,11 @@
                 <li>
                     <a n:href="Home:" class="">
                         <i class="entypo-gauge"></i>
-                        <span class="title">Dashboard</span>
+                        <span class="title">Nástěnka</span>
                     </a>
                 </li>
                 <li>
-                    <a n:href="Reservations:show" class="">
+                    <a n:href="Reservations:show" class="ajax">
                         <i class="entypo-newspaper"></i>
                         <span class="title">Rezervace</span>
                     </a>
@@ -92,128 +103,38 @@
                     </a>
                     <ul>
                         <li>
-                            <a n:href="Settings:show" class="">
+                            <a n:href="Settings:show" class="ajax">
                                 <span class="title">Uživatel</span>
                             </a>
                         </li>
                         <li>
-                            <a n:href="Workhours:show" class="">
+                            <a n:href="Workhours:show" class="ajax">
                                 <span class="title">Pracovní doba</span>
                             </a>
                         </li>
                         <li>
-                            <a n:href="Services:show" class="">
+                            <a n:href="Services:show" class="ajax">
                                 <span class="title">Služby</span>
                             </a>
                         </li>
                         <li>
-                            <a n:href="DiscountCodes:show" class="">
+                            <a n:href="DiscountCodes:show" class="ajax">
                                 <span class="title">Slevové kódy</span>
                             </a>
                         </li>
                     </ul>
                 </li>
-
-
-                <!--
-                <li class="has-sub">
-                    <a href="layout-api.html">
-                        <i class="entypo-layout"></i>
-                        <span class="title">Layouts</span>
-                    </a>
-                    <ul>
-                        <li>
-                            <a href="layout-api.html">
-                                <span class="title">Layout API</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="layout-collapsed-sidebar.html">
-                                <span class="title">Collapsed Sidebar</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="layout-fixed-sidebar.html">
-                                <span class="title">Fixed Sidebar</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="layout-chat-open.html">
-                                <span class="title">Chat Open</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="layout-horizontal-menu-boxed.html">
-                                <span class="title">Horizontal Menu Boxed</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="layout-horizontal-menu-fluid.html">
-                                <span class="title">Horizontal Menu Fluid</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="layout-mixed-menus.html">
-                                <span class="title">Mixed Menus</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="layout-right-sidebar.html">
-                                <span class="title">Right Sidebar</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="layout-both-menus-right-sidebar.html">
-                                <span class="title">Both Menus (Right Sidebar)</span>
-                            </a>
-                        </li>
-                        <li class="has-sub">
-                            <a href="layout-page-transition-fade.html">
-                                <span class="title">Page Enter Transitions</span>
-                            </a>
-                            <ul>
-                                <li>
-                                    <a href="layout-page-transition-fade.html">
-                                        <span class="title">Fade Scale</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="layout-page-transition-left-in.html">
-                                        <span class="title">Left In</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="layout-page-transition-right-in.html">
-                                        <span class="title">Right In</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="layout-page-transition-fade-only.html">
-                                        <span class="title">Fade Only</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="layout-boxed.html">
-                                <span class="title">Boxed Layout</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                -->
-
             </ul>
 
         </div>
 
     </div>
-    <div class="main-content">
-
+    <main n:snippet="main" class="main-content">
+        <div class="content-wrapper">
         <div n:if="$user->isLoggedIn() && $user->roles[0] === 'ADMIN'" class="row" id="user-info">
             <div class="clearfix col-md-6 col-sm-8 clearfix">
                 <ul class="user-info pull-left pull-none-xsm">
-                    <li class="profile-info"><a id="user-name" href="">
+                    <li class="profile-info"><a id="user-name" n:href="Settings:show">
                             <img src="" alt="" class="img-circle" width="44">{$user->getIdentity()->getData()["name"]}
                         </a></li>
                 </ul>
@@ -227,17 +148,24 @@
             </div>
             <hr>
         </div>
-        <div n:foreach="$flashes as $flash" n:class="flash, $flash->type" id="flash-messages">{$flash->message}</div>
+        {snippet flashMessages}
+            <div n:foreach="$flashes as $flash" n:class="flash, $flash->type"
+                    id="flash-messages">{$flash->message}</div>
 
+            <script src="{$basePath}/assets/admin/js/flashmessages.js"></script>
+        {/snippet}
         {include content}
+
+        </div>
+
+
         <footer class="main">
 
             © 2015 <strong>Neon</strong> Admin Theme by <a href="http://laborator.co" target="_blank">Laborator</a>
 
         </footer>
-    </div>
 
-
+    </main>
 
 
     <link rel="stylesheet" href="{$basePath}/assets/js/jvectormap/jquery-jvectormap-1.2.2.css">
@@ -253,7 +181,6 @@
     <script src="{$basePath}/assets/js/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
 
 
-
     <script src="{$basePath}/assets/js/jvectormap/jquery-jvectormap-europe-merc-en.js"></script>
     <script src="{$basePath}/assets/js/jquery.sparkline.min.js"></script>
     <script src="{$basePath}/assets/js/rickshaw/vendor/d3.v3.js"></script>
@@ -264,12 +191,12 @@
     <script src="{$basePath}/assets/js/neon-chat.js"></script>
 
 
-
     <script src="{$basePath}/assets/js/neon-custom.js"></script>
 
 
     {block scripts}
         <script defer src="https://unpkg.com/nette-forms@3/src/assets/netteForms.js"></script>
+        <script defer src="{$basePath}/assets/admin/js/index.js"></script>
     {/block}
 </body>
 </html>

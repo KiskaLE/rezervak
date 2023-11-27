@@ -1,9 +1,16 @@
 {block content}
-<h1>Slevové kódy</h1>
-<div><a class="btn btn-default btn-sm btn-icon icon-left" n:href="DiscountCodes:create"><i class="entypo-pencil"></i>Vytvořit</a>
-</div>
-<div class="dataTable-wrapper">
+<div class="row page-header"><h1>Slevové kódy</h1></div>
+<!--table-->
+<div class="row">
+    <h2></h2>
     <table class="table dataTable table-bordered">
+        <!--akce tabulky-->
+        <div class="table-header">
+            <a n:href="create" class="btn btn-blue ajax">Vytvořit kód</i></a>
+        </div>
+        <br>
+        <!--/akce tabulky-->
+        <!--head-->
         <thead>
         <tr>
             <th>Kód</th>
@@ -13,6 +20,8 @@
             <th>Akce</th>
         </tr>
         </thead>
+        <!--/head-->
+        <!--body-->
         <tbody>
         {foreach $discountCodes as $discountCode}
             <tr>
@@ -20,9 +29,17 @@
                 <th>{$discountCode->value}</th>
                 <th>{$discountCode->type == 0 ? "cena" : "procento" }</th>
                 <th>{$discountCode->active ? 'Ano' : 'Ne'}</th>
-                <th><a class="btn btn-default btn-sm btn-icon icon-left" n:href="DiscountCodes:edit $discountCode->id"><i
-                                class="entypo-pencil"></i>Upravit</a></th>
+                <th><a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="DiscountCodes:edit $discountCode->id"><i
+                                class="entypo-pencil"></i>Upravit</a>
+                    <a class="btn btn-danger btn-sm btn-icon icon-left ajax" n:href="delete! $discountCode->uuid"
+                       onclick="deleteCode(event)"><i class="entypo-pencil"></i>Smazat</a>
+                    <a class="btn {$discountCode->active ? 'btn-gold' : 'btn-default'}  btn-sm btn-icon icon-left ajax" n:href="hide! $discountCode->uuid"><i class="entypo-eye"></i>{$discountCode->active ? 'Aktivní' : 'Neaktivní'}</a></th>
             </tr>
         {/foreach}
+        </tbody>
+        <!--/body-->
     </table>
+
 </div>
+
+<!--/table-->

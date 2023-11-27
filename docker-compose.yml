@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  www:
+    image: vojtakylar/rezervakapache:latest
+    ports:
+      - 8001:80
+      - 465:465
+    volumes:
+      - ./:/var/www/html/
+      - ./docker/apache/sites-enabled:/etc/apache2/sites-enabled
+      - ./docker/apache/php:/usr/local/etc/php
+  db:
+    image: mysql:latest
+    ports:
+      - 3307:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=rezervak
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+      - PMA_ARBITRARY= 1
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+  phpmyadmin:
+    image: phpmyadmin:latest
+    ports:
+      - 8080:80
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306

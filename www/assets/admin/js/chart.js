@@ -39,12 +39,12 @@ document.addEventListener("DOMContentLoaded", () => {
 async function getData() {
     const naja = window.Naja
     const res = await naja.makeRequest("GET", "/admin", {
+        replaceHistory: false,
         run: "getChartData"
     }, {
         fetch: {
             credentials: 'include',
         },
     })
-    console.log(res);
     return Promise.resolve(res);
 }

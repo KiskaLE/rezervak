@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
-        'name' => 'nette/web-project',
+        'name' => 'vendor_name/rezervak',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '8285348237425d2e52cb5fe47f1c2ea9885f579a',
+        'reference' => '06c24d5c68d7560db78d4cc15ad5825a4957894b',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -205,15 +205,6 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'nette/web-project' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => '8285348237425d2e52cb5fe47f1c2ea9885f579a',
-            'type' => 'project',
-            'install_path' => __DIR__ . '/../../',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'ramsey/collection' => array(
             'pretty_version' => '2.0.0',
             'version' => '2.0.0.0',
@@ -253,6 +244,15 @@
             'reference' => '86bdba4aa0f707d3f125933931d3df6e5c7aad79',
             'type' => 'library',
             'install_path' => __DIR__ . '/../tracy/tracy',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'vendor_name/rezervak' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '06c24d5c68d7560db78d4cc15ad5825a4957894b',
+            'type' => 'project',
+            'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
             'dev_requirement' => false,
         ),

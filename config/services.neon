@@ -5,6 +5,7 @@ services:
 	- App\Modules\Mailer
 	- App\Modules\Payments
 	- App\Modules\DiscountCodes
+	- App\Modules\Admin\Presenters\ApiPresenter
 
 
 search:

@@ -1,62 +1,98 @@
 {block content}
-<h1>Edit - {switch $day->weekday}
+<div class="row page-header"><h1>{switch $day->weekday}
         {case 0}
-        Pondělí
+            Pondělí
         {case 1}
-        Úterý
+            Úterý
         {case 2}
-        Středa
+            Středa
         {case 3}
-        Čtvrtek
+            Čtvrtek
         {case 4}
-        Pátek
+            Pátek
         {case 5}
-        Sobota
+            Sobota
         {case 6}
-        Neděle
-    {/switch}</h1>
-<div><a n:href="Workhours:show" class="btn btn-default"><i class="entypo-back"></i></a></div>
+            Neděle
+        {/switch}</h1></div>
 
-<div class="content-wrapper">
-    <form n:name="editForm">
-        <div class="dataTable-wrapper table-edit col-lg-2 col-sm-2">
-            <table class="table table-bordered dataTable">
-                <tr>
-                    <th>Start</th>
-                    <th>Stop</th>
-                </tr>
-                <tr>
-                    <th><input n:name="start" type="time" value="{$day->start}"></th>
-                    <th><input n:name="stop" type="time" value="{$day->stop}"></th>
-                </tr>
-            </table>
-            <input class="btn btn-default" n:name="submit">
+<!--navigace-->
+<div class="row navbar">
+    <a n:href="Workhours:show" class="btn btn-default ajax" class="btn btn-default">Zpět</i></a>
+</div>
+<!--/navigace-->
+
+<!--form-->
+<div class="row">
+    <h2>Nadpis formuláře</h2>
+    <!--content-->
+    <form n:name="editForm" class="ajax">
+
+        <div class="panel panel-primary" data-collapsed="0">
+            <!--body-->
+            <div class="panel-body" style="display: block;">
+                <!--input-->
+                <div class="time-picker-wrapper">
+                    <span>Časové okno </span>
+                    <span>
+                        <input n:name="start"  class="form-control timepicker">
+                    </span>
+                    <span><img src="{$basePath}/assets/admin/icons/time-separator.svg" alt="time separator"></span>
+                    <span>
+                        <input n:name="stop" class="form-control timepicker">
+                    </span>
+                </div>
+                <!--/input-->
+                <!--submit-->
+                <div class="form-group default-padding">
+                    <input n:name="submit" id="btn-submit" class="btn btn-success">
+                    <a n:href="this" class="btn ajax">Zrušit změny</a>
+                </div>
+                <!--/submit-->
+            </div>
+            <!--/body-->
         </div>
 
     </form>
 
-    <div class="col-lg-5">
-        <h3>Přestávky</h3>
-        <table n:if="$breaks" class="table dataTable table-bordered">
-            <thead>
-            <tr>
-                <th>Začátek</th>
-                <th>Konec</th>
-                <th>Akce</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr n:foreach="$breaks as $break">
-                <th>{$break->start}</th>
-                <th>{$break->end}</th>
-                <th>
-                    <a class="btn btn-default btn-sm btn-icon icon-left" n:href="Workhours:editBreak $break->id, $day->id"><i
-                                class="entypo-pencil"></i>Úprava</a>
-                    <a class="btn btn-default btn-sm btn-icon icon-left " n:href="WorkHours:deleteBreak $break->id, $day->id"><i
-                                class="entypo-cancel"></i>Smazat</a></th>
-            </tr>
-            </tbody>
-        </table>
-        <div><a n:href="Workhours:createBreak $day->id" class="btn btn-default"><i class="entypo-plus"></i></a></div>
-    </div>
 </div>
+
+<!--/form-->
+
+<!--table-->
+<div class="row">
+    <h2>Přestávky</h2>
+    <table class="table dataTable table-bordered">
+        <!--akce tabulky-->
+        <div class="table-header">
+            <a n:href="Workhours:createBreak $day->id" class="btn btn-blue ajax">Vytvořit přestávku</i></a>
+        </div>
+        <br>
+        <!--/akce tabulky-->
+        <!--head-->
+        <thead>
+        <tr>
+            <th>Začátek</th>
+            <th>Konec</th>
+            <th>Akce</th>
+        </tr>
+        </thead>
+        <!--/head-->
+        <!--body-->
+        <tbody>
+        <tr n:foreach="$breaks as $break">
+            <th>{$break->start}</th>
+            <th>{$break->end}</th>
+            <th>
+                <a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="Workhours:editBreak $break->id, $day->id"><i
+                            class="entypo-pencil ajax"></i>Úprava</a>
+                <a class="btn btn-danger btn-sm btn-icon icon-left ajax" n:href="WorkHours:deleteBreak $break->id, $day->id"><i
+                            class="entypo-cancel ajax"></i>Smazat</a></th>
+        </tr>
+        </tbody>
+        <!--/body-->
+    </table>
+
+</div>
+
+<!--/table-->

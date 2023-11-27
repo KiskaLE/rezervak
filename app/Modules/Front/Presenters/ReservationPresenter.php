@@ -67,7 +67,8 @@ final class ReservationPresenter extends BasePresenter
             $this->payload->url = $this->link("Reservation:create", $u);
         }
 
-        $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
+        $services = $this->database->table("services")->where("user_id=? AND hidden=?", [$this->user->id, 0])
+            ->fetchAll();
         $this->template->services = $services;
         $this->redrawControl("content");
 
@@ -84,14 +85,12 @@ final class ReservationPresenter extends BasePresenter
     public
     function actionBackup($r)
     {
-        $reservation = $this->database->table("backup_reservations")->where("uuid=?", $r)->fetch();
+        $reservation = $this->database->table("reservations")->where("uuid=? AND type=1", $r)->fetch();
         $this->template->reservation = $reservation;
     }
 
     protected function createComponentForm(): Form
     {
-        $services = $this->database->table("services")->fetchAll();
-        $this->services = $services;
 
         $form = new Form;
         $form->addhidden("service")->setRequired();
@@ -123,7 +122,7 @@ final class ReservationPresenter extends BasePresenter
 
         if ($data->dateType == "default") {
             $times = $this->availableDates->getAvailableStartingHours($this->user_uuid ,$data->date, $duration);
-            $reservation = $this->insertReservation($uuid, $data, "reservations", $times);
+            $reservation = $this->insertReservation($uuid, $data, "default", $times);
             if ($reservation) {
                 $this->payments->createPayment($reservation, $data->dicountCode);
                 $this->mailer->sendConfirmationMail($email, $this->link("Payment:default", $uuid));
@@ -132,8 +131,9 @@ final class ReservationPresenter extends BasePresenter
                 $this->flashMessage("Nepovedlo se uložit rezervaci.", "alert-danger");
             }
         } else if ($data->dateType == "backup") {
-            $times = $this->availableDates->getBackupHours($data->date, $service->duration);
-            $reservation = $this->insertReservation($uuid, $data, "backup_reservations", $times);
+            $times = $this->availableDates->getBackupHours($this->user_uuid,$data->date, $service->duration);
+            $reservation = $this->insertReservation($uuid, $data, "backup", $times);
+            bdump($reservation);
             if ($reservation) {
                 $this->payments->createPayment($reservation, $data->dicountCode);
                 $this->mailer->sendBackupConfiramationMail($email, $this->link("Payment:backup", $uuid));
@@ -150,15 +150,15 @@ final class ReservationPresenter extends BasePresenter
      *
      * @param string $uuid The UUID of the reservation.
      * @param object $data The reservation data.
-     * @param string $insertTable The table to insert the reservation into.
+     * @param string $type The type of reservation.
      * @param array $times The array of available times.
      * @return mixed The inserted reservation data.
      */
-    private function insertReservation(string $uuid, $data, string $insertTable, $times)
+    private function insertReservation(string $uuid, $data, string $type, $times)
     {
         $service_id = $data->service;
 
-        $reservation = $this->database->table($insertTable)->insert([
+        $reservation = $this->database->table("reservations")->insert([
             "uuid" => $uuid,
             "date" => $data->date,
             "service_id" => $service_id,
@@ -172,6 +172,7 @@ final class ReservationPresenter extends BasePresenter
             "city" => $data->city,
             "created_at" => date("Y-m-d H:i:s"),
             "user_id" => $this->user->id,
+            "type" => $type == "backup" ? 1 : 0,
         ]);
 
         return $reservation;
@@ -189,7 +190,7 @@ final class ReservationPresenter extends BasePresenter
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = $service->duration;
         $availableTimes = $this->availableDates->getAvailableStartingHours($u, $day, intval($duration));
-        $availableBackup = $this->availableDates->getBackupHours($day, intval($duration));
+        $availableBackup = $this->availableDates->getBackupHours($u ,$day, intval($duration));
         $this->template->times = $availableTimes;
         $this->template->backupTimes = $availableBackup;
         $this->redrawControl("content");
@@ -219,7 +220,7 @@ final class ReservationPresenter extends BasePresenter
                 if ($discount->value >= 100) {
                     $price = 0;
                 } else {
-                    $price = $service->price  * $discount->value / 100;
+                    $price = $price - $service->price  * $discount->value / 100;
                 }
             }
             $this->sendJson(["status" => true, "price" => $price]);

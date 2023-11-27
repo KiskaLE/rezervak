@@ -1,0 +1,53 @@
+{block content}
+<div class="row page-header"><h1>Volno</h1></div>
+<!--navigace-->
+<div class="row navbar">
+    <a n:href="show" class="btn btn-default ajax" class="btn btn-default">Zpět</i></a>
+</div>
+<!--/navigace-->
+<!--form-->
+<div class="row">
+    <h2>Nadpis formuláře</h2>
+    <!--content-->
+    <form n:name="createExceptionForm" class="ajax">
+
+        <div class="panel panel-primary" data-collapsed="0">
+            <!--body-->
+            <div class="panel-body" style="display: block;">
+                <!--input-->
+                <div class="form-group">
+                    <label for="field-1" class="col-sm-3 control-label">Název</label>
+
+                    <div class="">
+                        <input n:name="name" class="form-control">
+                        <span class="description"></span>
+                    </div>
+                </div>
+                <!--/input-->
+                <!--input-->
+                <div class="form-group">
+                    <label for="field-1" class="col-sm-3 control-label">Datum</label>
+
+                    <div class="">
+                        <input n:name="date" id="date-start" class="form-control">
+                        <span class="description"></span>
+                    </div>
+                </div>
+                <!--/input-->
+                <!--submit-->
+                <div class="form-group default-padding">
+                    <input n:name="submit" id="btn-submit" class="btn btn-success">
+                    <a n:href="this" class="btn ajax">Zrušit změny</a>
+                </div>
+                <!--/submit-->
+            </div>
+            <!--/body-->
+        </div>
+
+    </form>
+
+</div>
+
+<!--/form-->
+
+<script src="{$basePath}/assets/admin/js/datePicker.js"></script>

@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+
     // Get the flash messages container
     var flashMessages = document.getElementById("flash-messages");
 
@@ -14,4 +14,3 @@ document.addEventListener("DOMContentLoaded", function() {
             flashMessages.remove();
         }, 6000); // 5000 milliseconds = 5 seconds
     }
-});

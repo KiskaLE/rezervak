@@ -16,8 +16,11 @@
                 <div class="select-wrapper">
                     {var $i = 0}
                     {foreach $services as $service}
-                        <div><p onclick="setService({$service->id}, {$service->name}, {$service->price})" class="button xl primary">{$service->name} - {$service->price}
-                                Kč</p>
+                        <div class="service-card {$i == 0%2 ? 'service-primary' : 'service-secondary'}">
+                            <div class="card-title"><h2>{$service->name}</h2></div>
+                            <div class="card-text"><p>{$service->description}</p></div>
+                            <div class="card-price"><span>{$service->price}</span><span> Kč</span></div>
+                            <div class="card-button" onclick="setService({$service->id}, {$service->name}, {$service->price})"><span>Rezervovat</span></div>
                         </div>
                         {do $i++}
                     {/foreach}
@@ -89,13 +92,13 @@
             <div class="tab">
                 <h1>Zadejte osobní údaje</h1>
                 <div class="info-form">
-                    <div><label for="">Jméno:</label><input n:name="firstname" class="multiform data"></div>
-                    <div><label for="">Příjmení:</label><input n:name="lastname" class="multiform data"></div>
-                    <div><label for="">Tel.:</label><input n:name="phone" class="multiform data"></div>
-                    <div><label for="">E-mail:</label><input n:name="email" class="multiform data"></div>
-                    <div><label for="">Adresa a č.p.</label><input n:name="address" class="multiform data"></div>
-                    <div><label for="">PSČ:</label><input n:name="code" class="multiform data"></div>
-                    <div><label for="">Město:</label><input n:name="city" class="multiform data"></div>
+                    <div><label for="">Jméno:</label><input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="firstname" class="multiform data"></div>
+                    <div><label for="">Příjmení:</label><input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="lastname" class="multiform data"></div>
+                    <div><label for="">Tel.:</label><input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="phone" class="multiform data"></div>
+                    <div><label for="">E-mail:</label><input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="email" class="multiform data"></div>
+                    <div><label for="">Adresa a č.p.</label><input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="address" class="multiform data"></div>
+                    <div><label for="">PSČ:</label><input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="code" class="multiform data"></div>
+                    <div><label for="">Město:</label><input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="city" class="multiform data"></div>
                 </div>
             </div>
 

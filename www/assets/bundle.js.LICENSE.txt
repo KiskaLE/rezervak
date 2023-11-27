@@ -12,9 +12,19 @@
  * Released under the MIT License
  */
 
+/**
+ * @author: Rinat G. http://coding.kz
+ * @copyright: Copyright (c) 2019 Rinat G.
+ * @license: Licensed under the MIT license. See http://www.opensource.org/licenses/mit-license.php
+ */
+
 /**!
  * NetteForms - simple form validation.
  *
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
+
+//! moment.js
+
+//! moment.js locale configuration

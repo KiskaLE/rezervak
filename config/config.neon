@@ -1,7 +1,7 @@
 mail:
     smtp: true
-    host: localhost
+    host: 'smtp.gmail.com'
     port: 465
-    username: test@test.com
-    password: "1234"
+    username: test
+    password: test
     secure: ssl

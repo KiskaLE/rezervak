@@ -4,6 +4,22 @@
 namespace App\Cron;
 
 use App;
+use Nette;
+
+require __DIR__ . '/../../vendor/autoload.php';
+
+# Necháme konfigurátor, aby nám sestavil DI kontejner
+$container = App\Bootstrap::bootForCron()->createContainer();
+
+$presenterFactory = $container->getByType(Nette\Application\IPresenterFactory::class);
+$presenter = $presenterFactory->createPresenter("Admin:Api");
+$presenter->autoCanonicalize = FALSE;
+
+
+$request = new Nette\Application\Request("Api", "GET", array('action' => 'clean'));
+$response = $presenter->run($request);
+
+die("test");
 
 require __DIR__ . '/../../vendor/autoload.php';
 
@@ -38,7 +54,7 @@ foreach ($admins as $admin) {
     }
 
     // check if any backup reservation can be booked into reservations table
-    $backups = $database->query("SELECT * FROM backup_reservations WHERE status='VERIFIED' AND user_id = '$admin->id' ORDER BY created_at ASC");
+    $backups = $database->query("SELECT * FROM reservations WHERE status='VERIFIED' AND user_id = '$admin->id' AND status=1 ORDER BY created_at ASC");
 
 
     $verificationTime = date("Y-m-d H:i:s", strtotime("-" . $admin->verification_time . " minutes"));

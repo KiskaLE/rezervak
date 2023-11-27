@@ -64,6 +64,13 @@ final class Payments
         return $code;
     }
 
+    public function updateTime($reservation_id) {
+        $now = date("Y-m-d H:i:s");
+        $this->database->table("payments")->where("reservation_id=?", $reservation_id)->update([
+            "updated_at" => $now
+        ]);
+    }
+
     /**
      * Retrieves the payments associated with the given reservation.
      *
