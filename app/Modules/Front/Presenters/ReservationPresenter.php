@@ -190,9 +190,10 @@ final class ReservationPresenter extends BasePresenter
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = $service->duration;
         $availableTimes = $this->availableDates->getAvailableStartingHours($u, $day, intval($duration));
+        bdump($availableTimes);
         $availableBackup = $this->availableDates->getBackupHours($u ,$day, intval($duration));
         $this->template->times = $availableTimes;
-        $this->template->backupTimes = $availableBackup;
+        //$this->template->backupTimes = $availableBackup;
         $this->redrawControl("content");
     }
     /**

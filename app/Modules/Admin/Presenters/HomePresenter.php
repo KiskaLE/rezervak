@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\Modules\admin\Presenters;
 
 use Nette;
+use App\Modules\Moment;
 
 
 final class HomePresenter extends SecurePresenter
@@ -13,6 +14,7 @@ final class HomePresenter extends SecurePresenter
 
     public function __construct(
         private Nette\Database\Explorer $database,
+        private Moment $moment,
     )
     {
     }
@@ -20,15 +22,16 @@ final class HomePresenter extends SecurePresenter
     public function beforeRender()
     {
         parent::beforeRender();
+        $this->moment->getTimezoneTimeFromUTCTime($this->moment->getUTCTime("now", "Africa/Cairo"), "Europe/Prague");
 
     }
 
     public function renderDefault()
     {
-        $numberOfReservationsToday = $this->database->table("reservations")->where("date=? AND user_id=? AND status='VERIFIED' AND type=0", [date("Y-m-d"), $this->user->id])->count();
+        $numberOfReservationsToday = $this->database->table("reservations")->where("start=? AND user_id=? AND status='VERIFIED' AND type=0", [date("Y-m-d"), $this->user->id])->count();
         $this->template->numberOfReservationsToday = $numberOfReservationsToday;
 
-        $numberOfReservations = $this->database->table("reservations")->where("date>=? AND user_id=? AND status='VERIFIED' AND type=0", [date("Y-m-d"), $this->user->id])->count();
+        $numberOfReservations = $this->database->table("reservations")->where("start>=? AND user_id=? AND status='VERIFIED' AND type=0", [date("Y-m-d"), $this->user->id])->count();
         $this->template->numberOfReservations = $numberOfReservations;
     }
 
@@ -47,7 +50,7 @@ final class HomePresenter extends SecurePresenter
         $reservations = $this->database->table("reservations")->where(" status='VERIFIED' AND user_id=? AND type=0", $this->user->id)->fetchAll();
         $sortedArray = [];
         foreach ($reservations as $row) {
-            $date = strval($row->date);
+            $date = strval($row->start);
             $sortedArray[$date][] = $date;
         }
         $data = [];

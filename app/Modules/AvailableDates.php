@@ -3,14 +3,18 @@
 namespace App\Modules;
 
 use Nette;
+use App\Modules\Moment;
 
 class AvailableDates
 {
 
     private string $table = "reservations";
+    private $user_id;
+    private $user_settings;
 
     public function __construct(
-        private Nette\Database\Explorer $database
+        private Nette\Database\Explorer $database,
+        private Moment $moment
     )
     {
     }
@@ -19,11 +23,11 @@ class AvailableDates
     {
         $date = date("Y-m-d");
         $available = [];
-        //add one day to curDay
         for ($i = 0; $i < $numberOfDays; $i++) {
             if (!$this->getAvailableStartingHours($u, $date, $duration) == []) {
                 $available[] = $date;
             }
+            //add one day to curDay
             $date = date('Y-m-d', strtotime($date . ' +1 days'));
         }
         return $available;
@@ -49,15 +53,42 @@ class AvailableDates
      */
     public function getBackupHours(string $u, string $date, int $duration): array
     {
+        //TODO přepracovat
+        $backupDates = [];
+         /*
         $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
         $verificationTime = $user->related("settings")->fetch()->verification_time;
         $time = date("Y-m-d H:i:s", strtotime("-" . $verificationTime . " minutes"));
         $backupDatesRows = $this->database->query("SELECT reservations.*, services.duration FROM reservations LEFT JOIN services ON reservations.service_id = services.id WHERE reservations.user_id=$user->id AND date='$date' AND services.duration='$duration' AND type=0 AND (status='VERIFIED' OR reservations.created_at > '$time')")->fetchAll();
-        $backupDates = [];
+        
         foreach ($backupDatesRows as $row) {
             $backupDates[] = $row->start;
         }
+        */
         return $backupDates;
+    }
+
+    private function checkAvailability($start, $end, $duration, $interval, string $customerTimezone)
+    {
+        $availableTimes = array();
+        $verifiedReservations = $this->database->table("reservations")->where("user_id=? AND start BETWEEN ? AND ? AND status='VERIFIED' AND type=0", [$this->user_id, $start, $end])->fetchAll();
+        bdump($verifiedReservations);
+        $verificationTime = strtotime(date("Y-m-d H:i:s") . ' -' . $this->user_settings->verification_time . ' minutes');
+        $unverifiedReservations = $this->database->table("reservations")->where("user_id=? AND start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? ", [$this->user_id, $start, $end, $verificationTime])->fetchAll();
+        bdump($start." ".$end);
+        $start = strtotime($start);
+        $end = strtotime($end);
+        while ($start < $end) {
+            $isAvailable = true;
+            
+            if ($isAvailable){
+                //convert time to customer timezone
+                $availableTimes[] = date("H:i", strtotime($this->moment->getTimezoneTimeFromUTCTime($start, $customerTimezone)));
+            }
+            
+            $start = $start + $interval * 60;
+        }
+       return $availableTimes;
     }
 
     /**
@@ -67,16 +98,75 @@ class AvailableDates
      * @param int $duration The duration in minutes of each available date.
      * @return array An array of available starting hours.
      */
-    public function getAvailableStartingHours(string $u, string $date, int $duration): array
+    public function getAvailableStartingHours(string $u, string $date, int $duration, $customerTimezone = "Europe/Prague"): array
     {
         $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
         $user_settings = $user->related("settings")->fetch();
-        $user_id = $user->id;
+        $this->user_id = $user->id;
+        $this->user_settings = $user_settings;
+
+
+        //customer
+        $customerDayStartUTC = $this->moment->getUTCTime($date." 00:00:00", $customerTimezone);
+        $customerDayEndUTC = $this->moment->getUTCTime($date." 23:59:59", $customerTimezone);
+        //jaký den je tohle pro admina?
+        $adminDayStart = $this->moment->getTimezoneTimeFromUTCTime($customerDayStartUTC, $user_settings->time_zone);
+        $adminDayEnd = $this->moment->getTimezoneTimeFromUTCTime($customerDayEndUTC, $user_settings->time_zone);
+        $adminStartDay = $this->moment->getDate($adminDayStart);
+        $adminEndDay = $this->moment->getDate($adminDayEnd);
+        $available = [];
+        if ($adminStartDay == $adminEndDay) {
+            //jeden den
+            $workingHoursStart = $this->database->table("workinghours")->where("user_id=? AND weekday=?", [$this->user_id, $this->getDay($adminStartDay)])->fetch();
+            $startUTC = $this->moment->getUTCTime($adminStartDay . " " . $workingHoursStart->start, $user_settings->time_zone);
+            $endUTC = $this->moment->getUTCTime($adminStartDay . " " . $workingHoursStart->stop, $user_settings->time_zone);
+            $available = $this->checkAvailability($startUTC, $endUTC, $duration, $user_settings->sample_rate, $customerTimezone );
+        } else {
+            //dva dny
+            bdump("test");
+            $workingHoursStart = $this->database->table("workinghours")->where("user_id=? AND weekday=?", [$this->user_id, $this->getDay($adminStartDay)])->fetch();
+            $startUTC = $this->moment->getUTCTime($adminStartDay . " " . $workingHoursStart->start, $user_settings->time_zone);
+            bdump($startUTC);
+            $endUTC = $this->moment->getUTCTime($adminStartDay . " " . $workingHoursStart->stop, $user_settings->time_zone);
+            bdump($endUTC);
+            $day1 = $this->checkAvailability($startUTC, $endUTC, $duration, $user_settings->sample_rate, $customerTimezone );
+
+            foreach( $day1 as $day ) {
+                $available[] = $day;
+            }
+
+            // $workingHoursEnd = $this->database->table("workinghours")->where("user_id=? AND weekday=?", [$this->user_id, $this->getDay($adminEndDay)])->fetch();
+            // $startUTC = $this->moment->getUTCTime($adminStartDay . " " . $workingHoursEnd->start, $user_settings->time_zone);
+            // $endUTC = $this->moment->getUTCTime($adminStartDay . " " . $workingHoursEnd->stop, $user_settings->time_zone);
+            // $day2 = $this->checkAvailability($startUTC, $endUTC, $duration, $user_settings->sample_rate, $customerTimezone );
+            // foreach( $day2 as $day ) {
+            //     $available[] = $day;
+            // }
+            
+        }
+        return $available;
+        
+
+
+        die;
+        //admin
+       
+
+
         $available = [];
         $workingHours = $this->database->table("workinghours")->where("user_id=? AND weekday=?", [$user_id, $this->getDay($date)])->fetch();
+
+
         $breaks = $workingHours->related("breaks")->fetchAll();
+        bdump($workingHours);
+        $startTime = $this->moment->getUTCTime($date . " " . $workingHours->start, $user_settings->time_zone);
+        $endTime = $this->moment->getUTCTime($date . " " . $workingHours->stop, $user_settings->time_zone);
+        bdump($startTime);
+        bdump($endTime);
+
         $dayStartMinutes = $this->convertTimeToMinutes($workingHours->start);
         $dayEndMinutes = $this->convertTimeToMinutes($workingHours->stop);
+
         $interval = $user_settings->sample_rate;
         $unverified = $this->database->table($this->table)->where("date=? AND status=? AND type=0", [$date, "UNVERIFIED"])->fetchAll();
         $bookedArray = $this->database->table($this->table)->where("date=? AND status=? AND type=0", [$date, "VERIFIED"])->fetchAll();
@@ -191,7 +281,7 @@ class AvailableDates
     public function getReservationsConflictsIds(int $id): array
     {
         $user = $this->database->table("users")->where("id=?", $id)->fetch();
-        $reservations = $user->related("reservations")->where("date>=?", date("Y-m-d H:i:s"))->fetchAll();
+        $reservations = $user->related("reservations")->where("start>=?", date("Y-m-d H:i:s"))->fetchAll();
         $exceptions = $user->related("workinghours_exceptions")->where("end>=?", date("Y-m-d H:i:s"))->fetchAll();
         $conflicts = [];
         foreach ($reservations as $row) {
