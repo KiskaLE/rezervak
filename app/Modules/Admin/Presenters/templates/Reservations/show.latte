@@ -23,7 +23,7 @@
         {foreach $reservations as $reservation}
             {dump $reservation}
             <tr>
-                <th>{$reservation->start|convertToAdminTimezone|date:"d.m.Y"}</th>
+                <th>{$reservation->start|date:"d.m.Y"}</th>
                 <th>{$reservation->firstname}</th>
                 <th>{$reservation->lastname}</th>
                 <th>{$reservation->email}</th>

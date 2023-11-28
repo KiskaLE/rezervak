@@ -20,7 +20,7 @@
                 </thead>
                 {foreach $reservationsUTC as $reservationUTC}
                     <tr>
-                        <th>{$reservationUTC->start|convertToAdminTimezone|date:"d.m.Y H:i"}</th>
+                        <th>{$reservationUTC->start|date:"d.m.Y H:i"}</th>
                         <th>{$reservationUTC->ref("services", "service_id")->name}</th>
                         <th>{$reservationUTC->email}</th>
                         <th>{$reservationUTC->phone}</th>

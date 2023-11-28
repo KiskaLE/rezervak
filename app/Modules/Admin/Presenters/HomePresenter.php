@@ -22,7 +22,6 @@ final class HomePresenter extends SecurePresenter
     public function beforeRender()
     {
         parent::beforeRender();
-        $this->moment->getTimezoneTimeFromUTCTime($this->moment->getUTCTime("now", "Africa/Cairo"), "Europe/Prague");
 
     }
 

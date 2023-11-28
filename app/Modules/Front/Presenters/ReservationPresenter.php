@@ -158,9 +158,7 @@ final class ReservationPresenter extends BasePresenter
      */
     private function insertReservation(string $uuid, $data, string $type, $times)
     {
-        $customerTimezone = "Europe/Prague";
-        //get UTC time of reservation
-        $start = $this->moment->getUTCTime($data->date."T".$times[$data->time].":00", $customerTimezone);
+        $start = $data->date." ".$times[$data->time];
         $service_id = $data->service;
 
         $reservation = $this->database->table("reservations")->insert([
