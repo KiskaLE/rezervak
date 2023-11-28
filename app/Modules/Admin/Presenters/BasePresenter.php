@@ -3,15 +3,17 @@
 namespace App\Modules\admin\Presenters;
 
 use Nette\Application\UI\Presenter;
+use App\Modules\Formater;
+use Nette\Database\Explorer;
 
 class BasePresenter extends Presenter
 {
 
     public $backlink;
-    public $timezones;
 
 
-    public function __construct()
+    public function __construct(
+    )
     {
         parent::__construct();
     }

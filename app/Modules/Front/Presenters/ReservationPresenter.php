@@ -11,6 +11,7 @@ use App\Modules\Mailer;
 use App\Modules\Payments;
 use App\Modules\DiscountCodes;
 use Ramsey\Uuid\Uuid;
+use App\Modules\Moment;
 
 
 final class ReservationPresenter extends BasePresenter
@@ -26,6 +27,7 @@ final class ReservationPresenter extends BasePresenter
         private Mailer                  $mailer,
         private Payments                $payments,
         private DiscountCodes           $discountCodes,
+        private Moment                  $moment
     )
     {
     }
@@ -156,13 +158,15 @@ final class ReservationPresenter extends BasePresenter
      */
     private function insertReservation(string $uuid, $data, string $type, $times)
     {
+        $customerTimezone = "Europe/Prague";
+        //get UTC time of reservation
+        $start = $this->moment->getUTCTime($data->date."T".$times[$data->time].":00", $customerTimezone);
         $service_id = $data->service;
 
         $reservation = $this->database->table("reservations")->insert([
             "uuid" => $uuid,
-            "date" => $data->date,
             "service_id" => $service_id,
-            "start" => $times[$data->time],
+            "start" => $start,
             "firstname" => $data->firstname,
             "lastname" => $data->lastname,
             "phone" => $data->phone,

@@ -2,10 +2,17 @@
 
 namespace App\Modules\admin\Presenters;
 
+use Nette\Database\Explorer;
+
 class SecurePresenter extends BasePresenter
 {
 
-    public function __construct(\Nette\Security\User $user)
+    public $timezones;
+
+    public function __construct(
+        \Nette\Security\User $user
+
+    )
     {
         parent::__construct();
 
@@ -16,12 +23,13 @@ class SecurePresenter extends BasePresenter
         parent::startup();
         // Your code here
     }
+
     protected function beforeRender()
     {
         parent::beforeRender();
 
-        if ($this->user->getRoles()[0] === "ADMIN"){
-        }else{
+        if ($this->user->getRoles()[0] === "ADMIN") {
+        } else {
             if (!$this->user->getRoles()[0] === "UNVERIFIED") {
                 $this->flashMessage("Ověrte svůj email", "alert-danger");
             }

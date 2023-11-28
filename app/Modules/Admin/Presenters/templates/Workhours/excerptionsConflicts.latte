@@ -10,7 +10,6 @@
                 <thead>
                 <tr>
                     <th>Datum</th>
-                    <th>Čas</th>
                     <th>Služba</th>
                     <th>E-mail</th>
                     <th>Tel.</th>
@@ -19,20 +18,19 @@
                     <th>Akce</th>
                 </tr>
                 </thead>
-                {foreach $reservations as $reservation}
+                {foreach $reservationsUTC as $reservationUTC}
                     <tr>
-                        <th>{$reservation->date|date:"d.m.Y"}</th>
-                        <th>{$reservation->start}</th>
-                        <th>{$reservation->ref("services", "service_id")->name}</th>
-                        <th>{$reservation->email}</th>
-                        <th>{$reservation->phone}</th>
-                        <th>{$reservation->related("payments", "reservation_id")->fetch()->status ? "Ano" : "Ne"}</th>
-                        <th>{$reservation->status == "VERIFIED" ? "Ano" : "Ne"}</th>
+                        <th>{$reservationUTC->start|convertToAdminTimezone|date:"d.m.Y H:i"}</th>
+                        <th>{$reservationUTC->ref("services", "service_id")->name}</th>
+                        <th>{$reservationUTC->email}</th>
+                        <th>{$reservationUTC->phone}</th>
+                        <th>{$reservationUTC->related("payments", "reservation_id")->fetch()->status ? "Ano" : "Ne"}</th>
+                        <th>{$reservationUTC->status == "VERIFIED" ? "Ano" : "Ne"}</th>
 
                         <th>
-                            <a class="btn btn-default btn-sm btn-icon icon-left ajax" n:href="Reservations:detail $reservation->uuid, backlink => $backlink"><i
+                            <a class="btn btn-default btn-sm btn-icon icon-left ajax" n:href="Reservations:detail $reservationUTC->uuid, backlink => $backlink"><i
                                         class="entypo-eye"></i>Detail</a>
-                            <a class="btn btn-danger btn-sm btn-icon icon-left ajax" n:href="Reservations:delete $reservation->uuid, backlink => $backlink"><i
+                            <a class="btn btn-danger btn-sm btn-icon icon-left ajax" n:href="Reservations:delete $reservationUTC->uuid, backlink => $backlink"><i
                                         class="entypo-cancel"></i>Smazat</a></th>
                     </tr>
                 {/foreach}
