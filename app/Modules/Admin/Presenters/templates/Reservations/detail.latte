@@ -13,7 +13,7 @@
                 </div>
                 <div>
                     <h3>Čas:</h3>
-                    <p>{$reservation->start}</p>
+                    <p>{$reservation->start|convertToAdminTimezone|date:"d.m.Y H:i"}</p>
                 </div>
                 <div>
                     <h3>Jméno:</h3>
@@ -39,7 +39,7 @@
                 </div>
                 <div>
                     <h3>Vytvořeno:</h3>
-                    <p>{$reservation->created_at|date:"d.m.Y H:i"}</p>
+                    <p>{$reservation->created_at|convertToAdminTimezone|date:"d.m.Y H:i"}</p>
                 </div>
             </div>
         </div>

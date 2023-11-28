@@ -85,11 +85,35 @@ class AvailableDates
         $unverifiedReservations = $this->database->table("reservations")->where("user_id=? AND start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? ", [$this->user_id, $start, $end, $verificationTime])->fetchAll();
         $exceptions = $this->database->table("workinghours_exceptions")->where("user_id=? AND start < ? AND end > ?", [$this->user_id, $start, $end])->fetchAll();
 
+        $breaks = $workingHour->related("breaks")->fetchAll();
+        $breaksUTC = array();
+        $dateAdmin = $this->moment->getDate($this->moment->getTimezoneTimeFromUTCTime($start, $customerTimezone));
+        foreach ($breaks as $row) {
+            $rowStart = $dateAdmin." ".$row->start;
+            $rowEnd =$dateAdmin." ". $row->end;
+            $breaksUTC[] = ["start"=>$this->moment->getUTCTime($rowStart, $customerTimezone), "end"=> $this->moment->getUTCTime($rowEnd, $customerTimezone)];
+
+        }
         $start = strtotime($start);
         $end = strtotime($end);
         while ($start < $end) {
             $newReservationEnd = strtotime(date("Y-m-d H:i") . " + " . $duration . " minutes");
             $isAvailable = true;
+            foreach ($breaksUTC as $breakUTC) {
+                $rowStart = strtotime($breakUTC["start"]);
+                $rowEnd = strtotime($breakUTC["end"]. "- 1 minute");
+                $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
+                    ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
+                    ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
+                    ($rowEnd >= $start && $rowEnd <= $newReservationEnd) ||    // End of the first period is within the second period
+                    ($rowStart == $start) || // Starts of both periods are the same
+                    ($rowEnd == $newReservationEnd); // Ends of both periods are the same
+                if ($overlap) {
+                    $isAvailable = false;
+                    break;
+                }
+            }
+
             //reservations
             foreach ($verifiedReservations as $row) {
                 $rowDuration = $row->ref("services", "service_id")->duration;
@@ -185,6 +209,7 @@ class AvailableDates
         $available = [];
         if ($adminStartDay == $adminEndDay) {
             //jeden den
+
             $workingHoursStart = $this->database->table("workinghours")->where("user_id=? AND weekday=?", [$this->user_id, $this->getDay($adminStartDay)])->fetch();
             $startUTC = $this->moment->getUTCTime($adminStartDay . " " . $workingHoursStart->start, $user_settings->time_zone);
             if ($startUTC < $adminDayStart) {
