@@ -33,8 +33,7 @@ final class ServicesPresenter extends SecurePresenter
         $this->template->service = $service;
 
     }
-
-    public function actionCreate(){
+    public function renderShowCustomSchedule($id) {
 
     }
 

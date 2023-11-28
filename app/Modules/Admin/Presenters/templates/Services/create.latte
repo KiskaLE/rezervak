@@ -64,6 +64,41 @@
                         <span class="input-error" id="numberOfDaysError">Čas musí být větší než 0.</span>
                     </div>
                 </div>
+
+                <!--checkbox-->
+                <div class="form-group">
+                    <div class="">
+                        <div class="form-checkbox"><input name="checkbox" type="checkbox"><span>Vlastní rozvrh</span></div>
+                        <span class="description"></span>
+                    </div>
+                </div>
+                <!--/checkbox-->
+
+                <div class="form-group">
+                    <label for="field-3" class="col-sm-3 control-label">Časové rozmezí</label>
+
+                    <div class="">
+                        <input class="form-control" name="range" id="date-start">
+                        <span class="description">Vyberte časové rozmezí</span>
+                        <span class="input-error"
+                              id="verificationTimeError">Čas musí být větší než 0.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="field-3" class="col-sm-3 control-label">Časové rozmezí</label>
+
+                    <div class="">
+                        <input class="form-control single-date" name="range" >
+                        <span class="description">Vyberte časové rozmezí</span>
+                        <span class="input-error"
+                              id="verificationTimeError">Čas musí být větší než 0.</span>
+                    </div>
+                </div>
+
+
+
+
                 <!--submit-->
                 <div class="form-group default-padding">
                     <input n:name="submit" id="btn-submit" class="btn btn-success">
@@ -78,3 +113,7 @@
 </div>
 
 <!--/form-->
+
+
+
+<script src="{$basePath}/assets/admin/js/datePicker.js"></script>

@@ -5,6 +5,8 @@ let showMonth = new Date().getMonth();
 let showYear = new Date().getFullYear();
 let address = new URL(window.location.href);
 let searchParams = address.searchParams;
+getCustomerTimezone();
+generateTimezones()
 
 
 function showTab(n) {

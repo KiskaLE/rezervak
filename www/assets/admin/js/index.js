@@ -1,5 +1,4 @@
 
-
 function deleteException(event) {
     const res = confirm('Opravdu chcete smazat tuto přestávku?');
     console.log(res)

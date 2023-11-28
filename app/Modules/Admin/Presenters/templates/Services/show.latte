@@ -31,8 +31,10 @@
                 <th class="text-right">{$service->price} Kč</th>
                 <th class="text-right">{$service->duration} min</th>
                 <th>
-                    <a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="Services:edit $service->id"><i
+                    <a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="edit $service->id"><i
                                 class="entypo-pencil"></i>Upravit</a>
+                    <a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="showCustomSchedule $service->id"><i
+                                class="entypo-pencil"></i>Rozvrh</a>
                     <a class="btn {!$service->hidden ? "btn-gold" : "btn-default"} btn-sm btn-icon icon-left ajax" n:href="Services:actionHide $service->id"><i
                                 class="entypo-eye"></i>{!$service->hidden ? "Skrýt" : "Zobrazit"}</a>
                 </th>
