@@ -51,21 +51,30 @@ class AvailableDates
      * @param int $duration The duration for which to retrieve the backup hours.
      * @return array The array of backup hours.
      */
-    public function getBackupHours(string $u, string $date, int $duration): array
+    //TODO add customerTimezone
+    public function getBackupHours(string $u, string $date, int $duration, $customerTimezone = "Europe/Prague"): array
     {
-        //TODO přepracovat
-        $backupDates = [];
-        /*
-       $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
-       $verificationTime = $user->related("settings")->fetch()->verification_time;
-       $time = date("Y-m-d H:i:s", strtotime("-" . $verificationTime . " minutes"));
-       $backupDatesRows = $this->database->query("SELECT reservations.*, services.duration FROM reservations LEFT JOIN services ON reservations.service_id = services.id WHERE reservations.user_id=$user->id AND date='$date' AND services.duration='$duration' AND type=0 AND (status='VERIFIED' OR reservations.created_at > '$time')")->fetchAll();
+        $results = array();
+        $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
+        //customer
+        $customerDayStartUTC = $this->moment->getUTCTime($date . "T00:00:00", $customerTimezone);
+        $customerDayEndUTC = $this->moment->getUTCTime(date("Y-m-d", strtotime($date . " +1 days")) . "T00:00:00", $customerTimezone);
 
-       foreach ($backupDatesRows as $row) {
-           $backupDates[] = $row->start;
-       }
-       */
-        return $backupDates;
+        $reservationsUTC = $this->database
+            ->table("reservations")
+            ->where("user_id=? AND start BETWEEN ? AND ? AND type=0 AND reservations.status='VERIFIED'", [$user->id, $customerDayStartUTC, $customerDayEndUTC])
+            ->where(":payments.status=0")
+            ->fetchAll();
+        foreach ($reservationsUTC as $rowUTC) {
+            $rowUTCStart = $rowUTC->start;
+            $rowDuration = $rowUTC->ref("services", "service_id")->duration;
+
+            if ($duration <= $rowDuration) {
+                $time = $this->moment->getTimezoneTimeFromUTCTime($rowUTCStart."", $customerTimezone);
+                $results[] = date("H:i", strtotime($time.""));
+            }
+        }
+        return $results;
     }
 
     private function checkAvailability($start, $end, $duration, $interval, string $customerTimezone, $workingHour)
@@ -75,7 +84,6 @@ class AvailableDates
         $verificationTime = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i") . ' -' . $this->user_settings->verification_time . ' minutes'));
         $unverifiedReservations = $this->database->table("reservations")->where("user_id=? AND start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? ", [$this->user_id, $start, $end, $verificationTime])->fetchAll();
         $exceptions = $this->database->table("workinghours_exceptions")->where("user_id=? AND start < ? AND end > ?", [$this->user_id, $start, $end])->fetchAll();
-        bdump($exceptions);
 
         $start = strtotime($start);
         $end = strtotime($end);
@@ -158,6 +166,7 @@ class AvailableDates
      * @param int $duration The duration in minutes of each available date.
      * @return array An array of available starting hours.
      */
+    //TODO add customerTimezone
     public function getAvailableStartingHours(string $u, string $date, int $duration, $customerTimezone = "Europe/Prague"): array
     {
         $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
@@ -165,10 +174,10 @@ class AvailableDates
         $this->user_id = $user->id;
         $this->user_settings = $user_settings;
 
-
         //customer
         $customerDayStartUTC = $this->moment->getUTCTime($date . "T00:00:00", $customerTimezone);
         $customerDayEndUTC = $this->moment->getUTCTime(date("Y-m-d", strtotime($date . " +1 days")) . "T00:00:00", $customerTimezone);
+
         $adminDayStart = $this->moment->getTimezoneTimeFromUTCTime($customerDayStartUTC, $user_settings->time_zone);
         $adminDayEnd = $this->moment->getTimezoneTimeFromUTCTime($customerDayEndUTC, $user_settings->time_zone);
         $adminStartDay = $this->moment->getDate($adminDayStart);
@@ -185,7 +194,6 @@ class AvailableDates
             $available = $this->checkAvailability($startUTC, $endUTC, $duration, $user_settings->sample_rate, $customerTimezone, $workingHoursStart);
         } else {
             //dva dny
-            //TODO dodělat pro 2 dny
 
             $workingHoursStart = $this->database->table("workinghours")->where("user_id=? AND weekday=?", [$this->user_id, $this->getDay($adminStartDay)])->fetch();
             $startUTC = $this->moment->getUTCTime($adminStartDay . " " . $workingHoursStart->start, $user_settings->time_zone);
@@ -209,114 +217,6 @@ class AvailableDates
 
         }
         return $available;
-
-
-        die;
-        //admin
-
-
-        $available = [];
-        $workingHours = $this->database->table("workinghours")->where("user_id=? AND weekday=?", [$user_id, $this->getDay($date)])->fetch();
-
-
-        $breaks = $workingHours->related("breaks")->fetchAll();
-        $startTime = $this->moment->getUTCTime($date . " " . $workingHours->start, $user_settings->time_zone);
-        $endTime = $this->moment->getUTCTime($date . " " . $workingHours->stop, $user_settings->time_zone);
-
-
-        $dayStartMinutes = $this->convertTimeToMinutes($workingHours->start);
-        $dayEndMinutes = $this->convertTimeToMinutes($workingHours->stop);
-
-        $interval = $user_settings->sample_rate;
-        $unverified = $this->database->table($this->table)->where("date=? AND status=? AND type=0", [$date, "UNVERIFIED"])->fetchAll();
-        $bookedArray = $this->database->table($this->table)->where("date=? AND status=? AND type=0", [$date, "VERIFIED"])->fetchAll();
-        $exceptionsArray = $this->getExceptions($u);
-        //add unverified dates that still can be verified
-        foreach ($unverified as $row) {
-            $verification_time = $user_settings->verification_time;
-            $isLate = strtotime(strval($row->created_at)) < strtotime(date("Y-m-d H:i:s") . ' -' . $verification_time . ' minutes');
-            if (!$isLate) {
-                $bookedArray[] = $row;
-            }
-        }
-        //add breaks in booked array
-        while ($dayStartMinutes < $dayEndMinutes) {
-            $sv = true;
-            //check for breaks
-            foreach ($breaks as $break) {
-                $start = $this->convertTimeToMinutes($break->start);
-                $duration2 = $this->convertTimeToMinutes($break->end) - $this->convertTimeToMinutes($break->start);
-                if (!$this->isPossible($dayStartMinutes, $duration, $start, $duration2)) {
-                    $sv = false;
-                    break;
-                }
-            }
-            if ($sv) {
-                foreach ($bookedArray as $booked) {
-                    $service = $booked->ref("services", "service_id");
-                    $start = $this->convertTimeToMinutes($booked->start);
-                    $duration2 = intval($service->duration);
-                    if (!$this->isPossible($dayStartMinutes, $duration, $start, $duration2)) {
-                        $sv = false;
-                        break;
-                    }
-                }
-            }
-            if ($sv) {
-                foreach ($exceptionsArray as $exception) {
-                    $start = strtotime($date . " " . $this->convertMinutesToTime($dayStartMinutes));;
-                    if (strtotime($exception->start) <= $start && strtotime($exception->end) >= $start) {
-                        $sv = false;
-                        break;
-                    }
-                }
-            }
-            if ($sv) {
-                $available[] = $this->convertMinutesToTime($dayStartMinutes);
-            }
-            $dayStartMinutes += $interval;
-        }
-        return $available;
-    }
-
-    /**
-     * Determines if two intervals of time do not collide with each other.
-     *
-     * @param int $start1 The start time of the first interval.
-     * @param int $duration1 The duration of the first interval.
-     * @param int $start2 The start time of the second interval.
-     * @param int $duration2 The duration of the second interval.
-     * @return bool Returns true if the intervals do not collide, false otherwise.
-     */
-    private function isPossible(int $start1, int $duration1, int $start2, int $duration2): bool
-    {
-        return !($start1 + $duration1 - 1 >= $start2 && $start2 + $duration2 - 1 >= $start1);
-
-    }
-
-    /**
-     * Converts the given time from the format '9:30' to minutes.
-     *
-     * @param string $time The time in the format '9:30'.
-     * @return int The time converted to minutes.
-     */
-    private function convertTimeToMinutes(string $time): int
-    {
-        $split = explode(":", $time);
-        return intval($split[0]) * 60 + intval($split[1]);
-    }
-
-    /**
-     * Converts minutes to time in hours and minutes format.
-     *
-     * @param int $minutes The number of minutes to convert.
-     * @return string The time in hours and minutes format (e.g. "2:30").
-     */
-    private function convertMinutesToTime(int $minutes): string
-    {
-        $hours = floor($minutes / 60);
-        $minutes = $minutes % 60;
-        return $hours . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT);
     }
 
     /**

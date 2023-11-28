@@ -9,7 +9,6 @@
         <thead>
         <tr>
             <th>Datum</th>
-            <th>Čas</th>
             <th>Jméno</th>
             <th>Příjmení</th>
             <th>E-mail</th>
@@ -24,8 +23,7 @@
         {foreach $reservations as $reservation}
             {dump $reservation}
             <tr>
-                <th>{$reservation->date|date:"d.m.Y"}</th>
-                <th>{$reservation->start}</th>
+                <th>{$reservation->start|convertToAdminTimezone|date:"d.m.Y"}</th>
                 <th>{$reservation->firstname}</th>
                 <th>{$reservation->lastname}</th>
                 <th>{$reservation->email}</th>
