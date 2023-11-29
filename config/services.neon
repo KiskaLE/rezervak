@@ -12,7 +12,8 @@ services:
 	    setup:
 	        - addFilter(convertToAdminTimezone, [@App\Modules\Formater, convertToAdminTimezone])
 
-
+extensions:
+	- Contributte\FormMultiplier\DI\MultiplierExtension
 
 search:
 	-	in: %appDir%

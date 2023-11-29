@@ -33,6 +33,10 @@
   text-align: left;
 }
 
+.hidden {
+  display: none;
+}
+
 .form-checkbox {
   padding: 0 20px;
 }
@@ -47,6 +51,17 @@
 }
 .form-checkbox span:before {
   content: " ";
+}
+
+.form-input-group.form-input-group {
+  display: flex;
+  gap: 10px;
+}
+.form-input-group.form-input-group .input-time {
+  max-width: 90px;
+}
+.form-input-group.form-input-group .single-date {
+  max-width: 100px;
 }
 
 .flex-row.flex-row {

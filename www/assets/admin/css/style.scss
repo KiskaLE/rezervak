@@ -35,6 +35,10 @@
 .page-header.page-header {
   text-align: left;
 }
+
+.hidden {
+  display: none;
+}
 //page end
 
 //form start
@@ -55,6 +59,19 @@
     content: " ";
   }
 
+}
+
+.form-input-group.form-input-group {
+  display: flex;
+  gap:10px;
+
+  .input-time {
+    max-width: 90px;
+  }
+
+  .single-date {
+    max-width: 100px;
+  }
 }
 
 //form end

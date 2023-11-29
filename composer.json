@@ -20,7 +20,8 @@
 		"latte/latte": "^3.0",
 		"tracy/tracy": "^2.9",
 		"ramsey/uuid": "^4.7",
-		"fightbulc/moment": "^1.34"
+		"fightbulc/moment": "^1.34",
+		"contributte/forms-multiplier": "^4.0"
 	},
 	"require-dev": {
 		"nette/tester": "^2.4",
