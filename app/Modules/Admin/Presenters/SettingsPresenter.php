@@ -37,11 +37,8 @@ class SettingsPresenter extends SecurePresenter
 
     protected function createComponentBasicSettingsForm(string $name): Form
     {
-        $timezone = array_search($this->settings->time_zone, $this->timezones);
-
         $form = new Form;
 
-        $form->addSelect("timezone", "time zone", $this->timezones)->setDefaultValue($timezone)->setRequired();
         $form->addText("sampleRate", "sample rate")->setHtmlAttribute("type", "number")->setDefaultValue($this->settings->sample_rate)->setRequired();
         $form->addText("paymentInfo", "payment info")->setDefaultValue($this->settings->payment_info);
         $form->addText("verificationTime", "time to verify reservation")->setHtmlAttribute("type", "number")->setDefaultValue($this->settings->verification_time)->setRequired();

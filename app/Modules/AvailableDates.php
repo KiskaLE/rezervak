@@ -24,7 +24,7 @@ class AvailableDates
         $date = date("Y-m-d");
         $available = [];
         for ($i = 0; $i < $numberOfDays; $i++) {
-            if (!$this->getAvailableStartingHours($u, $date, $duration) == []) {
+            if ($this->getAvailableStartingHours($u, $date, $duration) || $this->getBackupHours($u, $date, $duration)) {
                 $available[] = $date;
             }
             //add one day to curDay
@@ -52,7 +52,7 @@ class AvailableDates
      * @return array The array of backup hours.
      */
     //TODO add customerTimezone
-    public function getBackupHours(string $u, string $date, int $duration, $customerTimezone = "Europe/Prague"): array
+    public function getBackupHours(string $u, string $date, int $duration): array
     {
         $results = array();
         $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
@@ -65,7 +65,18 @@ class AvailableDates
             ->where("user_id=? AND start BETWEEN ? AND ? AND type=0 AND reservations.status='VERIFIED'", [$user->id, $dayStart, $dayEnd])
             ->where(":payments.status=0")
             ->fetchAll();
+
         foreach ($reservations as $row) {
+            $rowStart = $row->start;
+            $rowDuration = $row->ref("services", "service_id")->duration;
+
+            if ($duration <= $rowDuration) {
+                $results[] = date("H:i", strtotime($rowStart));
+            }
+        }
+        $verificationTime = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i") . ' -' . $this->user_settings->verification_time . ' minutes'));
+        $unverifiedReservations = $this->database->table("reservations")->where("user_id=? AND start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? ", [$this->user_id, $dayStart, $dayEnd, $verificationTime])->fetchAll();
+        foreach ($unverifiedReservations as $row) {
             $rowStart = $row->start;
             $rowDuration = $row->ref("services", "service_id")->duration;
 
@@ -97,78 +108,86 @@ class AvailableDates
             bdump("start".date("Y-m-d H:i", $newReservationEnd));
             $isAvailable = true;
 
-            //breaks
-            foreach ($breaks as $break) {
-                $rowStart = strtotime($date." ".$break->start);
-                $rowEnd = strtotime($date." ".$break->end. "- 1 minute");
-                $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
-                    ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
-                    ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
-                    ($rowEnd >= $start && $rowEnd <= $newReservationEnd) ||    // End of the first period is within the second period
-                    ($rowStart == $start) || // Starts of both periods are the same
-                    ($rowEnd == $newReservationEnd); // Ends of both periods are the same
-                if ($overlap) {
-                    $isAvailable = false;
-                    break;
-                }
-            }
-
-            //reservations
-            foreach ($verifiedReservations as $row) {
-                $rowDuration = $row->ref("services", "service_id")->duration;
-                $rowStart = strtotime($row->start);
-                $rowEnd = strtotime($row->start . " + " . $rowDuration-1 . " minutes");
-
-                //check if the reservation intersect row
-                $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
-                    ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
-                    ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
-                    ($rowEnd >= $start && $rowEnd <= $newReservationEnd) ||    // End of the first period is within the second period
-                    ($rowStart == $start) || // Starts of both periods are the same
-                    ($rowEnd == $newReservationEnd); // Ends of both periods are the same
-                if ($overlap) {
-                    $isAvailable = false;
-                    break;
-                }
-            }
-
-            //uverified reservations
-            foreach ($unverifiedReservations as $row) {
-                $rowDuration = $row->ref("services", "service_id")->duration;
-                $rowStart = strtotime($row->start);
-                $rowEnd = strtotime($row->start . " + " . $rowDuration-1 . " minutes");
-
-                //check if the reservation intersect row
-                $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
-                    ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
-                    ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
-                    ($rowEnd >= $start && $rowEnd <= $newReservationEnd) ||    // End of the first period is within the second period
-                    ($rowStart == $start) || // Starts of both periods are the same
-                    ($rowEnd == $newReservationEnd); // Ends of both periods are the same
-                if ($overlap) {
-                    $isAvailable = false;
-                    break;
-                }
-            }
-
             //exceptions
-            foreach ($exceptions as $row) {
-                bdump([$row->start, $row->end]);
-                $rowStart = strtotime($row->start." + 1 minute");
-                $rowEnd = strtotime($row->end." - 1 minute");
-                bdump("end".date("Y-m-d H:i", $newReservationEnd));
+            if ($isAvailable) {
+                foreach ($exceptions as $row) {
+                    bdump([$row->start, $row->end]);
+                    $rowStart = strtotime($row->start." + 1 minute");
+                    $rowEnd = strtotime($row->end." - 1 minute");
+                    bdump("end".date("Y-m-d H:i", $newReservationEnd));
 
 
-                //check if the reservation intersect row
-                $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
-                    ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
-                    ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
-                    ($rowEnd >= $start && $rowEnd <= $newReservationEnd) ||    // End of the first period is within the second period
-                    ($rowStart == $start) || // Starts of both periods are the same
-                    ($rowEnd == $newReservationEnd); // Ends of both periods are the same
-                if ($overlap) {
-                    $isAvailable = false;
-                    break;
+                    //check if the reservation intersect row
+                    $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
+                        ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
+                        ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
+                        ($rowEnd >= $start && $rowEnd <= $newReservationEnd) ||    // End of the first period is within the second period
+                        ($rowStart == $start) || // Starts of both periods are the same
+                        ($rowEnd == $newReservationEnd); // Ends of both periods are the same
+                    if ($overlap) {
+                        $isAvailable = false;
+                        break;
+                    }
+                }
+            }
+
+            if ($isAvailable) {
+                //breaks
+                foreach ($breaks as $break) {
+                    $rowStart = strtotime($date." ".$break->start);
+                    $rowEnd = strtotime($date." ".$break->end. "- 1 minute");
+                    $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
+                        ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
+                        ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
+                        ($rowEnd >= $start && $rowEnd <= $newReservationEnd) ||    // End of the first period is within the second period
+                        ($rowStart == $start) || // Starts of both periods are the same
+                        ($rowEnd == $newReservationEnd); // Ends of both periods are the same
+                    if ($overlap) {
+                        $isAvailable = false;
+                        break;
+                    }
+                }
+            }
+
+            if ($isAvailable) {
+                //reservations
+                foreach ($verifiedReservations as $row) {
+                    $rowDuration = $row->ref("services", "service_id")->duration;
+                    $rowStart = strtotime($row->start);
+                    $rowEnd = strtotime($row->start . " + " . $rowDuration-1 . " minutes");
+
+                    //check if the reservation intersect row
+                    $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
+                        ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
+                        ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
+                        ($rowEnd >= $start && $rowEnd <= $newReservationEnd) ||    // End of the first period is within the second period
+                        ($rowStart == $start) || // Starts of both periods are the same
+                        ($rowEnd == $newReservationEnd); // Ends of both periods are the same
+                    if ($overlap) {
+                        $isAvailable = false;
+                        break;
+                    }
+                }
+            }
+
+            if ($isAvailable) {
+                //uverified reservations
+                foreach ($unverifiedReservations as $row) {
+                    $rowDuration = $row->ref("services", "service_id")->duration;
+                    $rowStart = strtotime($row->start);
+                    $rowEnd = strtotime($row->start . " + " . $rowDuration-1 . " minutes");
+
+                    //check if the reservation intersect row
+                    $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
+                        ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
+                        ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
+                        ($rowEnd >= $start && $rowEnd <= $newReservationEnd) ||    // End of the first period is within the second period
+                        ($rowStart == $start) || // Starts of both periods are the same
+                        ($rowEnd == $newReservationEnd); // Ends of both periods are the same
+                    if ($overlap) {
+                        $isAvailable = false;
+                        break;
+                    }
                 }
             }
 
@@ -181,13 +200,6 @@ class AvailableDates
         }
 
         return $availableTimes;
-        die;
-        //remove time 00:00 if not on first index from array
-        if (count($availableTimes) > 0 && $availableTimes[count($availableTimes)-1] == "00:00") {
-            unset($availableTimes[count($availableTimes)-1]);
-        }
-
-
     }
 
     /**

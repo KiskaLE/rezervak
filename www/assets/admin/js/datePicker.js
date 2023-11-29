@@ -112,6 +112,9 @@ $(function() {
         "linkedCalendars": false,
         "showCustomRangeLabel": false,
         "minDate": getCurrentDate(),
+        "opens": "center",
+        "drops": "auto",
+        "autoApply": true,
         "locale": {
             "format": "DD/MM/YYYY",
             "separator": " - ",

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db:3306
--- Generation Time: Nov 28, 2023 at 12:19 PM
+-- Generation Time: Nov 28, 2023 at 07:25 PM
 -- Server version: 8.2.0
 -- PHP Version: 8.2.12
 
@@ -37,6 +37,13 @@ CREATE TABLE `breaks` (
                           `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
+--
+-- Dumping data for table `breaks`
+--
+
+INSERT INTO `breaks` (`id`, `start`, `end`, `workinghour_id`, `type`, `created_at`, `updated_at`) VALUES
+    (4, '12:00', '13:00', 10, 0, '2023-11-28 18:06:15', '2023-11-28 18:06:15');
+
 -- --------------------------------------------------------
 
 --
@@ -54,6 +61,13 @@ CREATE TABLE `discount_codes` (
                                   `services` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
+--
+-- Dumping data for table `discount_codes`
+--
+
+INSERT INTO `discount_codes` (`id`, `uuid`, `user_id`, `code`, `value`, `active`, `type`, `services`) VALUES
+    (1, 'd38fc112-4ff8-4114-9e4d-5e49f2f72dc5', 3, 'TEST', 500, 0, 0, '[1]');
+
 -- --------------------------------------------------------
 
 --
@@ -69,6 +83,13 @@ CREATE TABLE `payments` (
                             `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`id`, `reservation_id`, `price`, `status`, `created_at`, `updated_at`) VALUES
+    (9, 10, 500, 0, '2023-11-28 18:55:42', '2023-11-28 18:55:42');
+
 -- --------------------------------------------------------
 
 --
@@ -80,7 +101,7 @@ CREATE TABLE `reservations` (
                                 `uuid` char(36) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
                                 `user_id` int NOT NULL,
                                 `service_id` int NOT NULL,
-                                `start` datetime NOT NULL COMMENT 'UTC',
+                                `start` datetime NOT NULL,
                                 `firstname` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
                                 `lastname` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
                                 `email` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
@@ -93,6 +114,13 @@ CREATE TABLE `reservations` (
                                 `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                 `type` tinyint NOT NULL COMMENT '0 - default 1 - backup'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
+
+--
+-- Dumping data for table `reservations`
+--
+
+INSERT INTO `reservations` (`id`, `uuid`, `user_id`, `service_id`, `start`, `firstname`, `lastname`, `email`, `phone`, `address`, `code`, `city`, `status`, `created_at`, `updated_at`, `type`) VALUES
+    (10, '79c1ece2-72bc-4ada-903f-d34c452d4dc2', 3, 1, '2023-11-29 06:00:00', 'Vojtěch', 'Kylar', 'vojtakylar@seznam.cz', '604141626', '28. října', '66456', 'hgfhfg', 'VERIFIED', '2023-11-28 18:55:42', '2023-11-28 18:55:42', 0);
 
 -- --------------------------------------------------------
 
@@ -138,6 +166,31 @@ CREATE TABLE `services` (
                             `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
 
+--
+-- Dumping data for table `services`
+--
+
+INSERT INTO `services` (`id`, `user_id`, `name`, `description`, `price`, `duration`, `hidden`, `created_at`, `updated_at`) VALUES
+                                                                                                                               (1, 3, 'TEST', 'TEsts', 500, 60, 0, '2023-11-27 13:33:21', '2023-11-27 13:33:21'),
+                                                                                                                               (2, 3, 'TEST', 'TEsgdfdgdfgdfg', 500, 60, 0, '2023-11-28 13:27:44', '2023-11-28 13:27:44');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `services_custom_ schedule`
+--
+
+CREATE TABLE `services_custom_ schedule` (
+                                             `id` int NOT NULL,
+                                             `uuid` char(36) NOT NULL,
+                                             `start` datetime NOT NULL,
+                                             `end` datetime NOT NULL,
+                                             `service_id` int NOT NULL,
+                                             `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                             `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                             `type` tinyint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 -- --------------------------------------------------------
 
 --
@@ -155,6 +208,14 @@ CREATE TABLE `settings` (
                             `time_zone` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci NOT NULL DEFAULT '0' COMMENT 'UTC'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
+--
+-- Dumping data for table `settings`
+--
+
+INSERT INTO `settings` (`id`, `user_id`, `sample_rate`, `payment_info`, `verification_time`, `number_of_days`, `time_to_pay`, `time_zone`) VALUES
+                                                                                                                                               (1, 1, 30, NULL, 15, 30, 24, '0'),
+                                                                                                                                               (2, 3, 60, '', 15, 30, 24, 'Europe/Prague');
+
 -- --------------------------------------------------------
 
 --
@@ -171,6 +232,14 @@ CREATE TABLE `users` (
                          `role` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT 'UNVERIFIED'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
 
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `uuid`, `username`, `password`, `firstname`, `lastname`, `role`) VALUES
+                                                                                                (1, 'a6cf654b-6594-44a6-9406-b7a52d082d4f', 'admin', '$2y$10$CQbueLDDjlk0doFixrievO.fSCnFGJTYmf.qk.YOt6fphWR.aqiZ2', NULL, NULL, 'ADMIN'),
+                                                                                                (3, 'e32bb740-392c-4c9f-8a4e-35965166e56b', 'test', '$2y$10$OR9zFdhSovuNjF8VZS9h0.Rb4d7OG2CCArNIFMtpKjDhqa/MyJu9u', NULL, NULL, 'ADMIN');
+
 -- --------------------------------------------------------
 
 --
@@ -184,6 +253,26 @@ CREATE TABLE `workinghours` (
                                 `stop` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT '00:00' COMMENT 'User timezone',
                                 `user_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
+
+--
+-- Dumping data for table `workinghours`
+--
+
+INSERT INTO `workinghours` (`id`, `weekday`, `start`, `stop`, `user_id`) VALUES
+                                                                             (1, 0, '00:00', '00:00', 1),
+                                                                             (2, 1, '00:00', '00:00', 1),
+                                                                             (3, 2, '00:00', '00:00', 1),
+                                                                             (4, 3, '00:00', '00:00', 1),
+                                                                             (5, 4, '00:00', '00:00', 1),
+                                                                             (6, 5, '00:00', '00:00', 1),
+                                                                             (7, 6, '00:00', '00:00', 1),
+                                                                             (8, 0, '06:00', '14:00', 3),
+                                                                             (9, 1, '03:00', '16:00', 3),
+                                                                             (10, 2, '06:00', '16:00', 3),
+                                                                             (11, 3, '00:00', '10:00', 3),
+                                                                             (12, 4, '00:00', '00:00', 3),
+                                                                             (13, 5, '00:00', '00:00', 3),
+                                                                             (14, 6, '00:00', '00:00', 3);
 
 -- --------------------------------------------------------
 
@@ -201,6 +290,13 @@ CREATE TABLE `workinghours_exceptions` (
                                            `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                            `user_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `workinghours_exceptions`
+--
+
+INSERT INTO `workinghours_exceptions` (`id`, `uuid`, `name`, `start`, `end`, `created_at`, `updated_at`, `user_id`) VALUES
+    (6, '96c08722-e700-430a-beb7-5aee2118e421', 'TEST', '2023-11-29 09:00:00', '2023-11-30 09:00:00', '2023-11-28 18:09:15', '2023-11-28 18:09:15', 3);
 
 --
 -- Indexes for dumped tables
@@ -255,6 +351,13 @@ ALTER TABLE `services`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `services_custom_ schedule`
+--
+ALTER TABLE `services_custom_ schedule`
+    ADD PRIMARY KEY (`id`),
+  ADD KEY `service_id` (`service_id`);
+
+--
 -- Indexes for table `settings`
 --
 ALTER TABLE `settings`
@@ -292,25 +395,25 @@ ALTER TABLE `workinghours_exceptions`
 -- AUTO_INCREMENT for table `breaks`
 --
 ALTER TABLE `breaks`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `discount_codes`
 --
 ALTER TABLE `discount_codes`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `reservations`
 --
 ALTER TABLE `reservations`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `reservations_delated`
@@ -322,31 +425,37 @@ ALTER TABLE `reservations_delated`
 -- AUTO_INCREMENT for table `services`
 --
 ALTER TABLE `services`
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `services_custom_ schedule`
+--
+ALTER TABLE `services_custom_ schedule`
     MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `workinghours`
 --
 ALTER TABLE `workinghours`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `workinghours_exceptions`
 --
 ALTER TABLE `workinghours_exceptions`
-    MODIFY `id` int NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
