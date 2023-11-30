@@ -56,7 +56,7 @@ final class ReservationPresenter extends BasePresenter
                 $user_settings = $this->user->related("settings")->fetch();
                 bdump($user_settings);
                 $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
-                $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates($u, $service->duration, $user_settings->number_of_days)]);
+                $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates($u, $service->duration, $user_settings->number_of_days, intval($service_id))]);
             } else if ($run == "setDate") {
                 $this->setDate($u, intval($service_id), $day);
             } else if ($run == "verifyCode") {
@@ -125,7 +125,7 @@ final class ReservationPresenter extends BasePresenter
         $email = $data->email;
 
         if ($data->dateType == "default") {
-            $times = $this->availableDates->getAvailableStartingHours($this->user_uuid ,$data->date, $duration);
+            $times = $this->availableDates->getAvailableStartingHours($this->user_uuid ,$data->date, $duration, intval($service_id));
             $reservation = $this->insertReservation($uuid, $data, "default", $times);
             if ($reservation) {
                 $this->payments->createPayment($reservation, $data->dicountCode);
@@ -135,7 +135,7 @@ final class ReservationPresenter extends BasePresenter
                 $this->flashMessage("Nepovedlo se uložit rezervaci.", "alert-danger");
             }
         } else if ($data->dateType == "backup") {
-            $times = $this->availableDates->getBackupHours($this->user_uuid,$data->date, $service->duration);
+            $times = $this->availableDates->getBackupHours($this->user_uuid,$data->date, $service->duration, intval($service_id));
             $reservation = $this->insertReservation($uuid, $data, "backup", $times);
             bdump($reservation);
             if ($reservation) {
@@ -193,8 +193,8 @@ final class ReservationPresenter extends BasePresenter
     {
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = $service->duration;
-        $availableTimes = $this->availableDates->getAvailableStartingHours($u, $day, intval($duration));
-        $availableBackup = $this->availableDates->getBackupHours($u ,$day, intval($duration));
+        $availableTimes = $this->availableDates->getAvailableStartingHours($u, $day, intval($duration), intval($service_id));
+        $availableBackup = $this->availableDates->getBackupHours($u ,$day, intval($duration), intval($service_id));
         $this->template->times = $availableTimes;
         $this->template->backupTimes = $availableBackup;
         $this->redrawControl("content");

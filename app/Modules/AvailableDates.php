@@ -19,12 +19,12 @@ class AvailableDates
     {
     }
 
-    public function getAvailableDates(string $u, int $duration, int $numberOfDays): array
+    public function getAvailableDates(string $u, int $duration, int $numberOfDays, int $service_id): array
     {
         $date = date("Y-m-d");
         $available = [];
         for ($i = 0; $i < $numberOfDays; $i++) {
-            if ($this->getAvailableStartingHours($u, $date, $duration) || $this->getBackupHours($u, $date, $duration)) {
+            if ($this->getAvailableStartingHours($u, $date, $duration, $service_id) || $this->getBackupHours($u, $date, $duration, intval($service_id))) {
                 $available[] = $date;
             }
             //add one day to curDay
@@ -52,7 +52,7 @@ class AvailableDates
      * @return array The array of backup hours.
      */
     //TODO add customerTimezone
-    public function getBackupHours(string $u, string $date, int $duration): array
+    public function getBackupHours(string $u, string $date, int $duration, int $service_id): array
     {
         $results = array();
         $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
@@ -62,7 +62,7 @@ class AvailableDates
 
         $reservations = $this->database
             ->table("reservations")
-            ->where("user_id=? AND start BETWEEN ? AND ? AND type=0 AND reservations.status='VERIFIED'", [$user->id, $dayStart, $dayEnd])
+            ->where("user_id=? AND start BETWEEN ? AND ? AND type=0 AND reservations.status='VERIFIED' AND service_id=?", [$user->id, $dayStart, $dayEnd, $service_id])
             ->where(":payments.status=0")
             ->fetchAll();
 
@@ -70,12 +70,11 @@ class AvailableDates
             $rowStart = $row->start;
             $rowDuration = $row->ref("services", "service_id")->duration;
 
-            if ($duration <= $rowDuration) {
-                $results[] = date("H:i", strtotime($rowStart));
-            }
+            $results[] = date("H:i", strtotime($rowStart));
+
         }
         $verificationTime = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i") . ' -' . $this->user_settings->verification_time . ' minutes'));
-        $unverifiedReservations = $this->database->table("reservations")->where("user_id=? AND start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? ", [$this->user_id, $dayStart, $dayEnd, $verificationTime])->fetchAll();
+        $unverifiedReservations = $this->database->table("reservations")->where("user_id=? AND start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? AND service_id=?", [$this->user_id, $dayStart, $dayEnd, $verificationTime, $service_id])->fetchAll();
         foreach ($unverifiedReservations as $row) {
             $rowStart = $row->start;
             $rowDuration = $row->ref("services", "service_id")->duration;
@@ -94,7 +93,7 @@ class AvailableDates
         $verificationTime = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i") . ' -' . $this->user_settings->verification_time . ' minutes'));
         $unverifiedReservations = $this->database->table("reservations")->where("user_id=? AND start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? ", [$this->user_id, $start, $end, $verificationTime])->fetchAll();
         $exceptions = $this->database->table("workinghours_exceptions")->where("user_id=?", $this->user_id)->fetchAll();
-        bdump($exceptions);
+
         $breaks = $workingHour->related("breaks")->fetchAll();
         //$breaks = $this->database->table("workinghours_breaks")->where("user_id=? AND start < ? AND end > ?", [$this->user_id, $start, $end])->fetchAll();
 
@@ -105,16 +104,13 @@ class AvailableDates
 
         while ($start < $end) {
             $newReservationEnd = strtotime(date("Y-m-d H:i", $start) . " + " . $duration . " minutes");
-            bdump("start".date("Y-m-d H:i", $newReservationEnd));
             $isAvailable = true;
 
             //exceptions
             if ($isAvailable) {
                 foreach ($exceptions as $row) {
-                    bdump([$row->start, $row->end]);
-                    $rowStart = strtotime($row->start." + 1 minute");
-                    $rowEnd = strtotime($row->end." - 1 minute");
-                    bdump("end".date("Y-m-d H:i", $newReservationEnd));
+                    $rowStart = strtotime($row->start . " + 1 minute");
+                    $rowEnd = strtotime($row->end . " - 1 minute");
 
 
                     //check if the reservation intersect row
@@ -134,8 +130,8 @@ class AvailableDates
             if ($isAvailable) {
                 //breaks
                 foreach ($breaks as $break) {
-                    $rowStart = strtotime($date." ".$break->start);
-                    $rowEnd = strtotime($date." ".$break->end. "- 1 minute");
+                    $rowStart = strtotime($date . " " . $break->start);
+                    $rowEnd = strtotime($date . " " . $break->end . "- 1 minute");
                     $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
                         ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
                         ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
@@ -154,7 +150,7 @@ class AvailableDates
                 foreach ($verifiedReservations as $row) {
                     $rowDuration = $row->ref("services", "service_id")->duration;
                     $rowStart = strtotime($row->start);
-                    $rowEnd = strtotime($row->start . " + " . $rowDuration-1 . " minutes");
+                    $rowEnd = strtotime($row->start . " + " . $rowDuration - 1 . " minutes");
 
                     //check if the reservation intersect row
                     $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
@@ -175,7 +171,7 @@ class AvailableDates
                 foreach ($unverifiedReservations as $row) {
                     $rowDuration = $row->ref("services", "service_id")->duration;
                     $rowStart = strtotime($row->start);
-                    $rowEnd = strtotime($row->start . " + " . $rowDuration-1 . " minutes");
+                    $rowEnd = strtotime($row->start . " + " . $rowDuration - 1 . " minutes");
 
                     //check if the reservation intersect row
                     $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
@@ -202,6 +198,101 @@ class AvailableDates
         return $availableTimes;
     }
 
+    private function getCustomScheduleAvailability($user, $schedule, $duration, $date, $service_id)
+    {
+        $result = array();
+
+        $dayStart = $date . " 00:00";
+        $dayEnd = $date . " 23:59";
+
+        $verifiedReservations = $this->database->table("reservations")
+            ->where("user_id=? AND start BETWEEN ? AND ?", [$this->user_id, $dayStart, $dayEnd])
+            ->where("status=? AND type=0 AND service_id = ?", ["VERIFIED", $service_id])
+            ->fetchAll();
+        $verificationTime = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i") . ' -' . $this->user_settings->verification_time . ' minutes'));
+        $unverifiedReservations = $this->database->table("reservations")->where("user_id=? AND start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? ", [$this->user_id, $dayStart, $dayEnd, $verificationTime])->fetchAll();
+        $exceptions = $this->database->table("workinghours_exceptions")->where("user_id=?", $this->user_id)->fetchAll();
+
+
+        bdump($verifiedReservations);
+        $days = $schedule->related("service_custom_schedule_days")->where("start BETWEEN ? AND ?", [$dayStart, $dayEnd])->fetchAll();
+        foreach ($days as $day) {
+            $start = strtotime($day->start);
+            $end = strtotime($day->end);
+            while ($start < $end) {
+                $isAvailable = true;
+                $newReservationEnd = strtotime(date("Y-m-d H:i", $start) . " + " . $duration . " minutes");
+                //exceptions
+                if ($isAvailable) {
+                    foreach ($exceptions as $row) {
+                        $rowStart = strtotime($row->start . " + 1 minute");
+                        $rowEnd = strtotime($row->end . " - 1 minute");
+
+
+                        //check if the reservation intersect row
+                        $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
+                            ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
+                            ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
+                            ($rowEnd >= $start && $rowEnd <= $newReservationEnd) ||    // End of the first period is within the second period
+                            ($rowStart == $start) || // Starts of both periods are the same
+                            ($rowEnd == $newReservationEnd); // Ends of both periods are the same
+                        if ($overlap) {
+                            $isAvailable = false;
+                            break;
+                        }
+                    }
+                }
+
+                //resesevations
+                if ($isAvailable) {
+                    foreach ($verifiedReservations as $row) {
+                        $rowDuration = $row->ref("services", "service_id")->duration;
+                        $rowStart = strtotime($row->start);
+                        $rowEnd = strtotime($row->start . " + " . $rowDuration - 1 . " minutes");
+
+                        $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
+                            ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
+                            ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
+                            ($rowEnd >= $start && $rowEnd <= $newReservationEnd) ||    // End of the first period is within the second period
+                            ($rowStart == $start) || // Starts of both periods are the same
+                            ($rowEnd == $newReservationEnd); // Ends of both periods are the same
+                        if ($overlap) {
+                            $isAvailable = false;
+                            break;
+                        }
+                    }
+                }
+                if ($isAvailable) {
+                    //uverified reservations
+                    foreach ($unverifiedReservations as $row) {
+                        $rowDuration = $row->ref("services", "service_id")->duration;
+                        $rowStart = strtotime($row->start);
+                        $rowEnd = strtotime($row->start . " + " . $rowDuration - 1 . " minutes");
+
+                        //check if the reservation intersect row
+                        $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
+                            ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
+                            ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
+                            ($rowEnd >= $start && $rowEnd <= $newReservationEnd) ||    // End of the first period is within the second period
+                            ($rowStart == $start) || // Starts of both periods are the same
+                            ($rowEnd == $newReservationEnd); // Ends of both periods are the same
+                        if ($overlap) {
+                            $isAvailable = false;
+                            break;
+                        }
+                    }
+                }
+
+                if ($isAvailable) {
+                    $result[] = date("H:i", $start);
+                }
+
+                $start = $start + $duration * 60;
+            }
+        }
+        return $result;
+    }
+
     /**
      * Retrieves an array of available dates based on the provided parameters.
      *
@@ -210,64 +301,36 @@ class AvailableDates
      * @return array An array of available starting hours.
      */
     //TODO add customerTimezone
-    public function getAvailableStartingHours(string $u, string $date, int $duration, $customerTimezone = "Europe/Prague"): array
+    public function getAvailableStartingHours(string $u, string $date, int $duration, int $service_id)
     {
-
-        $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
-        $user_settings = $user->related("settings")->fetch();
-        $this->user_id = $user->id;
-        $this->user_settings = $user_settings;
-
-        $workingHours = $this->database->table("workinghours")->where("user_id=? AND weekday=?", [$this->user_id, $this->getDay($date)])->fetch();
-        $start =$date." ".$workingHours->start;
-        $end = $date." ".$workingHours->stop;
-
-
-        $available = $this->checkAvailability($start, $end, $duration, $user_settings->sample_rate, $workingHours);
-
-        return $available;
-
-        die;
-        $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
-        $user_settings = $user->related("settings")->fetch();
-        $this->user_id = $user->id;
-        $this->user_settings = $user_settings;
-
         $available = [];
-        if ($adminStartDay == $adminEndDay) {
-            //jeden den
 
-            $workingHours = $this->database->table("workinghours")->where("user_id=? AND weekday=?", [$this->user_id, $this->getDay($adminStartDay)])->fetch();
-            $start = $this->moment->getUTCTime($adminStartDay . " " . $workingHours->start, $user_settings->time_zone);
-            if ($start < $adminDayStart) {
-                $start = $this->moment->getUTCTime($adminDayStart, $user_settings->time_zone);
+        $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
+        $user_settings = $user->related("settings")->fetch();
+        $this->user_id = $user->id;
+        $this->user_settings = $user_settings;
+        $service = $this->database->table("services")->get($service_id);
+        if ($serviceCustomSchedules = $service->related("services_custom_schedules")->where("start <= ? AND end >= ?", [$date, $date])->fetchAll()) {
+            foreach ($serviceCustomSchedules as $schedule) {
+                if ($results = $this->getCustomScheduleAvailability($user, $schedule, $duration, $date, $service_id)) {
+                    foreach ($results as $result) {
+                        $available[] = $result;
+                    }
+
+                }
+
             }
-            $end = $this->moment->getUTCTime($adminStartDay . " " . $workingHours->stop, $user_settings->time_zone);
-            $available = $this->checkAvailability($start, $end, $duration, $user_settings->sample_rate, $customerTimezone, $workingHours);
+
         } else {
-            //dva dny
+            $workingHours = $this->database->table("workinghours")->where("user_id=? AND weekday=?", [$this->user_id, $this->getDay($date)])->fetch();
+            $start = $date . " " . $workingHours->start;
+            $end = $date . " " . $workingHours->stop;
 
-            $workingHours = $this->database->table("workinghours")->where("user_id=? AND weekday=?", [$this->user_id, $this->getDay($adminStartDay)])->fetch();
-            $start = $this->moment->getUTCTime($adminStartDay . " " . $workingHours->start, $user_settings->time_zone);
-            if ($start < $adminDayStart) {
-                $start = $this->moment->getUTCTime($adminDayStart, $user_settings->time_zone);
-            }
-            $end = $this->moment->getUTCTime($adminStartDay . " " . $workingHours->stop, $user_settings->time_zone);
-            $day1 = $this->checkAvailability($start, $end, $duration, $user_settings->sample_rate, $customerTimezone, $workingHours);
 
-            foreach ($day1 as $day) {
-                $available[] = $day;
-            }
-
-            $workingHoursEnd = $this->database->table("workinghours")->where("user_id=? AND weekday=?", [$this->user_id, $this->getDay($adminEndDay)])->fetch();
-            $start = $this->moment->getUTCTime($adminEndDay . " " . $workingHoursEnd->start, $user_settings->time_zone);
-            $end = $adminDayEnd;
-            $day2 = $this->checkAvailability($start, $end, $duration, $user_settings->sample_rate, $customerTimezone, $workingHoursEnd);
-            foreach ($day2 as $day) {
-                $available[] = $day;
-            }
-
+            $available = $this->checkAvailability($start, $end, $duration, $user_settings->sample_rate, $workingHours);
         }
+        bdump($date);
+        bdump($available);
         return $available;
     }
 
@@ -312,8 +375,8 @@ class AvailableDates
     {
         $exception = $this->database->table("workinghours_exceptions")->where("uuid=?", $uuid)->fetch();
         $user_settings = $this->database->table("settings")->where("user_id=?", $exception->user_id)->fetch();
-        $exceptionStartUTC = strtotime($this->moment->getUTCTime($exception->start."", $user_settings->time_zone));
-        $exceptionEndUTC = strtotime($this->moment->getUTCTime($exception->end."", $user_settings->time_zone));
+        $exceptionStartUTC = strtotime($this->moment->getUTCTime($exception->start . "", $user_settings->time_zone));
+        $exceptionEndUTC = strtotime($this->moment->getUTCTime($exception->end . "", $user_settings->time_zone));
         $reservationsUTC = $this->database->table("reservations")->where("user_id=?", $exception->user_id)->fetchAll();
         $conflicts = [];
         foreach ($reservationsUTC as $reservationUTC) {
