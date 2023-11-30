@@ -100,14 +100,6 @@ final class WorkhoursPresenter extends SecurePresenter
         $this->template->exception = $exception;
     }
 
-    public function handleDeleteException($uuid)
-    {
-        $this->database->table("workinghours_exceptions")->where("uuid=?", $uuid)->delete();
-        $this->flashMessage("Smazano", "alert-success");
-        $this->redirect(":show");
-        $this->redirect(":show");
-    }
-
 
     protected function createComponentEditForm(): Form
     {
@@ -342,6 +334,22 @@ final class WorkhoursPresenter extends SecurePresenter
         ]);
         $this->flashMessage("Uloženo", "alert-success");
         $this->redirect("Workhours:show");
+    }
+
+
+
+    public function handleDeleteException($uuid)
+    {
+        $this->database->table("workinghours_exceptions")->where("uuid=?", $uuid)->delete();
+        $this->flashMessage("Smazano", "alert-success");
+        $this->redirect("show");
+    }
+
+    public function handleDeleteBreak($break_id)
+    {
+        $this->database->table("breaks")->get($break_id)->delete();
+        $this->flashMessage("Smazano", "alert-success");
+        $this->redirect("edit", $this->id);
     }
 
 

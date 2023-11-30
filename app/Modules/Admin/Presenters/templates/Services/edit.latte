@@ -87,7 +87,10 @@
             <th>{$customSchedule->start|date:"d.m.Y H:i"}</th>
             <th>{$customSchedule->end|date:"d.m.Y H:i"}</th>
             <th><a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="editCustomSchedule $customSchedule->uuid, $backlink"><i
-                            class="entypo-pencil"></i>Upravit</a></th>
+                            class="entypo-pencil"></i>Upravit</a>
+                <a onclick="deleteServiceCustomSchedule(event)" class="btn btn-danger btn-sm btn-icon icon-left" n:href="deleteCustomSchedule! $customSchedule->uuid"><i
+                            class="entypo-pencil"></i>Smazat</a>
+            </th>
         </tr>
         </tbody>
         <!--/body-->

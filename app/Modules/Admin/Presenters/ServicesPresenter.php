@@ -430,4 +430,11 @@ final class ServicesPresenter extends SecurePresenter
         $this->redirect($default);
     }
 
+    public function handleDeleteCustomSchedule($cutomScheduleId)
+    {
+        $this->database->table("services_custom_schedules")->where("uuid=?", $cutomScheduleId)->delete();
+        $this->flashMessage("Smazano", "alert-success");
+        $this->redirect("edit", $this->id);
+    }
+
 }
