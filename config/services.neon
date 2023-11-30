@@ -8,6 +8,8 @@ services:
 	- App\Modules\Moment
 	- App\Modules\Admin\Presenters\ApiPresenter
 	- App\Modules\Formater
+	phpMailer: PHPMailer\PHPMailer\PHPMailer
+
 	nette.latteFactory:
 	    setup:
 	        - addFilter(convertToAdminTimezone, [@App\Modules\Formater, convertToAdminTimezone])

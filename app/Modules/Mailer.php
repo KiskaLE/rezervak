@@ -5,6 +5,7 @@ namespace App\Modules;
 use Nette;
 use Latte\Engine;
 use Nette\Mail\SmtpMailer;
+use PHPMailer\PHPMailer\PHPMailer;
 
 final class Mailer
 {
@@ -12,16 +13,19 @@ final class Mailer
     private $url;
 
     public function __construct(
-        private Nette\Database\Explorer $database
+        private Nette\Database\Explorer $database,
+        private PHPMailer               $phpMailer
     )
     {
-        $this->url = 'http://' . $_SERVER['HTTP_HOST'];
+        $this->url = 'http://' . "localhost:8000";
         $this->mailer = new SmtpMailer(
             'smtp.seznam.cz',
             'rezervkainfo@seznam.cz',
             'sxqOgSNiXQ8TQbG',
             465,
             "ssl");
+
+
     }
 
     private function createMail(string $from, string $to, string $subject, string $message): Nette\Mail\Message

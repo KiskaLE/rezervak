@@ -33,6 +33,7 @@ class ApiPresenter extends BasePresenter
 
     public function actionClean()
     {
+
         $database = $this->database;
         $admins = $this->database->table("users")
             ->where("role=?", "ADMIN")
@@ -49,6 +50,7 @@ class ApiPresenter extends BasePresenter
                 $canceledReservations = $database->table("reservations_delated")->fetchAll();
                 foreach ($canceledReservations as $reservation) {
                     $this->mailer->sendCancelationMail($reservation->email);
+
                 }
             });
             // check if any backup reservation can be booked
@@ -61,13 +63,15 @@ class ApiPresenter extends BasePresenter
                 $duration = $backup->ref("services", "service_id")->duration;
                 $email = $backup->email;
                 $uuid = $backup->uuid;
-                if ($this->availableDates->isTimeAvailable($admin->uuid, $backup->date, $backup->start, $duration)) {
+                if ($this->availableDates->isTimeAvailable($admin->uuid,$backup->start, $duration, intval($backup->service_id))) {
+                    dump("tst");
                     $database->transaction(function ($database) use ($backup) {
                         $database->table("reservations")->where("id=?", $backup->id)->update(["type" => 0]);
                         //update reservation
                         $database->table("reservations")->where("id=?", $backup->id)->update(["updated_at" => date("Y-m-d H:i:s")]);
                         $this->payments->updateTime($backup->id);
                         $this->mailer->sendConfirmationMail($backup->email, "/payment/?uuid=" . $backup->uuid);
+                        dump("odeslano");
                     });
 
                 }

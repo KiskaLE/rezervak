@@ -21,7 +21,8 @@
 		"tracy/tracy": "^2.9",
 		"ramsey/uuid": "^4.7",
 		"fightbulc/moment": "^1.34",
-		"contributte/forms-multiplier": "^4.0"
+		"contributte/forms-multiplier": "^4.0",
+		"phpmailer/phpmailer": "^6.9"
 	},
 	"require-dev": {
 		"nette/tester": "^2.4",
