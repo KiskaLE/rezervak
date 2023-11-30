@@ -73,6 +73,7 @@ final class ServicesPresenter extends SecurePresenter
             ];
         }
         $defaults = [
+            "scheduleName" => $schedule->name,
             "range" => $this->formater->getDateFormatedFromTimestamp($schedule->start) . " " . $this->formater->getTimeFormatedFromTimeStamp($schedule->start) . " - " . $this->formater->getDateFormatedFromTimestamp($schedule->end) . " " . $this->formater->getTimeFormatedFromTimeStamp($schedule->end),
             "multiplier" => $daysDefaults
         ];
@@ -90,8 +91,8 @@ final class ServicesPresenter extends SecurePresenter
     {
 
         $form = new Form;
-        $start = explode("-", $this->formater->getDateFromTimeStamp($this->schedule->start));
-        $end = explode("-", $this->formater->getDateFromTimeStamp($this->schedule->end));
+
+        $form->addText("scheduleName")->setRequired("Název je povinný");
         $form->addText("range")->setRequired();
         $multiplier = $form->addMultiplier("multiplier", function (Nette\Forms\Container $container, Nette\Forms\Form $form) {
             $container->addHidden("uuid");
@@ -120,6 +121,7 @@ final class ServicesPresenter extends SecurePresenter
                 $range = $this->formater->getDataFromString($data->range);
                 $database->table("services_custom_schedules")->where("id=?", $this->schedule->id)->update([
                     "start" => $range["start"],
+                    "name" => $data->scheduleName,
                     "end" => $range["end"],
                     "updated_at" => date("Y-m-d H:i:s")
                 ]);
@@ -179,6 +181,7 @@ final class ServicesPresenter extends SecurePresenter
     {
         $form = new Form;
 
+        $form->addText("scheduleName")->setRequired("Název je povinný");
         $form->addText("range")->setRequired("Rozsah je povinný");
 
         $multiplier = $form->addMultiplier("multiplier", function (Nette\Forms\Container $container, Nette\Forms\Form $form) {
@@ -225,6 +228,7 @@ final class ServicesPresenter extends SecurePresenter
                 $days = $data->multiplier;
                 $serviceSchedule = $this->database->table("services_custom_schedules")->insert([
                     "service_id" => $this->service->id,
+                    "name" => $data->scheduleName,
                     "uuid" => $uuid,
                     "start" => $range["start"],
                     "end" => $range["end"],
@@ -275,6 +279,7 @@ final class ServicesPresenter extends SecurePresenter
             ->toggle('#servicesCustomFields');;
 
         $form->addText("range")->addConditionOn($form["customSchedule"], $form::Equal, true)->setRequired("Rozsah je povinný");
+        $form->addText("scheduleName")->addConditionOn($form["customSchedule"], $form::Equal, true)->setRequired("Název je povinný");
 
         $multiplier = $form->addMultiplier("multiplier", function (Nette\Forms\Container $container, Nette\Forms\Form $form) {
             $container->addText("day", "text")
@@ -332,6 +337,7 @@ final class ServicesPresenter extends SecurePresenter
                     $days = $data->multiplier;
                     $serviceSchedule = $this->database->table("services_custom_schedules")->insert([
                         "service_id" => $service->id,
+                        "name" => $data->scheduleName,
                         "uuid" => $uuid,
                         "start" => $range["start"],
                         "end" => $range["end"],

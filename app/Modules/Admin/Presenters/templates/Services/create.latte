@@ -68,13 +68,25 @@
                 <!--checkbox-->
                 <div class="form-group">
                     <div class="">
-                        <div class="form-checkbox"><input id="servicesCustom" onchange="toggleFields()" n:name="customSchedule" type="checkbox"><span>Vlastní rozvrh</span>
+                        <div class="form-checkbox"><input id="servicesCustom" n:name="customSchedule" type="checkbox"><span>Vlastní rozvrh</span>
                         </div>
                         <span class="description"></span>
                     </div>
                 </div>
                 <!--/checkbox-->
                 <div class="" id="servicesCustomFields">
+
+                    <div class="form-group">
+                        <label for="field-3" class="col-sm-3 control-label">Název rozvrhu</label>
+
+                        <div class="">
+                            <input class="form-control" n:name="scheduleName">
+                            <span class="description">Zadejte název rozvrhu</span>
+                            <span class="input-error"
+                                  id="verificationTimeError"></span>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label for="field-3" class="col-sm-3 control-label">Časové rozmezí</label>
 
@@ -82,7 +94,7 @@
                             <input class="form-control" n:name="range" id="date-start">
                             <span class="description">Vyberte časové rozmezí</span>
                             <span class="input-error"
-                                  id="verificationTimeError">Čas musí být větší než 0.</span>
+                                  id="verificationTimeError"></span>
                         </div>
                     </div>
 

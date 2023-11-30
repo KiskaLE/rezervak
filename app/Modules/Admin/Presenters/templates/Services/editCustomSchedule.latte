@@ -13,51 +13,51 @@
     <form n:name="editCustomScheduleForm" class="ajax">
 
         <div class="panel panel-primary" data-collapsed="0">
-            <!--heading-->
-            <div class="panel-heading">
-                <div class="panel-title">
-                    Základní nastavení
-                </div>
-
-                <div class="panel-options">
-                    <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
-                </div>
-            </div>
-            <!--/heading-->
             <!--body-->
             <div class="panel-body" style="display: block;">
 
-                    <div class="form-group">
-                        <label for="field-3" class="col-sm-3 control-label">Časové rozmezí</label>
+                <div class="form-group">
+                    <label for="field-3" class="col-sm-3 control-label">Název rozvrhu</label>
 
+                    <div class="">
+                        <input class="form-control" n:name="scheduleName">
+                        <span class="description">Zadejte název rozvrhu</span>
+                        <span class="input-error"
+                              id="verificationTimeError"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="field-3" class="col-sm-3 control-label">Časové rozmezí</label>
+
+                    <div class="">
+                        <input class="form-control" n:name="range" id="date-start">
+                        <span class="description">Vyberte časové rozmezí</span>
+                        <span class="input-error"
+                              id="verificationTimeError">Čas musí být větší než 0.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="field-3" class="col-sm-3 control-label">Časové rozmezí</label>
+                    <div n:multiplier="multiplier">
                         <div class="">
-                            <input class="form-control" n:name="range" id="date-start">
-                            <span class="description">Vyberte časové rozmezí</span>
+                            <div class="form-input-group">
+                                <input n:name="uuid">
+                                <input class="form-control single-date" n:name="day" >
+                                <input class="form-control input-time" n:name="timeStart" >
+                                <input class="form-control input-time" n:name="timeEnd" >
+                                <br>
+                                {multiplier:remove}
+                            </div>
+
                             <span class="input-error"
                                   id="verificationTimeError">Čas musí být větší než 0.</span>
                         </div>
+
                     </div>
-
-                    <div class="form-group">
-                        <label for="field-3" class="col-sm-3 control-label">Časové rozmezí</label>
-                        <div n:multiplier="multiplier">
-                            <div class="">
-                                <div class="form-input-group">
-                                    <input n:name="uuid">
-                                    <input class="form-control single-date" n:name="day" >
-                                    <input class="form-control input-time" n:name="timeStart" >
-                                    <input class="form-control input-time" n:name="timeEnd" >
-                                    <br>
-                                    {multiplier:remove}
-                                </div>
-
-                                <span class="input-error"
-                                      id="verificationTimeError">Čas musí být větší než 0.</span>
-                            </div>
-
-                        </div>
-                        <br>
-                        {multiplier:add multiplier}
+                    <br>
+                    {multiplier:add multiplier}
 
                 </div>
 
