@@ -104,7 +104,9 @@ final class ReservationPresenter extends BasePresenter
         $form->addText("phone", "Telefon:")->setRequired();
         $form->addText("email", "E-mail:")->setRequired();
         $form->addText("address", "Adresa a čp:")->setRequired();
-        $form->addText("code", "PSČ:")->setRequired();
+        $form->addText("code", "PSČ:")->addFilter(function ($value) {
+            return str_replace(' ', '', $value); // remove spaces from the postcode
+        })->setRequired();
         $form->addText("city", "Město:")->setRequired();
 
         $form->addText("dicountCode", "Kód slevy:");

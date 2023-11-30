@@ -2,7 +2,7 @@
 <div class="row page-header"><h1>Služby</h1></div>
 <!--navigace-->
 <div class="row navbar">
-    <a n:href="show" class="btn btn-default ajax" class="btn btn-default">Zpět</i></a>
+    <a n:href="back! show" class="btn btn-default ajax" class="btn btn-default">Zpět</i></a>
 </div>
 <!--/navigace-->
 
@@ -10,7 +10,7 @@
 <div class="row">
     <h2>Nadpis formuláře</h2>
     <!--content-->
-    <form n:name="createForm" class="ajax">
+    <form n:name="editCustomScheduleForm" class="ajax">
 
         <div class="panel panel-primary" data-collapsed="0">
             <!--heading-->
@@ -26,55 +26,7 @@
             <!--/heading-->
             <!--body-->
             <div class="panel-body" style="display: block;">
-                <div class="form-group">
-                    <label for="field-1" class="col-sm-3 control-label">Název</label>
-                    <div class="">
-                        <input class="form-control" n:name="name">
-                        <span class="description"></span>
-                        <span class="input-error" id="sampleRateError">Název je povinný</span>
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="field-2" class="col-sm-3 control-label">Doba trvání [min]</label>
-
-                    <div class="">
-                        <input class="form-control" type="number" n:name="duration">
-                        <span class="description">Zadejte čas trvání v minutách</span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="field-3" class="col-sm-3 control-label">Cena [Kč]</label>
-
-                    <div class="">
-                        <input class="form-control" type="number" n:name="price">
-                        <span class="description">Zadejte cenu v Kč</span>
-                        <span class="input-error"
-                              id="verificationTimeError">Čas musí být větší než 0.</span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="field-4" class="col-sm-3 control-label">Popis</label>
-
-                    <div class="">
-                        <textarea class="form-control" n:name="description"></textarea>
-                        <span class="description">Zadejte popis služby (max 255 znaků)</span>
-                        <span class="input-error" id="numberOfDaysError">Čas musí být větší než 0.</span>
-                    </div>
-                </div>
-
-                <!--checkbox-->
-                <div class="form-group">
-                    <div class="">
-                        <div class="form-checkbox"><input id="servicesCustom" onchange="toggleFields()" n:name="customSchedule" type="checkbox"><span>Vlastní rozvrh</span>
-                        </div>
-                        <span class="description"></span>
-                    </div>
-                </div>
-                <!--/checkbox-->
-                <div class="" id="servicesCustomFields">
                     <div class="form-group">
                         <label for="field-3" class="col-sm-3 control-label">Časové rozmezí</label>
 
@@ -91,6 +43,7 @@
                         <div n:multiplier="multiplier">
                             <div class="">
                                 <div class="form-input-group">
+                                    <input n:name="uuid">
                                     <input class="form-control single-date" n:name="day" >
                                     <input class="form-control input-time" n:name="timeStart" >
                                     <input class="form-control input-time" n:name="timeEnd" >
@@ -106,7 +59,6 @@
                         <br>
                         {multiplier:add multiplier}
 
-                    </div>
                 </div>
 
 
@@ -126,4 +78,5 @@
 <!--/form-->
 
 <script src="{$basePath}/assets/admin/js/datePicker.js"></script>
+<script src="{$basePath}/assets/admin/js/servicesCustom.js"></script>
 

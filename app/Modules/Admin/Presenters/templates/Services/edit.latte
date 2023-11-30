@@ -59,3 +59,40 @@
 </div>
 
 <!--/form-->
+
+<!--table-->
+<div class="row">
+    <h2>Vlastní rozvrh</h2>
+    <table class="table dataTable table-bordered">
+        <!--akce tabulky-->
+        <div class="table-header">
+            <a n:href="createCustomSchedule $service->id, $backlink" class="btn btn-blue ajax">Vytvořit rozvrh</i></a>
+        </div>
+        <br>
+        <!--/akce tabulky-->
+        <!--head-->
+        <thead>
+        <tr>
+            <th>Název</th>
+            <th>Od</th>
+            <th>Do</th>
+            <th>Akce</th>
+        </tr>
+        </thead>
+        <!--/head-->
+        <!--body-->
+        <tbody>
+        <tr n:foreach="$customSchedules as $customSchedule">
+            <th>Název</th>
+            <th>{$customSchedule->start|date:"d.m.Y H:i"}</th>
+            <th>{$customSchedule->end|date:"d.m.Y H:i"}</th>
+            <th><a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="editCustomSchedule $customSchedule->uuid, $backlink"><i
+                            class="entypo-pencil"></i>Upravit</a></th>
+        </tr>
+        </tbody>
+        <!--/body-->
+    </table>
+
+</div>
+
+<!--/table-->

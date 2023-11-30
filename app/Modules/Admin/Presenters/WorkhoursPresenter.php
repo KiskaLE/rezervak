@@ -51,8 +51,8 @@ final class WorkhoursPresenter extends SecurePresenter
 
     public function renderExcerptionsConflicts($id)
     {
-        $reservationsUTC = $this->availableDates->getConflictedReservations($id);
-        $this->template->reservationsUTC = $reservationsUTC;
+        $reservations = $this->availableDates->getConflictedReservations($id);
+        $this->template->reservationsUTC = $reservations;
     }
 
     public function actionEdit($id)

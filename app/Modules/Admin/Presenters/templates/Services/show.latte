@@ -25,6 +25,7 @@
         <!--body-->
         <tbody>
         {foreach $services as $service}
+            {var $serviceSchedules = $service->related("services_custom_schedules")->fetch()}
             <tr>
                 <th class="text-left">{$service->name}</th>
                 <th class="text-left">{$service->description}</th>
@@ -33,8 +34,7 @@
                 <th>
                     <a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="edit $service->id"><i
                                 class="entypo-pencil"></i>Upravit</a>
-                    <a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="showCustomSchedule $service->id"><i
-                                class="entypo-pencil"></i>Rozvrh</a>
+
                     <a class="btn {!$service->hidden ? "btn-gold" : "btn-default"} btn-sm btn-icon icon-left ajax" n:href="Services:actionHide $service->id"><i
                                 class="entypo-eye"></i>{!$service->hidden ? "Skrýt" : "Zobrazit"}</a>
                 </th>

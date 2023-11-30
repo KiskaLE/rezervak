@@ -54,15 +54,13 @@ class SettingsPresenter extends SecurePresenter
 
     public function basicSettingsFormSucceeded(Form $form, $data) {
 
-        $time_zone = $this->timezones[$data->timezone];
         try {
             $this->database->table("settings")->where("user_id=?", $this->user->id)->update([
                 "sample_rate" => $data->sampleRate,
                 "payment_info" => $data->paymentInfo,
                 "verification_time" => $data->verificationTime,
                 "number_of_days" => $data->numberOfDays,
-                "time_to_pay" => $data->timeToPay,
-                "time_zone" => $time_zone
+                "time_to_pay" => $data->timeToPay
             ]);
             $this->flashMessage("Změny byly uloženy.", "alert-success");
         } catch (\Throwable $th) {

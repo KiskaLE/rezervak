@@ -38,5 +38,25 @@ class Formater
         return ["start" => $start, "end" => $end, "timeStart" => $timeStart, "timeEnd" => $timeEnd];
     }
 
+    public function getDateFromTimeStamp($timestamp)
+    {
+        return date("Y-m-d", strtotime($timestamp));
+    }
+
+    public function getTimeFromTimeStamp($timestamp)
+    {
+        return date("H:i", strtotime($timestamp));
+    }
+
+    public function getTimeFormatedFromTimeStamp($timestamp)
+    {
+        return date("H:i", strtotime($timestamp));
+    }
+
+    public function getDateFormatedFromTimestamp($timestamp)
+    {
+        return date("d/m/Y", strtotime($timestamp));
+    }
+
 
 }
