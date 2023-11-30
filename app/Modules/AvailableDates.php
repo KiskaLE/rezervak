@@ -103,7 +103,7 @@ class AvailableDates
         $end = strtotime($end);
 
         while ($start < $end) {
-            $newReservationEnd = strtotime(date("Y-m-d H:i", $start) . " + " . $duration . " minutes");
+            $newReservationEnd = strtotime(date("Y-m-d H:i", $start) . " + " . $duration-1 . " minutes");
             $isAvailable = true;
 
             //exceptions
@@ -221,7 +221,7 @@ class AvailableDates
             $end = strtotime($day->end);
             while ($start < $end) {
                 $isAvailable = true;
-                $newReservationEnd = strtotime(date("Y-m-d H:i", $start) . " + " . $duration . " minutes");
+                $newReservationEnd = strtotime(date("Y-m-d H:i", $start) . " + " . $duration-1 . " minutes");
                 //exceptions
                 if ($isAvailable) {
                     foreach ($exceptions as $row) {
