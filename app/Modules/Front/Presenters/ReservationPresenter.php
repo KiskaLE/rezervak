@@ -20,6 +20,8 @@ final class ReservationPresenter extends BasePresenter
     private $services;
     private $user_uuid;
     private $user;
+    private $service;
+
 
     public function __construct(
         private Nette\Database\Explorer $database,
@@ -54,8 +56,8 @@ final class ReservationPresenter extends BasePresenter
         if ($this->isAjax()) {
             if ($run == "fetch") {
                 $user_settings = $this->user->related("settings")->fetch();
-                bdump($user_settings);
                 $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
+                $this->service = $service;
                 $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates($u, $service->duration, $user_settings->number_of_days, intval($service_id))]);
             } else if ($run == "setDate") {
                 $this->setDate($u, intval($service_id), $day);
@@ -93,7 +95,6 @@ final class ReservationPresenter extends BasePresenter
 
     protected function createComponentForm(): Form
     {
-
         $form = new Form;
         $form->addhidden("service")->setRequired();
         $form->addHidden("dateType")->setRequired();

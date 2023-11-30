@@ -187,6 +187,10 @@ class AvailableDates
                 }
             }
 
+            if ($isAvailable && $newReservationEnd > $end) {
+                $isAvailable = false;
+            }
+
             if ($isAvailable) {
                 //convert time to customer timezone
                 $availableTimes[] = date("H:i", $start);
@@ -198,7 +202,7 @@ class AvailableDates
         return $availableTimes;
     }
 
-    private function getCustomScheduleAvailability($user, $schedule, $duration, $date, $service_id)
+    private function getCustomScheduleAvailability($user, $schedule, $duration, $date, $service_id, $interval)
     {
         $result = array();
 
@@ -213,13 +217,12 @@ class AvailableDates
         $unverifiedReservations = $this->database->table("reservations")->where("user_id=? AND start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? ", [$this->user_id, $dayStart, $dayEnd, $verificationTime])->fetchAll();
         $exceptions = $this->database->table("workinghours_exceptions")->where("user_id=?", $this->user_id)->fetchAll();
 
-
-        bdump($verifiedReservations);
         $days = $schedule->related("service_custom_schedule_days")->where("start BETWEEN ? AND ?", [$dayStart, $dayEnd])->fetchAll();
         foreach ($days as $day) {
             $start = strtotime($day->start);
             $end = strtotime($day->end);
             while ($start < $end) {
+                bdump(date("H:i", $start));
                 $isAvailable = true;
                 $newReservationEnd = strtotime(date("Y-m-d H:i", $start) . " + " . $duration-1 . " minutes");
                 //exceptions
@@ -283,13 +286,18 @@ class AvailableDates
                     }
                 }
 
+                if ($isAvailable && $newReservationEnd > $end) {
+                    $isAvailable = false;
+                }
+
                 if ($isAvailable) {
                     $result[] = date("H:i", $start);
                 }
 
-                $start = $start + $duration * 60;
+                $start = $start + $interval * 60;
             }
         }
+        bdump($result);
         return $result;
     }
 
@@ -312,7 +320,7 @@ class AvailableDates
         $service = $this->database->table("services")->get($service_id);
         if ($serviceCustomSchedules = $service->related("services_custom_schedules")->where("start <= ? AND end >= ?", [$date, $date])->fetchAll()) {
             foreach ($serviceCustomSchedules as $schedule) {
-                if ($results = $this->getCustomScheduleAvailability($user, $schedule, $duration, $date, $service_id)) {
+                if ($results = $this->getCustomScheduleAvailability($user, $schedule, $duration, $date, $service_id, $user_settings->sample_rate)) {
                     foreach ($results as $result) {
                         $available[] = $result;
                     }
@@ -329,8 +337,7 @@ class AvailableDates
 
             $available = $this->checkAvailability($start, $end, $duration, $user_settings->sample_rate, $workingHours);
         }
-        bdump($date);
-        bdump($available);
+
         return $available;
     }
 
