@@ -52,7 +52,7 @@ final class ReservationPresenter extends BasePresenter
             } else if ($run == "setDate") {
                 $this->setDate($u, intval($service_id), $day);
             } else if ($run == "verifyCode") {
-                $this->verifyDiscountCode($this->user->id ,intval($service_id), $discountCode);
+                $this->verifyDiscountCode($this->user->id, intval($service_id), $discountCode);
             } else if ($run == "getServiceName") {
                 $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
                 $this->sendJson(["serviceName" => $service->name]);
@@ -86,19 +86,40 @@ final class ReservationPresenter extends BasePresenter
     protected function createComponentForm(): Form
     {
         $form = new Form;
-        $form->addhidden("service")->setRequired();
-        $form->addHidden("dateType")->setRequired();
-        $form->addHidden("date")->setRequired();
-        $form->addHidden("time")->setRequired();
-        $form->addText("firstname", "Jmeno:")->setRequired();
-        $form->addText("lastname", "Příjmení:")->setRequired();
-        $form->addText("phone", "Telefon:")->setRequired();
-        $form->addText("email", "E-mail:")->setRequired();
-        $form->addText("address", "Adresa a čp:")->setRequired();
-        $form->addText("code", "PSČ:")->addFilter(function ($value) {
-            return str_replace(' ', '', $value); // remove spaces from the postcode
-        })->setRequired();
-        $form->addText("city", "Město:")->setRequired();
+        $form->addhidden("service")
+            ->setRequired()
+            ->addRule(Form::PATTERN, 'Vybraná služba je neplatná', '\d+');
+        $form->addHidden("dateType")
+            ->setRequired()
+            ->addRule(Form::PATTERN, 'Neplatný druh rezervace', 'default|backup');
+        $form->addHidden("date")
+            ->setRequired()
+            ->addRule(Form::PATTERN, 'Neplatný datum', '^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$');
+        $form->addHidden("time")
+            ->setRequired()
+            ->addRule(Form::PATTERN, 'Čas musí být číslo', '\d+');
+        $form->addText("firstname", "Jmeno:")
+            ->setRequired()
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, 'Jméno nesmí obsahovat čísla', '\d+');
+        $form->addText("lastname", "Příjmení:")
+            ->setRequired()
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, 'Příjmení nesmí obsahovat čísla', '\d+');
+        $form->addText("phone", "Telefon:")
+            ->setRequired();
+        $form->addText("email", "E-mail:")
+            ->setRequired()
+            ->addRule(Form::EMAIL, 'Neplatný formát e-mailu');
+        $form->addText("address", "Adresa a čp:")
+            ->setRequired();
+        $form->addText("code", "PSČ:")
+            ->setRequired()
+            ->addRule(Form::PATTERN, 'Neplatný formát PSČ', '^\d{5}$');
+        $form->addText("city", "Město:")
+            ->setRequired()
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, 'Město nesmí obsahovat čísla', '\d+');
 
         $form->addText("dicountCode", "Kód slevy:");
         $form->addSubmit("submit");
@@ -107,40 +128,47 @@ final class ReservationPresenter extends BasePresenter
         return $form;
     }
 
-    public function formSucceeded(Form $form,\stdClass $data): void
+    public function formSucceeded(Form $form, \stdClass $data): void
     {
-        $session = $this->getSession('Reservation');
+        if (!$form->isValid()) {
+            $this->flashMessage("Zadaná data nejsou správná.", "alert-danger");
+            $this->redirect("create");
+        }
 
-        $service_id = $data->service;
-        $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
-        $duration = intval($service->duration);
+        $session = $this->getSession('Reservation');
         $uuid = strval(Uuid::uuid4());
         $email = $data->email;
 
         if ($data->dateType == "default") {
-            //$times = $this->availableDates->getAvailableStartingHours($this->user_uuid ,$data->date, $duration, intval($service_id));
             $times = $session->availableTimes;
             $reservation = $this->insertReservation($uuid, $data, "default", $times);
             if ($reservation) {
-                $this->payments->createPayment($reservation, $data->dicountCode);
-                $this->mailer->sendConfirmationMail($email, $this->link("Payment:default", $uuid));
-                $this->redirect("Reservation:confirmation", ["r" => $uuid]);
+                $payment = $this->payments->createPayment($reservation, $data->dicountCode);
+                if ($payment) {
+                    $this->mailer->sendConfirmationMail($email, $this->link("Payment:default", $uuid));
+                    $this->redirect("Reservation:confirmation", ["r" => $uuid]);
+                } else {
+                    $this->flashMessage("Nepovedlo se vytvořit platbu.", "alert-danger");
+                }
             } else {
                 $this->flashMessage("Nepovedlo se uložit rezervaci.", "alert-danger");
             }
         } else if ($data->dateType == "backup") {
-            //$times = $this->availableDates->getBackupHours($this->user_uuid,$data->date, $service->duration, intval($service_id));
             $times = $session->availableBackupTimes;
             $reservation = $this->insertReservation($uuid, $data, "backup", $times);
             if ($reservation) {
-                $this->payments->createPayment($reservation, $data->dicountCode);
-                $this->mailer->sendBackupConfiramationMail($email, $this->link("Payment:backup", $uuid));
-                $this->redirect("Reservation:backup", ["r" => $uuid]);
+                $payment = $this->payments->createPayment($reservation, $data->dicountCode);
+                if ($payment) {
+                    $this->mailer->sendBackupConfiramationMail($email, $this->link("Payment:backup", $uuid));
+                    $this->redirect("Reservation:backup", ["r" => $uuid]);
+                } else {
+                    $this->flashMessage("Nepovedlo se vytvořit platbu.", "alert-danger");
+                }
             } else {
                 $this->flashMessage("Nepovedlo se uložit rezervaci.", "alert-danger");
             }
         }
-
+        $this->redirect("create");
     }
 
     /**
@@ -154,41 +182,46 @@ final class ReservationPresenter extends BasePresenter
      */
     private function insertReservation(string $uuid, $data, string $type, $times)
     {
-        $start = $data->date." ".$times[$data->time];
+        $start = $data->date . " " . $times[$data->time];
         $service_id = $data->service;
 
-        $reservation = $this->database->table("reservations")->insert([
-            "uuid" => $uuid,
-            "service_id" => $service_id,
-            "start" => $start,
-            "firstname" => $data->firstname,
-            "lastname" => $data->lastname,
-            "phone" => $data->phone,
-            "email" => $data->email,
-            "address" => $data->address,
-            "code" => $data->code,
-            "city" => $data->city,
-            "created_at" => date("Y-m-d H:i:s"),
-            "user_id" => $this->user->id,
-            "type" => $type == "backup" ? 1 : 0,
-        ]);
+        try {
+            $reservation = $this->database->table("reservations")->insert([
+                "uuid" => $uuid,
+                "service_id" => $service_id,
+                "start" => $start,
+                "firstname" => $data->firstname,
+                "lastname" => $data->lastname,
+                "phone" => $data->phone,
+                "email" => $data->email,
+                "address" => $data->address,
+                "code" => $data->code,
+                "city" => $data->city,
+                "created_at" => date("Y-m-d H:i:s"),
+                "user_id" => $this->user->id,
+                "type" => $type == "backup" ? 1 : 0,
+            ]);
+        } catch (\Throwable $e) {
+            return false;
+        }
 
         return $reservation;
     }
+
     /**
      * Sets the date for a given service ID and day.
      *
      * @param int $service_id The ID of the service.
      * @param string $day The day for which to set the date.
-     * @throws Exception If the service cannot be fetched from the database.
      * @return void
+     * @throws Exception If the service cannot be fetched from the database.
      */
     private function setDate(string $u, int $service_id, string $day): void
     {
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = $service->duration;
         $availableTimes = $this->availableDates->getAvailableStartingHours($u, $day, intval($duration), intval($service_id));
-        $availableBackup = $this->availableDates->getBackupHours($u ,$day, intval($duration), intval($service_id));
+        $availableBackup = $this->availableDates->getBackupHours($u, $day, intval($duration), intval($service_id));
 
         //store data in session
         $session = $this->getSession('Reservation');
@@ -199,17 +232,18 @@ final class ReservationPresenter extends BasePresenter
         $this->template->backupTimes = $availableBackup;
         $this->redrawControl("content");
     }
+
     /**
      * Verifies a discount code for a given service.
      *
      * @param int $service_id The ID of the service.
      * @param string $discountCode The discount code to verify.
-     * @throws None
      * @return void
+     * @throws None
      */
     private function verifyDiscountCode(int $user_id, int $service_id, string $discountCode): void
     {
-        $discount = $this->discountCodes->isCodeValid($user_id ,$service_id, $discountCode);
+        $discount = $this->discountCodes->isCodeValid($user_id, $service_id, $discountCode);
         $service = $this->discountCodes->getService(intval($service_id));
         $price = $service->price;
         if ($discount) {
@@ -224,7 +258,7 @@ final class ReservationPresenter extends BasePresenter
                 if ($discount->value >= 100) {
                     $price = 0;
                 } else {
-                    $price = $price - $service->price  * $discount->value / 100;
+                    $price = $price - $service->price * $discount->value / 100;
                 }
             }
             $this->sendJson(["status" => true, "price" => $price]);
