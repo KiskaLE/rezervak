@@ -142,18 +142,14 @@ final class ReservationPresenter extends BasePresenter
                 $this->flashMessage("Nepovedlo se vytvořit rezervaci. Termín je již obsazen", "alert-danger");
                 $this->redirect("create", $this->user_uuid);
             }
-            $reservation = $this->insertReservation($uuid, $data, "default", $time);
-            if ($reservation) {
-                $payment = $this->payments->createPayment($reservation, $data->dicountCode);
-                if ($payment) {
-                    $this->mailer->sendConfirmationMail($email, $this->link("Payment:default", $uuid));
-                    $this->redirect("Reservation:confirmation", ["r" => $uuid]);
-                } else {
-                    $this->flashMessage("Nepovedlo se vytvořit platbu.", "alert-danger");
-                }
-            } else {
+            $result = $this->insertReservation($uuid, $data, "default", $time);
+            bdump($result);
+            if (!$result) {
                 $this->flashMessage("Nepovedlo se uložit rezervaci.", "alert-danger");
+                $this->redirect("create", $this->user_uuid);
             }
+            $this->mailer->sendConfirmationMail($email, $this->link("Payment:default", $uuid));
+            $this->redirect("Reservation:confirmation", ["r" => $uuid]);
         } else if ($data->dateType == "backup") {
             $times = $session->availableBackupTimes;
             $time = $times[$data->time];
@@ -161,24 +157,20 @@ final class ReservationPresenter extends BasePresenter
                 $this->flashMessage("Nepovedlo se vytvořit rezervaci. Termín je již obsazen", "alert-danger");
                 $this->redirect("create", $this->user_uuid);
             }
-            $reservation = $this->insertReservation($uuid, $data, "backup", $time);
-            if ($reservation) {
-                $payment = $this->payments->createPayment($reservation, $data->dicountCode);
-                if ($payment) {
-                    $this->mailer->sendBackupConfiramationMail($email, $this->link("Payment:backup", $uuid));
-                    $this->redirect("Reservation:backup", ["r" => $uuid]);
-                } else {
-                    $this->flashMessage("Nepovedlo se vytvořit platbu.", "alert-danger");
-                }
-            } else {
+            $result = $this->insertReservation($uuid, $data, "backup", $time);
+            if (!$result) {
                 $this->flashMessage("Nepovedlo se uložit rezervaci.", "alert-danger");
+                $this->redirect("create", $this->user_uuid);
             }
+            $this->mailer->sendBackupConfiramationMail($email, $this->link("Payment:backup", $uuid));
+            $this->redirect("Reservation:confirmation", ["r" => $uuid]);
         }
         $this->redirect("create");
     }
 
 
-    private function checkAvailability(string $u, $date, $service_id, $time, $type = "default"): bool {
+    private function checkAvailability(string $u, $date, $service_id, $time, $type = "default"): bool
+    {
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = $service->duration;
         switch ($type) {
@@ -208,30 +200,32 @@ final class ReservationPresenter extends BasePresenter
      */
     private function insertReservation(string $uuid, $data, string $type, $time)
     {
-        $start = $data->date . " " . $time;
-        $service_id = $data->service;
-
-        try {
-            $reservation = $this->database->table("reservations")->insert([
-                "uuid" => $uuid,
-                "service_id" => $service_id,
-                "start" => $start,
-                "firstname" => $data->firstname,
-                "lastname" => $data->lastname,
-                "phone" => $data->phone,
-                "email" => $data->email,
-                "address" => $data->address,
-                "code" => $data->code,
-                "city" => $data->city,
-                "created_at" => date("Y-m-d H:i:s"),
-                "user_id" => $this->user->id,
-                "type" => $type == "backup" ? 1 : 0,
-            ]);
-        } catch (\Throwable $e) {
-            return false;
-        }
-
-        return $reservation;
+         $result = $this->database->transaction(function ($database) use ($uuid, $data, $type, $time) {
+            $start = $data->date . " " . $time;
+            $service_id = $data->service;
+            try {
+                $reservation = $this->database->table("reservations")->insert([
+                    "uuid" => $uuid,
+                    "service_id" => $service_id,
+                    "start" => $start,
+                    "firstname" => $data->firstname,
+                    "lastname" => $data->lastname,
+                    "phone" => $data->phone,
+                    "email" => $data->email,
+                    "address" => $data->address,
+                    "code" => $data->code,
+                    "city" => $data->city,
+                    "created_at" => date("Y-m-d H:i:s"),
+                    "user_id" => $this->user->id,
+                    "type" => $type == "backup" ? 1 : 0,
+                ]);
+                $this->payments->createPayment($reservation, $data->dicountCode);
+                return $reservation;
+            } catch (\Throwable $e) {
+                return false;
+            }
+        });
+        return $result;
     }
 
     /**
@@ -242,7 +236,8 @@ final class ReservationPresenter extends BasePresenter
      * @return void
      * @throws Exception If the service cannot be fetched from the database.
      */
-    private function setDate(string $u, int $service_id, string $day): void
+    private
+    function setDate(string $u, int $service_id, string $day): void
     {
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = $service->duration;
@@ -267,7 +262,8 @@ final class ReservationPresenter extends BasePresenter
      * @return void
      * @throws None
      */
-    private function verifyDiscountCode(int $user_id, int $service_id, string $discountCode): void
+    private
+    function verifyDiscountCode(int $user_id, int $service_id, string $discountCode): void
     {
         $discount = $this->discountCodes->isCodeValid($user_id, $service_id, $discountCode);
         $service = $this->discountCodes->getService(intval($service_id));
