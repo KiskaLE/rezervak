@@ -117,7 +117,7 @@ final class DiscountCodesPresenter extends SecurePresenter
             }
             $i++;
         }
-        $status = $this->database->transaction(function ($database) use ($uuid, $values, $show, $enabled) {
+        $status = $this->database->transaction(function ($database) use ($uuid, $values, $enabled) {
             $isSuccess = true;
             try {
                 $discountCode = $this->database->table("discount_codes")->insert([
