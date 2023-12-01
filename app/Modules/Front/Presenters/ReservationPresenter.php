@@ -88,38 +88,39 @@ final class ReservationPresenter extends BasePresenter
         $form = new Form;
         $form->addhidden("service")
             ->setRequired()
-            ->addRule(Form::PATTERN, 'Vybraná služba je neplatná', '\d+');
+            ->addRule($form::PATTERN, 'Vybraná služba je neplatná', '\d+');
         $form->addHidden("dateType")
             ->setRequired()
-            ->addRule(Form::PATTERN, 'Neplatný druh rezervace', 'default|backup');
+            ->addRule($form::PATTERN, 'Neplatný druh rezervace', 'default|backup');
         $form->addHidden("date")
             ->setRequired()
-            ->addRule(Form::PATTERN, 'Neplatný datum', '^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$');
+            ->addRule($form::PATTERN, 'Neplatný datum', '^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$');
         $form->addHidden("time")
             ->setRequired()
-            ->addRule(Form::PATTERN, 'Čas musí být číslo', '\d+');
+            ->addRule($form::PATTERN, 'Čas musí být číslo', '\d+');
         $form->addText("firstname", "Jmeno:")
             ->setRequired()
-            ->addCondition(Form::FILLED)
-            ->addRule(Form::PATTERN, 'Jméno nesmí obsahovat čísla', '\d+');
+            ->addCondition($form::FILLED)
+            ->addRule($form::PATTERN, 'Jméno nesmí obsahovat čísla', '^[a-zA-Z]+$');
         $form->addText("lastname", "Příjmení:")
             ->setRequired()
-            ->addCondition(Form::FILLED)
-            ->addRule(Form::PATTERN, 'Příjmení nesmí obsahovat čísla', '\d+');
+            ->addCondition($form::FILLED)
+            ->addRule($form::PATTERN, 'Příjmení nesmí obsahovat čísla', '^[a-zA-Z]+$');
         $form->addText("phone", "Telefon:")
-            ->setRequired();
+            ->setRequired()
+            ->addRule($form::PATTERN, 'Telefoní čílo není platný', '\d+');
         $form->addText("email", "E-mail:")
             ->setRequired()
-            ->addRule(Form::EMAIL, 'Neplatný formát e-mailu');
+            ->addRule($form::EMAIL, 'Neplatný formát e-mailu');
         $form->addText("address", "Adresa a čp:")
             ->setRequired();
         $form->addText("code", "PSČ:")
             ->setRequired()
-            ->addRule(Form::PATTERN, 'Neplatný formát PSČ', '^\d{5}$');
+            ->addRule($form::PATTERN, 'Neplatný formát PSČ', '^\d{5}$');
         $form->addText("city", "Město:")
             ->setRequired()
-            ->addCondition(Form::FILLED)
-            ->addRule(Form::PATTERN, 'Město nesmí obsahovat čísla', '\d+');
+            ->addCondition($form::FILLED)
+            ->addRule($form::PATTERN, 'Město nesmí obsahovat čísla', '^[a-zA-Z]+$');
 
         $form->addText("dicountCode", "Kód slevy:");
         $form->addSubmit("submit");
@@ -130,11 +131,6 @@ final class ReservationPresenter extends BasePresenter
 
     public function formSucceeded(Form $form, \stdClass $data): void
     {
-        if (!$form->isValid()) {
-            $this->flashMessage("Zadaná data nejsou správná.", "alert-danger");
-            $this->redirect("create");
-        }
-
         $session = $this->getSession('Reservation');
         $uuid = strval(Uuid::uuid4());
         $email = $data->email;
@@ -142,9 +138,9 @@ final class ReservationPresenter extends BasePresenter
         if ($data->dateType == "default") {
             $times = $session->availableTimes;
             $time = $times[$data->time];
-            if ($this->checkAvailability($this->user_uuid, $data->date, $data->service, $time)) {
+            if (!$this->checkAvailability($this->user_uuid, $data->date, $data->service, $time)) {
                 $this->flashMessage("Nepovedlo se vytvořit rezervaci. Termín je již obsazen", "alert-danger");
-                $this->redirect("create");
+                $this->redirect("create", $this->user_uuid);
             }
             $reservation = $this->insertReservation($uuid, $data, "default", $time);
             if ($reservation) {
@@ -161,9 +157,9 @@ final class ReservationPresenter extends BasePresenter
         } else if ($data->dateType == "backup") {
             $times = $session->availableBackupTimes;
             $time = $times[$data->time];
-            if ($this->checkAvailability($this->user_uuid, $data->date, $data->service, $time, "backup")) {
+            if (!$this->checkAvailability($this->user_uuid, $data->date, $data->service, $time, "backup")) {
                 $this->flashMessage("Nepovedlo se vytvořit rezervaci. Termín je již obsazen", "alert-danger");
-                $this->redirect("create");
+                $this->redirect("create", $this->user_uuid);
             }
             $reservation = $this->insertReservation($uuid, $data, "backup", $time);
             if ($reservation) {
@@ -193,6 +189,8 @@ final class ReservationPresenter extends BasePresenter
                 $available = $this->availableDates->getAvailableStartingHours($u, $date, intval($duration), intval($service_id));
                 break;
         }
+        bdump($available);
+        bdump($time);
         if (in_array($time, $available)) {
             return true;
         }
