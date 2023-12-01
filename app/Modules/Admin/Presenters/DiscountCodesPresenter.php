@@ -108,7 +108,6 @@ final class DiscountCodesPresenter extends SecurePresenter
     {
         $uuid = Uuid::uuid4();
         $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
-        $show = $values->active ? 1 : 0;
         $enabled = [];
         $i = 1;
         foreach ($services as $service) {
@@ -127,7 +126,7 @@ final class DiscountCodesPresenter extends SecurePresenter
                     "code" => $values->code,
                     "value" => $values->value,
                     "type" => $values->type,
-                    "active" => $show,
+                    "active" => 0,
                 ]);
                 foreach ($enabled as $row) {
                     $this->database->table("service2discount_code")->insert([
@@ -171,7 +170,6 @@ final class DiscountCodesPresenter extends SecurePresenter
     public function editFormSucceeded(Form $form, $values)
     {
         $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
-        $show = $values->active ? 1 : 0;
         $status = false;
         $enabled = [];
         $i = 1;
@@ -182,13 +180,12 @@ final class DiscountCodesPresenter extends SecurePresenter
             }
             $i++;
         }
-        $status = $this->database->transaction(function ($database) use ($values, $show, $enabled) {
+        $status = $this->database->transaction(function ($database) use ($values, $enabled) {
             $isSuccess = true;
             try {
                 $this->database->table("discount_codes")->where("id=?", $this->id)->update([
                     "code" => $values->code,
                     "value" => $values->value,
-                    "active" => $show
                 ]);
                 //add new services
                 foreach ($enabled as $row) {

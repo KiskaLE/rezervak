@@ -266,7 +266,7 @@ final class ReservationPresenter extends BasePresenter
     function verifyDiscountCode(int $user_id, int $service_id, string $discountCode): void
     {
         $discount = $this->discountCodes->isCodeValid($user_id, $service_id, $discountCode);
-        $service = $this->discountCodes->getService(intval($service_id));
+        $service = $this->discountCodes->getService($service_id);
         $price = $service->price;
         if ($discount) {
 
