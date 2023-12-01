@@ -22,14 +22,19 @@ final class Payments
      * @param string $discountCode (optional) The discount code.
      * @return void
      */
-    public function createPayment($reservation, string $discountCode = ""): void
+    public function createPayment($reservation, string $discountCode = ""): bool
     {
-        $user_id = $reservation->user_id;
-        $price = $this->createPrice($user_id, $reservation, $discountCode);
-        $this->database->table("payments")->insert([
-            "price" => $price,
-            "reservation_id" => $reservation->id
-        ]);
+        try {
+            $user_id = $reservation->user_id;
+            $price = $this->createPrice($user_id, $reservation, $discountCode);
+            $this->database->table("payments")->insert([
+                "price" => $price,
+                "reservation_id" => $reservation->id
+            ]);
+            return true;
+        } catch (\Throwable) {
+            return false;
+        }
 
     }
 
@@ -50,7 +55,7 @@ final class Payments
                 if ($discountValue >= 100) {
                     $price = 0;
                 } else {
-                    $price = $price * $discountValue / 100;
+                    $price = $price - $price * $discountValue / 100;
                 }
             }
         }
