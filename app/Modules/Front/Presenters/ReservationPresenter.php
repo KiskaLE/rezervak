@@ -16,8 +16,6 @@ use App\Modules\Moment;
 
 final class ReservationPresenter extends BasePresenter
 {
-
-    private $services;
     private $user_uuid;
     private $user;
     private $service;
@@ -39,14 +37,6 @@ final class ReservationPresenter extends BasePresenter
         parent::startup();
         $this->template->times = [];
         $this->template->backupTimes = [];
-
-
-    }
-
-
-    protected function beforeRender()
-    {
-        parent::beforeRender();
     }
 
     public function actionCreate($u, $run, $day, $service_id, $discountCode = "")
@@ -119,6 +109,8 @@ final class ReservationPresenter extends BasePresenter
 
     public function formSucceeded(Form $form,\stdClass $data): void
     {
+        $session = $this->getSession('Reservation');
+
         $service_id = $data->service;
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         $duration = intval($service->duration);
@@ -126,7 +118,8 @@ final class ReservationPresenter extends BasePresenter
         $email = $data->email;
 
         if ($data->dateType == "default") {
-            $times = $this->availableDates->getAvailableStartingHours($this->user_uuid ,$data->date, $duration, intval($service_id));
+            //$times = $this->availableDates->getAvailableStartingHours($this->user_uuid ,$data->date, $duration, intval($service_id));
+            $times = $session->availableTimes;
             $reservation = $this->insertReservation($uuid, $data, "default", $times);
             if ($reservation) {
                 $this->payments->createPayment($reservation, $data->dicountCode);
@@ -136,9 +129,9 @@ final class ReservationPresenter extends BasePresenter
                 $this->flashMessage("Nepovedlo se uložit rezervaci.", "alert-danger");
             }
         } else if ($data->dateType == "backup") {
-            $times = $this->availableDates->getBackupHours($this->user_uuid,$data->date, $service->duration, intval($service_id));
+            //$times = $this->availableDates->getBackupHours($this->user_uuid,$data->date, $service->duration, intval($service_id));
+            $times = $session->availableBackupTimes;
             $reservation = $this->insertReservation($uuid, $data, "backup", $times);
-            bdump($reservation);
             if ($reservation) {
                 $this->payments->createPayment($reservation, $data->dicountCode);
                 $this->mailer->sendBackupConfiramationMail($email, $this->link("Payment:backup", $uuid));
@@ -196,6 +189,12 @@ final class ReservationPresenter extends BasePresenter
         $duration = $service->duration;
         $availableTimes = $this->availableDates->getAvailableStartingHours($u, $day, intval($duration), intval($service_id));
         $availableBackup = $this->availableDates->getBackupHours($u ,$day, intval($duration), intval($service_id));
+
+        //store data in session
+        $session = $this->getSession('Reservation');
+        $session->availableTimes = $availableTimes;
+        $session->availableBackupTimes = $availableBackup;
+
         $this->template->times = $availableTimes;
         $this->template->backupTimes = $availableBackup;
         $this->redrawControl("content");
