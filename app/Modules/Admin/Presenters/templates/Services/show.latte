@@ -42,6 +42,23 @@
         {/foreach}
         </tbody>
         <!--/body-->
+        <!-- Paginator pages -->
+        <ul n:if="$paginator->getPageCount() > 1" class="pagination">
+
+            <li n:if="!$paginator->isFirst()">
+                <a n:href="show $paginator->getPage() - 1"><i class="entypo-left-open-mini"></i></a>
+            </li>
+
+
+            <li n:for="$i = max($paginator->getPage() - 2, 0); $i < min($paginator->getPageCount(), $paginator->getPage() + 2); $i++" class="{($i+1) == $paginator->getPage() ? 'active' : ''}">
+                <a n:href="show $i+1">{$i+1}</a>
+            </li>
+
+            <li n:if="!$paginator->isLast()">
+                <a n:href="show $paginator->getPage() + 1"><i class="entypo-right-open-mini"></i></a>
+            </li>
+        </ul>
+        <!-- /Paginator pages -->
     </table>
 
 </div>

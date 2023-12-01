@@ -28,4 +28,18 @@ class BasePresenter extends Presenter
         parent::beforeRender();
     }
 
+    private function handleBack($defaultRoute)
+    {
+        if ($this->backlink) {
+            try {
+                $this->restoreRequest($this->backlink);
+            } catch (InvalidLinkException $e) {
+                // Handle invalid backlink, log error or redirect to a default route
+                $this->redirect($defaultRoute);
+            }
+        } else {
+            $this->redirect($defaultRoute);
+        }
+    }
+
 }

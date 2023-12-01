@@ -442,5 +442,45 @@ input.valid {
     border-radius: 5px;
   }
 }
+@keyframes slideFromTop {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.fade-out {
+  animation: fadeOut 1.5s ease-in-out;
+}
+
+#flash-messages {
+  animation: slideFromTop 1.5s ease-in-out;
+  --width: 300px;
+  text-align: center;
+  width: var(--width);
+  position: fixed;
+  z-index: 1000;
+  top: 30px;
+  right: calc(50vw - var(--width) / 2);
+  padding: 15px;
+  margin-bottom: 17px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+}
+
+.alert-danger {
+  background-color: red;
+}
 
 /*# sourceMappingURL=styles.css.map */

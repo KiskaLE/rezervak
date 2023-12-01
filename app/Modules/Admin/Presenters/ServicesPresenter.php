@@ -34,9 +34,17 @@ final class ServicesPresenter extends SecurePresenter
         parent::beforeRender();
     }
 
-    public function actionShow()
+    public function actionShow(int $page = 1)
     {
-        $services = $this->database->table("services")->where("user_id", $this->user->id)->fetchAll();
+        $numberOfServices = $this->database->table("services")->where("user_id", $this->user->id)->count();
+        $paginator = new Nette\Utils\Paginator;
+        $paginator->setItemCount($numberOfServices);
+        $paginator->setItemsPerPage(10);
+        $paginator->setPage($page);
+
+        $this->template->paginator = $paginator;
+
+        $services = $this->database->table("services")->where("user_id", $this->user->id)->limit($paginator->getLength(), $paginator->getOffset())->fetchAll();
         $this->template->services = $services;
 
     }
@@ -426,14 +434,6 @@ final class ServicesPresenter extends SecurePresenter
         $this->redirect("Services:show");
 
         die("success");
-    }
-
-    public function handleBack($default)
-    {
-        if ($this->backlink) {
-            $this->restoreRequest($this->backlink);
-        }
-        $this->redirect($default);
     }
 
     public function handleDeleteCustomSchedule($cutomScheduleId)
