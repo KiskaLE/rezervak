@@ -141,7 +141,12 @@ final class ReservationPresenter extends BasePresenter
 
         if ($data->dateType == "default") {
             $times = $session->availableTimes;
-            $reservation = $this->insertReservation($uuid, $data, "default", $times);
+            $time = $times[$data->time];
+            if ($this->checkAvailability($this->user_uuid, $data->date, $data->service, $time)) {
+                $this->flashMessage("Nepovedlo se vytvořit rezervaci. Termín je již obsazen", "alert-danger");
+                $this->redirect("create");
+            }
+            $reservation = $this->insertReservation($uuid, $data, "default", $time);
             if ($reservation) {
                 $payment = $this->payments->createPayment($reservation, $data->dicountCode);
                 if ($payment) {
@@ -155,7 +160,12 @@ final class ReservationPresenter extends BasePresenter
             }
         } else if ($data->dateType == "backup") {
             $times = $session->availableBackupTimes;
-            $reservation = $this->insertReservation($uuid, $data, "backup", $times);
+            $time = $times[$data->time];
+            if ($this->checkAvailability($this->user_uuid, $data->date, $data->service, $time, "backup")) {
+                $this->flashMessage("Nepovedlo se vytvořit rezervaci. Termín je již obsazen", "alert-danger");
+                $this->redirect("create");
+            }
+            $reservation = $this->insertReservation($uuid, $data, "backup", $time);
             if ($reservation) {
                 $payment = $this->payments->createPayment($reservation, $data->dicountCode);
                 if ($payment) {
@@ -171,6 +181,24 @@ final class ReservationPresenter extends BasePresenter
         $this->redirect("create");
     }
 
+
+    private function checkAvailability(string $u, $date, $service_id, $time, $type = "default"): bool {
+        $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
+        $duration = $service->duration;
+        switch ($type) {
+            case "backup":
+                $available = $this->availableDates->getBackupHours($u, $date, intval($service->duration), intval($service_id));
+                break;
+            default:
+                $available = $this->availableDates->getAvailableStartingHours($u, $date, intval($duration), intval($service_id));
+                break;
+        }
+        if (in_array($time, $available)) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Inserts a reservation into the specified table.
      *
@@ -180,9 +208,9 @@ final class ReservationPresenter extends BasePresenter
      * @param array $times The array of available times.
      * @return mixed The inserted reservation data.
      */
-    private function insertReservation(string $uuid, $data, string $type, $times)
+    private function insertReservation(string $uuid, $data, string $type, $time)
     {
-        $start = $data->date . " " . $times[$data->time];
+        $start = $data->date . " " . $time;
         $service_id = $data->service;
 
         try {
