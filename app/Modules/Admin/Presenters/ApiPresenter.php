@@ -35,12 +35,12 @@ class ApiPresenter extends BasePresenter
     {
 
         $database = $this->database;
-        $admins = $this->database->table("users")
+        $admins = $database->table("users")
             ->where("role=?", "ADMIN")
             ->fetchAll();
         foreach ($admins as $admin) {
-            $database->transaction(function ($database) use ($admin) {
-                $settings = $admin->related("settings")->fetch();
+            $settings = $admin->related("settings")->fetch();
+            $database->transaction(function ($database) use ($admin, $settings) {
                 $yesterday = date("Y-m-d H:i:s", strtotime("-" . $settings->time_to_pay . " hours"));
                 //$yesterday = date("Y-m-d H:i:s", strtotime("-2" . " minutes"));
                 $database->query("DELETE FROM reservations_delated WHERE 1;");
@@ -63,8 +63,7 @@ class ApiPresenter extends BasePresenter
                 $duration = $backup->ref("services", "service_id")->duration;
                 $email = $backup->email;
                 $uuid = $backup->uuid;
-                if ($this->availableDates->isTimeAvailable($admin->uuid,$backup->start, $duration, intval($backup->service_id))) {
-                    dump("tst");
+                if ($this->availableDates->isTimeAvailable($admin->uuid, $backup->start, $duration, intval($backup->service_id)) && $this->availableDates->isTimeToPay($backup->start, $settings->time_to_pay)) {
                     $database->transaction(function ($database) use ($backup) {
                         $database->table("reservations")->where("id=?", $backup->id)->update(["type" => 0]);
                         //update reservation

@@ -17,7 +17,7 @@
                 <div class="select-wrapper">
                     {var $i = 0}
                     {foreach $services as $service}
-                        <div class="service-card {$i == 0%2 ? 'service-primary' : 'service-secondary'}">
+                        <div class="service-card service-primary}">
                             <div class="card-title"><h2>{$service->name}</h2></div>
                             <div class="card-text"><p>{$service->description}</p></div>
                             <div class="card-price"><span>{$service->price}</span><span> Kč</span></div>
@@ -76,13 +76,11 @@
                         </div>
                         <div class="time backup-time">
                             <h2 n:if="$backupTimes">Náhradní čas:</h2>
-                            <div>
                                 {var $j = 0}
                                     {foreach $backupTimes as $time}
                                     <p onclick="setTime({$j},'backup', {$time})" class="button secondary">{$time}</p>
                                     {do $j++}
                                 {/foreach}
-                            </div>
                         </div>
                     {/snippet}
 

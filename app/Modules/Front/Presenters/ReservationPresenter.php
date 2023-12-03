@@ -181,8 +181,6 @@ final class ReservationPresenter extends BasePresenter
                 $available = $this->availableDates->getAvailableStartingHours($u, $date, intval($duration), intval($service_id));
                 break;
         }
-        bdump($available);
-        bdump($time);
         if (in_array($time, $available)) {
             return true;
         }

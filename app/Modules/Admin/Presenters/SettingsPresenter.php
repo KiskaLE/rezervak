@@ -39,11 +39,28 @@ class SettingsPresenter extends SecurePresenter
     {
         $form = new Form;
 
-        $form->addText("sampleRate", "sample rate")->setHtmlAttribute("type", "number")->setDefaultValue($this->settings->sample_rate)->setRequired();
-        $form->addText("paymentInfo", "payment info")->setDefaultValue($this->settings->payment_info);
-        $form->addText("verificationTime", "time to verify reservation")->setHtmlAttribute("type", "number")->setDefaultValue($this->settings->verification_time)->setRequired();
-        $form->addText("numberOfDays", "number of days")->setHtmlAttribute("type", "number")->setDefaultValue($this->settings->number_of_days)->setRequired();
-        $form->addText("timeToPay", "time to pay")->setHtmlAttribute("type", "number")->setDefaultValue($this->settings->time_to_pay)->setRequired();
+        $form->addText("sampleRate", "sample rate")
+            ->setHtmlAttribute("type", "number")
+            ->setDefaultValue($this->settings->sample_rate)
+            ->setRequired("Zadejte čar rozdělení kalendáře")
+            ->addRule($form::Min, "Rozdělení kalendáře nesmí být méně než 1", 1);
+        $form->addText("paymentInfo", "payment info")
+            ->setDefaultValue($this->settings->payment_info);
+        $form->addText("verificationTime", "time to verify reservation")
+            ->setHtmlAttribute("type", "number")
+            ->setDefaultValue($this->settings->verification_time)
+            ->setRequired("Zadejte čas na ověrení rezervace")
+            ->addRule($form::Min, "Čas na ověření rezervace nesmí být méně než 1", 1);
+        $form->addText("numberOfDays", "number of days")
+            ->setHtmlAttribute("type", "number")
+            ->setDefaultValue($this->settings->number_of_days)
+            ->setRequired("Zadejte počet dní pro rezervování")
+            ->addRule($form::Min, "Počet dní pro rezervování nesmí být méně než 1", 1);
+        $form->addText("timeToPay", "time to pay")
+            ->setHtmlAttribute("type", "number")
+            ->setDefaultValue($this->settings->time_to_pay)
+            ->setRequired("Zadejte čas na zaplacení")
+            ->addRule($form::Min, "Čas na zaplacení nesmí být méně než 1", 1);
 
         $form->addSubmit("submit", "Uložit");
 
@@ -52,7 +69,8 @@ class SettingsPresenter extends SecurePresenter
         return $form;
     }
 
-    public function basicSettingsFormSucceeded(Form $form, $data) {
+    public function basicSettingsFormSucceeded(Form $form, $data)
+    {
 
         try {
             $this->database->table("settings")->where("user_id=?", $this->user->id)->update([
@@ -66,7 +84,7 @@ class SettingsPresenter extends SecurePresenter
         } catch (\Throwable $th) {
             $this->flashMessage("Nepodarilo se uložit změny!", "alert-danger");
         }
-            $this->redirect("this");
+        $this->redirect("this");
 
 
     }

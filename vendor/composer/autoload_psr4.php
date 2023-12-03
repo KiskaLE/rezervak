@@ -9,6 +9,9 @@ return array(
     'Symfony\\Thanks\\' => array($vendorDir . '/symfony/thanks/src'),
     'Ramsey\\Uuid\\' => array($vendorDir . '/ramsey/uuid/src'),
     'Ramsey\\Collection\\' => array($vendorDir . '/ramsey/collection/src'),
+    'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
+    'Moment\\' => array($vendorDir . '/fightbulc/moment/src'),
+    'Contributte\\FormMultiplier\\' => array($vendorDir . '/contributte/forms-multiplier/src'),
     'Brick\\Math\\' => array($vendorDir . '/brick/math/src'),
     'App\\' => array($baseDir . '/app'),
 );

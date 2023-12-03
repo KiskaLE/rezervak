@@ -7,7 +7,7 @@
   --secondary: rgb(29, 27, 39);
   --accent: rgb(107, 186, 163);
   --shadow: var(--primary) 0px 10px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
-  --shadow-secondary: var(--secondary) 0px 4px 12px;
+  --shadow-secondary: 0 1px 1px rgba(0, 0, 0, 0.11), 0 2px 2px rgba(0, 0, 0, 0.11), 0 4px 4px rgba(0, 0, 0, 0.11), 0 8px 8px rgba(0, 0, 0, 0.11), 0 16px 16px rgba(0, 0, 0, 0.11), 0 32px 32px rgba(0, 0, 0, 0.11);
   font-size: 16px;
 }
 
@@ -247,16 +247,6 @@ body {
   border-radius: 20px;
 }
 
-.backup-time {
-  display: flex;
-  flex-direction: column !important;
-  padding: 10px 0;
-}
-.backup-time div {
-  display: flex;
-  gap: 10px;
-}
-
 .time-wrapper {
   padding: 0 180px;
 }
@@ -265,13 +255,23 @@ body {
 }
 .time-wrapper .time {
   display: flex;
-  flex-flow: wrap;
+  flex-direction: column;
   gap: 10px;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
 }
 .time-wrapper .time p {
   height: fit-content;
+  width: 100%;
+}
+.time-wrapper .backup-time {
+  display: flex;
+  padding: 10px 0;
+}
+.time-wrapper .backup-time div {
+  display: flex;
+  gap: 10px;
 }
 
 .calender-wrapper {
@@ -342,9 +342,11 @@ input.valid {
 /* Service cards */
 .service-card {
   width: 100%;
+  box-sizing: border-box;
   padding: 40px;
   border-radius: 15px;
   max-width: 400px;
+  box-shadow: var(--shadow-secondary);
 }
 .service-card .card-title {
   margin-bottom: 25px;
@@ -473,14 +475,17 @@ input.valid {
   z-index: 1000;
   top: 30px;
   right: calc(50vw - var(--width) / 2);
-  padding: 15px;
-  margin-bottom: 17px;
-  border: 1px solid transparent;
-  border-radius: 3px;
+  border-radius: 4px;
+  padding: 10px 35px 10px 14px;
+  margin-bottom: 10px;
+  text-shadow: none;
+  background-color: #f2dede; /* Default background color */
+  border: 1px solid #ebccd1; /* Default border color */
+  color: #a94442; /* Default text color */
 }
 
 .alert-danger {
-  background-color: red;
+  background-color: rgba(255, 0, 0, 0.87);
 }
 
 /*# sourceMappingURL=styles.css.map */

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width">
     <link rel="icon" href="{$basePath}/assets/images/favicon.ico">
 
-    <title n:snippet="title">title</title>
+    <title n:snippet="title">{ifset title}{include title|stripHtml} | {/ifset}Rezervak</title>
     <!-- Neon -->
     <link rel="stylesheet" href="{$basePath}/assets/js/jquery-ui/css/no-theme/jquery-ui-1.10.3.custom.min.css">
     <link rel="stylesheet" href="{$basePath}/assets/css/font-icons/entypo/css/entypo.css">
@@ -40,8 +40,6 @@
 
     <![endif]-->
 
-
-    <title>{ifset title}{include title|stripHtml} | {/ifset}Nette Web</title>
 </head>
 
 <body class="page-body" data-url="http://neon.dev">

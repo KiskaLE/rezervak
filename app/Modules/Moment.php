@@ -9,6 +9,14 @@ class Moment
     public function __construct() 
     {}
 
+
+    public function getNowPrague()
+    {
+        $m = new \Moment\Moment("now");
+        $m->setTimezone('Europe/Prague');
+        return $m->format("Y-m-d H:i:s");
+    }
+
     /**
      * Converts a given time from a specified timezone to UTC.
      *

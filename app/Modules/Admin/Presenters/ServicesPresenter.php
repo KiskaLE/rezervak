@@ -278,16 +278,31 @@ final class ServicesPresenter extends SecurePresenter
 
 
         $form->addHidden("action");
-        $form->addText("name", "Name")->setRequired("Jméno je povinné");
-        $form->addTextArea("description", "Description")->setMaxLength(255)->setRequired("Popis je povinný");
-        $form->addText("duration", "Duration")->setHtmlAttribute("type", "number")->setRequired("Doba je povinná");
-        $form->addText("price", "Price")->setHtmlAttribute("type", "number")->setRequired("Cena je povinná");
+        $form->addText("name", "Name")
+            ->setRequired("Jméno je povinné")
+            ->addRule($form::PATTERN, "Jméno není platné", "^[a-zA-Z0-9 ]+$");
+        $form->addTextArea("description", "Description")
+            ->setMaxLength(255)
+            ->setRequired("Popis je povinný");
+        $form->addText("duration", "Duration")
+            ->setHtmlAttribute("type", "number")
+            ->setRequired("Doba je povinná")
+            ->addRule($form::Min, "Doba nesmí být menší než 1", 1);
+        $form->addText("price", "Price")
+            ->setHtmlAttribute("type", "number")
+            ->setRequired("Cena je povinná")
+            ->addRule($form::Min, "Cena nesmí být meně než 0", 0);
         $form->addCheckbox("customSchedule", "Custom Schedule")
             ->addCondition($form::Equal, true)
-            ->toggle('#servicesCustomFields');;
+            ->toggle('#servicesCustomFields');
 
-        $form->addText("range")->addConditionOn($form["customSchedule"], $form::Equal, true)->setRequired("Rozsah je povinný");
-        $form->addText("scheduleName")->addConditionOn($form["customSchedule"], $form::Equal, true)->setRequired("Název je povinný");
+        $form->addText("range")
+            ->addConditionOn($form["customSchedule"], $form::Equal, true)
+            ->setRequired("Rozsah je povinný");
+        $form->addText("scheduleName")
+            ->addConditionOn($form["customSchedule"], $form::Equal, true)
+            ->setRequired("Název je povinný")
+            ->addRule($form::PATTERN, "Název může obsahovat pouze znaky", "^[a-zA-Z0-9 ]+$");
 
         $multiplier = $form->addMultiplier("multiplier", function (Nette\Forms\Container $container, Nette\Forms\Form $form) {
             $container->addText("day", "text")
@@ -387,15 +402,16 @@ final class ServicesPresenter extends SecurePresenter
         $form = new Form;
         $form->addText("name", "Name")
             ->setDefaultValue($this->service->name)
-            ->setRequired();
+            ->setRequired("Jméno je povinné");
         $form->addTextArea("description", "Description")
             ->setDefaultValue($this->service->description)
             ->setMaxLength(255)
-            ->setRequired();
+            ->setRequired("Popis je povinny");
         $form->addText("price", "Price")
             ->setDefaultValue($this->service->price)
             ->setHtmlAttribute("type", "number")
-            ->setRequired();
+            ->setRequired("Cena je povinna")
+            ->addRule($form::Min, "Cena musí být větší než 0", 0);
         $form->addSubmit("submit", "Uložit");
 
         $form->onSuccess[] = [$this, "editFormSuccess"];

@@ -1,3 +1,4 @@
+{block title}Nastavení{/block}
 {block content}
 <div class="row page-header"><h1>Uživatel</h1></div>
 
@@ -61,8 +62,7 @@
                     <div class="">
                         <input n:name="sampleRate" class="form-control">
                         <span class="description">Zde zadejte v jakém intervalu se bude váš kalendář rozdělovat.</span>
-                        <span class="input-error" id="sampleRateError">Čas musí být větší než 0.</span>
-                    </div>
+                        <span class="input-error error" n:ifcontent>{inputError sampleRate}</span>
                 </div>
 
                 <div class="form-group">
@@ -70,7 +70,7 @@
 
                     <div class="">
                         <input n:name="paymentInfo" class="form-control">
-                        <span class="description">Zde zadejte číslo vašeho bankovního účtu.</span>
+                        <span class="input-error error" n:ifcontent>{inputError paymentInfo}</span>
                     </div>
                 </div>
 
@@ -80,8 +80,7 @@
                     <div class="">
                         <input n:name="verificationTime" class="form-control">
                         <span class="description">Zde zadejte dobu na ověření rezervace v minutách.</span>
-                        <span class="input-error"
-                              id="verificationTimeError">Čas musí být větší než 0.</span>
+                        <span class="input-error error" n:ifcontent>{inputError verificationTime}</span>
                     </div>
                 </div>
 
@@ -91,7 +90,7 @@
                     <div class="">
                         <input n:name="numberOfDays" class="form-control">
                         <span class="description">Zde zadejte kolik dní je možno rezervovat do budoucnosti.</span>
-                        <span class="input-error" id="numberOfDaysError">Čas musí být větší než 0.</span>
+                        <span class="input-error error" n:ifcontent>{inputError numberOfDays}</span>
                     </div>
                 </div>
 
@@ -101,7 +100,7 @@
                     <div class="">
                         <input n:name="timeToPay" class="form-control">
                         <span class="description">Zde zadejte čas v hodinách na zaplacení rezervace.</span>
-                        <span class="input-error" id="timeToPayError">Čas musí být větší než 0.</span>
+                        <span class="input-error error" n:ifcontent>{inputError timeToPay}</span>
                     </div>
                 </div>
                 <!--submit-->

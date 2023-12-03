@@ -58,7 +58,7 @@ class AvailableDates
     {
         $results = array();
         $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
-        $user_settings = $user->related("settings")->fetch();
+        $userSettings = $user->related("settings")->fetch();
         //customer
         $dayStart = $date . " 00:00:00";
         $dayEnd = $date . " 23:59:59";
@@ -68,32 +68,65 @@ class AvailableDates
             ->where("user_id=? AND start BETWEEN ? AND ? AND type=0 AND reservations.status='VERIFIED' AND service_id=?", [$user->id, $dayStart, $dayEnd, $service_id])
             ->where(":payments.status=0")
             ->fetchAll();
-
         foreach ($reservations as $row) {
+            $isAvailable = true;
             $rowStart = $row->start;
-            $rowDuration = $row->ref("services", "service_id")->duration;
 
-            $results[] = date("H:i", strtotime($rowStart));
-
-        }
-        $verificationTime = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i") . ' -' . $user_settings->verification_time . ' minutes'));
-        $unverifiedReservations = $this->database->table("reservations")->where("user_id=? AND start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? AND service_id=?", [$user->id, $dayStart, $dayEnd, $verificationTime, $service_id])->fetchAll();
-        foreach ($unverifiedReservations as $row) {
-            $rowStart = $row->start;
-            $rowDuration = $row->ref("services", "service_id")->duration;
-
-            if ($duration <= $rowDuration) {
+            if (!$this->checkIfPaymentIsPossibleToBePaid($row->start, $userSettings, $user)) {
+                $isAvailable = false;
+            }
+            if ($isAvailable) {
                 $results[] = date("H:i", strtotime($rowStart));
             }
         }
+        //get unverified reservations with same service that can be verified
+        $verificationTime = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i") . ' -' . $userSettings->verification_time . ' minutes'));
+        $unverifiedReservations = $this->database->table("reservations")->where("user_id=? AND start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? AND service_id=?", [$user->id, $dayStart, $dayEnd, $verificationTime, $service_id])->fetchAll();
+        //check if
+        foreach ($unverifiedReservations as $row) {
+            $isAvailable = true;
+            $rowStart = $row->start;
+            $rowDuration = $row->ref("services", "service_id")->duration;
 
+            if (!$this->checkIfPaymentIsPossibleToBePaid($row->start, $userSettings, $user)) {
+                $isAvailable = false;
+            }
+
+            if ($isAvailable) {
+                $results[] = date("H:i", strtotime($rowStart));
+            }
+        }
         //remove duplicates
         $results = array_unique($results);
 
         return $results;
     }
 
-    private function checkAvailability($start, $end, $duration, $interval, $workingHour)
+    private function checkIfPaymentIsPossibleToBePaid($timestamp, $userSettings, $user): bool
+    {
+        $now = date("Y-m-d H:i:s");
+        //get number of backup reservations
+        $numberOfBackupReservations = $this->getNumberOfBackupReservations($user, $userSettings, $timestamp);
+        $timeToPay = ($numberOfBackupReservations + 1) * $userSettings->time_to_pay;
+        $lastTimeToPay = date("Y-m-d H:i:s", strtotime($timestamp . ' -' . $timeToPay . ' hours'));
+
+        return $lastTimeToPay > $now;
+    }
+
+    private function getNumberOfBackupReservations($user, $userSettings, string $timestamp): int
+    {
+        $backupReservationsCount = $this->database->table("reservations")
+            ->where("user_id=? AND start=? AND type=1 AND status='VERIFIED'", [$user->id, $timestamp])
+            ->count();
+        $timeToVerify = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i") . ' -' . $userSettings->verification_time . ' minutes'));
+        $unverifiedReservationsCount = $this->database->table("reservations")
+            ->where("user_id=? AND start=? AND created_at > ? AND type=1 AND status='UNVERIFIED'", [$user->id, $timestamp, $timeToVerify])
+            ->count();
+        return $backupReservationsCount + $unverifiedReservationsCount;
+
+    }
+
+    private function checkAvailability($userSettings, $start, $end, $duration, $interval, $workingHour)
     {
         $availableTimes = array();
         $verifiedReservations = $this->database->table("reservations")->where("user_id=? AND start BETWEEN ? AND ? AND status='VERIFIED' AND type=0", [$this->user_id, $start, $end])->fetchAll();
@@ -112,6 +145,11 @@ class AvailableDates
         while ($start < $end) {
             $newReservationEnd = strtotime(date("Y-m-d H:i", $start) . " + " . $duration-1 . " minutes");
             $isAvailable = true;
+
+            //check if it is time to pay
+            if (!$this->isTimeToPay(date("Y-m-d H:i", $start), $userSettings)) {
+                $isAvailable = false;
+            }
 
             //exceptions
             if ($isAvailable) {
@@ -209,7 +247,7 @@ class AvailableDates
         return $availableTimes;
     }
 
-    private function getCustomScheduleAvailability($user, $schedule, $duration, $date, $service_id, $interval)
+    private function getCustomScheduleAvailability($userSettings, $schedule, $duration, $date, $service_id, $interval)
     {
         $result = array();
 
@@ -232,6 +270,12 @@ class AvailableDates
                 bdump(date("H:i", $start));
                 $isAvailable = true;
                 $newReservationEnd = strtotime(date("Y-m-d H:i", $start) . " + " . $duration-1 . " minutes");
+
+                //check if it is time to pay
+                if (!$this->isTimeToPay(date("Y-m-d H:i", $start), $userSettings)) {
+                    $isAvailable = false;
+                }
+
                 //exceptions
                 if ($isAvailable) {
                     foreach ($exceptions as $row) {
@@ -321,13 +365,14 @@ class AvailableDates
         $available = [];
 
         $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
-        $user_settings = $user->related("settings")->fetch();
+        $userSettings = $user->related("settings")->fetch();
         $this->user_id = $user->id;
-        $this->user_settings = $user_settings;
+        $this->user_settings = $userSettings;
         $service = $this->database->table("services")->get($service_id);
+
         if ($serviceCustomSchedules = $service->related("services_custom_schedules")->where("start <= ? AND end >= ?", [$date, $date])->fetchAll()) {
             foreach ($serviceCustomSchedules as $schedule) {
-                if ($results = $this->getCustomScheduleAvailability($user, $schedule, $duration, $date, $service_id, $user_settings->sample_rate)) {
+                if ($results = $this->getCustomScheduleAvailability($userSettings, $schedule, $duration, $date, $service_id, $userSettings->sample_rate)) {
                     foreach ($results as $result) {
                         $available[] = $result;
                     }
@@ -342,9 +387,8 @@ class AvailableDates
             $end = $date . " " . $workingHours->stop;
 
 
-            $available = $this->checkAvailability($start, $end, $duration, $user_settings->sample_rate, $workingHours);
+            $available = $this->checkAvailability($userSettings, $start, $end, $duration, $userSettings->sample_rate, $workingHours);
         }
-
         return $available;
     }
 
@@ -401,6 +445,23 @@ class AvailableDates
         }
         return $conflicts;
 
+    }
+
+    /**
+     * Determine if it is time to pay based on the start time and user settings.
+     *
+     * @param string $start The start time.
+     * @param mixed $userSettings The user settings.
+     * @return bool Returns `true` if it is time to pay, `false` otherwise.
+     */
+    public function isTimeToPay(string $start, $userSettings): bool
+    {
+        $now = date("Y-m-d H:i:s");
+        $lastTimeToPay = date("Y-m-d H:i:s", strtotime($start . ' -' . $userSettings->time_to_pay . ' hours'));
+        if ($now >= $lastTimeToPay) {
+            return false;
+        }
+        return true;
     }
 }
 

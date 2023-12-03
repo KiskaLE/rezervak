@@ -18,8 +18,9 @@
 
 <body>
 <div n:foreach="$flashes as $flash" n:class="flash, $flash->type"
-        id="flash-messages">{$flash->message}</div>
-<script src="{$basePath}/assets/admin/js/flashmessages.js"></script>
+        id="flash-messages">{$flash->message}
+</div>
+<!--<script src="{$basePath}/assets/admin/js/flashmessages.js"></script>-->
 <main class="body-container">{include content}</main>
 
 <footer>

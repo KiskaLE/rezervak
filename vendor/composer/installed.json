@@ -59,77 +59,134 @@
             "install-path": "../brick/math"
         },
         {
-            "name": "dibi/dibi",
-            "version": "v5.0.0",
-            "version_normalized": "5.0.0.0",
+            "name": "contributte/forms-multiplier",
+            "version": "v4.0.0",
+            "version_normalized": "4.0.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/dg/dibi.git",
-                "reference": "82c45c30763d1f3932907fea46ff27a594d7ba7e"
+                "url": "https://github.com/contributte/forms-multiplier.git",
+                "reference": "138d84aec011483eef136d9d4b2acb0b695e9874"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dg/dibi/zipball/82c45c30763d1f3932907fea46ff27a594d7ba7e",
-                "reference": "82c45c30763d1f3932907fea46ff27a594d7ba7e",
+                "url": "https://api.github.com/repos/contributte/forms-multiplier/zipball/138d84aec011483eef136d9d4b2acb0b695e9874",
+                "reference": "138d84aec011483eef136d9d4b2acb0b695e9874",
                 "shasum": ""
             },
             "require": {
-                "php": "8.0 - 8.3"
+                "nette/forms": "^3.1.0",
+                "php": ">=8.0"
             },
-            "replace": {
-                "dg/dibi": "*"
+            "conflict": {
+                "latte/latte": "<3.0.0"
             },
             "require-dev": {
-                "nette/di": "^3.1",
-                "nette/tester": "^2.5",
-                "phpstan/phpstan": "^1.0",
-                "tracy/tracy": "^2.9"
+                "codeception/codeception": "^4.1.9",
+                "codeception/module-asserts": "^1.3.1",
+                "codeception/module-phpbrowser": "^1.0.2",
+                "contributte/phpstan": "^0.1",
+                "contributte/qa": "^0.3",
+                "latte/latte": "^3.0.0",
+                "nette/application": "^3.1.11",
+                "nette/di": "^3.1.0",
+                "webchemistry/testing-helpers": "~2.0.0"
             },
-            "time": "2023-08-09T14:38:02+00:00",
+            "time": "2023-07-17T10:09:16+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.0-dev"
+                    "dev-master": "4.1.x-dev"
                 }
             },
             "installation-source": "dist",
             "autoload": {
-                "classmap": [
-                    "src/"
-                ]
+                "psr-4": {
+                    "Contributte\\FormMultiplier\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "Multiplier for nette forms",
+            "keywords": [
+                "Forms",
+                "contributte",
+                "multiplier",
+                "nette"
+            ],
+            "support": {
+                "issues": "https://github.com/contributte/forms-multiplier/issues",
+                "source": "https://github.com/contributte/forms-multiplier/tree/v4.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://contributte.org/partners.html",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/f3l1x",
+                    "type": "github"
+                }
+            ],
+            "install-path": "../contributte/forms-multiplier"
+        },
+        {
+            "name": "fightbulc/moment",
+            "version": "1.34",
+            "version_normalized": "1.34.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fightbulc/moment.php.git",
+                "reference": "c813018ff87dfe77353f838908fc644cc5536b50"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fightbulc/moment.php/zipball/c813018ff87dfe77353f838908fc644cc5536b50",
+                "reference": "c813018ff87dfe77353f838908fc644cc5536b50",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.36 || ^5.5 || ^6.5 || ^7.5 || ^9.0"
+            },
+            "time": "2023-01-26T21:18:59+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Moment\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-3-Clause",
-                "GPL-2.0-only",
-                "GPL-3.0-only"
+                "MIT"
             ],
             "authors": [
                 {
-                    "name": "David Grudl",
-                    "homepage": "https://davidgrudl.com"
+                    "name": "Tino Ehrich",
+                    "email": "tino@bigpun.me",
+                    "role": "developer"
                 }
             ],
-            "description": "Dibi is Database Abstraction Library for PHP",
-            "homepage": "https://dibiphp.com",
+            "description": "Parse, validate, manipulate, and display dates in PHP w/ i18n support. Inspired by moment.js",
             "keywords": [
-                "access",
-                "database",
-                "dbal",
-                "mssql",
-                "mysql",
-                "odbc",
-                "oracle",
-                "pdo",
-                "postgresql",
-                "sqlite",
-                "sqlsrv"
+                "date",
+                "display",
+                "format",
+                "i18n",
+                "locale",
+                "manipulate",
+                "moment",
+                "parse",
+                "time",
+                "translation",
+                "validate"
             ],
             "support": {
-                "issues": "https://github.com/dg/dibi/issues",
-                "source": "https://github.com/dg/dibi/tree/v5.0.0"
+                "issues": "https://github.com/fightbulc/moment.php/issues",
+                "source": "https://github.com/fightbulc/moment.php/tree/1.34"
             },
-            "install-path": "../dibi/dibi"
+            "install-path": "../fightbulc/moment"
         },
         {
             "name": "latte/latte",
@@ -1562,6 +1619,90 @@
                 "source": "https://github.com/nette/utils/tree/v4.0.2"
             },
             "install-path": "../nette/utils"
+        },
+        {
+            "name": "phpmailer/phpmailer",
+            "version": "v6.9.1",
+            "version_normalized": "6.9.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPMailer/PHPMailer.git",
+                "reference": "039de174cd9c17a8389754d3b877a2ed22743e18"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/039de174cd9c17a8389754d3b877a2ed22743e18",
+                "reference": "039de174cd9c17a8389754d3b877a2ed22743e18",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ctype": "*",
+                "ext-filter": "*",
+                "ext-hash": "*",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+                "doctrine/annotations": "^1.2.6 || ^1.13.3",
+                "php-parallel-lint/php-console-highlighter": "^1.0.0",
+                "php-parallel-lint/php-parallel-lint": "^1.3.2",
+                "phpcompatibility/php-compatibility": "^9.3.5",
+                "roave/security-advisories": "dev-latest",
+                "squizlabs/php_codesniffer": "^3.7.2",
+                "yoast/phpunit-polyfills": "^1.0.4"
+            },
+            "suggest": {
+                "decomplexity/SendOauth2": "Adapter for using XOAUTH2 authentication",
+                "ext-mbstring": "Needed to send email in multibyte encoding charset or decode encoded addresses",
+                "ext-openssl": "Needed for secure SMTP sending and DKIM signing",
+                "greew/oauth2-azure-provider": "Needed for Microsoft Azure XOAUTH2 authentication",
+                "hayageek/oauth2-yahoo": "Needed for Yahoo XOAUTH2 authentication",
+                "league/oauth2-google": "Needed for Google XOAUTH2 authentication",
+                "psr/log": "For optional PSR-3 debug logging",
+                "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)",
+                "thenetworg/oauth2-azure": "Needed for Microsoft XOAUTH2 authentication"
+            },
+            "time": "2023-11-25T22:23:28+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "PHPMailer\\PHPMailer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1-only"
+            ],
+            "authors": [
+                {
+                    "name": "Marcus Bointon",
+                    "email": "phpmailer@synchromedia.co.uk"
+                },
+                {
+                    "name": "Jim Jagielski",
+                    "email": "jimjag@gmail.com"
+                },
+                {
+                    "name": "Andy Prevost",
+                    "email": "codeworxtech@users.sourceforge.net"
+                },
+                {
+                    "name": "Brent R. Matzelle"
+                }
+            ],
+            "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
+            "support": {
+                "issues": "https://github.com/PHPMailer/PHPMailer/issues",
+                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.9.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Synchro",
+                    "type": "github"
+                }
+            ],
+            "install-path": "../phpmailer/phpmailer"
         },
         {
             "name": "ramsey/collection",

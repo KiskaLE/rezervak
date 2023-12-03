@@ -28,7 +28,7 @@ class BasePresenter extends Presenter
         parent::beforeRender();
     }
 
-    private function handleBack($defaultRoute)
+    public function handleBack($defaultRoute)
     {
         if ($this->backlink) {
             try {

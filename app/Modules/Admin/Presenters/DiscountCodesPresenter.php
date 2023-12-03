@@ -16,6 +16,7 @@ final class DiscountCodesPresenter extends SecurePresenter
 
     private $id;
     private $selectedServices;
+    private $discountCode;
 
     public function __construct(
         private Nette\Database\Explorer $database
@@ -29,10 +30,26 @@ final class DiscountCodesPresenter extends SecurePresenter
 
     }
 
-    public function actionShow()
+    public function actionShow(int $page = 1)
     {
-        $discountCodes = $this->database->table("discount_codes")->where("user_id=?", $this->user->id)->fetchAll();
+        $discountCodesCount = $this->database->table("discount_codes")
+            ->where("user_id=?", $this->user->id)
+            ->count();
+
+        $paginator = new Nette\Utils\Paginator;
+        $paginator->setItemCount($discountCodesCount);
+        $paginator->setItemsPerPage(10);
+        $paginator->setPage($page);
+
+        $discountCodes = $this->database->table("discount_codes")
+            ->where("user_id=?", $this->user->id)
+            ->limit($paginator->getLength(), $paginator->getOffset())
+            ->fetchAll();
         $this->template->discountCodes = $discountCodes;
+        $this->template->paginator = $paginator;
+
+
+
     }
 
     public function actionEdit(int $id)
@@ -43,6 +60,7 @@ final class DiscountCodesPresenter extends SecurePresenter
         $this->template->services = $services;
 
         $discountCode = $this->database->table("discount_codes")->where("id=?", $id)->fetch();
+        $this->discountCode = $discountCode;
         $services2discountCode = $discountCode->related("service2discount_code.discount_code_id")->fetchAll();
         $selectedServices = [];
         foreach ($services2discountCode as $row) {
@@ -89,9 +107,16 @@ final class DiscountCodesPresenter extends SecurePresenter
         $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
         $form = new Form;
         $form->addCheckbox("active", "Aktivní");
-        $form->addText("code", "Code")->setRequired();
-        $form->addSelect("type", "Typ", $types)->setRequired();
-        $form->addText("value", "Hodnota")->setHtmlAttribute("type", "number")->setRequired();
+        $form->addText("code", "Code")
+            ->setRequired("Zadejte slevový kód");
+        $form->addSelect("type", "Typ", $types)
+            ->setRequired("Vyberte typ slevy");
+        $form->addText("value", "Hodnota")
+            ->setHtmlAttribute("type", "number")
+            ->setRequired("Zadejte hodnotu slevy")
+            ->addRule($form::Min, "Hodnota musí být větší než 0", 1)
+            ->addConditionOn($form["type"], $form::Equal, 1)
+            ->addRule($form::Max, "Hodnota nesmí být větší než 100", 100);
         $i = 1;
         foreach ($services as $service) {
             $form->addCheckbox(strval("service" . $i), $service->name);
@@ -151,10 +176,17 @@ final class DiscountCodesPresenter extends SecurePresenter
     {
         $types = [0 => "Částka", 1 => "Procento"];
         $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
+        $type = $this->discountCode->type;
         $form = new Form;
         $form->addCheckbox("active", "Aktivní");
-        $form->addText("code", "Code")->setRequired();
-        $form->addText("value", "Hodnota")->setHtmlAttribute("type", "number")->setRequired();
+        $form->addText("code", "Code")
+            ->setRequired("Zadejte slevový kód");
+        $form->addText("value", "Hodnota")
+            ->setHtmlAttribute("type", "number")
+            ->setRequired("Zadejte hodnotu slevy")
+            ->addRule($form::Min, "Hodnota musí být větě než 0", 1)
+            ->addCondition($type == 1)
+            ->addRule($form::Max, "Hodnota nesmí být větě než 100", 100);
         $i = 1;
         foreach ($services as $service) {
             $form->addCheckbox(strval("service" . $i), $service->name);

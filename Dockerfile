@@ -8,6 +8,7 @@ RUN set --eux; \
     docker-php-ext-install mysqli && docker-php-ext-enable mysqli; \
     a2enmod rewrite
 # for mysqli if you want
+RUN apt-get update && apt-get install -y cron
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
