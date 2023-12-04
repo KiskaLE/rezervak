@@ -178,6 +178,13 @@ body {
   gap: 50px;
 }
 
+.services-grid {
+  display: grid;
+  grid-gap: 50px;
+  grid-template-columns: 1fr 1fr;
+
+}
+
 .info-form {
   display: flex;
   flex-direction: column;
@@ -448,7 +455,11 @@ input.valid {
   }
 }
 
-
+@media (max-width: 900px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+}
 
 
 @media (max-width: 500px) {
