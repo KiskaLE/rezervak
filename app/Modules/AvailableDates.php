@@ -348,7 +348,6 @@ class AvailableDates
                 $start = $start + $interval * 60;
             }
         }
-        bdump($result);
         return $result;
     }
 
@@ -456,7 +455,7 @@ class AvailableDates
      */
     public function isTimeToPay(string $start, $userSettings): bool
     {
-        $now = date("Y-m-d H:i:s");
+        $now = $this->moment->getNowPrague();
         $lastTimeToPay = date("Y-m-d H:i:s", strtotime($start . ' -' . $userSettings->time_to_pay . ' hours'));
         if ($now >= $lastTimeToPay) {
             return false;
