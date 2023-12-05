@@ -10,9 +10,18 @@
 
 
   --shadow: var(--primary) 0px 10px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
-  --shadow-secondary: 0 1px 1px rgba(0, 0, 0, 0.11), 0 2px 2px rgba(0, 0, 0, 0.11), 0 4px 4px rgba(0, 0, 0, 0.11), 0 8px 8px rgba(0, 0, 0, 0.11), 0 16px 16px rgba(0, 0, 0, 0.11), 0 32px 32px rgba(0, 0, 0, 0.11);
+  --shadow-secondary: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 
+  --radius: 27px;
   font-size: 16px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.text-center {
+  text-align: center;
 }
 
 .body-container {
@@ -29,12 +38,13 @@ p {
 
 .card {
   padding: 20px;
-  border-radius: 50px;
+  border-radius: var(--radius);
 }
 
 bold {
   font-weight: bold;
 }
+
 
 h1 {
   color: var(--primary);
@@ -47,12 +57,30 @@ h1 {
 
 body {
   font-family: "Jost", sans-serif;
-  font-family: "Source Code Pro", monospace;
   background-color: var(--background);
   margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.back {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 40px;
+  border: 1px solid rgba(94, 94, 94, 0.8);
+  border-radius: 25px;
+
+  img {
+    width: 28px;
+    color: var(--primary);
+  }
+}
+
+.back:hover {
+  background-color: rgba(139, 157, 248, 0.72);
 }
 
 .body-container {
@@ -66,7 +94,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  padding: 20px 20px;
 }
 
 .items-table {
@@ -95,7 +123,7 @@ body {
     height: 50px;
     width: 50px;
     border: var(--secondary) 3px solid;
-    border-radius: 50%;
+    border-radius: var(--radius);
     display: inline-block;
   }
 
@@ -114,8 +142,8 @@ body {
 }
 
 .reservationForm-wrapper {
-  display: flex;
-  flex-direction: column;
+
+  margin-top: 60px;
 
   h1 {
     text-align: center;
@@ -152,8 +180,6 @@ body {
 }
 
 .button:hover {
-  transform: translateY(-3px);
-  color: white;
 }
 
 .button.xl {
@@ -189,6 +215,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  padding: 50px;
+  box-shadow: var(--shadow-secondary);
+  border-radius: var(--radius);
 }
 
 .backup {
@@ -232,6 +261,75 @@ body {
   width: 100%;
 }
 
+
+.time-wrapper {
+  max-height: 345px;
+  overflow-y: scroll;
+
+  div {
+    div {
+      display: flex;
+    }
+  }
+
+  .time {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+
+    p {
+      text-align: center;
+    }
+  }
+
+  .backup-time {
+    display: flex;
+    padding: 10px 0;
+
+    div {
+      display: flex;
+      gap: 10px;
+    }
+  }
+}
+
+//calendar start
+
+.greyout {
+  filter: grayscale(100%);
+}
+
+.calendar-box {
+  display: flex;
+  box-shadow: var(--shadow-secondary);
+  padding: 50px;
+  border-radius: var(--radius);
+  gap: 40px;
+}
+
+.calender-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-date {
+
+
+}
+
+.calendar-times {
+  display: none;
+  padding-top: 173px;
+  height: 100px;
+  width: 150px;
+}
+
+
 .calendar-head {
   tr {
     border-bottom: 2px solid black;
@@ -253,6 +351,8 @@ body {
 }
 
 #calendar {
+  position: relative;
+
   th.weekend {
     color: red;
   }
@@ -278,54 +378,29 @@ body {
   }
 }
 
-
-.time-wrapper {
-  padding: 0 180px;
-
-  div {
-    div {
-      display: flex;
-    }
-  }
-
-  .time {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-
-    p {
-      height: fit-content;
-      width: 100%;
-    }
-  }
-
-  .backup-time {
-    display: flex;
-    padding: 10px 0;
-
-    div {
-      display: flex;
-      gap: 10px;
-    }
-  }
-}
-
-.calender-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
+//calendar end
 
 #recap {
+  box-shadow: var(--shadow-secondary);
+  padding: 50px;
+  border-radius: var(--radius);
   display: flex;
   flex-direction: column;
   gap: 10px;
 
+  img {
+    width: 30px;
+  }
+
+  #address::after {
+    content: ",";
+  }
+
   div {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
     h2 {
       font-size: 20px;
       margin: 0;
@@ -333,11 +408,16 @@ body {
 
     p {
       margin: 0;
+      font-size: 1.2rem;
     }
   }
 }
 
 .discount-code-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start !important;
+
   div {
     display: flex;
     gap: 10px;
@@ -345,6 +425,14 @@ body {
     .button {
       width: fit-content;
     }
+  }
+}
+
+.btn-secondary {
+  border: 2px solid var(--primary) !important;
+
+  p {
+    color: var(--primary) !important;
   }
 }
 
@@ -376,6 +464,7 @@ input.valid {
 /* Hide all steps by default: */
 .tab {
   display: none;
+  flex-direction: column;
 }
 
 /* Make circles that indicate the steps of the form: */
@@ -393,11 +482,13 @@ input.valid {
   width: 100%;
   box-sizing: border-box;
   padding: 40px;
-  border-radius: 15px;
+  border-radius: var(--radius);
   max-width: 400px;
   box-shadow: var(--shadow-secondary);
+
   .card-title {
     margin-bottom: 25px;
+
     h2 {
       font-size: 2.375rem;
       font-weight: bolder;
@@ -405,6 +496,7 @@ input.valid {
       margin: 0;
     }
   }
+
   .card-text {
     p {
       font-size: 1.263rem;
@@ -428,12 +520,14 @@ input.valid {
     align-items: center;
     cursor: pointer;
     transition: 300ms;
+
     span {
       font-size: 1.671rem;
       font-weight: bold;
       color: var(--text-light);
     }
   }
+
   .card-button:hover {
     transform: translateY(-3px);
     box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
@@ -449,6 +543,7 @@ input.valid {
 .service-secondary {
   background-color: var(--secondary);
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+
   p,
   h2 {
     color: white !important;
@@ -456,9 +551,48 @@ input.valid {
 }
 
 @media (max-width: 900px) {
+
+  #recap {
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .calendar-box {
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .info-form {
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .back {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+  }
+
   .services-grid {
     grid-template-columns: 1fr;
   }
+
+  .calendar-times {
+    padding-top: 0;
+
+    .time-wrapper {
+      height: fit-content;
+      overflow-y: unset
+
+    }
+  }
+
+  .calendar-times {
+    height: fit-content;
+    width: 80vw;
+  }
+
+
 }
 
 
@@ -467,19 +601,20 @@ input.valid {
   .service-card {
     width: 100%;
   }
-  
-  .time {
-    flex-direction: column;
-  }
 
   .time-wrapper {
     padding: 0;
+
   }
 
   .select-wrapper {
     flex-direction: column;
 
     gap: 30px;
+
+    p {
+      width: 100% !important;
+    }
   }
   .backup-time {
     flex-direction: column;
@@ -494,9 +629,7 @@ input.valid {
     box-sizing: border-box;
   }
 
-  .tab {
-    width: 90vw;
-  }
+  //calendar start
 
   #calendar-nav {
     justify-content: center;
@@ -516,6 +649,8 @@ input.valid {
     }
   }
 }
+
+//calendar end
 
 //flash messages
 @keyframes slideFromTop {
@@ -564,4 +699,5 @@ input.valid {
 .alert-danger {
   background-color: rgba(255, 0, 0, 0.87);
 }
+
 //flash messages end

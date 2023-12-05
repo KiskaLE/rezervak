@@ -7,8 +7,17 @@
   --secondary: rgb(29, 27, 39);
   --accent: rgb(107, 186, 163);
   --shadow: var(--primary) 0px 10px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
-  --shadow-secondary: 0 1px 1px rgba(0, 0, 0, 0.11), 0 2px 2px rgba(0, 0, 0, 0.11), 0 4px 4px rgba(0, 0, 0, 0.11), 0 8px 8px rgba(0, 0, 0, 0.11), 0 16px 16px rgba(0, 0, 0, 0.11), 0 32px 32px rgba(0, 0, 0, 0.11);
+    --shadow-secondary: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+    --radius: 27px;
   font-size: 16px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center;
 }
 
 .body-container {
@@ -25,7 +34,7 @@ p {
 
 .card {
   padding: 20px;
-  border-radius: 50px;
+    border-radius: var(--radius);
 }
 
 bold {
@@ -42,12 +51,30 @@ h1 {
 
 body {
   font-family: "Jost", sans-serif;
-  font-family: "Source Code Pro", monospace;
   background-color: var(--background);
   margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.back {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 40px;
+    border: 1px solid rgba(94, 94, 94, 0.8);
+    border-radius: 25px;
+}
+
+.back img {
+    width: 28px;
+    color: var(--primary);
+}
+
+.back:hover {
+    background-color: rgba(139, 157, 248, 0.72);
 }
 
 .body-container {
@@ -61,7 +88,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+    padding: 20px 20px;
 }
 
 .items-table {
@@ -88,7 +115,7 @@ body {
   height: 50px;
   width: 50px;
   border: var(--secondary) 3px solid;
-  border-radius: 50%;
+    border-radius: var(--radius);
   display: inline-block;
 }
 #reservation-steps .step.active {
@@ -104,8 +131,7 @@ body {
 }
 
 .reservationForm-wrapper {
-  display: flex;
-  flex-direction: column;
+    margin-top: 60px;
 }
 .reservationForm-wrapper h1 {
   text-align: center;
@@ -136,11 +162,6 @@ body {
   transition-duration: 300ms;
   cursor: pointer;
   margin: 0;
-}
-
-.button:hover {
-  transform: translateY(-3px);
-  color: white;
 }
 
 .button.xl {
@@ -174,6 +195,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
+    padding: 50px;
+    box-shadow: var(--shadow-secondary);
+    border-radius: var(--radius);
 }
 
 .backup {
@@ -217,6 +241,64 @@ body {
   width: 100%;
 }
 
+.time-wrapper {
+    max-height: 345px;
+    overflow-y: scroll;
+}
+
+.time-wrapper div div {
+    display: flex;
+}
+
+.time-wrapper .time {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.time-wrapper .time p {
+    text-align: center;
+}
+
+.time-wrapper .backup-time {
+    display: flex;
+    padding: 10px 0;
+}
+
+.time-wrapper .backup-time div {
+    display: flex;
+    gap: 10px;
+}
+
+.greyout {
+    filter: grayscale(100%);
+}
+
+.calendar-box {
+    display: flex;
+    box-shadow: var(--shadow-secondary);
+    padding: 50px;
+    border-radius: var(--radius);
+    gap: 40px;
+}
+
+.calender-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendar-times {
+    display: none;
+    padding-top: 173px;
+    height: 100px;
+    width: 150px;
+}
+
 .calendar-head tr {
   border-bottom: 2px solid black;
 }
@@ -233,6 +315,9 @@ body {
   text-align: center;
 }
 
+#calendar {
+    position: relative;
+}
 #calendar th.weekend {
   color: red;
 }
@@ -253,44 +338,27 @@ body {
   border-radius: 20px;
 }
 
-.time-wrapper {
-  padding: 0 180px;
-}
-.time-wrapper div div {
-  display: flex;
-}
-.time-wrapper .time {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-}
-.time-wrapper .time p {
-  height: fit-content;
-  width: 100%;
-}
-.time-wrapper .backup-time {
-  display: flex;
-  padding: 10px 0;
-}
-.time-wrapper .backup-time div {
-  display: flex;
-  gap: 10px;
-}
-
-.calender-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
 #recap {
+    box-shadow: var(--shadow-secondary);
+    padding: 50px;
+    border-radius: var(--radius);
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+#recap img {
+    width: 30px;
+}
+
+#recap #address::after {
+    content: ",";
+}
+
+#recap div {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 #recap div h2 {
   font-size: 20px;
@@ -298,14 +366,28 @@ body {
 }
 #recap div p {
   margin: 0;
+    font-size: 1.2rem;
 }
 
+.discount-code-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start !important;
+}
 .discount-code-wrapper div {
   display: flex;
   gap: 10px;
 }
 .discount-code-wrapper div .button {
   width: fit-content;
+}
+
+.btn-secondary {
+    border: 2px solid var(--primary) !important;
+}
+
+.btn-secondary p {
+    color: var(--primary) !important;
 }
 
 footer {
@@ -336,6 +418,7 @@ input.valid {
 /* Hide all steps by default: */
 .tab {
   display: none;
+    flex-direction: column;
 }
 
 /* Make circles that indicate the steps of the form: */
@@ -350,7 +433,7 @@ input.valid {
   width: 100%;
   box-sizing: border-box;
   padding: 40px;
-  border-radius: 15px;
+    border-radius: var(--radius);
   max-width: 400px;
   box-shadow: var(--shadow-secondary);
 }
@@ -409,16 +492,48 @@ input.valid {
 }
 
 @media (max-width: 900px) {
+    #recap {
+        box-shadow: none;
+        padding: 0;
+    }
+
+    .calendar-box {
+        box-shadow: none;
+        padding: 0;
+    }
+
+    .info-form {
+        box-shadow: none;
+        padding: 0;
+    }
+
+    .back {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+    }
+
     .services-grid {
         grid-template-columns: 1fr;
+    }
+
+    .calendar-times {
+        padding-top: 0;
+    }
+
+    .calendar-times .time-wrapper {
+        height: fit-content;
+        overflow-y: unset;
+    }
+
+    .calendar-times {
+        height: fit-content;
+        width: 80vw;
     }
 }
 @media (max-width: 500px) {
   .service-card {
     width: 100%;
-  }
-  .time {
-    flex-direction: column;
   }
   .time-wrapper {
     padding: 0;
@@ -427,6 +542,10 @@ input.valid {
     flex-direction: column;
     gap: 30px;
   }
+
+    .select-wrapper p {
+        width: 100% !important;
+    }
   .backup-time {
     flex-direction: column;
   }
@@ -437,9 +556,6 @@ input.valid {
   .button {
     width: 100%;
     box-sizing: border-box;
-  }
-  .tab {
-    width: 90vw;
   }
   #calendar-nav {
     justify-content: center;

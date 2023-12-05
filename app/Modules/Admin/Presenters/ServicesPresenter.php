@@ -279,8 +279,7 @@ final class ServicesPresenter extends SecurePresenter
 
         $form->addHidden("action");
         $form->addText("name", "Name")
-            ->setRequired("Jméno je povinné")
-            ->addRule($form::PATTERN, "Jméno není platné", "^[a-zA-Z0-9 ]+$");
+            ->setRequired("Jméno je povinné");
         $form->addTextArea("description", "Description")
             ->setMaxLength(255)
             ->setRequired("Popis je povinný");

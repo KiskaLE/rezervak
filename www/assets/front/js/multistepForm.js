@@ -5,20 +5,19 @@ let showMonth = new Date().getMonth();
 let showYear = new Date().getFullYear();
 let address = new URL(window.location.href);
 let searchParams = address.searchParams;
-getCustomerTimezone();
-generateTimezones()
 
 
 function showTab(n) {
     // This function will display the specified tab of the form ...
     let x = document.getElementsByClassName("tab");
-    x[n].style.display = "block";
+    x[n].style.display = "flex";
+
     // ... and fix the Previous/Next buttons:
     document.getElementById("prevBtn").style.display = "none";
     if (n == 0) {
         document.getElementById("prevBtn").style.display = "none";
     }
-    if (n < 3) {
+    if (n < 2) {
         document.getElementById("nextBtn").style.display = "none";
     } else {
         // document.getElementById("prevBtn").style.display = "inline";
@@ -41,7 +40,7 @@ function showTab(n) {
         setRecap()
     }
     //render calendar
-    if (currentTab == "1") {
+    if (currentTab == 1) {
         createCalendar(showMonth, showYear);
     }
 
@@ -195,7 +194,7 @@ async function createRecap() {
 function setRecap() {
     let data = document.querySelectorAll(".multiform")
     for (let i = 0; i < data.length; i++) {
-        if (data[i].name == "service" || data[i].name == "time" || data[i].name == "dateType") {
+        if (data[i].name == "service" || data[i].name == "time" || data[i].name == "dateType" || data[i].name == "date") {
             continue
         }
         document.querySelector("#" + data[i].name).innerHTML = data[i].value
@@ -243,12 +242,12 @@ function getOption(name, number) {
 }
 
 
-function changeDay() {
+async function changeDay() {
     const button = document.querySelector("#load-day");
     const day = document.querySelector("[name='date']").value;
     const service = document.querySelector("[name='service']").value;
     let naja = window.Naja;
-    naja.makeRequest("GET", "/reservation/create", {
+    await naja.makeRequest("GET", "/reservation/create", {
         u: searchParams.get("u"),
         run: "setDate",
         day: day,
@@ -258,15 +257,50 @@ function changeDay() {
             credentials: 'include',
         },
     })
+    let time = day.split("-");
+    const timesTitle = document.querySelector("#calendar-selected-date")
+    timesTitle.innerHTML = time[2] + "." + time[1] + "." + time[0];
+
+    //set recap
+    const date = document.getElementById("date")
+    date.innerHTML = time[2] + "." + time[1] + "." + time[0];
+    if (window.innerWidth > 900) {
+        const box = document.querySelector(".calendar-times");
+        box.style.display = "block";
+    } else {
+        toggleCalendarTimes();
+    }
 }
 
+function toggleCalendarTimes() {
+    const calendar = document.querySelector(".calendar-date")
+    const times = document.querySelector(".calendar-times")
+    const back = document.querySelector("#times-back")
+    if (times.style.display == "none") {
+        back.classList.remove("hidden")
+        calendar.style.display = "none";
+        times.style.display = "block";
+    } else {
+        back.classList.add("hidden")
+        calendar.style.display = "block";
+        times.style.display = "none";
+    }
+}
+
+
 function setService(id, name, price) {
-    document.querySelector("[name='service']").value = id;
-    const recap = document.querySelector("#service");
-    ;
-    recap.innerHTML = name;
-    document.querySelector("#price").innerHTML = price;
-    nextPrev(1);
+    if (document.readyState === "complete") {
+        // Fully loaded!
+        document.querySelector("[name='service']").value = id;
+        const recap = document.querySelector("#service");
+        const box = document.querySelector(".calendar-times");
+        box.style.display = "none";
+
+        recap.innerHTML = name;
+        document.querySelector("#price").innerHTML = price;
+        nextPrev(1);
+    }
+
 }
 
 function setTime(id, type, time) {
@@ -292,6 +326,30 @@ function calNext(n) {
 }
 
 async function createCalendar(month, year) {
+    const spinner = new mojs.Shape({
+        parent: '#calendar',
+        shape: 'circle',
+        stroke: '#918d91',
+        strokeDasharray: '125, 125',
+        strokeDashoffset: {'0': '-125'},
+        strokeWidth: 7,
+        fill: 'none',
+        rotate: {'-90': '270'},
+        radius: 30,
+        isShowStart: false,
+        duration: 500,
+        easing: 'back.in',
+    })
+        .then({
+            rotate: {'-90': '270'},
+            strokeDashoffset: {'-125': '-250'},
+            duration: 3000,
+            easing: 'cubic.out',
+            repeat: 1000,
+        });
+
+    spinner.play();
+
     const container = document.querySelector("#calendar");
     const calendarTitle = document.querySelector("#calendar-month")
     const curDate = new Date();
@@ -301,7 +359,7 @@ async function createCalendar(month, year) {
     const availableDays = await getAvailableDays();
 
     calendarTitle.innerHTML = "";
-    container.innerHTML = "";
+    container.innerHTML = ""
     let curMonthName = "";
     switch (month) {
         case 0:
@@ -378,7 +436,7 @@ async function createCalendar(month, year) {
             th.className += " available"
             th.addEventListener("click", () => {
                 document.querySelector("[name='date']").value = date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0');
-                nextPrev(1);
+                changeDay();
             });
         }
         days.push(th);
@@ -397,7 +455,8 @@ async function createCalendar(month, year) {
             container.appendChild(week);
         }
     }
-    ;
+    spinner.stop();
+
 
     function getDayIndexMondaySunday(date) {
         return date.getDay() === 0 ? 6 : date.getDay() - 1
@@ -453,3 +512,5 @@ async function verify() {
     }
 
 }
+
+

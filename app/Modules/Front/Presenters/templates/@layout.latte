@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="icon" href="{$basePath}/assets/images/favicon.ico">
     <link rel="stylesheet" href="{$basePath}/assets/front/css/styles.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -10,10 +10,7 @@
     <script src="{$basePath}/assets/js/jquery-1.11.3.min.js"></script>
 
 
-    <title>Neon | Dashboard</title>
-
-
-    <title>{ifset title}{include title|stripHtml} | {/ifset}Nette Web</title>
+    <title>{ifset title}{include title|stripHtml} | {/ifset}Rezervák</title>
 </head>
 
 <body>
@@ -29,6 +26,7 @@
 
 {block scripts}
     <script src="https://unpkg.com/nette-forms@3/src/assets/netteForms.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mojs/core"></script>
 
 {/block}
 
