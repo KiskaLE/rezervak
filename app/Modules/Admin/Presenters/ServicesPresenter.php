@@ -9,6 +9,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use Ramsey\Uuid\Uuid;
 use App\Modules\Formater;
+use App\Modules\AvailableDates;
 
 
 final class ServicesPresenter extends SecurePresenter
@@ -23,7 +24,8 @@ final class ServicesPresenter extends SecurePresenter
     public function __construct(
         private Nette\Database\Explorer $database,
         private Nette\Security\User     $user,
-        private Formater                $formater
+        private Formater       $formater,
+        private AvailableDates $availableDates
     )
     {
 
@@ -49,6 +51,27 @@ final class ServicesPresenter extends SecurePresenter
 
     }
 
+    public function actionShowCustomSchedulesConflicts($id, $backlink, $page = 1)
+    {
+        $this->backlink = $backlink;
+        $customSchedule = $this->database->table("services_custom_schedules")->where("uuid=?", $id)->fetch();
+        $service = $customSchedule->ref("services", "service_id");
+
+        $reservations = $this->availableDates->getCustomSchedulesConflicts($service, $customSchedule);
+        $numberOfReservations = count($reservations);
+
+        $paginator = $this->createPagitator($numberOfReservations, $page, 10);
+
+        $this->template->reservations = array_slice($reservations, $paginator->getOffset(), $paginator->getLength());
+
+        $this->template->paginator = $paginator;
+        $this->template->backlink = $this->backlink;
+        $this->template->curBacklink = $this->storeRequest();
+        $this->template->id = $id;
+
+
+    }
+
     public function actionEdit($id)
     {
         $this->id = $id;
@@ -61,6 +84,9 @@ final class ServicesPresenter extends SecurePresenter
 
         $this->backlink = $this->storeRequest();
         $this->template->backlink = $this->backlink;
+
+        //custom schedule conflicts
+        $this->template->customScheduleConflicts = $this->availableDates->getCustomSchedulesConflictsIds($service);
 
     }
 
@@ -281,7 +307,7 @@ final class ServicesPresenter extends SecurePresenter
         $form->addText("name", "Name")
             ->setRequired("Jméno je povinné");
         $form->addTextArea("description", "Description")
-            ->setMaxLength(255)
+            ->setMaxLength(100)
             ->setRequired("Popis je povinný");
         $form->addText("duration", "Duration")
             ->setHtmlAttribute("type", "number")
@@ -404,7 +430,7 @@ final class ServicesPresenter extends SecurePresenter
             ->setRequired("Jméno je povinné");
         $form->addTextArea("description", "Description")
             ->setDefaultValue($this->service->description)
-            ->setMaxLength(255)
+            ->setMaxLength(100)
             ->setRequired("Popis je povinny");
         $form->addText("price", "Price")
             ->setDefaultValue($this->service->price)

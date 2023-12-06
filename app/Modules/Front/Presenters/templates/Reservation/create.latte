@@ -20,7 +20,7 @@
                 <div class="select-wrapper services-grid">
                     {var $i = 0}
                     {foreach $services as $service}
-                        <div class="service-card service-primary}">
+                        <div class="service-card service-primary">
                             <div class="card-title"><h2>{$service->name}</h2></div>
                             <div class="card-text"><p>{$service->description}</p></div>
                             <div class="card-price"><span>{$service->price}</span><span> Kč</span></div>
@@ -46,12 +46,12 @@
                         <div class="calender-wrapper">
                             <table>
                                 <div id="calendar-nav"><img
-                                            src="{$basePath}/assets/front/icons/arrow-prev-small-svgrepo-com.svg"
-                                            alt="previous"
+                                            src="{$basePath}/assets/front/icons/arrow-calendar-left.svg"
+                                            alt="předchozí měsíc"
                                             onclick="calNext(-1)" id="prev-month">
                                     <h2 id="calendar-month"></h2><img
-                                            src="{$basePath}/assets/front/icons/arrow-next-small-svgrepo-com.svg"
-                                            alt="next"
+                                            src="{$basePath}/assets/front/icons/arrow-calendar-right.svg"
+                                            alt="další měsíc"
                                             onclick="calNext(1)" id="next-month"></div>
                                 <thead class="calendar-head">
                                 <tr>

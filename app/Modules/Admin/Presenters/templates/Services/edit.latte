@@ -90,7 +90,9 @@
             <th><a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="editCustomSchedule $customSchedule->uuid, $backlink"><i
                             class="entypo-pencil"></i>Upravit</a>
                 <a onclick="deleteServiceCustomSchedule(event)" class="btn btn-danger btn-sm btn-icon icon-left" n:href="deleteCustomSchedule! $customSchedule->uuid"><i
-                            class="entypo-pencil"></i>Smazat</a>
+                            class="entypo-trash"></i>Smazat</a>
+                <a n:if="in_array($customSchedule->id, $customScheduleConflicts)" class="btn btn-danger btn-sm btn-icon icon-left ajax" n:href="showCustomSchedulesConflicts $customSchedule->uuid, $backlink"><i
+                            class="entypo-eye"></i>Konflikt</a>
             </th>
         </tr>
         </tbody>

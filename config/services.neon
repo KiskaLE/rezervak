@@ -8,7 +8,7 @@ services:
 	- App\Modules\Moment
 	- App\Modules\Admin\Presenters\ApiPresenter
 	- App\Modules\Formater
-	phpMailer: PHPMailer\PHPMailer\PHPMailer
+	- PHPMailer\PHPMailer\PHPMailer(true)
 
 	nette.latteFactory:
 	    setup:

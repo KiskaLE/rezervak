@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db:3306
--- Generation Time: Dec 01, 2023 at 12:37 PM
+-- Generation Time: Dec 06, 2023 at 07:18 AM
 -- Server version: 8.2.0
 -- PHP Version: 8.2.12
 
@@ -139,7 +139,7 @@ CREATE TABLE `services` (
                             `id` int NOT NULL,
                             `user_id` int NOT NULL,
                             `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
-                            `description` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
+                            `description` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
                             `price` int NOT NULL,
                             `duration` int NOT NULL,
                             `hidden` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1-hidden\r\n0-visible',

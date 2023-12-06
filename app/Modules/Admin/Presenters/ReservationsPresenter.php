@@ -30,17 +30,15 @@ final class ReservationsPresenter extends SecurePresenter
 
     public function actionShow(int $page = 1)
     {
-        $numberOfResrvations = $this->database->table('reservations')
+        $numberOfReservations = $this->database->table('reservations')
             ->select('reservations.*',)
             ->where('reservations.status=?', 'VERIFIED')
             ->where("reservations.type=?", 0)
             ->where('user_id=?', $this->user->id)
             ->where(':payments.status=?', 1)->count();
 
-        $paginator = new Nette\Utils\Paginator;
-        $paginator->setItemCount($numberOfResrvations);
-        $paginator->setItemsPerPage(10);
-        $paginator->setPage($page);
+        $paginator = $this->createPagitator($numberOfReservations, $page, 10);
+
 
         $reservations = $this->database->table('reservations')
             ->select('reservations.*',)

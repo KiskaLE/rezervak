@@ -7,7 +7,7 @@ let address = new URL(window.location.href);
 let searchParams = address.searchParams;
 
 
-function showTab(n) {
+async function showTab(n) {
     // This function will display the specified tab of the form ...
     let x = document.getElementsByClassName("tab");
     x[n].style.display = "flex";
@@ -37,21 +37,21 @@ function showTab(n) {
     }
     //render recap
     if (currentTab >= x.length - 1) {
-        setRecap()
+        await setRecap()
     }
     //render calendar
     if (currentTab == 1) {
-        createCalendar(showMonth, showYear);
+        await createCalendar(showMonth, showYear);
     }
 
     // ... and run a function that displays the correct step indicator:
     if (n == 2) {
-        changeDay();
+        await changeDay();
     }
     fixStepIndicator(n)
 }
 
-function nextPrev(n) {
+async function nextPrev(n) {
     // This function will figure out which tab to display
     let x = document.getElementsByClassName("tab");
     // Exit the function if any field in the current tab is invalid:
@@ -68,11 +68,11 @@ function nextPrev(n) {
     }
 
     // Otherwise, display the correct tab:
-    showTab(currentTab);
+    await showTab(currentTab);
     tabCounter++;
 }
 
-function goToTab(n) {
+async function goToTab(n) {
     let x = document.getElementsByClassName("tab");
     // activeted tabs
     const tabs = document.querySelectorAll(".step")
@@ -80,7 +80,7 @@ function goToTab(n) {
     if (n < currentTab) {
         x[currentTab].style.display = "none";
         currentTab = n;
-        showTab(currentTab);
+        await showTab(currentTab);
     }
     //remove active from tabs berore active tab
     for (let i = 0; i < tabs.length; i++) {
@@ -280,6 +280,7 @@ function toggleCalendarTimes() {
         back.classList.remove("hidden")
         calendar.style.display = "none";
         times.style.display = "block";
+        removeDaySelected();
     } else {
         back.classList.add("hidden")
         calendar.style.display = "block";
@@ -436,6 +437,8 @@ async function createCalendar(month, year) {
             th.className += " available"
             th.addEventListener("click", () => {
                 document.querySelector("[name='date']").value = date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0');
+                removeDaySelected();
+                th.classList.add("selected");
                 changeDay();
             });
         }
@@ -480,6 +483,15 @@ async function createCalendar(month, year) {
     }
 
 
+}
+
+function removeDaySelected() {
+    const days = document.querySelectorAll(".day.selected")
+    if (days != null) {
+        for (let i = 0; i < days.length; i++) {
+            days[i].classList.remove("selected");
+        }
+    }
 }
 
 async function verify() {

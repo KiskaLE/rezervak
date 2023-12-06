@@ -11,6 +11,7 @@ final class Mailer
 {
     private $mailer;
     private $url;
+    private $latte;
 
     public function __construct(
         private Nette\Database\Explorer $database,
@@ -25,70 +26,54 @@ final class Mailer
             465,
             "ssl");
 
+        $this->phpMailer->isSMTP();
+        $this->phpMailer->Host = 'smtp.seznam.cz';
+        $this->phpMailer->SMTPAuth = true;
+        $this->phpMailer->Username = 'rezervkainfo@seznam.cz';
+        $this->phpMailer->Password = 'sxqOgSNiXQ8TQbG';
+        $this->phpMailer->SMTPSecure = 'ssl';
+        $this->phpMailer->Port = 465;
+
+        $this->phpMailer->setFrom("rezervkainfo@seznam.cz");
+        $this->phpMailer->CharSet = "UTF-8";
+
+        $this->phpMailer->isHTML(true);
+        $this->phpMailer->setLanguage("cs");
+
+        $this->latte = new Engine;
+
 
     }
 
-    private function createMail(string $from, string $to, string $subject, string $message): Nette\Mail\Message
+    private function sendMail(string $to, string $subject, string $message)
     {
-        $mail = new Nette\Mail\Message;
-        $mail->setFrom($from);
-        $mail->addTo($to);
-        $mail->setSubject($subject);
-        $mail->setHtmlBody($message);
-
-        return $mail;
+        $this->phpMailer->clearAddresses();
+        $this->phpMailer->addAddress($to);
+        $this->phpMailer->Subject = $subject;
+        $this->phpMailer->Body = $message;
+        $this->phpMailer->send();
+        $this->phpMailer->clearAddresses();
     }
 
-    public function sendMail(string $from, string $to, string $subject, string $message)
-    {
-        $mailer = new Nette\Mail\SendmailMailer;
-        $mail = $this->createMail($from, $to, $subject, $message);
-        $mailer->send($mail);
-    }
-
-//TODO code it in DRY
     public function sendConfirmationMail(string $to, string $confirmUrl)
     {
-        $latte = new Engine;
         $params = [
             'url' => $this->url . $confirmUrl,
         ];
-        $mail = new Nette\Mail\Message;
-        $mail->setFrom('rezervkainfo@seznam.cz');
-        $mail->addTo($to);
-        $mail->setSubject('Rezervace');
-        $mail->setHtmlBody($latte->renderToString(__DIR__ . '/Mails/confirmation.latte', $params));
-
-        $this->mailer->send($mail);
+        $this->sendMail($to, "Rezervace", $this->latte->renderToString(__DIR__ . '/Mails/confirmation.latte', $params));
     }
 
     public function sendBackupConfiramationMail(string $to, string $confirmUrl)
     {
-        $latte = new Engine;
         $params = [
             'url' => $this->url . $confirmUrl,
         ];
-        $mail = new Nette\Mail\Message;
-        $mail->setFrom('rezervkainfo@seznam.cz');
-        $mail->addTo($to);
-        $mail->setSubject('Rezervace');
-        $mail->setHtmlBody($latte->renderToString(__DIR__ . '/Mails/backup.latte', $params));
-
-        $mailer = new Nette\Mail\SendmailMailer;
-        $mailer->send($mail);
+        $this->sendMail($to, "Potvzení záložní rezervace", $this->latte->renderToString(__DIR__ . '/Mails/backup.latte', $params));
     }
 
     public function sendCancelationMail(string $to)
     {
-        $latte = new Engine;
-        $mail = new Nette\Mail\Message;
-        $mail->setFrom('rezervkainfo@seznam.cz');
-        $mail->addTo($to);
-        $mail->setSubject('Zrušení rezervace');
-        $mail->setHtmlBody($latte->renderToString(__DIR__ . '/Mails/cancel.latte'));
-
-        $mailer = new Nette\Mail\SendmailMailer;
-        $mailer->send($mail);
+        $this->sendMail($to, "Zrušení rezervace", $this->latte->renderToString(__DIR__ . '/Mails/cancel.latte'));
 
     }
 }

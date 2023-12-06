@@ -96,6 +96,7 @@
 .login-container {
   min-height: 100vh;
   background-color: #303641;
+    width: 100%;
 }
 
 .main-content {
