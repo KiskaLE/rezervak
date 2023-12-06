@@ -45,6 +45,51 @@ final class Mailer
 
     }
 
+    /**
+     * Sends a confirmation email to the specified recipient.
+     *
+     * @param string $to The email address of the recipient.
+     * @param string $confirmUrl The URL to confirm the reservation.
+     * @return void
+     * @throws Some_Exception_Class A description of the exception that may be thrown.
+     */
+    public function sendConfirmationMail(string $to, string $confirmUrl): void
+    {
+        $params = [
+            'url' => $this->url . $confirmUrl,
+        ];
+        $this->sendMail($to, "Rezervace", $this->latte->renderToString(__DIR__ . '/Mails/confirmation.latte', $params));
+    }
+
+    /**
+     * Sends a backup confirmation email to the specified recipient.
+     *
+     * @param string $to The email address of the recipient.
+     * @param string $confirmUrl The URL for confirming the backup.
+     * @return void
+     * @throws Exception If there is an error sending the email.
+     */
+    public function sendBackupConfiramationMail(string $to, string $confirmUrl): void
+    {
+        $params = [
+            'url' => $this->url . $confirmUrl,
+        ];
+        $this->sendMail($to, "Potvzení záložní rezervace", $this->latte->renderToString(__DIR__ . '/Mails/backup.latte', $params));
+    }
+
+    /**
+     * Sends a cancellation email.
+     *
+     * @param string $to The email address to send the cancellation email to.
+     * @return void
+     * @throws Exception If there is an error sending the email.
+     */
+    public function sendCancelationMail(string $to): void
+    {
+        $this->sendMail($to, "Zrušení rezervace", $this->latte->renderToString(__DIR__ . '/Mails/cancel.latte'));
+
+    }
+
     private function sendMail(string $to, string $subject, string $message)
     {
         $this->phpMailer->clearAddresses();
@@ -53,27 +98,5 @@ final class Mailer
         $this->phpMailer->Body = $message;
         $this->phpMailer->send();
         $this->phpMailer->clearAddresses();
-    }
-
-    public function sendConfirmationMail(string $to, string $confirmUrl)
-    {
-        $params = [
-            'url' => $this->url . $confirmUrl,
-        ];
-        $this->sendMail($to, "Rezervace", $this->latte->renderToString(__DIR__ . '/Mails/confirmation.latte', $params));
-    }
-
-    public function sendBackupConfiramationMail(string $to, string $confirmUrl)
-    {
-        $params = [
-            'url' => $this->url . $confirmUrl,
-        ];
-        $this->sendMail($to, "Potvzení záložní rezervace", $this->latte->renderToString(__DIR__ . '/Mails/backup.latte', $params));
-    }
-
-    public function sendCancelationMail(string $to)
-    {
-        $this->sendMail($to, "Zrušení rezervace", $this->latte->renderToString(__DIR__ . '/Mails/cancel.latte'));
-
     }
 }

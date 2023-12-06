@@ -55,7 +55,7 @@ final class HomePresenter extends SecurePresenter
         $data = [];
         foreach ($sortedArray as $key) {
             $date = date("d.m.Y", strtotime(explode(" ", $key[0])[0]));
-            $data[] = ["date"=> $date,"value" => count($key)];
+            $data[] = ["date" => $date, "value" => count($key)];
         }
         $this->sendJson($data);
 

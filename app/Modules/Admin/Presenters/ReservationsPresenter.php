@@ -136,12 +136,5 @@ final class ReservationsPresenter extends SecurePresenter
         $this->redirect('Reservations:show');
     }
 
-    public function handleBack($default)
-    {
-        if ($this->backlink) {
-            $this->restoreRequest($this->backlink);
-        }
-        $this->redirect($default);
-    }
 
 }

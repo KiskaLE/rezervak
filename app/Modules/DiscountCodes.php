@@ -34,6 +34,13 @@ class DiscountCodes
         return $discountCodeRow;
     }
 
+    /**
+     * Retrieves a service from the database by its ID.
+     *
+     * @param int $service_id The ID of the service to retrieve.
+     * @return mixed The fetched service, or null if not found.
+     * @throws Some_Exception_Class If the service cannot be found.
+     */
     public function getService(int $service_id)
     {
         return $service = $this->database->table("services")->where("id=?", $service_id)->fetch();

@@ -49,7 +49,6 @@ final class DiscountCodesPresenter extends SecurePresenter
         $this->template->paginator = $paginator;
 
 
-
     }
 
     public function actionEdit(int $id)

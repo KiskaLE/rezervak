@@ -14,7 +14,7 @@ class ApiPresenter extends BasePresenter
 
     public function __construct(
         private Nette\Database\Explorer $database,
-        private Mailer     $mailer,
+        private Mailer   $mailer,
         private AvailableDates $availableDates,
         private Payments $payments
 

@@ -121,6 +121,33 @@ final class ServicesPresenter extends SecurePresenter
         $this->service = $service;
     }
 
+    public function actionActionHide($id)
+    {
+        $hidden = $this->database->table("services")->get($id)->hidden;
+        if ($hidden) {
+            $this->database->table("services")->where("id=?", $id)->update([
+                "hidden" => 0
+            ]);
+            $this->flashMessage("Služba je zobrazena", "alert-success");
+        } else {
+            $this->database->table("services")->where("id=?", $id)->update([
+                "hidden" => 1
+            ]);
+            $this->flashMessage("Služba je Skryta", "alert-success");
+        }
+
+        $this->redirect("Services:show");
+
+        die("success");
+    }
+
+    public function handleDeleteCustomSchedule($cutomScheduleId)
+    {
+        $this->database->table("services_custom_schedules")->where("uuid=?", $cutomScheduleId)->delete();
+        $this->flashMessage("Smazano", "alert-success");
+        $this->redirect("edit", $this->id);
+    }
+
     protected function createComponentEditCustomScheduleForm(): Form
     {
 
@@ -455,33 +482,6 @@ final class ServicesPresenter extends SecurePresenter
         $this->flashMessage("Uloženo", "alert-success");
 
         $this->redirect("this");
-    }
-
-    public function actionActionHide($id)
-    {
-        $hidden = $this->database->table("services")->get($id)->hidden;
-        if ($hidden) {
-            $this->database->table("services")->where("id=?", $id)->update([
-                "hidden" => 0
-            ]);
-            $this->flashMessage("Služba je zobrazena", "alert-success");
-        } else {
-            $this->database->table("services")->where("id=?", $id)->update([
-                "hidden" => 1
-            ]);
-            $this->flashMessage("Služba je Skryta", "alert-success");
-        }
-
-        $this->redirect("Services:show");
-
-        die("success");
-    }
-
-    public function handleDeleteCustomSchedule($cutomScheduleId)
-    {
-        $this->database->table("services_custom_schedules")->where("uuid=?", $cutomScheduleId)->delete();
-        $this->flashMessage("Smazano", "alert-success");
-        $this->redirect("edit", $this->id);
     }
 
 }

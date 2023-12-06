@@ -13,8 +13,7 @@ class BasePresenter extends Presenter
     public $backlink;
 
 
-    public function __construct(
-    )
+    public function __construct()
     {
         parent::__construct();
     }
@@ -24,11 +23,19 @@ class BasePresenter extends Presenter
         parent::startup();
         // Your code here
     }
+
     protected function beforeRender()
     {
         parent::beforeRender();
     }
 
+    /**
+     * Handles the "back" functionality of the application.
+     *
+     * @param mixed $defaultRoute The default route to redirect to if no backlink is present.
+     * @return void
+     * @throws InvalidLinkException If the backlink is invalid.
+     */
     public function handleBack($defaultRoute)
     {
         if ($this->backlink) {
@@ -44,13 +51,12 @@ class BasePresenter extends Presenter
     }
 
     /**
-     * Generates a paginator object for a given total number of items, current page, and number of rows per page.
+     * Creates a paginator object for pagination.
      *
      * @param int $total The total number of items.
-     * @param int $page The current page.
+     * @param int $page The current page number.
      * @param int $rowsPerPage The number of rows per page.
-     * @return N/A
-     * @throws N/A
+     * @return Paginator The paginator object.
      */
     public function createPagitator(int $total, int $page, int $rowsPerPage)
     {
