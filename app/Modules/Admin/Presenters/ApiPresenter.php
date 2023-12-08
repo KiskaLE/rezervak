@@ -3,23 +3,25 @@
 namespace App\Modules\Admin\Presenters;
 
 use Nette;
-use Nette\Application\UI\Presenter;
 use App\Modules\Mailer;
 use App\Modules\AvailableDates;
 use App\Modules\Payments;
+use GuzzleHttp\Client;
 
 class ApiPresenter extends BasePresenter
 {
 
+    private $client;
 
     public function __construct(
         private Nette\Database\Explorer $database,
-        private Mailer   $mailer,
+        private Mailer         $mailer,
         private AvailableDates $availableDates,
-        private Payments $payments
+        private Payments       $payments
 
     )
     {
+        $this->client = new Client();
     }
 
     public function renderDefault()
@@ -28,6 +30,7 @@ class ApiPresenter extends BasePresenter
 
     public function actionVerifyPayments()
     {
+
         die("verify");
     }
 

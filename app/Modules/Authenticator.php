@@ -55,7 +55,6 @@ final class Authenticator implements Nette\Security\Authenticator
     {
         $passwordHash = $this->passwords->hash($password);
         $database = $this->database;
-        //TODO verify user
         try {
             $database->transaction(function ($database) use ($username, $passwordHash) {
                 //create user
