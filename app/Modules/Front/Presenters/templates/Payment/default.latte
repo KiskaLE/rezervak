@@ -5,6 +5,7 @@
 {foreach $payments as $payment}
     <div n:if="$payment->status == 0">
         <p>{$payment->price}</p>
+        {$qrCode}
     </div>
 
 {/foreach}

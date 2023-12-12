@@ -4,6 +4,7 @@ namespace App\Modules;
 
 use Nette;
 use App\Modules\DiscountCodes;
+use Defr\QRPlatba\QRPlatba;
 
 final class Payments
 {
@@ -24,6 +25,7 @@ final class Payments
      */
     public function createPayment($reservation, string $discountCode = ""): bool
     {
+        $status = false;
         try {
             $user_id = $reservation->user_id;
             $price = $this->createPrice($user_id, $reservation, $discountCode);
@@ -31,10 +33,11 @@ final class Payments
                 "price" => $price,
                 "reservation_id" => $reservation->id
             ]);
-            return true;
-        } catch (\Throwable) {
-            return false;
+            $status = true;
+        } catch (\Throwable $th) {
         }
+
+        return $status;
 
     }
 
@@ -44,11 +47,18 @@ final class Payments
      * @param int $id The ID of the payment.
      * @return string The generated payment code.
      */
-    public function generatePaymentCode(int $id)
+    public function generatePaymentCode($payment, int $user_id)
     {
-        $payment = $this->database->table("payments")->where("id=?", $id)->fetch();
+        $qrPlatba = new QRPlatba();
+        $account = $this->database->table("settings")->where("user_id", $user_id)->fetch()->payment_info;
+
         $code = $payment->id . str_replace(":", "", explode(" ", $payment->created_at)[1]);
-        return $code;
+        $qrPlatba->setAccount($account)
+            ->setVariableSymbol($code)
+            ->setAmount($payment->price)
+            ->setDueDate(new \DateTime());
+
+        return $qrPlatba->getQRCodeImage();
     }
 
     /**
@@ -75,9 +85,6 @@ final class Payments
     public function getPayments($reservation)
     {
         $payments = $this->database->table("payments")->where("reservation_id=?", $reservation->id)->fetchAll();
-        foreach ($payments as $payment) {
-            $this->generatePaymentCode($payment->id);
-        }
         return $payments;
     }
 

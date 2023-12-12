@@ -8,6 +8,7 @@ use Nette;
 use App\Modules\Payments;
 
 
+
 final class PaymentPresenter extends BasePresenter
 {
 
@@ -29,12 +30,16 @@ final class PaymentPresenter extends BasePresenter
             if ($reservation->status != "VERIFIED") {
                 $this->redirect("Payment:notFound");
             }
+            $payment = $this->database->table("payments")->where("reservation_id=?", $reservation->id)->fetch();
             $this->template->service = $reservation;
-            $this->template->payments = $this->payments->getPayments($reservation);
+            $this->template->payments = $payment;
+            $qrCode = $this->payments->generatePaymentCode($payment, $this->user->id);
+            $this->template->qrCode = $qrCode;
 
         } else {
             $this->redirect("Payment:notFound");
         }
+
     }
 
     public function actionBackup($uuid)
