@@ -32,8 +32,10 @@ final class PaymentPresenter extends BasePresenter
             }
             $payment = $this->database->table("payments")->where("reservation_id=?", $reservation->id)->fetch();
             $this->template->service = $reservation;
-            $this->template->payments = $payment;
+            $this->template->payment = $payment;
             $qrCode = $this->payments->generatePaymentCode($payment, $this->user->id);
+            $user = $reservation->ref("users", "user_id");
+            $this->template->userSettings = $user->related("settings")->fetch();
             $this->template->qrCode = $qrCode;
 
         } else {

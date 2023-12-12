@@ -23,15 +23,17 @@ final class Payments
      * @param string $discountCode (optional) The discount code.
      * @return void
      */
-    public function createPayment($reservation, string $discountCode = ""): bool
+    public function createPayment($database, $reservation, string $discountCode = ""): bool
     {
         $status = false;
         try {
             $user_id = $reservation->user_id;
             $price = $this->createPrice($user_id, $reservation, $discountCode);
-            $this->database->table("payments")->insert([
+            $idTransaction = $reservation->id . date("dHi");
+            $database->table("payments")->insert([
                 "price" => $price,
-                "reservation_id" => $reservation->id
+                "reservation_id" => $reservation->id,
+                "id_transaction" => $idTransaction
             ]);
             $status = true;
         } catch (\Throwable $th) {
@@ -52,9 +54,8 @@ final class Payments
         $qrPlatba = new QRPlatba();
         $account = $this->database->table("settings")->where("user_id", $user_id)->fetch()->payment_info;
 
-        $code = $payment->id . str_replace(":", "", explode(" ", $payment->created_at)[1]);
         $qrPlatba->setAccount($account)
-            ->setVariableSymbol($code)
+            ->setVariableSymbol($payment->id_transaction)
             ->setAmount($payment->price)
             ->setDueDate(new \DateTime());
 

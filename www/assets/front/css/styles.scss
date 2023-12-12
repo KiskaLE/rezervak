@@ -212,6 +212,7 @@ body {
 }
 
 .info-form {
+  background-color: var(--background);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -306,6 +307,7 @@ body {
 
 .calendar-box {
   display: flex;
+  background-color: var(--background);
   box-shadow: var(--shadow-secondary);
   padding: 50px;
   border-radius: var(--radius);
@@ -372,6 +374,11 @@ body {
 #calendar {
   position: relative;
 
+  .day {
+    box-shadow: var(--shadow-secondary);
+    margin: 10px;
+  }
+
   th.weekend {
     color: red;
   }
@@ -404,6 +411,7 @@ body {
 //calendar end
 
 #recap {
+  background-color: var(--background);
   box-shadow: var(--shadow-secondary);
   padding: 50px;
   border-radius: var(--radius);
@@ -625,8 +633,55 @@ input.valid {
 
 }
 
+//payment start
+.payment-wrapper {
+  display: flex;
+  align-items: center;
+  box-shadow: var(--shadow-secondary);
+  border-radius: var(--radius);
+  gap: 50px;
+  padding: 30px;
+  font-size: 1.2rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+  }
+
+  .payment-qr-code {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    img {
+      width: 100px;
+      height: 100px;
+    }
+  }
+}
+
+//payment end
+
 
 @media (max-width: 500px) {
+
+  .payment-wrapper {
+    flex-direction: column;
+    box-shadow: none;
+    width: 100%;
+
+    h2 {
+      font-size: 2rem;
+    }
+
+    .payment-qr-code {
+      img {
+        width: 80vw;
+        height: 80vw;
+      }
+    }
+  }
 
   .service-card {
     width: 100%;
