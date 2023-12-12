@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db:3306
--- Generation Time: Dec 07, 2023 at 07:31 AM
+-- Generation Time: Dec 12, 2023 at 07:48 AM
 -- Server version: 8.2.0
 -- PHP Version: 8.2.12
 
@@ -62,6 +62,7 @@ CREATE TABLE `discount_codes` (
 CREATE TABLE `payments` (
                             `id` int NOT NULL,
                             `reservation_id` int DEFAULT NULL,
+                            `id_transaction` int NOT NULL,
                             `price` int NOT NULL,
                             `status` tinyint NOT NULL DEFAULT '0',
                             `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -271,6 +272,7 @@ ALTER TABLE `discount_codes`
 --
 ALTER TABLE `payments`
     ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id_transaction` (`id_transaction`),
   ADD KEY `reservation_id` (`reservation_id`) USING BTREE;
 
 --
