@@ -404,25 +404,36 @@ async function createCalendar(month, year) {
     //days in calendar
     let days = [];
     //create last month days
-    for (let i = 0; i < getDayIndexMondaySunday(firstDateOfMonth); i++) {
-        const th = document.createElement("th");
-        th.className = "";
-        days.push(th);
+    const date = new Date(year, month, 1);
+    date.setMonth(date.getMonth() - 1);
+    date.setDate(0);
+    const daysInPreviousMonth = date.getDate();
+    const legend = ["Po", "Út", "St", "Čt", "Pá", "So", "Ne"];
+    for (let i = 0; i < legend.length; i++) {
+        const div = document.createElement("div");
+        div.className = "day-legend";
+        div.innerHTML = legend[i];
+        container.appendChild(div);
     }
-    //week
+    for (let i = 0; i < getDayIndexMondaySunday(firstDateOfMonth); i++) {
+        const div = document.createElement("div");
+        div.classList.add("day");
+        div.classList.add("unavailable");
+        div.classList.add("different-month")
+        div.innerHTML = daysInPreviousMonth - getDayIndexMondaySunday(firstDateOfMonth) + i + 1;
+        container.appendChild(div);
+    }
+
     for (let i = 1; i < lastDayOfMonth.getDate() + 1; i++) {
         const date = new Date(year, month, i);
-        const th = document.createElement("th");
-        th.innerHTML = i;
-        th.className = "day";
+        const div = document.createElement("div");
+        div.innerHTML = i;
+        div.className = "day";
         if (date <= curDate) {
-            th.className += " unavailable";
-            days.push(th);
-            continue;
+            div.classList.add("unavailable");
         }
-
         if (date.getDay() === 0 || date.getDay() === 6) {
-            th.className += " weekend";
+            div.classList.add("weekend");
         }
         let isFull = true;
         for (let j = 0; j < availableDays.length; j++) {
@@ -432,32 +443,28 @@ async function createCalendar(month, year) {
             }
         }
         if (isFull) {
-            th.className += " unavailable"
+            div.classList.add("unavailable");
         } else {
-            th.className += " available"
-            th.addEventListener("click", () => {
+            div.classList.add("available");
+            div.addEventListener("click", () => {
                 document.querySelector("[name='date']").value = date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0');
                 removeDaySelected();
-                th.classList.add("selected");
+                div.classList.add("selected");
                 changeDay();
             });
         }
-        days.push(th);
+        container.appendChild(div);
+    }
+    //add days to end of week from next month
+    for (let i = 0; i < 7 - getDayIndexMondaySunday(lastDayOfMonth) - 1; i++) {
+        const div = document.createElement("div");
+        div.classList.add("day");
+        div.classList.add("unavailable");
+        div.classList.add("different-month")
+        div.innerHTML = i + 1;
+        container.appendChild(div);
     }
 
-    //split days into weeks
-    let week = document.createElement("tr");
-    for (let i = 0; i < days.length; i++) {
-        if (i % 7 === 0) {
-            container.appendChild(week);
-            week = document.createElement("tr");
-            week.className = "week";
-        }
-        week.appendChild(days[i]);
-        if (i === days.length - 1) {
-            container.appendChild(week);
-        }
-    }
     spinner.stop();
 
 

@@ -44,29 +44,17 @@
                         <h2 class="h2-center">Vyberte datum a čas</h2>
 
                         <div class="calender-wrapper">
-                            <table>
-                                <div id="calendar-nav"><img
-                                            src="{$basePath}/assets/front/icons/arrow-calendar-left.svg"
-                                            alt="předchozí měsíc"
-                                            onclick="calNext(-1)" id="prev-month">
-                                    <h2 id="calendar-month"></h2><img
-                                            src="{$basePath}/assets/front/icons/arrow-calendar-right.svg"
-                                            alt="další měsíc"
-                                            onclick="calNext(1)" id="next-month"></div>
-                                <thead class="calendar-head">
-                                <tr>
-                                    <th>Po</th>
-                                    <th>Út</th>
-                                    <th>St</th>
-                                    <th>Čt</th>
-                                    <th>Pa</th>
-                                    <th>So</th>
-                                    <th>Ne</th>
-                                </tr>
-                                </thead>
-                                <tbody id="calendar">
-                                </tbody>
-                            </table>
+                            <div id="calendar-nav"><img
+                                        src="{$basePath}/assets/front/icons/arrow-calendar-left.svg"
+                                        alt="předchozí měsíc"
+                                        onclick="calNext(-1)" id="prev-month">
+                                <h2 id="calendar-month"></h2><img
+                                        src="{$basePath}/assets/front/icons/arrow-calendar-left.svg"
+                                        style="transform: rotate(180deg)"
+                                        alt="další měsíc"
+                                        onclick="calNext(1)" id="next-month">
+                            </div>
+                            <div id="calendar"></div>
                         </div>
                         <input n:name="date" class="multiform data">
                     </div>

@@ -201,6 +201,7 @@ final class ReservationPresenter extends BasePresenter
          $result = $this->database->transaction(function ($database) use ($uuid, $data, $type, $time) {
             $start = $data->date . " " . $time;
             $service_id = $data->service;
+             $success = true;
             try {
                 $reservation = $this->database->table("reservations")->insert([
                     "uuid" => $uuid,
@@ -217,11 +218,16 @@ final class ReservationPresenter extends BasePresenter
                     "user_id" => $this->user->id,
                     "type" => $type == "backup" ? 1 : 0,
                 ]);
-                $this->payments->createPayment($reservation, $data->dicountCode);
-                return $reservation;
+                if (!$this->payments->createPayment($database, $reservation, $data->dicountCode)) {
+                    $success = false;
+                }
+
             } catch (\Throwable $e) {
-                return false;
+                $success = false;
             }
+             if ($success) {
+                 return $reservation;
+             }
         });
         return $result;
     }
