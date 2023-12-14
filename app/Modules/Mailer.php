@@ -53,12 +53,19 @@ final class Mailer
      * @return void
      * @throws Some_Exception_Class A description of the exception that may be thrown.
      */
-    public function sendConfirmationMail(string $to, string $confirmUrl): void
+    public function sendConfirmationMail(string $to, string $confirmUrl, $reservation): void
     {
+
+        $user = $reservation->ref("users", "user_id");
+        $userSettings = $user->related("settings")->fetch();
         $params = [
             'url' => $this->url . $confirmUrl,
+            'user' => $user,
+            'userSettings' => $userSettings,
+            'reservation' => $reservation
+
         ];
-        $this->sendMail($to, "Rezervace", $this->latte->renderToString(__DIR__ . '/Mails/confirmation.latte', $params));
+        $this->sendMail($to, "Potvrzení Vaší rezervace - Vyžadováno Ověření", $this->latte->renderToString(__DIR__ . '/Mails/confirmation.latte', $params));
     }
 
     /**
@@ -69,24 +76,41 @@ final class Mailer
      * @return void
      * @throws Exception If there is an error sending the email.
      */
-    public function sendBackupConfiramationMail(string $to, string $confirmUrl): void
+    public function sendBackupConfiramationMail(string $to, string $confirmUrl, $reservation): void
     {
+        $user = $reservation->ref("users", "user_id");
+        $userSettings = $user->related("settings")->fetch();
         $params = [
             'url' => $this->url . $confirmUrl,
+            'user' => $user,
+            'userSettings' => $userSettings,
+            'reservation' => $reservation
+
         ];
-        $this->sendMail($to, "Potvzení záložní rezervace", $this->latte->renderToString(__DIR__ . '/Mails/backup.latte', $params));
+        $this->sendMail($to, "Potvrzení Vaší záložní rezervace - Vyžadováno Ověření", $this->latte->renderToString(__DIR__ . '/Mails/backup.latte', $params));
     }
 
     /**
      * Sends a cancellation email.
      *
      * @param string $to The email address to send the cancellation email to.
+     * @param mixed $reservation The reservation object.
+     * @param string $reason The reason for the cancellation.
      * @return void
-     * @throws Exception If there is an error sending the email.
+     * @throws Some_Exception_Class Description of the exception that may be thrown.
      */
-    public function sendCancelationMail(string $to): void
+    public function sendCancelationMail(string $to, $reservation, string $reason): void
     {
-        $this->sendMail($to, "Zrušení rezervace", $this->latte->renderToString(__DIR__ . '/Mails/cancel.latte'));
+        $user = $reservation->ref("users", "user_id");
+        $userSettings = $user->related("settings")->fetch();
+        $params = [
+            'user' => $user,
+            'userSettings' => $userSettings,
+            'reservation' => $reservation,
+            'reason' => $reason
+
+        ];
+        $this->sendMail($to, "Zrušení rezervace", $this->latte->renderToString(__DIR__ . '/Mails/cancel.latte', $params));
 
     }
 

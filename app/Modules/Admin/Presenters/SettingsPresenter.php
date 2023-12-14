@@ -62,6 +62,19 @@ class SettingsPresenter extends SecurePresenter
             ->setRequired("Zadejte čas na zaplacení")
             ->addRule($form::Min, "Čas na zaplacení nesmí být méně než 1", 1);
 
+        $form->addText("company", "Společnost")
+            ->setDefaultValue($this->settings->company)
+            ->setMaxLength(255);
+
+        $form->addText("phone", "Telefon")
+            ->setDefaultValue($this->settings->phone)
+            ->setMaxLength(20);
+
+        $form->addEmail("email", "Email")
+            ->addRule($form::Email, "Neplatný mailový formát")
+            ->setDefaultValue($this->settings->email)
+            ->setMaxLength(255);
+
         $form->addSubmit("submit", "Uložit");
 
         $form->onSuccess[] = [$this, "basicSettingsFormSucceeded"];
@@ -78,7 +91,11 @@ class SettingsPresenter extends SecurePresenter
                 "payment_info" => $data->paymentInfo,
                 "verification_time" => $data->verificationTime,
                 "number_of_days" => $data->numberOfDays,
-                "time_to_pay" => $data->timeToPay
+                "time_to_pay" => $data->timeToPay,
+                "company" => $data->company,
+                "phone" => $data->phone,
+                "email" => $data->email,
+                "updated_at" => date("Y-m-d H:i:s"),
             ]);
             $this->flashMessage("Změny byly uloženy.", "alert-success");
         } catch (\Throwable $th) {

@@ -27,3 +27,4 @@ services:
     environment:
       - PMA_HOST=db
       - PMA_PORT=3306
+      - UPLOAD_LIMIT=300M

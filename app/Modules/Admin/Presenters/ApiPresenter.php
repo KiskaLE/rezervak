@@ -52,7 +52,8 @@ class ApiPresenter extends BasePresenter
                 //get all canceled reservations
                 $canceledReservations = $database->table("reservations_delated")->fetchAll();
                 foreach ($canceledReservations as $reservation) {
-                    $this->mailer->sendCancelationMail($reservation->email);
+                    $this->mailer->sendCancelationMail($reservation->email, $reservation, "Nezaplacení rezervace v určeném čase.");
+                    dump("zrušeno");
 
                 }
             });

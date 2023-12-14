@@ -1,15 +1,73 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Potvrzení objednávky</title>
-    <style>
-
-    </style>
+    <title>Potvrzení rezervace</title>
 </head>
-<body>
-<p>Dobrý den,</p>
+<body style="background-color: #d4d4d4;
+            padding: 20px;
+            margin: 0;">
+<div style="display: flex; flex-direction: column; align-items: center">
+    <div style="max-width: 600px; padding: 5px;">
+        <h1 style="font-size: 32px;
+            font-weight: bolder;
+            color: #2563eb;
+            margin: 0 0 20px;">Vaše záložní rezervace je skoro hotová!</h1>
+        <p style="font-size: 16px;
+            line-height: 30px;">Dobrý den,<br>
 
-<p>Vaše rezervace byla přijata.</p>
-<a href="{$url}">Potvrdit</a>
+            děkujeme Vám za Vaši rezervaci. Rádi bychom Vás informovali, že <b>Vaše rezervace byla úspěšně přijata pod
+                číslem {$reservation->id}</b>. Pokud se teto termín uvolní budeme vás informovat v následujícím e-mailu.
+        </p>
+        <h3>Detaily vaší rezervace:</h3>
+        <p style="font-size: 16px;
+            line-height: 30px;">
+            <b>Jméno:</b> {$reservation->firstname}<br>
+            <b>Příjmení:</b> {$reservation->lastname}<br>
+            <b>Datum:</b> {$reservation->start|date:"d.m.Y"}<br>
+           <b>Čas:</b> {$reservation->start|date:"H:i"}<br>
+            {var $price = $reservation->related("payments")->fetch()->price}
+            <b>Cena:</b> {$price} Kč<br>
+        </p>
+        <h3>Další krok:</h3>
+        <p style="font-size: 16px;
+            line-height: 30px;">Pro dokončení procesu rezervace je nutné kliknout na níže uvedený odkaz a postupovat
+            podle
+            pokynů:
+
+        </p>
+        <br>
+        <div style="padding: 5px 10px;
+            border: none !important;
+            border-radius: 5px;
+            transition-duration: 300ms;
+            cursor: pointer;
+            margin: 0;
+            background-color: #2563eb;
+            width: fit-content;
+            border-radius: 22.62px;
+            font-size: 20px;
+            padding: 10px 20px;
+">
+            <a href="{$url}" style="text-decoration: none; color: white; font-size: 16px;">Ověřit</a>
+        </div>
+        <br>
+        <p style="font-size: 16px;
+            line-height: 30px;">Tento krok je nezbytný pro finální potvrzení Vaší rezervace.</p>
+        <h3>Důležité Informace:</h3>
+        <p style="font-size: 16px;
+            line-height: 30px;">Prosím, dokončete ověření do <b>{$userSettings->verification_time} minut</b> od přijetí
+            tohoto emailu. <br>
+        </p>
+        <br>
+        <p style="font-size: 16px;
+            line-height: 30px;">S pozdravem, <br>
+            Rezerevační systém <br>
+            <span n:if="$userSettings->company">{$userSettings->company}</span><br>
+            <span n:if="$userSettings->email">{$userSettings->email}</span> <br>
+            <span n:if="$userSettings->phone">{$userSettings->phone}</span>
+        </p>
+    </div>
+</div>
+
 </body>
 </html>

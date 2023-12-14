@@ -34,6 +34,7 @@ p {
 }
 
 .card {
+    width: 100%;
   padding: 50px;
   border-radius: var(--radius);
   box-shadow: var(--shadow-secondary);
@@ -492,6 +493,7 @@ input.valid {
   flex-direction: column;
   justify-content: center;
   width: 100%;
+    min-width: 370px !important;
   height: 100%;
   box-sizing: border-box;
   padding: 40px;
@@ -628,6 +630,7 @@ input.valid {
   }
   .service-card {
     width: 100%;
+      min-width: unset;
     box-shadow: none;
   }
   .services-grid.services-grid {

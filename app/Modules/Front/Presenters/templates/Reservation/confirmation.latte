@@ -9,7 +9,9 @@
         </p>
 
         <p class="text-center">
-            <bold>Máte 15 minut na potvzení vaší rezervace.</bold>
+            <bold>Máte {$reservation->ref("users", "user_id")->related("settings")->fetch()->verification_time} minut na
+                potvzení vaší rezervace.
+            </bold>
         </p>
 
     </div>
