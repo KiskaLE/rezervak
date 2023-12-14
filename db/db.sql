@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db:3306
--- Generation Time: Dec 12, 2023 at 07:48 AM
+-- Generation Time: Dec 14, 2023 at 12:36 PM
 -- Server version: 8.2.0
 -- PHP Version: 8.2.12
 
@@ -197,7 +197,12 @@ CREATE TABLE `settings` (
                             `verification_time` int NOT NULL DEFAULT '15',
                             `number_of_days` int NOT NULL DEFAULT '30',
                             `time_to_pay` int NOT NULL DEFAULT '24' COMMENT 'in hours',
-                            `time_zone` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci NOT NULL DEFAULT '0' COMMENT 'UTC'
+                            `time_zone`  varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci NOT NULL DEFAULT '0' COMMENT 'UTC',
+                            `company`    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci         DEFAULT NULL,
+                            `phone`      varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci          DEFAULT NULL,
+                            `email`      varchar(255) COLLATE utf8mb4_czech_ci                      NOT NULL,
+                            `created_at` datetime                                                   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                            `updated_at` datetime                                                            DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 -- --------------------------------------------------------
