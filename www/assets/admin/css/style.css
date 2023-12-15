@@ -71,6 +71,19 @@
 .form-group {
   display: flex;
   flex-direction: column;
+    width: 100%;
+    justify-content: center;
+}
+
+.form-group .btn {
+    width: 150px;
+    align-self: center;
+}
+
+@media (max-width: 500px) {
+    .form-group .btn {
+        width: 100%;
+    }
 }
 
 #reservation {
@@ -143,11 +156,6 @@
 .input-error {
   display: none;
   color: red;
-}
-
-.panel-body .form-group {
-  display: flex;
-  flex-direction: column;
 }
 
 #user-name {
