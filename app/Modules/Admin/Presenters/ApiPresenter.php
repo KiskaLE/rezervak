@@ -46,11 +46,11 @@ class ApiPresenter extends BasePresenter
             $database->transaction(function ($database) use ($admin, $settings) {
                 $yesterday = date("Y-m-d H:i:s", strtotime("-" . $settings->time_to_pay . " hours"));
                 //$yesterday = date("Y-m-d H:i:s", strtotime("-2" . " minutes"));
-                $database->query("DELETE FROM reservations_delated WHERE 1;");
-                $database->query("INSERT INTO reservations_delated SELECT reservations.* FROM reservations LEFT JOIN payments ON reservations.id=payments.reservation_id WHERE payments.status=0 AND reservations.type = 0 AND reservations.updated_at < '$yesterday' AND reservations.user_id = '$admin->id';");
+                $database->query("DELETE FROM reservations_canceled WHERE 1;");
+                $database->query("INSERT INTO reservations_canceled SELECT reservations.* FROM reservations LEFT JOIN payments ON reservations.id=payments.reservation_id WHERE payments.status=0 AND reservations.type = 0 AND reservations.updated_at < '$yesterday' AND reservations.user_id = '$admin->id';");
                 $database->query("DELETE reservations.*, payments.* FROM reservations LEFT JOIN payments ON reservations.id=payments.reservation_id WHERE payments.status=0 AND reservations.type = 0 AND reservations.updated_at < '$yesterday' AND reservations.user_id = '$admin->id';");
                 //get all canceled reservations
-                $canceledReservations = $database->table("reservations_delated")->fetchAll();
+                $canceledReservations = $database->table("reservations_canceled")->fetchAll();
                 foreach ($canceledReservations as $reservation) {
                     $this->mailer->sendCancelationMail($reservation->email, $reservation, "Nezaplacení rezervace v určeném čase.");
                     dump("zrušeno");
