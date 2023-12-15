@@ -29,7 +29,7 @@ final class Payments
         try {
             $user_id = $reservation->user_id;
             $price = $this->createPrice($user_id, $reservation, $discountCode);
-            $idTransaction = $reservation->id . date("dHi");
+            $idTransaction = $reservation->id . date("s");
             $database->table("payments")->insert([
                 "price" => $price,
                 "reservation_id" => $reservation->id,
