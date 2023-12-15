@@ -94,8 +94,8 @@ final class Payments
         $price = $reservation->ref("services", "service_id")->price;
         $discountCodeRow = $this->discountCodes->isCodeValid($user_id, $reservation->service_id, $discountCode);
         if ($discountCodeRow) {
-            $discountType = $discountCodeRow->type;
-            $discountValue = $discountCodeRow->value;
+            $discountType = $discountCodeRow["type"];
+            $discountValue = $discountCodeRow["type"];
             if ($discountType == 0) {
                 if ($discountValue >= $price) {
                     $price = 0;

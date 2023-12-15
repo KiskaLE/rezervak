@@ -16,3 +16,11 @@ document.addEventListener('DOMContentLoaded', naja.initialize.bind(naja));
 
 
 netteForms.initOnLoad();
+
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth'
+    });
+    calendar.render();
+});

@@ -19,4 +19,31 @@ function deleteServiceCustomSchedule(event) {
         event.preventDefault()
     }
 }
+function getDateRangeTimestamps(dateRange) {
+    console.log(dateRange)
+    // Split the date range into start and end date strings
+    let [startDateStr, endDateStr] = dateRange.split(' - ');
+
+    // Function to parse date in "dd/mm/yyyy hh:mm" format
+    function parseDate(dateStr) {
+        let [datePart, timePart] = dateStr.split(' ');
+        let [day, month, year] = datePart.split('/');
+        let [hours, minutes] = timePart.split(':');
+
+        // Create a new date object, adjusting month index by 1
+        let date = new Date(year, month - 1, day, hours, minutes);
+        return date;
+    }
+
+    // Parse the start and end dates to get Date objects
+    let startDate = parseDate(startDateStr);
+    let endDate = parseDate(endDateStr);
+
+    // Get the timestamps
+    let startTimestamp = startDate.getTime();
+    let endTimestamp = endDate.getTime();
+
+    return [startTimestamp, endTimestamp];
+}
+
 

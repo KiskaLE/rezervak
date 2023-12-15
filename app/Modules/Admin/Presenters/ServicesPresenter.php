@@ -106,6 +106,7 @@ final class ServicesPresenter extends SecurePresenter
                 "timeEnd" => $this->formater->getTimeFormatedFromTimeStamp($day->end)
             ];
         }
+        bdump($daysDefaults);
         $defaults = [
             "scheduleName" => $schedule->name,
             "range" => $this->formater->getDateFormatedFromTimestamp($schedule->start) . " " . $this->formater->getTimeFormatedFromTimeStamp($schedule->start) . " - " . $this->formater->getDateFormatedFromTimestamp($schedule->end) . " " . $this->formater->getTimeFormatedFromTimeStamp($schedule->end),
@@ -119,6 +120,11 @@ final class ServicesPresenter extends SecurePresenter
         $this->backlink = $backlink;
         $service = $this->database->table("services")->get($id);
         $this->service = $service;
+        $this->template->service = $service;
+        $userSettings = $this->database->table("settings")->where("user_id=?" , $this->user->id)->fetch();
+        $this->template->userSettings = $userSettings;
+        $calendarPeriod = gmdate("H:i:s", $userSettings->sample_rate * 60);
+        $this->template->calendarPeriod = $calendarPeriod;
     }
 
     public function actionActionHide($id)
@@ -244,37 +250,11 @@ final class ServicesPresenter extends SecurePresenter
 
         $form->addText("scheduleName")->setRequired("Název je povinný");
         $form->addText("range")->setRequired("Rozsah je povinný");
+        $form->addHidden("events")->setRequired("Vyberte časové okna");
 
-        $multiplier = $form->addMultiplier("multiplier", function (Nette\Forms\Container $container, Nette\Forms\Form $form) {
-            $container->addText("day", "text")
-                ->setRequired("Den je povinný");
-            $container->addText("timeStart", "Začátek")
-                ->setHtmlAttribute("type", "time")
-                ->setRequired("Začátek je povinný");
-            $container->addText("timeEnd", "Konec")
-                ->setHtmlAttribute("type", "time")
-                ->setRequired("Konec je povinný");
-
-            // Custom validation function
-            $validateTimeRange = function ($timeEndField) use ($container) {
-                $timeStart = $container['timeStart']->getValue();
-                $timeEnd = $timeEndField->getValue();
-
-                $start = strtotime($timeStart);
-                $end = strtotime($timeEnd);
-
-                return $end > $start;
-            };
-
-            $container['timeEnd']->addRule($validateTimeRange, 'Čas ukončení musí být později než čas začátku.');
-        }, 1);
 
         $form->addSubmit("submit", "Uložit");
         $form->onSuccess[] = [$this, "createCustomScheduleFormSuccess"];
-        $multiplier->addCreateButton('Přidat')
-            ->addClass('btn btn-primary');
-        $multiplier->addRemoveButton('Odebrat')
-            ->addClass('btn btn-danger');
 
         return $form;
     }
@@ -286,7 +266,7 @@ final class ServicesPresenter extends SecurePresenter
             try {
                 $range = $this->formater->getDataFromString($data->range);
                 $uuid = Uuid::uuid4();
-                $days = $data->multiplier;
+                $events = Nette\Utils\Json::decode($data->events);
                 $serviceSchedule = $this->database->table("services_custom_schedules")->insert([
                     "service_id" => $this->service->id,
                     "name" => $data->scheduleName,
@@ -295,12 +275,12 @@ final class ServicesPresenter extends SecurePresenter
                     "end" => $range["end"],
                     "type" => 0
                 ]);
-                foreach ($days as $day) {
+                foreach ($events as $day) {
                     $uuid = Uuid::uuid4();
-                    $date = explode("/", $day["day"]);
-                    $databaseDate = $date[2] . "-" . $date[1] . "-" . $date[0];
-                    $start = $databaseDate . " " . $day["timeStart"];
-                    $end = $databaseDate . " " . $day["timeEnd"];
+                    $start = date("Y-m-d H:i:s", strtotime($day->start));
+                    bdump(strtotime($day->start));
+                    bdump($start);
+                    $end = date("Y-m-d H:i:s", strtotime($day->end));
                     $this->database->table("service_custom_schedule_days")->insert([
                         "uuid" => $uuid,
                         "service_custom_schedule_id" => $serviceSchedule->id,
