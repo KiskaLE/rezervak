@@ -6,25 +6,23 @@ use Nette;
 use Latte\Engine;
 use Nette\Mail\SmtpMailer;
 use PHPMailer\PHPMailer\PHPMailer;
+use Nette\Mail\SendmailMailer;
 
 final class Mailer
 {
-    private $mailer;
     private $url;
     private $latte;
 
     public function __construct(
         private Nette\Database\Explorer $database,
-        private PHPMailer               $phpMailer
+        private PHPMailer          $phpMailer,
+        private Nette\Mail\Mailer  $mailer,
+        private Nette\DI\Container $container
     )
     {
-        $this->url = 'http://' . "localhost:8000";
-        $this->mailer = new SmtpMailer(
-            'smtp.seznam.cz',
-            'rezervkainfo@seznam.cz',
-            'sxqOgSNiXQ8TQbG',
-            465,
-            "ssl");
+        $mailerConfig = $this->container->getParameters();
+        //$this->url = "http://".$_SERVER['SERVER_NAME'];
+        $this->url = "http://" . "localhost:8000";
 
         $this->phpMailer->isSMTP();
         $this->phpMailer->Host = 'smtp.seznam.cz';
@@ -114,13 +112,24 @@ final class Mailer
 
     }
 
-    private function sendMail(string $to, string $subject, string $message)
+    private function sendMail(string $to, string $subject, $message)
     {
+
+        $mail = new Nette\Mail\Message;
+        $mail->setFrom("rezervkainfo@seznam.cz")
+            ->addTo($to)
+            ->setSubject($subject)
+            ->setHtmlBody($message);
+
+        $this->mailer->send($mail);
+
+        /*
         $this->phpMailer->clearAddresses();
         $this->phpMailer->addAddress($to);
         $this->phpMailer->Subject = $subject;
         $this->phpMailer->Body = $message;
         $this->phpMailer->send();
         $this->phpMailer->clearAddresses();
+        */
     }
 }
