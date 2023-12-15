@@ -99,13 +99,9 @@ final class ReservationPresenter extends BasePresenter
             ->setRequired()
             ->addRule($form::PATTERN, 'Čas musí být číslo', '\d+');
         $form->addText("firstname", "Jmeno:")
-            ->setRequired()
-            ->addCondition($form::FILLED)
-            ->addRule($form::PATTERN, 'Jméno nesmí obsahovat čísla', '^[a-zA-Z]+$');
+            ->setRequired();
         $form->addText("lastname", "Příjmení:")
-            ->setRequired()
-            ->addCondition($form::FILLED)
-            ->addRule($form::PATTERN, 'Příjmení nesmí obsahovat čísla', '^[a-zA-Z]+$');
+            ->setRequired();
         $form->addText("phone", "Telefon:")
             ->setRequired()
             ->addRule($form::PATTERN, 'Telefoní čílo není platný', '\d+');
@@ -118,9 +114,7 @@ final class ReservationPresenter extends BasePresenter
             ->setRequired()
             ->addRule($form::PATTERN, 'Neplatný formát PSČ', '^\d{5}$');
         $form->addText("city", "Město:")
-            ->setRequired()
-            ->addCondition($form::FILLED)
-            ->addRule($form::PATTERN, 'Město nesmí obsahovat čísla', '^[a-zA-Z]+$');
+            ->setRequired();
 
         $form->addText("dicountCode", "Kód slevy:");
         $form->addSubmit("submit");
