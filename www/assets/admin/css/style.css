@@ -209,8 +209,10 @@
 }
 
 #calendar {
-  width: 500px !important;
+  width: 100% !important;
   height: 500px !important;
 }
 
-/*# sourceMappingURL=style.css.map */
+.highlight-time-slot {
+  background-color: #ecfccb;
+}/*# sourceMappingURL=style.css.map */

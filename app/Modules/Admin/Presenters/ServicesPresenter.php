@@ -51,6 +51,7 @@ final class ServicesPresenter extends SecurePresenter
 
     }
 
+
     public function actionShowCustomSchedulesConflicts($id, $backlink, $page = 1)
     {
         $this->backlink = $backlink;
@@ -385,34 +386,6 @@ final class ServicesPresenter extends SecurePresenter
                     "user_id" => $this->user->id,
                     "description" => $data->description
                 ]);
-                //if custom schedule is checked
-                if ($data->customSchedule) {
-                    $range = $this->formater->getDataFromString($data->range);
-                    $uuid = Uuid::uuid4();
-                    $days = $data->multiplier;
-                    $serviceSchedule = $this->database->table("services_custom_schedules")->insert([
-                        "service_id" => $service->id,
-                        "name" => $data->scheduleName,
-                        "uuid" => $uuid,
-                        "start" => $range["start"],
-                        "end" => $range["end"],
-                        "type" => 0
-                    ]);
-                    foreach ($days as $day) {
-                        $uuid = Uuid::uuid4();
-                        $date = explode("/", $day["day"]);
-                        $databaseDate = $date[2] . "-" . $date[1] . "-" . $date[0];
-                        $start = $databaseDate . " " . $day["timeStart"];
-                        $end = $databaseDate . " " . $day["timeEnd"];
-                        $this->database->table("service_custom_schedule_days")->insert([
-                            "uuid" => $uuid,
-                            "service_custom_schedule_id" => $serviceSchedule->id,
-                            "start" => $start,
-                            "end" => $end,
-                            "type" => 0
-                        ]);
-                    }
-                }
             } catch (\Exception $e) {
                 $success = false;
             }

@@ -34,7 +34,7 @@ p {
 }
 
 .card {
-    width: 100%;
+  width: 100%;
   padding: 50px;
   border-radius: var(--radius);
   box-shadow: var(--shadow-secondary);
@@ -163,6 +163,7 @@ body {
 #confirmation {
   margin-top: 10rem;
   max-width: 800px;
+  height: -moz-fit-content;
   height: fit-content;
 }
 #confirmation h1 {
@@ -437,6 +438,7 @@ body {
   gap: 10px;
 }
 .discount-code-wrapper div .button {
+  width: -moz-fit-content;
   width: fit-content;
 }
 
@@ -493,7 +495,7 @@ input.valid {
   flex-direction: column;
   justify-content: center;
   width: 100%;
-    min-width: 370px !important;
+  min-width: 370px !important;
   height: 100%;
   box-sizing: border-box;
   padding: 40px;
@@ -583,10 +585,12 @@ input.valid {
     padding-top: 0;
   }
   .calendar-times .time-wrapper {
+    height: -moz-fit-content;
     height: fit-content;
     overflow-y: unset;
   }
   .calendar-times {
+    height: -moz-fit-content;
     height: fit-content;
     width: 80vw;
   }
@@ -630,7 +634,7 @@ input.valid {
   }
   .service-card {
     width: 100%;
-      min-width: unset;
+    min-width: unset;
     box-shadow: none;
   }
   .services-grid.services-grid {
@@ -719,6 +723,4 @@ input.valid {
 
 .alert-danger {
   background-color: rgba(255, 0, 0, 0.87);
-}
-
-/*# sourceMappingURL=styles.css.map */
+}/*# sourceMappingURL=styles.css.map */

@@ -20,7 +20,6 @@ function deleteServiceCustomSchedule(event) {
     }
 }
 function getDateRangeTimestamps(dateRange) {
-    console.log(dateRange)
     // Split the date range into start and end date strings
     let [startDateStr, endDateStr] = dateRange.split(' - ');
 

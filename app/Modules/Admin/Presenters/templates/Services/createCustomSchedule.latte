@@ -38,14 +38,21 @@
                     </div>
                 </div>
 
-                <div id='calendar'></div>
+                <div class="form-group">
+                    <label for="field-3" class="col-sm-3 control-label">Termíny</label>
+
+                    <div class="">
+                        <div id='calendar'></div>
+                    </div>
+                </div>
+
+                
                 <input n:name="events" id="events">
                 <!--submit-->
                 <div class="form-group">
-                    <input onclick="getAndProcessCalendarEvents()" n:name="submit" id="btn-submit" class="btn btn-success">
+                    <input onclick="getAndProcessCalendarEvents('events')" n:name="submit" id="btn-submit" class="btn btn-success">
                 </div>
                 <!--/submit-->
-                <div onclick="getAndProcessCalendarEvents()">Test</div>
             </div>
             <!--/body-->
         </div>
@@ -54,103 +61,7 @@
 
 </div>
 
-
 <script src="{$basePath}/assets/admin/js/datePicker.js"></script>
 <script>
-
-
-        const calendarEl = document.getElementById('calendar');
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            locale: 'cs',
-            eventOverlap: false,
-            aspectRatio: 2,
-            selectable: true,
-            editable: false,
-            initialView: 'timeGridFourDay',
-            firstDay: 1,
-            timeZone: 'UTC',
-            views: {
-                timeGridFourDay: {
-                    type: 'timeGrid',
-                    duration: {
-                        days: 7},
-                }
-            },
-            slotDuration: {$calendarPeriod},
-            nowIndicator: true,
-            select: function (selectionInfo) {
-                // Clear any previous selections
-                calendar.unselect();
-                const calendarPeriod = {$userSettings->sample_rate};
-                const eventDuration = {$service->duration}; // Set your event duration here
-
-                const numberOfPeriods = Math.ceil(eventDuration/calendarPeriod);
-
-                // Start time of the first event
-                let startTime = window.Moment(selectionInfo.start);
-                let endTime = window.Moment(selectionInfo.end);
-
-                // Loop to create back-to-back events
-                let count = 0;
-                while (startTime < endTime) {
-                    let eventEndTime = startTime.clone().add(eventDuration, 'minutes');
-
-                    // If the calculated end time exceeds the selected end time, break the loop
-                    if (eventEndTime > endTime) {
-                        if (count !== 0) {
-                            break;
-                        }
-                    }
-
-                    // Function to check for event conflicts
-                    function isEventConflict(eventStart, eventEnd) {
-                        let events = calendar.getEvents();
-                        return events.some(function (existingEvent) {
-                            return (
-                                eventStart < existingEvent.end && eventEnd > existingEvent.start
-                            );
-                        });
-                    }
-
-                    // Check for conflicts
-                    if (!isEventConflict(startTime, eventEndTime)) {
-                        // If no conflict, add the event
-                        calendar.addEvent({
-                            title: {$service->name},
-                            start: startTime.toDate(),
-                            end: eventEndTime.toDate()
-                        });
-                    }
-
-                    // Set start time for the next event to be the end time of the current event
-                    startTime.add(numberOfPeriods * calendarPeriod, 'minutes');
-                    count++
-                }
-
-                // Clear the selection
-                calendar.unselect();
-            },
-            eventClick: function (info) {
-                info.event.remove();
-            }
-        });
-        calendar.render();
-
-        function getAndProcessCalendarEvents() {
-            document.getElementById("events").value = getEventsAsJson();
-            console.log(getEventsAsJson())
-
-            function getEventsAsJson() {
-                const events = calendar.getEvents();
-                const jsonEvents = events.map(function(event) {
-                    return {
-                        start: event.start,
-                        end: event.end ? event.end : null,
-                    };
-                });
-
-                return JSON.stringify(jsonEvents, null, 2); // Beautify the JSON output
-            }
-        }
+    createFullCalendar({$calendarPeriod}, {$userSettings->sample_rate}, {$service->duration}, {$service->name}, "calendar")
 </script>
-<!--<script src="{$basePath}/assets/admin/js/fullCalendar.js"></script>-->
