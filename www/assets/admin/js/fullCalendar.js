@@ -121,3 +121,11 @@ function getAndProcessCalendarEvents(input) {
         return JSON.stringify(jsonEvents, null, 2); // Beautify the JSON output
     }
 }
+
+function addEvent(title, start, end) {
+        calendar.addEvent({
+            title: title,
+            start: start,
+            end: end
+        })
+}

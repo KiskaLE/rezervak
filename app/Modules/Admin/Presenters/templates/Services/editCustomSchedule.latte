@@ -40,32 +40,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="field-3" class="col-sm-3 control-label">Časové rozmezí</label>
-                    <div n:multiplier="multiplier">
-                        <div class="">
-                            <div class="form-input-group">
-                                <input n:name="uuid">
-                                <input class="form-control single-date" n:name="day" >
-                                <input class="form-control input-time" n:name="timeStart" >
-                                <input class="form-control input-time" n:name="timeEnd" >
-                                <br>
-                                {multiplier:remove}
-                            </div>
-
-                            <span class="input-error"
-                                  id="verificationTimeError">Čas musí být větší než 0.</span>
-                        </div>
-
+                    <label for="field-3" class="col-sm-3 control-label">Název rozvrhu</label>
+                    <div class="">
+                        <input n:name="events" id="events">
+                        <div id="calendar">
                     </div>
-                    <br>
-                    {multiplier:add multiplier}
-
                 </div>
-
 
                 <!--submit-->
                 <div class="form-group">
-                    <input n:name="submit" id="btn-submit" class="btn btn-success">
+                    <input onclick="getAndProcessCalendarEvents('events')" n:name="submit" id="btn-submit" class="btn btn-success">
                 </div>
                 <!--/submit-->
             </div>
@@ -80,4 +64,10 @@
 
 <script src="{$basePath}/assets/admin/js/datePicker.js"></script>
 <script src="{$basePath}/assets/admin/js/servicesCustom.js"></script>
+<script>
+    createFullCalendar({$calendarPeriod}, {$userSettings->sample_rate}, {$service->duration}, {$service->name}, "calendar")
+    {foreach $days as $day}
+        addEvent({$service->name}, {$day->start}, {$day->end});
+    {/foreach}
+</script>
 
