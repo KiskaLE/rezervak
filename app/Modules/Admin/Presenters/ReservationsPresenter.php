@@ -7,7 +7,6 @@ namespace App\Modules\admin\Presenters;
 
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\Application\UI\InvalidLinkException;
 
 
 final class ReservationsPresenter extends SecurePresenter
@@ -67,7 +66,6 @@ final class ReservationsPresenter extends SecurePresenter
         $this->uuid = $id;
         $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
         $this->template->reservation = $reservation;
-
     }
 
     public function actionDelete($id, $backlink)
