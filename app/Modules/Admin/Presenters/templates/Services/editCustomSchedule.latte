@@ -46,6 +46,7 @@
                         <div id="calendar">
                     </div>
                 </div>
+                <br>
 
                 <!--submit-->
                 <div class="form-group">
@@ -63,7 +64,7 @@
 <!--/form-->
 
 <script src="{$basePath}/assets/admin/js/datePicker.js"></script>
-<script src="{$basePath}/assets/admin/js/servicesCustom.js"></script>
+<!--<script src="{$basePath}/assets/admin/js/servicesCustom.js"></script>-->
 <script>
     createFullCalendar({$calendarPeriod}, {$userSettings->sample_rate}, {$service->duration}, {$service->name}, "calendar")
     {foreach $days as $day}
