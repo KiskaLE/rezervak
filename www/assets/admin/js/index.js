@@ -45,4 +45,21 @@ function getDateRangeTimestamps(dateRange) {
     return [startTimestamp, endTimestamp];
 }
 
+function toggleDropdown() {
+    console.log("test")
+    const dropdown = document.getElementById('user-dropdown');
+    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+}
+
+function closeDropdown(event) {
+    var dropdown = document.getElementById('user-dropdown');
+    var userAvatar = document.getElementById('user-avatar');
+    
+    if (!dropdown.contains(event.target) && !userAvatar.contains(event.target)) {
+        dropdown.style.display = 'none';
+    }
+}
+
+// Event listener for closing the dropdown
+document.addEventListener('click', closeDropdown);
 
