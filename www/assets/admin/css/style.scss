@@ -170,10 +170,6 @@
   color: red;
 }
 
-.panel-body {
-
-}
-
 #user-name {
   font-size: 17px;
 }
@@ -234,4 +230,18 @@
 
 .highlight-time-slot {
   background-color: #ecfccb;
+}
+
+.fc .fc-daygrid-day-frame {
+  height: 50px;
+  overflow: hidden;
+}
+
+//title
+.fc-toolbar-title {
+  font-weight: bold;
+}
+
+.fc-scrollgrid-sync-inner a {
+  font-weight: bold;
 }

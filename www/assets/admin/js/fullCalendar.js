@@ -18,16 +18,16 @@ function createFullCalendar(slotDuration ,calendarPeriod, serviceDuration, servi
     calendar = new FullCalendar.Calendar(document.getElementById(parentId), {
             locale: 'cs',
             eventOverlap: false,
+            allDaySlot: false,
             aspectRatio: 1,
             selectable: true,
             editable: false,
             themeSystem: "standard",
             initialView: 'dayGridMonth',
-            showNonCurrentDates: false,
             headerToolbar: {
-                left: "title",
-                center: "dayGridMonth",
-                right: "today prev,next"
+                left: "dayGridMonth timeGridWeek timeGridDay",
+                center: "title",
+                right: "today prevYear,prev,next,nextYear"
             },
             firstDay: 1,
             timeZone: 'UTC',
@@ -51,7 +51,7 @@ function createFullCalendar(slotDuration ,calendarPeriod, serviceDuration, servi
             nowIndicator: true,
             select: function (selectionInfo) {
                 const currentView = calendar.view;
-                if (currentView.type === 'timeGridDay') {
+                if (currentView.type === 'timeGridDay' || currentView.type === "timeGridWeek") {
                         // Clear any previous selections
                     calendar.unselect(); // Set your event duration here
 
@@ -104,7 +104,7 @@ function createFullCalendar(slotDuration ,calendarPeriod, serviceDuration, servi
             },
             eventClick: function (info) {
                 const currentView = calendar.view;
-                if (currentView.type === 'timeGridDay') {
+                if (currentView.type === 'timeGridDay' || currentView.type === "timeGridWeek") {
                     info.event.remove();
                 }
             },

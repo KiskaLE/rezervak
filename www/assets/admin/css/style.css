@@ -210,9 +210,22 @@
 
 #calendar {
   width: 100% !important;
-  height: 500px !important;
+  height: 80vh !important;
 }
 
 .highlight-time-slot {
   background-color: #ecfccb;
+}
+
+.fc .fc-daygrid-day-frame {
+  height: 50px;
+  overflow: hidden;
+}
+
+.fc-toolbar-title {
+  font-weight: bold;
+}
+
+.fc-scrollgrid-sync-inner a {
+  font-weight: bold;
 }/*# sourceMappingURL=style.css.map */
