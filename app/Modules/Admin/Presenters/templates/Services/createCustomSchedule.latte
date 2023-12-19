@@ -1,0 +1,68 @@
+{block title}Služby{/block}
+{block content}
+<div class="row page-header"><h1>Služby</h1></div>
+<!--navigace-->
+<div class="row navbar">
+    <a n:href="back! show" class="btn btn-default ajax" class="btn btn-default">Zpět</i></a>
+</div>
+<!--/navigace-->
+
+<div class="row">
+    <h2>Vytvořit rozvrh</h2>
+    <!--content-->
+    <form n:name="createCustomScheduleForm" class="ajax">
+
+        <div class="panel panel-primary" data-collapsed="0">
+            <!--body-->
+            <div class="panel-body" style="display: block;">
+
+                <div class="form-group">
+                    <label for="field-3" class="col-sm-3 control-label">Název rozvrhu</label>
+
+                    <div class="">
+                        <input class="form-control" n:name="scheduleName">
+                        <span class="description">Zadejte název rozvrhu</span>
+                        <span class="input-error"
+                              id="verificationTimeError"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="field-3" class="col-sm-3 control-label">Časové rozmezí</label>
+
+                    <div class="">
+                        <input class="form-control" n:name="range" id="date-start">
+                        <span class="description">Vyberte časové rozmezí</span>
+                        <span class="input-error"
+                              id="verificationTimeError">Čas musí být větší než 0.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="field-3" class="col-sm-3 control-label">Termíny</label>
+
+                    <div class="">
+                        <input n:name="events" id="events">
+                        <div id='calendar'></div>
+                    </div>
+                </div>
+
+                
+                
+                <!--submit-->
+                <div class="form-group">
+                    <input onclick="getAndProcessCalendarEvents('events')" n:name="submit" id="btn-submit" class="btn btn-success">
+                </div>
+                <!--/submit-->
+            </div>
+            <!--/body-->
+        </div>
+
+    </form>
+
+</div>
+
+<script src="{$basePath}/assets/admin/js/datePicker.js"></script>
+<script>
+    createFullCalendar({$calendarPeriod}, {$userSettings->sample_rate}, {$service->duration}, {$service->name}, "calendar")
+</script>

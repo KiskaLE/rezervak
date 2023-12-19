@@ -1,11 +1,17 @@
+{block title}Platba{/block}
 {block content}
 <div class="page-wrapper"></div>
-<h1 class="text-highlight">Payment</h1>
+<h1>Platba</h1>
 
-{foreach $payments as $payment}
-    <div n:if="$payment->status == 0">
-        <p>{$payment->price}</p>
+<div n:if="$payment->status == 0" class="payment-wrapper">
+    <div class="payment-info">
+        <h2>Údaje pro platbu</h2>
+        <div><span><bold>Částka:</bold> </span><span>{$payment->price}</span><span> Kč</span></div>
+        <div><span><bold>Číslo účtu:</bold> </span><span>{$userSettings->payment_info}</span></div>
+        <div><span><bold>Variabilní symbol:</bold> </span><span>{$payment->id_transaction}</span></div>
     </div>
-
-{/foreach}
+    <div class="payment-qr-code">
+        {$qrCode|noescape}
+    </div>
+</div>
 

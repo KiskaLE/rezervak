@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Front\Presenters;
 
 use Nette;
+use App\Modules\Moment;
 
 
 final class HomePresenter extends BasePresenter

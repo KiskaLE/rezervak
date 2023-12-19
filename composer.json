@@ -1,6 +1,6 @@
 {
 	"name": "nette/rezervak",
-	"description": "Nette: Standard Web Project",
+	"description": "Reservation application",
 	"keywords": ["nette"],
 	"type": "project",
 	"license": ["MIT", "BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
@@ -20,7 +20,11 @@
 		"latte/latte": "^3.0",
 		"tracy/tracy": "^2.9",
 		"ramsey/uuid": "^4.7",
-		"fightbulc/moment": "^1.34"
+		"fightbulc/moment": "^1.34",
+		"contributte/forms-multiplier": "^4.0",
+		"phpmailer/phpmailer": "^6.9",
+		"guzzlehttp/guzzle": "^7.0",
+		"dfridrich/qr-platba": "^2"
 	},
 	"require-dev": {
 		"nette/tester": "^2.4",

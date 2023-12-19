@@ -7,16 +7,17 @@ let address = new URL(window.location.href);
 let searchParams = address.searchParams;
 
 
-function showTab(n) {
+async function showTab(n) {
     // This function will display the specified tab of the form ...
     let x = document.getElementsByClassName("tab");
-    x[n].style.display = "block";
+    x[n].style.display = "flex";
+
     // ... and fix the Previous/Next buttons:
     document.getElementById("prevBtn").style.display = "none";
     if (n == 0) {
         document.getElementById("prevBtn").style.display = "none";
     }
-    if (n < 3) {
+    if (n < 2) {
         document.getElementById("nextBtn").style.display = "none";
     } else {
         // document.getElementById("prevBtn").style.display = "inline";
@@ -36,21 +37,21 @@ function showTab(n) {
     }
     //render recap
     if (currentTab >= x.length - 1) {
-        setRecap()
+        await setRecap()
     }
     //render calendar
-    if (currentTab == "1") {
-        createCalendar(showMonth, showYear);
+    if (currentTab == 1) {
+        await createCalendar(showMonth, showYear);
     }
 
     // ... and run a function that displays the correct step indicator:
     if (n == 2) {
-        changeDay();
+        await changeDay();
     }
     fixStepIndicator(n)
 }
 
-function nextPrev(n) {
+async function nextPrev(n) {
     // This function will figure out which tab to display
     let x = document.getElementsByClassName("tab");
     // Exit the function if any field in the current tab is invalid:
@@ -67,11 +68,11 @@ function nextPrev(n) {
     }
 
     // Otherwise, display the correct tab:
-    showTab(currentTab);
+    await showTab(currentTab);
     tabCounter++;
 }
 
-function goToTab(n) {
+async function goToTab(n) {
     let x = document.getElementsByClassName("tab");
     // activeted tabs
     const tabs = document.querySelectorAll(".step")
@@ -79,7 +80,7 @@ function goToTab(n) {
     if (n < currentTab) {
         x[currentTab].style.display = "none";
         currentTab = n;
-        showTab(currentTab);
+        await showTab(currentTab);
     }
     //remove active from tabs berore active tab
     for (let i = 0; i < tabs.length; i++) {
@@ -193,7 +194,7 @@ async function createRecap() {
 function setRecap() {
     let data = document.querySelectorAll(".multiform")
     for (let i = 0; i < data.length; i++) {
-        if (data[i].name == "service" || data[i].name == "time" || data[i].name == "dateType") {
+        if (data[i].name == "service" || data[i].name == "time" || data[i].name == "dateType" || data[i].name == "date") {
             continue
         }
         document.querySelector("#" + data[i].name).innerHTML = data[i].value
@@ -241,12 +242,12 @@ function getOption(name, number) {
 }
 
 
-function changeDay() {
+async function changeDay() {
     const button = document.querySelector("#load-day");
     const day = document.querySelector("[name='date']").value;
     const service = document.querySelector("[name='service']").value;
     let naja = window.Naja;
-    naja.makeRequest("GET", "/reservation/create", {
+    await naja.makeRequest("GET", "/reservation/create", {
         u: searchParams.get("u"),
         run: "setDate",
         day: day,
@@ -256,15 +257,51 @@ function changeDay() {
             credentials: 'include',
         },
     })
+    let time = day.split("-");
+    const timesTitle = document.querySelector("#calendar-selected-date")
+    timesTitle.innerHTML = time[2] + "." + time[1] + "." + time[0];
+
+    //set recap
+    const date = document.getElementById("date")
+    date.innerHTML = time[2] + "." + time[1] + "." + time[0];
+    if (window.innerWidth > 900) {
+        const box = document.querySelector(".calendar-times");
+        box.style.display = "block";
+    } else {
+        toggleCalendarTimes();
+    }
 }
 
+function toggleCalendarTimes() {
+    const calendar = document.querySelector(".calendar-date")
+    const times = document.querySelector(".calendar-times")
+    const back = document.querySelector("#times-back")
+    if (times.style.display == "none") {
+        back.classList.remove("hidden")
+        calendar.style.display = "none";
+        times.style.display = "block";
+        removeDaySelected();
+    } else {
+        back.classList.add("hidden")
+        calendar.style.display = "block";
+        times.style.display = "none";
+    }
+}
+
+
 function setService(id, name, price) {
-    document.querySelector("[name='service']").value = id;
-    const recap = document.querySelector("#service");
-    ;
-    recap.innerHTML = name;
-    document.querySelector("#price").innerHTML = price;
-    nextPrev(1);
+    if (document.readyState === "complete") {
+        // Fully loaded!
+        document.querySelector("[name='service']").value = id;
+        const recap = document.querySelector("#service");
+        const box = document.querySelector(".calendar-times");
+        box.style.display = "none";
+
+        recap.innerHTML = name;
+        document.querySelector("#price").innerHTML = price;
+        nextPrev(1);
+    }
+
 }
 
 function setTime(id, type, time) {
@@ -290,6 +327,30 @@ function calNext(n) {
 }
 
 async function createCalendar(month, year) {
+    const spinner = new mojs.Shape({
+        parent: '#calendar',
+        shape: 'circle',
+        stroke: '#918d91',
+        strokeDasharray: '125, 125',
+        strokeDashoffset: {'0': '-125'},
+        strokeWidth: 7,
+        fill: 'none',
+        rotate: {'-90': '270'},
+        radius: 30,
+        isShowStart: false,
+        duration: 500,
+        easing: 'back.in',
+    })
+        .then({
+            rotate: {'-90': '270'},
+            strokeDashoffset: {'-125': '-250'},
+            duration: 3000,
+            easing: 'cubic.out',
+            repeat: 1000,
+        });
+
+    spinner.play();
+
     const container = document.querySelector("#calendar");
     const calendarTitle = document.querySelector("#calendar-month")
     const curDate = new Date();
@@ -299,7 +360,7 @@ async function createCalendar(month, year) {
     const availableDays = await getAvailableDays();
 
     calendarTitle.innerHTML = "";
-    container.innerHTML = "";
+    container.innerHTML = ""
     let curMonthName = "";
     switch (month) {
         case 0:
@@ -343,25 +404,36 @@ async function createCalendar(month, year) {
     //days in calendar
     let days = [];
     //create last month days
-    for (let i = 0; i < getDayIndexMondaySunday(firstDateOfMonth); i++) {
-        const th = document.createElement("th");
-        th.className = "";
-        days.push(th);
+    const date = new Date(year, month, 1);
+    date.setMonth(date.getMonth() - 1);
+    date.setDate(0);
+    const daysInPreviousMonth = date.getDate();
+    const legend = ["Po", "Út", "St", "Čt", "Pá", "So", "Ne"];
+    for (let i = 0; i < legend.length; i++) {
+        const div = document.createElement("div");
+        div.className = "day-legend";
+        div.innerHTML = legend[i];
+        container.appendChild(div);
     }
-    //week
+    for (let i = 0; i < getDayIndexMondaySunday(firstDateOfMonth); i++) {
+        const div = document.createElement("div");
+        div.classList.add("day");
+        div.classList.add("unavailable");
+        div.classList.add("different-month")
+        div.innerHTML = daysInPreviousMonth - getDayIndexMondaySunday(firstDateOfMonth) + i + 1;
+        container.appendChild(div);
+    }
+
     for (let i = 1; i < lastDayOfMonth.getDate() + 1; i++) {
         const date = new Date(year, month, i);
-        const th = document.createElement("th");
-        th.innerHTML = i;
-        th.className = "day";
+        const div = document.createElement("div");
+        div.innerHTML = i;
+        div.className = "day";
         if (date <= curDate) {
-            th.className += " unavailable";
-            days.push(th);
-            continue;
+            div.classList.add("unavailable");
         }
-
         if (date.getDay() === 0 || date.getDay() === 6) {
-            th.className += " weekend";
+            div.classList.add("weekend");
         }
         let isFull = true;
         for (let j = 0; j < availableDays.length; j++) {
@@ -371,31 +443,30 @@ async function createCalendar(month, year) {
             }
         }
         if (isFull) {
-            th.className += " unavailable"
+            div.classList.add("unavailable");
         } else {
-            th.className += " available"
-            th.addEventListener("click", () => {
+            div.classList.add("available");
+            div.addEventListener("click", () => {
                 document.querySelector("[name='date']").value = date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0');
-                nextPrev(1);
+                removeDaySelected();
+                div.classList.add("selected");
+                changeDay();
             });
         }
-        days.push(th);
+        container.appendChild(div);
+    }
+    //add days to end of week from next month
+    for (let i = 0; i < 7 - getDayIndexMondaySunday(lastDayOfMonth) - 1; i++) {
+        const div = document.createElement("div");
+        div.classList.add("day");
+        div.classList.add("unavailable");
+        div.classList.add("different-month")
+        div.innerHTML = i + 1;
+        container.appendChild(div);
     }
 
-    //split days into weeks
-    let week = document.createElement("tr");
-    for (let i = 0; i < days.length; i++) {
-        if (i % 7 === 0) {
-            container.appendChild(week);
-            week = document.createElement("tr");
-            week.className = "week";
-        }
-        week.appendChild(days[i]);
-        if (i === days.length - 1) {
-            container.appendChild(week);
-        }
-    }
-    ;
+    spinner.stop();
+
 
     function getDayIndexMondaySunday(date) {
         return date.getDay() === 0 ? 6 : date.getDay() - 1
@@ -419,6 +490,15 @@ async function createCalendar(month, year) {
     }
 
 
+}
+
+function removeDaySelected() {
+    const days = document.querySelectorAll(".day.selected")
+    if (days != null) {
+        for (let i = 0; i < days.length; i++) {
+            days[i].classList.remove("selected");
+        }
+    }
 }
 
 async function verify() {
@@ -451,3 +531,5 @@ async function verify() {
     }
 
 }
+
+

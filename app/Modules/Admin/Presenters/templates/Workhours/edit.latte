@@ -1,3 +1,4 @@
+{block title}Pracovní doba{/block}
 {block content}
 <div class="row page-header"><h1>{switch $day->weekday}
         {case 0}
@@ -43,8 +44,9 @@
                     </span>
                 </div>
                 <!--/input-->
+                <br>
                 <!--submit-->
-                <div class="form-group default-padding">
+                <div class="form-group">
                     <input n:name="submit" id="btn-submit" class="btn btn-success">
                     <a n:href="this" class="btn ajax">Zrušit změny</a>
                 </div>
@@ -86,7 +88,7 @@
             <th>
                 <a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="Workhours:editBreak $break->id, $day->id"><i
                             class="entypo-pencil ajax"></i>Úprava</a>
-                <a class="btn btn-danger btn-sm btn-icon icon-left ajax" n:href="WorkHours:deleteBreak $break->id, $day->id"><i
+                <a onclick="deleteException(event)" class="btn btn-danger btn-sm btn-icon icon-left" n:href="deleteBreak! $break->id "><i
                             class="entypo-cancel ajax"></i>Smazat</a></th>
         </tr>
         </tbody>

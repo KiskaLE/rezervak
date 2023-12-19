@@ -9,7 +9,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use Ramsey\Uuid\Uuid;
 use App\Modules\AvailableDates;
-
+use App\Modules\Moment;
 
 final class WorkhoursPresenter extends SecurePresenter
 {
@@ -52,7 +52,7 @@ final class WorkhoursPresenter extends SecurePresenter
     public function renderExcerptionsConflicts($id)
     {
         $reservations = $this->availableDates->getConflictedReservations($id);
-        $this->template->reservations = $reservations;
+        $this->template->reservationsUTC = $reservations;
     }
 
     public function actionEdit($id)
@@ -104,10 +104,15 @@ final class WorkhoursPresenter extends SecurePresenter
     {
         $this->database->table("workinghours_exceptions")->where("uuid=?", $uuid)->delete();
         $this->flashMessage("Smazano", "alert-success");
-        $this->redirect(":show");
-        $this->redirect(":show");
+        $this->redirect("show");
     }
 
+    public function handleDeleteBreak($break_id)
+    {
+        $this->database->table("breaks")->get($break_id)->delete();
+        $this->flashMessage("Smazano", "alert-success");
+        $this->redirect("edit", $this->id);
+    }
 
     protected function createComponentEditForm(): Form
     {

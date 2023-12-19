@@ -15,6 +15,8 @@ final class DiscountCodesPresenter extends SecurePresenter
 {
 
     private $id;
+    private $selectedServices;
+    private $discountCode;
 
     public function __construct(
         private Nette\Database\Explorer $database
@@ -28,19 +30,42 @@ final class DiscountCodesPresenter extends SecurePresenter
 
     }
 
-    public function actionShow()
+    public function actionShow(int $page = 1)
     {
-        $discountCodes = $this->database->table("discount_codes")->where("user_id=?", $this->user->id)->fetchAll();
+        $discountCodesCount = $this->database->table("discount_codes")
+            ->where("user_id=?", $this->user->id)
+            ->count();
+
+        $paginator = new Nette\Utils\Paginator;
+        $paginator->setItemCount($discountCodesCount);
+        $paginator->setItemsPerPage(10);
+        $paginator->setPage($page);
+
+        $discountCodes = $this->database->table("discount_codes")
+            ->where("user_id=?", $this->user->id)
+            ->limit($paginator->getLength(), $paginator->getOffset())
+            ->fetchAll();
         $this->template->discountCodes = $discountCodes;
+        $this->template->paginator = $paginator;
+
+
     }
 
     public function actionEdit(int $id)
     {
         $this->id = $id;
+
         $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
         $this->template->services = $services;
+
         $discountCode = $this->database->table("discount_codes")->where("id=?", $id)->fetch();
-        $selectedServices = Json::decode($discountCode->services);
+        $this->discountCode = $discountCode;
+        $services2discountCode = $discountCode->related("service2discount_code.discount_code_id")->fetchAll();
+        $selectedServices = [];
+        foreach ($services2discountCode as $row) {
+            $selectedServices[] = $row->ref("services", "service_id")->id;
+        }
+        $this->selectedServices = $selectedServices;
         $this->template->selectedServices = $selectedServices;
         $this->template->discountCode = $discountCode;
     }
@@ -51,13 +76,14 @@ final class DiscountCodesPresenter extends SecurePresenter
         $this->template->services = $services;
     }
 
-    public function handleDelete( $uuid)
+    public function handleDelete($uuid)
     {
         $this->database->table("discount_codes")->where("uuid=?", $uuid)->delete();
         $this->redirect("this");
     }
 
-    public function handleHide( $uuid) {
+    public function handleHide($uuid)
+    {
         $active = $this->database->table("discount_codes")->where("uuid=?", $uuid)->fetch("hidden")->active;
         if ($active) {
             $this->database->table("discount_codes")->where("uuid=?", $uuid)->update([
@@ -80,9 +106,16 @@ final class DiscountCodesPresenter extends SecurePresenter
         $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
         $form = new Form;
         $form->addCheckbox("active", "Aktivní");
-        $form->addText("code", "Code")->setRequired();
-        $form->addSelect("type", "Typ", $types)->setRequired();
-        $form->addText("value", "Hodnota")->setHtmlAttribute("type", "number")->setRequired();
+        $form->addText("code", "Code")
+            ->setRequired("Zadejte slevový kód");
+        $form->addSelect("type", "Typ", $types)
+            ->setRequired("Vyberte typ slevy");
+        $form->addText("value", "Hodnota")
+            ->setHtmlAttribute("type", "number")
+            ->setRequired("Zadejte hodnotu slevy")
+            ->addRule($form::Min, "Hodnota musí být větší než 0", 1)
+            ->addConditionOn($form["type"], $form::Equal, 1)
+            ->addRule($form::Max, "Hodnota nesmí být větší než 100", 100);
         $i = 1;
         foreach ($services as $service) {
             $form->addCheckbox(strval("service" . $i), $service->name);
@@ -99,8 +132,6 @@ final class DiscountCodesPresenter extends SecurePresenter
     {
         $uuid = Uuid::uuid4();
         $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
-        $show = $values->active ? 1 : 0;
-        $status = false;
         $enabled = [];
         $i = 1;
         foreach ($services as $service) {
@@ -110,34 +141,51 @@ final class DiscountCodesPresenter extends SecurePresenter
             }
             $i++;
         }
-        $json = Json::encode($enabled);
-        try {
-            $status = $this->database->table("discount_codes")->insert([
-                "uuid" => $uuid,
-                "user_id" => $this->user->id,
-                "code" => $values->code,
-                "value" => $values->value,
-                "type" => $values->type,
-                "active" => 0,
-                "services" => $json
-            ]);
-        } catch (\Throwable $th) {
-            $this->flashMessage("Nepodarilo se vytvořit, kód nesmí být duplicitní", "alert-danger");
+        $status = $this->database->transaction(function ($database) use ($uuid, $values, $enabled) {
+            $isSuccess = true;
+            try {
+                $discountCode = $this->database->table("discount_codes")->insert([
+                    "uuid" => $uuid,
+                    "user_id" => $this->user->id,
+                    "code" => $values->code,
+                    "value" => $values->value,
+                    "type" => $values->type,
+                    "active" => 0,
+                ]);
+                foreach ($enabled as $row) {
+                    $this->database->table("service2discount_code")->insert([
+                        "discount_code_id" => $discountCode->id,
+                        "service_id" => $row
+                    ]);
+                }
+            } catch (\Throwable $th) {
+                $this->flashMessage("Nepodarilo se vytvořit, kód nesmí být duplicitní", "alert-danger");
+                $isSuccess = false;
+            }
+            return $isSuccess;
+        });
+        if (!$status) {
+            $this->redirect("this");
         }
-        if ($status) {
-            $this->flashMessage("Vytvořeno", "alert-success");
-            $this->redirect("DiscountCodes:show");
-        }
+        $this->flashMessage("Vytvořeno", "alert-success");
+        $this->redirect("DiscountCodes:show");
     }
 
     protected function createComponentEditForm(): Form
     {
         $types = [0 => "Částka", 1 => "Procento"];
         $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
+        $type = $this->discountCode->type;
         $form = new Form;
         $form->addCheckbox("active", "Aktivní");
-        $form->addText("code", "Code")->setRequired();
-        $form->addText("value", "Hodnota")->setHtmlAttribute("type", "number")->setRequired();
+        $form->addText("code", "Code")
+            ->setRequired("Zadejte slevový kód");
+        $form->addText("value", "Hodnota")
+            ->setHtmlAttribute("type", "number")
+            ->setRequired("Zadejte hodnotu slevy")
+            ->addRule($form::Min, "Hodnota musí být větě než 0", 1)
+            ->addCondition($type == 1)
+            ->addRule($form::Max, "Hodnota nesmí být větě než 100", 100);
         $i = 1;
         foreach ($services as $service) {
             $form->addCheckbox(strval("service" . $i), $service->name);
@@ -153,7 +201,6 @@ final class DiscountCodesPresenter extends SecurePresenter
     public function editFormSucceeded(Form $form, $values)
     {
         $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
-        $show = $values->active ? 1 : 0;
         $status = false;
         $enabled = [];
         $i = 1;
@@ -164,18 +211,35 @@ final class DiscountCodesPresenter extends SecurePresenter
             }
             $i++;
         }
-        $json = Json::encode($enabled);
+        $status = $this->database->transaction(function ($database) use ($values, $enabled) {
+            $isSuccess = true;
+            try {
+                $this->database->table("discount_codes")->where("id=?", $this->id)->update([
+                    "code" => $values->code,
+                    "value" => $values->value,
+                ]);
+                //add new services
+                foreach ($enabled as $row) {
+                    if (!in_array($row, $this->selectedServices)) {
+                        $this->database->table("service2discount_code")->insert([
+                            "discount_code_id" => $this->id,
+                            "service_id" => $row
+                        ]);
+                    }
+                }
+                //delete uchecked services
+                foreach ($this->selectedServices as $row) {
+                    if (!in_array($row, $enabled)) {
+                        $this->database->table("service2discount_code")->where("discount_code_id=? AND service_id=?", $this->id, $row)->delete();
+                    }
+                }
+            } catch (\Throwable $th) {
+                $this->flashMessage("Nepodarilo se uložit", "alert-danger");
+                $isSuccess = false;
+            }
+            return $isSuccess;
+        });
 
-        try {
-            $status = $this->database->table("discount_codes")->where("id=?", $this->id)->update([
-                "code" => $values->code,
-                "value" => $values->value,
-                "active" => $show,
-                "services" => $json
-            ]);
-        } catch (\Throwable $th) {
-            $this->flashMessage("Nepodarilo se uložit", "alert-danger");
-        }
         if ($status) {
             $this->flashMessage("Uloženo", "alert-success");
             $this->redirect("DiscountCodes:show");

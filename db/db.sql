@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db:3306
--- Generation Time: Nov 21, 2023 at 12:09 PM
+-- Generation Time: Dec 14, 2023 at 12:36 PM
 -- Server version: 8.2.0
 -- PHP Version: 8.2.12
 
@@ -45,13 +45,12 @@ CREATE TABLE `breaks` (
 
 CREATE TABLE `discount_codes` (
                                   `id` int NOT NULL,
-                                  `uuid` char(36) COLLATE utf8mb4_czech_ci NOT NULL,
+                                  `uuid` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci NOT NULL,
                                   `user_id` int NOT NULL,
                                   `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci NOT NULL,
                                   `value` int NOT NULL,
                                   `active` tinyint(1) NOT NULL,
-                                  `type` tinyint NOT NULL COMMENT '0-price\r\n1-%',
-                                  `services` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL
+                                  `type` tinyint NOT NULL COMMENT '0-price\r\n1-%'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 -- --------------------------------------------------------
@@ -63,6 +62,7 @@ CREATE TABLE `discount_codes` (
 CREATE TABLE `payments` (
                             `id` int NOT NULL,
                             `reservation_id` int DEFAULT NULL,
+                            `id_transaction` int NOT NULL,
                             `price` int NOT NULL,
                             `status` tinyint NOT NULL DEFAULT '0',
                             `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -79,9 +79,8 @@ CREATE TABLE `reservations` (
                                 `id` int NOT NULL,
                                 `uuid` char(36) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
                                 `user_id` int NOT NULL,
-                                `date` date NOT NULL,
                                 `service_id` int NOT NULL,
-                                `start` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                                `start` datetime NOT NULL,
                                 `firstname` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
                                 `lastname` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
                                 `email` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
@@ -105,9 +104,8 @@ CREATE TABLE `reservations_delated` (
                                         `id` int NOT NULL,
                                         `uuid` char(36) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
                                         `user_id` int NOT NULL,
-                                        `date` date NOT NULL,
                                         `service_id` int NOT NULL,
-                                        `start` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
+                                        `start` datetime NOT NULL,
                                         `firstname` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
                                         `lastname` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
                                         `email` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
@@ -124,6 +122,17 @@ CREATE TABLE `reservations_delated` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `service2discount_code`
+--
+
+CREATE TABLE `service2discount_code` (
+                                         `discount_code_id` int NOT NULL,
+                                         `service_id` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `services`
 --
 
@@ -131,13 +140,48 @@ CREATE TABLE `services` (
                             `id` int NOT NULL,
                             `user_id` int NOT NULL,
                             `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL,
-                            `description` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
+                            `description` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT NULL,
                             `price` int NOT NULL,
                             `duration` int NOT NULL,
                             `hidden` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1-hidden\r\n0-visible',
                             `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                             `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `services_custom_schedules`
+--
+
+CREATE TABLE `services_custom_schedules` (
+                                             `id` int NOT NULL,
+                                             `uuid` char(36) NOT NULL,
+                                             `name` varchar(255) NOT NULL,
+                                             `start` datetime NOT NULL,
+                                             `end` datetime NOT NULL,
+                                             `service_id` int NOT NULL,
+                                             `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                             `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                             `type` tinyint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `service_custom_schedule_days`
+--
+
+CREATE TABLE `service_custom_schedule_days` (
+                                                `id` int NOT NULL,
+                                                `uuid` char(36) NOT NULL,
+                                                `service_custom_schedule_id` int NOT NULL,
+                                                `start` datetime NOT NULL,
+                                                `end` datetime NOT NULL,
+                                                `type` tinyint NOT NULL,
+                                                `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                                `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -152,7 +196,13 @@ CREATE TABLE `settings` (
                             `payment_info` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci DEFAULT NULL,
                             `verification_time` int NOT NULL DEFAULT '15',
                             `number_of_days` int NOT NULL DEFAULT '30',
-                            `time_to_pay` int NOT NULL DEFAULT '24' COMMENT 'in hours'
+                            `time_to_pay` int NOT NULL DEFAULT '24' COMMENT 'in hours',
+                            `time_zone`  varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci NOT NULL DEFAULT '0' COMMENT 'UTC',
+                            `company`    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci         DEFAULT NULL,
+                            `phone`      varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci          DEFAULT NULL,
+                            `email`      varchar(255) COLLATE utf8mb4_czech_ci                      NOT NULL,
+                            `created_at` datetime                                                   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                            `updated_at` datetime                                                            DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 -- --------------------------------------------------------
@@ -180,8 +230,8 @@ CREATE TABLE `users` (
 CREATE TABLE `workinghours` (
                                 `id` int NOT NULL,
                                 `weekday` tinyint NOT NULL COMMENT '0- monday 1-tuesday 2-wednesday 3- thursday 4- friday 5-saturday 6- sunday	',
-                                `start` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT '00:00',
-                                `stop` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT '00:00',
+                                `start` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci DEFAULT '00:00' COMMENT 'User timezone',
+                                `stop` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_czech_ci NOT NULL DEFAULT '00:00' COMMENT 'User timezone',
                                 `user_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_czech_ci;
 
@@ -195,8 +245,8 @@ CREATE TABLE `workinghours_exceptions` (
                                            `id` int NOT NULL,
                                            `uuid` char(36) NOT NULL,
                                            `name` varchar(255) NOT NULL,
-                                           `start` datetime NOT NULL,
-                                           `end` datetime NOT NULL,
+                                           `start` datetime NOT NULL COMMENT 'User timezone',
+                                           `end` datetime NOT NULL COMMENT 'User timezone',
                                            `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                            `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                            `user_id` int NOT NULL
@@ -227,6 +277,7 @@ ALTER TABLE `discount_codes`
 --
 ALTER TABLE `payments`
     ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id_transaction` (`id_transaction`),
   ADD KEY `reservation_id` (`reservation_id`) USING BTREE;
 
 --
@@ -248,11 +299,33 @@ ALTER TABLE `reservations_delated`
   ADD KEY `user_id_2` (`user_id`);
 
 --
+-- Indexes for table `service2discount_code`
+--
+ALTER TABLE `service2discount_code`
+    ADD UNIQUE KEY `discount_code_id_2` (`discount_code_id`,`service_id`),
+    ADD KEY `discount_code_id` (`discount_code_id`),
+    ADD KEY `service_id` (`service_id`);
+
+--
 -- Indexes for table `services`
 --
 ALTER TABLE `services`
     ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `services_custom_schedules`
+--
+ALTER TABLE `services_custom_schedules`
+    ADD PRIMARY KEY (`id`),
+  ADD KEY `service_id` (`service_id`);
+
+--
+-- Indexes for table `service_custom_schedule_days`
+--
+ALTER TABLE `service_custom_schedule_days`
+    ADD PRIMARY KEY (`id`),
+  ADD KEY `service_custom_schedule_id` (`service_custom_schedule_id`);
 
 --
 -- Indexes for table `settings`
@@ -325,6 +398,18 @@ ALTER TABLE `services`
     MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `services_custom_schedules`
+--
+ALTER TABLE `services_custom_schedules`
+    MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `service_custom_schedule_days`
+--
+ALTER TABLE `service_custom_schedule_days`
+    MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
@@ -374,7 +459,7 @@ ALTER TABLE `payments`
 -- Constraints for table `reservations`
 --
 ALTER TABLE `reservations`
-    ADD CONSTRAINT `reservations_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`),
+    ADD CONSTRAINT `reservations_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `reservations_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
@@ -382,6 +467,18 @@ ALTER TABLE `reservations`
 --
 ALTER TABLE `services`
     ADD CONSTRAINT `services_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `services_custom_schedules`
+--
+ALTER TABLE `services_custom_schedules`
+    ADD CONSTRAINT `services_custom_schedules_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `service_custom_schedule_days`
+--
+ALTER TABLE `service_custom_schedule_days`
+    ADD CONSTRAINT `service_custom_schedule_days_ibfk_1` FOREIGN KEY (`service_custom_schedule_id`) REFERENCES `services_custom_schedules` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `settings`

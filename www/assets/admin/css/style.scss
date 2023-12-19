@@ -35,6 +35,10 @@
 .page-header.page-header {
   text-align: left;
 }
+
+.hidden {
+  display: none;
+}
 //page end
 
 //form start
@@ -57,6 +61,19 @@
 
 }
 
+.form-input-group.form-input-group {
+  display: flex;
+  gap:10px;
+
+  .input-time {
+    max-width: 90px;
+  }
+
+  .single-date {
+    max-width: 100px;
+  }
+}
+
 //form end
 .flex-row.flex-row {
   display: flex;
@@ -65,6 +82,17 @@
 .form-group {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  justify-content: center;
+
+  .btn {
+    width: 150px;
+    align-self: center;
+
+    @media (max-width: 500px) {
+      width: 100%;
+    }
+  }
 }
 
 #reservation {
@@ -90,6 +118,7 @@
 .login-container {
   min-height: 100vh;
   background-color: #303641;
+  width: 100%;
 }
 
 .main-content {
@@ -139,13 +168,6 @@
 .input-error {
   display: none;
   color: red;
-}
-
-.panel-body {
-  .form-group {
-    display: flex;
-    flex-direction: column;
-  }
 }
 
 #user-name {
@@ -198,4 +220,28 @@
     position: relative;
     top: -2px
   }
+}
+
+//full calendar
+#calendar {
+  width: 100% !important;
+  height: 80vh !important;
+}
+
+.highlight-time-slot {
+  background-color: #ecfccb;
+}
+
+.fc .fc-daygrid-day-frame {
+  height: 50px;
+  overflow: hidden;
+}
+
+//title
+.fc-toolbar-title {
+  font-weight: bold;
+}
+
+.fc-scrollgrid-sync-inner a {
+  font-weight: bold;
 }

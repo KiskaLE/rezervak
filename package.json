@@ -16,9 +16,11 @@
     "webpack-dev-server": "^4.15.1"
   },
   "dependencies": {
+    "@mojs/core": "^1.7.1",
     "chart.js": "^4.4.0",
+    "moment": "^2.29.4",
     "naja": "^2.5.0",
-    "nette-forms": "^3.3.2",
+    "nette-forms": "^3.3.5",
     "nouislider": "^15.7.1"
   }
 }

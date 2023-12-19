@@ -2,13 +2,23 @@
 :root {
   --text-dark: rgb(29, 27, 39);
   --text-light: rgb(248, 248, 255);
-  --background: rgb(248, 248, 255);
-  --primary: rgb(55, 86, 247);
+  --background: #f3f4f6;
+  --white: #f9fafb;
+  --primary: #2563eb;
   --secondary: rgb(29, 27, 39);
   --accent: rgb(107, 186, 163);
   --shadow: var(--primary) 0px 10px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
-  --shadow-secondary: var(--secondary) 0px 4px 12px;
+  --shadow-secondary: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  --radius: 27px;
   font-size: 16px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.text-center {
+  text-align: center;
 }
 
 .body-container {
@@ -24,8 +34,11 @@ p {
 }
 
 .card {
-  padding: 20px;
-  border-radius: 50px;
+  width: 100%;
+  padding: 50px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-secondary);
+  background-color: var(--white);
 }
 
 bold {
@@ -42,12 +55,41 @@ h1 {
 
 body {
   font-family: "Jost", sans-serif;
-  font-family: "Source Code Pro", monospace;
   background-color: var(--background);
   margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.back {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 40px;
+  border: 1px solid rgba(94, 94, 94, 0.8);
+  border-radius: 25px;
+}
+.back img {
+  width: 28px;
+  color: var(--primary);
+}
+
+.text-left {
+  text-align: left !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+.back:hover {
+  background-color: rgba(139, 157, 248, 0.72);
 }
 
 .body-container {
@@ -59,9 +101,10 @@ body {
 
 .page-wrapper {
   display: flex;
+  width: 100%;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  padding: 20px 20px;
 }
 
 .items-table {
@@ -88,7 +131,7 @@ body {
   height: 50px;
   width: 50px;
   border: var(--secondary) 3px solid;
-  border-radius: 50%;
+  border-radius: var(--radius);
   display: inline-block;
 }
 #reservation-steps .step.active {
@@ -104,8 +147,8 @@ body {
 }
 
 .reservationForm-wrapper {
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  margin-top: 60px;
 }
 .reservationForm-wrapper h1 {
   text-align: center;
@@ -118,7 +161,9 @@ body {
 }
 
 #confirmation {
+  margin-top: 10rem;
   max-width: 800px;
+  height: -moz-fit-content;
   height: fit-content;
 }
 #confirmation h1 {
@@ -136,11 +181,6 @@ body {
   transition-duration: 300ms;
   cursor: pointer;
   margin: 0;
-}
-
-.button:hover {
-  transform: translateY(-3px);
-  color: white;
 }
 
 .button.xl {
@@ -164,10 +204,21 @@ body {
   gap: 50px;
 }
 
+.services-grid {
+  display: grid;
+  justify-items: center;
+  grid-template-columns: 1fr 1fr;
+}
+
 .info-form {
+  background-color: white;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  padding: 50px;
+  width: 500px;
+  box-shadow: var(--shadow-secondary);
+  border-radius: var(--radius);
 }
 
 .backup {
@@ -195,7 +246,7 @@ body {
 }
 
 .service-button:hover {
-  color: white;
+  color: var(--white);
   cursor: pointer;
 }
 
@@ -211,67 +262,44 @@ body {
   width: 100%;
 }
 
-.calendar-head tr {
-  border-bottom: 2px solid black;
-}
-
-#calendar-nav {
-  display: flex;
-}
-#calendar-nav img {
-  height: 70px;
-}
-#calendar-nav #calendar-month {
-  width: 100%;
-  min-width: 170px;
-  text-align: center;
-}
-
-#calendar th.weekend {
-  color: red;
-}
-#calendar th.unavailable {
-  background-color: white;
-}
-#calendar th.available {
-  background-color: var(--primary);
-  color: white;
-  transition-duration: 300ms;
-}
-#calendar th.available:hover {
-  cursor: pointer;
-  background-color: var(--secondary);
-}
-#calendar th {
-  padding: 25px;
-  border-radius: 20px;
-}
-
-.backup-time {
-  display: flex;
-  flex-direction: column !important;
-  padding: 10px 0;
-}
-.backup-time div {
-  display: flex;
-  gap: 10px;
-}
-
 .time-wrapper {
-  padding: 0 180px;
+  max-height: 380px;
+  overflow-y: scroll;
 }
 .time-wrapper div div {
   display: flex;
 }
 .time-wrapper .time {
   display: flex;
-  flex-flow: wrap;
+  flex-direction: column;
   gap: 10px;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
 }
 .time-wrapper .time p {
-  height: fit-content;
+  text-align: center;
+}
+.time-wrapper .time p:hover {
+  color: var(--white);
+  background-color: var(--secondary);
+}
+.time-wrapper .backup-time {
+  display: flex;
+  padding: 10px 0;
+}
+.time-wrapper .backup-time div {
+  display: flex;
+  gap: 10px;
+}
+
+.calendar-box {
+  display: flex;
+  background-color: var(--white);
+  box-shadow: var(--shadow-secondary);
+  padding: 50px;
+  border-radius: var(--radius);
+  gap: 40px;
 }
 
 .calender-wrapper {
@@ -281,10 +309,115 @@ body {
   justify-content: center;
 }
 
+.calendar-times {
+  display: none;
+  padding-top: 140px;
+  height: 100px;
+  width: 150px;
+}
+
+.calendar-head tr {
+  border-bottom: 2px solid black;
+}
+
+#calendar-nav {
+  display: flex;
+  gap: 10px;
+}
+#calendar-nav img {
+  height: 37px;
+  border: 1px solid grey;
+  border-radius: 50%;
+}
+#calendar-nav img:hover {
+  background-color: rgba(139, 157, 248, 0.72);
+}
+#calendar-nav h2 {
+  margin: 0;
+  color: grey;
+  font-weight: lighter;
+}
+#calendar-nav thead {
+  color: grey;
+}
+#calendar-nav #calendar-month {
+  width: 100%;
+  min-width: 170px;
+  text-align: center;
+}
+
+#calendar {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(min-content, 1fr));
+}
+#calendar .day {
+  padding: 25px; /* Default padding based on viewport width */
+  box-shadow: var(--shadow-secondary);
+  border-radius: 9px;
+  margin: 5px;
+  text-align: center;
+}
+@media (max-width: 768px) {
+  #calendar .day {
+    padding: 3vw; /* Reduce padding for smaller screens */
+  }
+}
+@media (max-width: 480px) {
+  #calendar .day {
+    padding: 2.2vw; /* Further reduce padding for even smaller screens */
+  }
+}
+#calendar .day-legend {
+  padding: 0;
+  text-align: center;
+}
+#calendar .different-month {
+  background-color: rgba(128, 128, 128, 0.32) !important;
+}
+#calendar .weekend {
+  color: red !important;
+}
+#calendar .unavailable {
+  background-color: var(--white);
+  color: grey;
+}
+#calendar .available {
+  background-color: var(--primary);
+  color: var(--white);
+  transition-duration: 300ms;
+}
+#calendar .available.selected {
+  background-color: var(--secondary);
+}
+#calendar .available:hover {
+  cursor: pointer;
+  background-color: var(--secondary);
+}
+#calendar div {
+  padding: 25px;
+}
+
 #recap {
+  background-color: var(--white);
+  box-shadow: var(--shadow-secondary);
+  padding: 50px;
+  border-radius: var(--radius);
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 500px;
+}
+#recap img {
+  width: 30px;
+}
+#recap #address::after {
+  content: ",";
+}
+#recap div {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 #recap div h2 {
   font-size: 20px;
@@ -292,14 +425,28 @@ body {
 }
 #recap div p {
   margin: 0;
+  font-size: 1.2rem;
 }
 
+.discount-code-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start !important;
+}
 .discount-code-wrapper div {
   display: flex;
   gap: 10px;
 }
 .discount-code-wrapper div .button {
+  width: -moz-fit-content;
   width: fit-content;
+}
+
+.btn-secondary {
+  border: 2px solid var(--primary) !important;
+}
+.btn-secondary p {
+  color: var(--primary) !important;
 }
 
 footer {
@@ -330,6 +477,8 @@ input.valid {
 /* Hide all steps by default: */
 .tab {
   display: none;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Make circles that indicate the steps of the form: */
@@ -341,10 +490,18 @@ input.valid {
 /* Mark the steps that are finished and valid: */
 /* Service cards */
 .service-card {
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   width: 100%;
+  min-width: 370px !important;
+  height: 100%;
+  box-sizing: border-box;
   padding: 40px;
-  border-radius: 15px;
+  border-radius: var(--radius);
   max-width: 400px;
+  box-shadow: var(--shadow-secondary);
 }
 .service-card .card-title {
   margin-bottom: 25px;
@@ -374,6 +531,7 @@ input.valid {
   align-items: center;
   cursor: pointer;
   transition: 300ms;
+  box-shadow: var(--shadow-secondary);
 }
 .service-card .card-button span {
   font-size: 1.671rem;
@@ -387,7 +545,6 @@ input.valid {
 }
 
 .service-primary {
-  background-color: var(--background) !important;
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
 
@@ -400,12 +557,98 @@ input.valid {
   color: white !important;
 }
 
-@media (max-width: 500px) {
-  .service-card {
+@media (max-width: 900px) {
+  #recap {
+    box-shadow: none;
+    padding: 0;
     width: 100%;
   }
-  .time {
+  .calendar-box {
+    background-color: var(--white);
+    box-shadow: none;
+    padding: 0;
+  }
+  .info-form {
+    width: 100%;
+    box-shadow: none;
+    padding: 0;
+  }
+  .back {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+  }
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  .calendar-times {
+    padding-top: 0;
+  }
+  .calendar-times .time-wrapper {
+    height: -moz-fit-content;
+    height: fit-content;
+    overflow-y: unset;
+  }
+  .calendar-times {
+    height: -moz-fit-content;
+    height: fit-content;
+    width: 80vw;
+  }
+}
+.payment-wrapper {
+  display: flex;
+  align-items: center;
+  box-shadow: var(--shadow-secondary);
+  border-radius: var(--radius);
+  gap: 50px;
+  padding: 30px;
+  font-size: 1.2rem;
+}
+.payment-wrapper h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+}
+.payment-wrapper .payment-qr-code {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.payment-wrapper .payment-qr-code img {
+  width: 100px;
+  height: 100px;
+}
+
+@media (max-width: 500px) {
+  .payment-wrapper {
     flex-direction: column;
+    box-shadow: none;
+    width: 100%;
+  }
+  .payment-wrapper h2 {
+    font-size: 2rem;
+  }
+  .payment-wrapper .payment-qr-code img {
+    width: 80vw;
+    height: 80vw;
+  }
+  .service-card {
+    width: 100%;
+    min-width: unset;
+    box-shadow: none;
+  }
+  .services-grid.services-grid {
+    gap: 0;
+    width: 100vw;
+  }
+  .services-grid.services-grid .service-card.service-card {
+    width: 100vw;
+    max-width: unset;
+    border-radius: unset;
+  }
+  .services-grid.services-grid .service-card:nth-child(even) {
+    background-color: var(--secondary) !important;
+    color: var(--text-light) !important;
   }
   .time-wrapper {
     padding: 0;
@@ -413,6 +656,9 @@ input.valid {
   .select-wrapper {
     flex-direction: column;
     gap: 30px;
+  }
+  .select-wrapper p {
+    width: 100% !important;
   }
   .backup-time {
     flex-direction: column;
@@ -425,9 +671,6 @@ input.valid {
     width: 100%;
     box-sizing: border-box;
   }
-  .tab {
-    width: 90vw;
-  }
   #calendar-nav {
     justify-content: center;
   }
@@ -437,10 +680,47 @@ input.valid {
     align-items: center;
     justify-content: center;
   }
-  #calendar th {
-    padding: 3vw;
-    border-radius: 5px;
+}
+@keyframes slideFromTop {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
   }
 }
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.fade-out {
+  animation: fadeOut 1.5s ease-in-out;
+}
 
-/*# sourceMappingURL=styles.css.map */
+#flash-messages {
+  animation: slideFromTop 1.5s ease-in-out;
+  --width: 300px;
+  text-align: center;
+  width: var(--width);
+  position: fixed;
+  z-index: 1000;
+  top: 30px;
+  right: calc(50vw - var(--width) / 2);
+  border-radius: 4px;
+  padding: 10px 35px 10px 14px;
+  margin-bottom: 10px;
+  text-shadow: none;
+  background-color: #f2dede; /* Default background color */
+  border: 1px solid #ebccd1; /* Default border color */
+  color: #a94442; /* Default text color */
+}
+
+.alert-danger {
+  background-color: rgba(255, 0, 0, 0.87);
+}/*# sourceMappingURL=styles.css.map */

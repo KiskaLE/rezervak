@@ -1,16 +1,18 @@
 {block content}
-<div class="center h-screen">
- <div id="confirmation" class="card">
-  <h1>E-mail byl odeslán!</h1>
+<div class="center">
+    <div id="confirmation" class="card">
+        <h1 class="text-center">Děkujeme za rezervaci!</h1>
 
-  <p>Vážený zákazníku,</p>
-  <p>Na váš emailový účet <bold>{$reservation->email}</bold> byl odeslán email pro potvzení rezervace.</p>
-   <p>V tomto emailu naleznete odkaz, který vás přesměruje na platební stránku.</p>
+        <p class="text-center">Na váš emailový účet
+            <bold>{$reservation->email}</bold>
+            byl odeslán email pro potvzení rezervace.
+        </p>
 
-  <p><bold>Máte 15 minut na potvzení vaší rezervace.</bold></p>
+        <p class="text-center">
+            <bold>Máte {$reservation->ref("users", "user_id")->related("settings")->fetch()->verification_time} minut na
+                potvzení vaší rezervace.
+            </bold>
+        </p>
 
-   <p> Prosíme, postarejte se o platbu co nejdříve, abyste si zajistili vybraný termín.</p>
-
- </div>
-
+    </div>
 </div>

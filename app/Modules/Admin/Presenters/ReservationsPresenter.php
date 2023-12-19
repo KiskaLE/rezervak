@@ -7,7 +7,6 @@ namespace App\Modules\admin\Presenters;
 
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\Application\UI\InvalidLinkException;
 
 
 final class ReservationsPresenter extends SecurePresenter
@@ -28,17 +27,28 @@ final class ReservationsPresenter extends SecurePresenter
 
     }
 
-    public function actionShow()
+    public function actionShow(int $page = 1)
     {
-        //$reservations = $this->database->query("SELECT reservations.* FROM `reservations` LEFT JOIN payments ON reservations.id = payments.reservation_id WHERE reservations.status='VERIFIED' AND payments.status=1 AND reservations.user_id=?;", $this->user->id)->fetchAll();
-        //$reservations = $this->database->table("reservations")->select("payments")->where("date>=? AND user_id=? AND status='VERIFIED'", [date("Y-m-d"), $this->user->id])->fetchAll();
+        $numberOfReservations = $this->database->table('reservations')
+            ->select('reservations.*',)
+            ->where('reservations.status=?', 'VERIFIED')
+            ->where("reservations.type=?", 0)
+            ->where('user_id=?', $this->user->id)
+            ->where(':payments.status=?', 1)->count();
+
+        $paginator = $this->createPagitator($numberOfReservations, $page, 10);
+
+
         $reservations = $this->database->table('reservations')
             ->select('reservations.*',)
             ->where('reservations.status=?', 'VERIFIED')
             ->where("reservations.type=?", 0)
             ->where('user_id=?', $this->user->id)
-            ->where(':payments.status=?', 1)->fetchAll();
+            ->where(':payments.status=?', 1)
+            ->limit($paginator->getLength(), $paginator->getOffset())
+            ->fetchAll();
         $this->template->reservations = $reservations;
+        $this->template->paginator = $paginator;
     }
 
     public function actionEdit($id, $backlink)
@@ -56,7 +66,6 @@ final class ReservationsPresenter extends SecurePresenter
         $this->uuid = $id;
         $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
         $this->template->reservation = $reservation;
-
     }
 
     public function actionDelete($id, $backlink)
@@ -125,12 +134,5 @@ final class ReservationsPresenter extends SecurePresenter
         $this->redirect('Reservations:show');
     }
 
-    public function handleBack($default)
-    {
-        if ($this->backlink) {
-            $this->restoreRequest($this->backlink);
-        }
-        $this->redirect($default);
-    }
 
 }

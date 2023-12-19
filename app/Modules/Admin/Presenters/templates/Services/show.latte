@@ -1,3 +1,4 @@
+{block title}Služby{/block}
 {block content}
 <div class="row page-header"><h1>Služby</h1></div>
 
@@ -25,21 +26,40 @@
         <!--body-->
         <tbody>
         {foreach $services as $service}
+            {var $serviceSchedules = $service->related("services_custom_schedules")->fetch()}
             <tr>
                 <th class="text-left">{$service->name}</th>
                 <th class="text-left">{$service->description}</th>
                 <th class="text-right">{$service->price} Kč</th>
                 <th class="text-right">{$service->duration} min</th>
                 <th>
-                    <a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="Services:edit $service->id"><i
+                    <a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="edit $service->id"><i
                                 class="entypo-pencil"></i>Upravit</a>
+
                     <a class="btn {!$service->hidden ? "btn-gold" : "btn-default"} btn-sm btn-icon icon-left ajax" n:href="Services:actionHide $service->id"><i
-                                class="entypo-eye"></i>{!$service->hidden ? "Skrýt" : "Zobrazit"}</a>
+                                class="entypo-eye"></i>{!$service->hidden ? "Zobrazeno" : "Skryto"}</a>
                 </th>
             </tr>
         {/foreach}
         </tbody>
         <!--/body-->
+        <!-- Paginator pages -->
+        <ul n:if="$paginator->getPageCount() > 1" class="pagination">
+
+            <li n:if="!$paginator->isFirst()">
+                <a n:href="show $paginator->getPage() - 1"><i class="entypo-left-open-mini"></i></a>
+            </li>
+
+
+            <li n:for="$i = max($paginator->getPage() - 2, 0); $i < min($paginator->getPageCount(), $paginator->getPage() + 2); $i++" class="{($i+1) == $paginator->getPage() ? 'active' : ''}">
+                <a n:href="show $i+1">{$i+1}</a>
+            </li>
+
+            <li n:if="!$paginator->isLast()">
+                <a n:href="show $paginator->getPage() + 1"><i class="entypo-right-open-mini"></i></a>
+            </li>
+        </ul>
+        <!-- /Paginator pages -->
     </table>
 
 </div>

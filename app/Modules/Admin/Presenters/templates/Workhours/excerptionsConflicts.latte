@@ -1,3 +1,4 @@
+{block title}Pracovní doba{/block}
 {block content}
 <div class="content-wrapper">
     <h1>Konflikty</h1>
@@ -10,7 +11,6 @@
                 <thead>
                 <tr>
                     <th>Datum</th>
-                    <th>Čas</th>
                     <th>Služba</th>
                     <th>E-mail</th>
                     <th>Tel.</th>
@@ -21,8 +21,7 @@
                 </thead>
                 {foreach $reservations as $reservation}
                     <tr>
-                        <th>{$reservation->date|date:"d.m.Y"}</th>
-                        <th>{$reservation->start}</th>
+                        <th>{$reservation->start|date:"d.m.Y H:i"}</th>
                         <th>{$reservation->ref("services", "service_id")->name}</th>
                         <th>{$reservation->email}</th>
                         <th>{$reservation->phone}</th>

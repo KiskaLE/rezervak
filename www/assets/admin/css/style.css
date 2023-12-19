@@ -33,6 +33,10 @@
   text-align: left;
 }
 
+.hidden {
+  display: none;
+}
+
 .form-checkbox {
   padding: 0 20px;
 }
@@ -49,6 +53,17 @@
   content: " ";
 }
 
+.form-input-group.form-input-group {
+  display: flex;
+  gap: 10px;
+}
+.form-input-group.form-input-group .input-time {
+  max-width: 90px;
+}
+.form-input-group.form-input-group .single-date {
+  max-width: 100px;
+}
+
 .flex-row.flex-row {
   display: flex;
 }
@@ -56,6 +71,17 @@
 .form-group {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  justify-content: center;
+}
+.form-group .btn {
+  width: 150px;
+  align-self: center;
+}
+@media (max-width: 500px) {
+  .form-group .btn {
+    width: 100%;
+  }
 }
 
 #reservation {
@@ -81,6 +107,7 @@
 .login-container {
   min-height: 100vh;
   background-color: #303641;
+  width: 100%;
 }
 
 .main-content {
@@ -127,11 +154,6 @@
 .input-error {
   display: none;
   color: red;
-}
-
-.panel-body .form-group {
-  display: flex;
-  flex-direction: column;
 }
 
 #user-name {
@@ -186,4 +208,24 @@
   top: -2px;
 }
 
-/*# sourceMappingURL=style.css.map */
+#calendar {
+  width: 100% !important;
+  height: 80vh !important;
+}
+
+.highlight-time-slot {
+  background-color: #ecfccb;
+}
+
+.fc .fc-daygrid-day-frame {
+  height: 50px;
+  overflow: hidden;
+}
+
+.fc-toolbar-title {
+  font-weight: bold;
+}
+
+.fc-scrollgrid-sync-inner a {
+  font-weight: bold;
+}/*# sourceMappingURL=style.css.map */

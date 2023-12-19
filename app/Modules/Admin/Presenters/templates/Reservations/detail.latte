@@ -1,3 +1,4 @@
+{block title}Rezervace{/block}
 {block content}
 <div class="content-wrapper">
     <h1>Detail</h1>
@@ -13,7 +14,7 @@
                 </div>
                 <div>
                     <h3>Čas:</h3>
-                    <p>{$reservation->start}</p>
+                    <p>{$reservation->start|date:"d.m.Y H:i"}</p>
                 </div>
                 <div>
                     <h3>Jméno:</h3>

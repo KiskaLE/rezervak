@@ -1,3 +1,4 @@
+{block title}Služby{/block}
 {block content}
 <div class="row page-header"><h1>Služby</h1></div>
 <!--navigace-->
@@ -8,22 +9,11 @@
 
 <!--form-->
 <div class="row">
-    <h2>Nadpis formuláře</h2>
+    <h2>Vytvoření služby</h2>
     <!--content-->
     <form n:name="createForm" class="ajax">
 
         <div class="panel panel-primary" data-collapsed="0">
-            <!--heading-->
-            <div class="panel-heading">
-                <div class="panel-title">
-                    Základní nastavení
-                </div>
-
-                <div class="panel-options">
-                    <a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
-                </div>
-            </div>
-            <!--/heading-->
             <!--body-->
             <div class="panel-body" style="display: block;">
                 <div class="form-group">
@@ -60,10 +50,14 @@
 
                     <div class="">
                         <textarea class="form-control" n:name="description"></textarea>
-                        <span class="description">Zadejte popis služby (max 255 znaků)</span>
+                        <span class="description">Zadejte popis služby (max 100 znaků)</span>
                         <span class="input-error" id="numberOfDaysError">Čas musí být větší než 0.</span>
                     </div>
                 </div>
+
+                
+
+
                 <!--submit-->
                 <div class="form-group default-padding">
                     <input n:name="submit" id="btn-submit" class="btn btn-success">
@@ -78,3 +72,5 @@
 </div>
 
 <!--/form-->
+
+<script src="{$basePath}/assets/admin/js/datePicker.js"></script>

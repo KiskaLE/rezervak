@@ -8,6 +8,7 @@ use Nette;
 use App\Modules\Payments;
 
 
+
 final class PaymentPresenter extends BasePresenter
 {
 
@@ -20,28 +21,34 @@ final class PaymentPresenter extends BasePresenter
         parent::__construct();
     }
 
-    public function actionDefault($uuid)
+    public function actionDefault($id)
     {
-        $reservation = $this->database->table("reservations")->where("uuid=?", $uuid)->fetch();
+        $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
         $this->user = $reservation->ref("users", "user_id");
         if ($reservation) {
-            $this->verify($reservation, $uuid, "reservations");
+            $this->verify($reservation, $id, "reservations");
             if ($reservation->status != "VERIFIED") {
                 $this->redirect("Payment:notFound");
             }
+            $payment = $this->database->table("payments")->where("reservation_id=?", $reservation->id)->fetch();
             $this->template->service = $reservation;
-            $this->template->payments = $this->payments->getPayments($reservation);
+            $this->template->payment = $payment;
+            $qrCode = $this->payments->generatePaymentCode($payment, $this->user->id);
+            $user = $reservation->ref("users", "user_id");
+            $this->template->userSettings = $user->related("settings")->fetch();
+            $this->template->qrCode = $qrCode;
 
         } else {
             $this->redirect("Payment:notFound");
         }
+
     }
 
-    public function actionBackup($uuid)
+    public function actionBackup($id)
     {
-        $reservation = $this->database->table("reservations")->where("uuid=?", $uuid)->fetch();
+        $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
         $this->user = $reservation->ref("users", "user_id");
-        $this->verify($reservation, $uuid, "reservations");
+        $this->verify($reservation, $id, "reservations");
         if ($reservation->status != "VERIFIED") {
             $this->redirect("Payment:notFound");
         }

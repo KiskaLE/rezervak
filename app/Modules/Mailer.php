@@ -5,86 +5,131 @@ namespace App\Modules;
 use Nette;
 use Latte\Engine;
 use Nette\Mail\SmtpMailer;
+use PHPMailer\PHPMailer\PHPMailer;
+use Nette\Mail\SendmailMailer;
 
 final class Mailer
 {
-    private $mailer;
     private $url;
+    private $latte;
 
     public function __construct(
-        private Nette\Database\Explorer $database
+        private Nette\Database\Explorer $database,
+        private PHPMailer          $phpMailer,
+        private Nette\Mail\Mailer  $mailer,
+        private Nette\DI\Container $container
     )
     {
-        $this->url = 'http://' . $_SERVER['HTTP_HOST'];
-        $this->mailer = new SmtpMailer(
-            'smtp.seznam.cz',
-            'rezervkainfo@seznam.cz',
-            'sxqOgSNiXQ8TQbG',
-            465,
-            "ssl");
+        $mailerConfig = $this->container->getParameters();
+        //$this->url = "http://".$_SERVER['SERVER_NAME'];
+        $this->url = "http://" . "localhost:8000";
+
+        $this->phpMailer->isSMTP();
+        $this->phpMailer->Host = 'smtp.seznam.cz';
+        $this->phpMailer->SMTPAuth = true;
+        $this->phpMailer->Username = 'rezervkainfo@seznam.cz';
+        $this->phpMailer->Password = 'sxqOgSNiXQ8TQbG';
+        $this->phpMailer->SMTPSecure = 'ssl';
+        $this->phpMailer->Port = 465;
+
+        $this->phpMailer->setFrom("rezervkainfo@seznam.cz");
+        $this->phpMailer->CharSet = "UTF-8";
+
+        $this->phpMailer->isHTML(true);
+        $this->phpMailer->setLanguage("cs");
+
+        $this->latte = new Engine;
+
+
     }
 
-    private function createMail(string $from, string $to, string $subject, string $message): Nette\Mail\Message
+    /**
+     * Sends a confirmation email to the specified recipient.
+     *
+     * @param string $to The email address of the recipient.
+     * @param string $confirmUrl The URL to confirm the reservation.
+     * @return void
+     * @throws Some_Exception_Class A description of the exception that may be thrown.
+     */
+    public function sendConfirmationMail(string $to, string $confirmUrl, $reservation): void
     {
-        $mail = new Nette\Mail\Message;
-        $mail->setFrom($from);
-        $mail->addTo($to);
-        $mail->setSubject($subject);
-        $mail->setHtmlBody($message);
 
-        return $mail;
-    }
-
-    public function sendMail(string $from, string $to, string $subject, string $message)
-    {
-        $mailer = new Nette\Mail\SendmailMailer;
-        $mail = $this->createMail($from, $to, $subject, $message);
-        $mailer->send($mail);
-    }
-
-//TODO code it in DRY
-    public function sendConfirmationMail(string $to, string $confirmUrl)
-    {
-        $latte = new Engine;
+        $user = $reservation->ref("users", "user_id");
+        $userSettings = $user->related("settings")->fetch();
         $params = [
             'url' => $this->url . $confirmUrl,
+            'user' => $user,
+            'userSettings' => $userSettings,
+            'reservation' => $reservation
+
         ];
+        $this->sendMail($to, "Potvrzení Vaší rezervace - Vyžadováno Ověření", $this->latte->renderToString(__DIR__ . '/Mails/confirmation.latte', $params));
+    }
+
+    /**
+     * Sends a backup confirmation email to the specified recipient.
+     *
+     * @param string $to The email address of the recipient.
+     * @param string $confirmUrl The URL for confirming the backup.
+     * @return void
+     * @throws Exception If there is an error sending the email.
+     */
+    public function sendBackupConfiramationMail(string $to, string $confirmUrl, $reservation): void
+    {
+        $user = $reservation->ref("users", "user_id");
+        $userSettings = $user->related("settings")->fetch();
+        $params = [
+            'url' => $this->url . $confirmUrl,
+            'user' => $user,
+            'userSettings' => $userSettings,
+            'reservation' => $reservation
+
+        ];
+        $this->sendMail($to, "Potvrzení Vaší záložní rezervace - Vyžadováno Ověření", $this->latte->renderToString(__DIR__ . '/Mails/backup.latte', $params));
+    }
+
+    /**
+     * Sends a cancellation email.
+     *
+     * @param string $to The email address to send the cancellation email to.
+     * @param mixed $reservation The reservation object.
+     * @param string $reason The reason for the cancellation.
+     * @return void
+     * @throws Some_Exception_Class Description of the exception that may be thrown.
+     */
+    public function sendCancelationMail(string $to, $reservation, string $reason): void
+    {
+        $user = $reservation->ref("users", "user_id");
+        $userSettings = $user->related("settings")->fetch();
+        $params = [
+            'user' => $user,
+            'userSettings' => $userSettings,
+            'reservation' => $reservation,
+            'reason' => $reason
+
+        ];
+        $this->sendMail($to, "Zrušení rezervace", $this->latte->renderToString(__DIR__ . '/Mails/cancel.latte', $params));
+
+    }
+
+    private function sendMail(string $to, string $subject, $message)
+    {
+
         $mail = new Nette\Mail\Message;
-        $mail->setFrom('rezervkainfo@seznam.cz');
-        $mail->addTo($to);
-        $mail->setSubject('Rezervace');
-        $mail->setHtmlBody($latte->renderToString(__DIR__ . '/Mails/confirmation.latte', $params));
+        $mail->setFrom("rezervkainfo@seznam.cz")
+            ->addTo($to)
+            ->setSubject($subject)
+            ->setHtmlBody($message);
 
         $this->mailer->send($mail);
-    }
 
-    public function sendBackupConfiramationMail(string $to, string $confirmUrl)
-    {
-        $latte = new Engine;
-        $params = [
-            'url' => $this->url . $confirmUrl,
-        ];
-        $mail = new Nette\Mail\Message;
-        $mail->setFrom('rezervkainfo@seznam.cz');
-        $mail->addTo($to);
-        $mail->setSubject('Rezervace');
-        $mail->setHtmlBody($latte->renderToString(__DIR__ . '/Mails/backup.latte', $params));
-
-        $mailer = new Nette\Mail\SendmailMailer;
-        $mailer->send($mail);
-    }
-
-    public function sendCancelationMail(string $to)
-    {
-        $latte = new Engine;
-        $mail = new Nette\Mail\Message;
-        $mail->setFrom('rezervkainfo@seznam.cz');
-        $mail->addTo($to);
-        $mail->setSubject('Zrušení rezervace');
-        $mail->setHtmlBody($latte->renderToString(__DIR__ . '/Mails/cancel.latte'));
-
-        $mailer = new Nette\Mail\SendmailMailer;
-        $mailer->send($mail);
-
+        /*
+        $this->phpMailer->clearAddresses();
+        $this->phpMailer->addAddress($to);
+        $this->phpMailer->Subject = $subject;
+        $this->phpMailer->Body = $message;
+        $this->phpMailer->send();
+        $this->phpMailer->clearAddresses();
+        */
     }
 }
