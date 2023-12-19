@@ -21,7 +21,7 @@ function createFullCalendar(slotDuration ,calendarPeriod, serviceDuration, servi
             allDaySlot: false,
             aspectRatio: 1,
             selectable: true,
-            editable: false,
+            editable: true,
             themeSystem: "standard",
             initialView: 'dayGridMonth',
             headerToolbar: {
@@ -94,7 +94,7 @@ function createFullCalendar(slotDuration ,calendarPeriod, serviceDuration, servi
                         }
 
                         // Set start time for the next event to be the end time of the current event
-                        startTime.add(numberOfPeriods * calendarPeriod, 'minutes');
+                        startTime.add(serviceDuration, 'minutes');
                         count++
                     }
                     // Clear the selection
