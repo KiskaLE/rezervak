@@ -1,5 +1,23 @@
 {block content}
-    <h1 n:block=title>Login</h1>
-    {control signInForm}
-    
-{/block}
+<div class="login-container">
+    <h2>Přihlašte se k vašemu účtu</h2>
+    <form n:name="signInForm">
+
+       <div class="login-box">
+            <div class="form-group">
+                <label for="username">Email</label>
+                <input class="" n:name="username" id="username" autocomplete="off" />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Heslo</label>
+                <input class="" n:name="password" id="password" autocomplete="off" />
+            </div>
+            <span><a n:href="create" class="login-info">Nemáte účet?</a></span>
+
+            <div class="form-group">
+                <input type="submit" n:name="submit">
+            </div>
+        </div>
+    </form>
+</div>

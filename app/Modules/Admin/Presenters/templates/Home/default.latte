@@ -1,3 +1,36 @@
 {block content}
+<div class="row page-header"><h1>Nástěnka</h1></div>
+<div class="row">
+    <div class="well">
+        {var $date = date('d.m.Y')}
+        <h1>Dneska je {$date}</h1>
+        <h3>Máte naplánováno {$numberOfReservationsToday} {$numberOfReservationsToday < 5 ? 'rezervaci' : 'rezervací'}.</h3>
+    </div>
+    <div class="col-sm-3 col-xs-4">
+        <div class="tile-stats tile-blue">
+            <div class="icon">
+                <i class="entypo-chart-bar"></i>
+            </div>
+            <div class="num">
+                {$numberOfReservations}
+            </div>
+            <h3>Počet rezervací</h3>
+        </div>
+    </div>
+    <div class="panel-body with-table">
+        <table class="table table-bordered col-sm-3 sm-">
+            <tbody>
+            <tr>
+                <td>
+                    <strong>Rezervace</strong>
+                    <br>
+                    <canvas id="reservation"></canvas>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
-<h1>Dashboard</h1>
+    </div>
+</div>
+
+<script src="{$basePath}/assets/admin/js/chart.js"></script>

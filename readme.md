@@ -4,6 +4,10 @@
 
 The simplest way to get started is to start the built-in PHP server in the root directory of your project:
 
+    npm run start
+
+    docker-compose up
+
     php -S localhost:8000 -t www
 
 Then visit `http://localhost:8000` in your browser to see the welcome page.
@@ -20,16 +24,43 @@ via a web browser. See [security warning](https://nette.org/security-warning).**
 
 naja
 
+## CSS
+color pallete: https://colorhunt.co/palette/f3f9fb474f8551e3d4f3ecd3
+
 ## Admin template
 
 neon-bootstrap-admin
 
 # TODO
 
-add
-if ($this->isAjax()) {
-$this->sendJson(...);
-}
-// ...
+## Front
 
-to ReservationPresenter actionCreate
+
+Create Email templates
+
+Design Completation pages
+
+fix that user cant reserve full day as backup
+
+přepsat crony
+
+
+
+
+## Admin
+
+Upravit design user row
+
+Create Dashboard
+
+
+Connect Fio API
+
+
+re-do crons 
+
+
+
+
+
+

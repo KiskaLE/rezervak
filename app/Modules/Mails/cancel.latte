@@ -1,0 +1,48 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Zrušení rezervace</title>
+</head>
+<body style="background-color: #ffffff;
+            padding: 20px;
+            margin: 0;">
+<div style="display: flex; flex-direction: column; align-items: center">
+    <div style="max-width: 600px; padding: 5px;">
+        <h1 style="font-size: 32px;
+            font-weight: bolder;
+            color: #2563eb;
+            margin: 0 0 20px;">Vaše rezervace byla zrušena!</h1>
+        <p style="font-size: 16px;
+            line-height: 30px;">Dobrý den,<br>
+
+            s lítostí Vám oznamujeme, že Vaše rezervace
+            <b>č.{$reservation->id} u {$userSettings->company} na {$reservation->start|date:"d.m.Y"} byla zrušena.</b>
+        </p>
+        <h3>Detaily zrušené rezervace:</h3>
+        <p style="font-size: 16px;
+            line-height: 30px;">
+            <b>Jméno:</b> {$reservation->firstname}<br>
+            <b>Příjmení:</b> {$reservation->lastname}<br>
+            <b>Datum:</b> {$reservation->start|date:"d.m.Y"}<br>
+           <b>Čas:</b> {$reservation->start|date:"H:i"}
+        </p>
+        <br>
+        <h3>Důvod Zrušení:</h3>
+        <p style="font-size: 16px;
+            line-height: 30px;">
+            {$reason}
+        </p>
+        <br>
+        <p style="font-size: 16px;
+            line-height: 30px;">S pozdravem, <br>
+            Rezerevační systém <br>
+            <span n:if="$userSettings->company">{$userSettings->company}</span><br>
+            <span n:if="$userSettings->email">{$userSettings->email}</span> <br>
+            <span n:if="$userSettings->phone">{$userSettings->phone}</span>
+
+        </p>
+    </div>
+</div>
+
+</body>
+</html>

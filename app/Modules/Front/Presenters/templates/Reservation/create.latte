@@ -1,82 +1,186 @@
+{block title}Rezervace{/block}
 {block content}
+
+
 <div class="page-wrapper">
-        <div id="reservation-steps">
-                <span onclick="goToTab(0)" class="step"></span>
-                <span onclick="goToTab(1)" class="step"></span>
-                <span onclick="goToTab(2)" class="step"></span>
-                <span onclick="goToTab(3)" class="step"></span>
-                <span onclick="goToTab(4)" class="step"></span>
-        </div>
-        <div class="reservationForm-wrapper">
-            <form n:name="form" id="regForm" >
-                <div class="tab">
+    <div id="reservation-steps" style="display: none">
+        <span onclick="goToTab(0)" class="step"></span>
+        <span onclick="goToTab(1)" class="step"></span>
+        <span onclick="goToTab(2)" class="step"></span>
+        <span onclick="goToTab(3)" class="step"></span>
+        <span onclick="goToTab(4)" class="step"></span>
+    </div>
+    <div class="reservationForm-wrapper">
+
+        <form n:name="form" id="regForm">
+
+
+            <div class="tab">
+                <h1>Vyberte službu</h1>
+                <div class="select-wrapper services-grid">
                     {var $i = 0}
                     {foreach $services as $service}
-                        <div><p onclick="setService({$i})" class="service-button">{$service->name}</p></div>
+                        <div class="service-card service-primary">
+                            <div class="card-title"><h2>{$service->name}</h2></div>
+                            <div class="card-text"><p>{$service->description}</p></div>
+                            <div class="card-price"><span>{$service->price}</span><span> Kč</span></div>
+                            <div class="card-button"
+                                 onclick="setService({$service->id}, {$service->name}, {$service->price})"><span>Rezervovat</span>
+                            </div>
+                        </div>
                         {do $i++}
                     {/foreach}
-                    <input n:name="service" class="multiform">
                 </div>
-                <div class="tab">
-                    <table>
-                        <div id="calendar-nav"><img src="{$basePath}/assets/front/icons/arrow-prev-small-svgrepo-com.svg" alt="previous" onclick="calNext(-1)"  id="prev-month"><h2 id="calendar-month"></h2><img src="{$basePath}/assets/front/icons/arrow-next-small-svgrepo-com.svg" alt="next" onclick="calNext(1)" id="next-month"></div>
-                        <thead>
-                            <tr>
-                                <th>Po</th>
-                                <th>Út</th>
-                                <th>St</th>
-                                <th>Čt</th>
-                                <th>Pa</th>
-                                <th>So</th>
-                                <th>Ne</th>
-                            </tr>
-                        </thead>
-                        <tbody id="calendar">
-                        </tbody>
-                    </table>
-                    <input n:name="date" class="multiform">
-                </div>
-                <div class="tab">
-                    <div class="time-wrapper"><input n:name="time" value="{$times ? $times[0] : ""}" id="time">
+                <input n:name="service" class="multiform">
+            </div>
 
-                        {snippet content}
-                            {var $i = 0}
-                            {var $count = 0}
-                            {foreach $times as $time }
-                                {if $count == 0}<div>{/if}
-                                    <div><p onclick="setTime({$i})" class="service-button" >{$time}</p></div>
-                            {do $count++}
-                            {if $count == 4}
+
+            <div class="tab">
+                <div class="calendar-box">
+                    <div class="calendar-date">
+                        <div class="back">
+                            <img src="{$basePath}/assets/front/icons/back.svg" alt="zpět" onclick="nextPrev(-1)">
+                        </div>
+                        <h2 class="h2-center">Vyberte datum a čas</h2>
+
+                        <div class="calender-wrapper">
+                            <div id="calendar-nav"><img
+                                        src="{$basePath}/assets/front/icons/arrow-calendar-left.svg"
+                                        alt="předchozí měsíc"
+                                        onclick="calNext(-1)" id="prev-month">
+                                <h2 id="calendar-month"></h2><img
+                                        src="{$basePath}/assets/front/icons/arrow-calendar-left.svg"
+                                        style="transform: rotate(180deg)"
+                                        alt="další měsíc"
+                                        onclick="calNext(1)" id="next-month">
+                            </div>
+                            <div id="calendar"></div>
+                        </div>
+                        <input n:name="date" class="multiform data">
+                    </div>
+
+                    <div class="calendar-times">
+                        <div class="back hidden" id="times-back"><img src="{$basePath}/assets/front/icons/back.svg"
+                                                                      alt="zpět" onclick="toggleCalendarTimes()"></div>
+                        <h3 id="calendar-selected-date" class="text-center"></h3>
+                        <div class="time-wrapper">
+                            <input n:name="time" value="{$times ? $times[0] : ""}" id="timeInput" class="multiform">
+                            <input n:name="dateType">
+
+                            {snippet content}
+                                <div class="time select-wrapper">
+                                    {var $i = 0}
+                                {foreach $times as $time}
+                                        <p onclick="setTime({$i},'default', {$time})"
+                                           class="button xl btn-secondary">{$time}</p>
+                                        {do $i++}
+                                    {/foreach}
+
                                 </div>
-                                {do $count = 0}
-                            {/if}
-                                {do $i++}
-                            {/foreach}
-                        {/snippet}
+                                <div class="time backup-time">
+                                    <h3 n:if="$backupTimes">Náhradní čas:</h3>
+                                    {var $j = 0}
+                                    {foreach $backupTimes as $time}
+                                        <p onclick="setTime({$j},'backup', {$time})"
+                                           class="button secondary">{$time}</p>
+                                        {do $j++}
+                                    {/foreach}
+                                </div>
+                            {/snippet}
+
+                        </div>
                     </div>
                 </div>
-                <div class="tab">
-                    <p><label for="">Jméno:</label><input n:name="firstname" class="multiform"></p>
-                    <p><label for="">Příjmení:</label><input n:name="lastname" class="multiform"></p>
-                    <p><label for="">Tel.:</label><input n:name="phone" class="multiform"></p>
-                    <p><label for="">E-mail:</label><input n:name="email" class="multiform"></p>
-                    <p><label for="">Adresa a č.p.</label><input n:name="address" class="multiform"></p>
-                    <p><label for="">PSČ:</label><input n:name="code" class="multiform"></p>
-                    <p><label for="">Město:</label><input n:name="city" class="multiform"></p>
-                </div>
-                <div class="tab" id="recap">
+            </div>
 
-                </div>
-                <div style="overflow:auto;">
-                    <div style="float:right;">
-                        <button type="button" id="prevBtn" onclick="nextPrev(-1)">Zpět</button>
-                        <button type="button" id="nextBtn" onclick="nextPrev(1)">Další</button>
+            <div class="tab">
+                <div class="info-form">
+                    <div class="">
+                        <div class="back">
+                            <img src="{$basePath}/assets/front/icons/back.svg" alt="zpět" onclick="nextPrev(-1)">
+                        </div>
+                        <h2 class="h2-center">Zadejte osobní údaje</h2>
+                    </div>
+                    <div><label for="">Jméno:</label><input autocomplete="off" autocorrect="off" autocapitalize="off"
+                                                            spellcheck="false" n:name="firstname"
+                                                            class="multiform data"></div>
+                    <div><label for="">Příjmení:</label><input autocomplete="off" autocorrect="off" autocapitalize="off"
+                                                               spellcheck="false" n:name="lastname"
+                                                               class="multiform data"></div>
+                    <div><label for="">Tel.:</label><input autocomplete="off" autocorrect="off" autocapitalize="off"
+                                                           spellcheck="false" n:name="phone" class="multiform data">
+                    </div>
+                    <div><label for="">E-mail:</label><input autocomplete="off" autocorrect="off" autocapitalize="off"
+                                                             spellcheck="false" n:name="email" class="multiform data">
+                    </div>
+                    <div><label for="">Adresa a č.p.</label><input autocomplete="off" autocorrect="off"
+                                                                   autocapitalize="off"
+                                                                   spellcheck="false" n:name="address"
+                                                                   class="multiform data"></div>
+                    <div><label for="">PSČ:</label><input autocomplete="off" autocorrect="off" autocapitalize="off"
+                                                          spellcheck="false" n:name="code" class="multiform data"></div>
+                    <div><label for="">Město:</label><input autocomplete="off" autocorrect="off" autocapitalize="off"
+                                                            spellcheck="false" n:name="city" class="multiform data">
+                    </div>
+                    <div class="nav-buttons">
+                        <button class="button xl" id="prevBtn" type="button" onclick="nextPrev(-1)">Zpět</button>
+                        <button class="button xl primary" id="nextBtn" type="button" onclick="nextPrev(1)">Další
+                        </button>
                     </div>
                 </div>
-            </form>
-        </div>
+            </div>
 
-        <script src="{$basePath}/assets/front/js/multistepForm.js"></script>
+
+            <div class="tab">
+                <div id="recap">
+                    <div class="back"><img src="{$basePath}/assets/front/icons/back.svg" alt="zpět"
+                                           onclick="nextPrev(-1)"></div>
+                    <h2 id="service"></h2>
+                    <div><img src="{$basePath}/assets/front/icons/calendar.svg" alt="datum">
+                        <span id="date"></span></div>
+                    <div><img src="{$basePath}/assets/front/icons/time.svg" alt="čas">
+                        <span id="time"></span></div>
+                    <div>
+                        <img src="{$basePath}/assets/front/icons/user-info.svg" alt="jméno a příjmení">
+                        <div>
+                            <span id="firstname"></span><span id="lastname"></span>
+                        </div>
+                    </div>
+                    <div><img src="{$basePath}/assets/front/icons/phone.svg" alt="telefoní číslo">
+                        <span id="phone"></span></div>
+                    <div><img src="{$basePath}/assets/front/icons/email.svg" alt="email">
+                        <span id="email"></span></div>
+                    <div><img src="{$basePath}/assets/front/icons/address.svg" alt="adresa">
+                        <div>
+                            <span id="address"></span><span id="city"></span><span id="code"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="{$basePath}/assets/front/icons/price.svg" alt="cena">
+                        <div>
+                            <span id="price"></span><span id="currency">Kč</span>
+                        </div>
+                    </div>
+
+
+                    <div class="discount-code-wrapper">
+                        <label for="">Slevový kód</label>
+                        <div><input n:name="dicountCode" onfocusout="verify()" autocomplete="off">
+                            <p id="verify-code" class="button secondary xl" onclick="verify()">Ověřit</p></div>
+                    </div>
+                    <div class="nav-buttons">
+                        <button class="button xl primary" id="nextBtn" type="button" onclick="nextPrev(1)">Objednat
+                        </button>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </form>
+    </div>
+    <script src="{$basePath}/assets/front/js/multistepForm.js"></script>
+
 
 </div>
 

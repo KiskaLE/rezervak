@@ -1,39 +1,92 @@
+{block title}Pracovní doba{/block}
 {block content}
-<h1>edit-Show</h1>
-<div class="dataTable-wrapper">
+<div class="row page-header"><h1>Pracovní doba</h1></div>
+
+<!--table-->
+<div class="row">
+    <h2>Rozvrh</h2>
     <table class="table dataTable table-bordered">
+        <!--head-->
         <thead>
         <tr>
-            <th>Weekday</th>
-            <th>Start</th>
-            <th>Stop</th>
-            <th>Actions</th>
+            <th>Den</th>
+            <th>Začátek</th>
+            <th>Konec</th>
+            <th>Akce</th>
         </tr>
         </thead>
-
+        <!--/head-->
+        <!--body-->
+        <tbody>
         {foreach $days as $day}
             <tr>
                 <th>{switch $day->weekday}
                     {case 0}
-                        Monday
+                        Pondělí
                     {case 1}
-                        Tuesday
+                        Úterý
                     {case 2}
-                        Wednesday
+                        Středa
                     {case 3}
-                        Thursday
+                        Čtvrtek
                     {case 4}
-                        Friday
+                        Pátek
                     {case 5}
-                        Saturday
+                        Sobota
                     {case 6}
-                        Sunday
+                        Neděle
                     {/switch}</th>
-                <th>{$day->start}</th>
-                <th>{$day->stop}</th>
-                <th><a class="btn btn-default btn-sm btn-icon icon-left" n:href="Workhours:edit $day->id"><i class="entypo-pencil"></i>Edit</a></th>
+                <th class="text-right">{$day->start}</th>
+                <th class="text-right">{$day->stop}</th>
+                <th><a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="Workhours:edit $day->id"><i
+                                class="entypo-pencil"></i>Úprava</a></th>
             </tr>
         {/foreach}
+        </tbody>
+        <!--/body-->
     </table>
 </div>
 
+<!--/table-->
+
+<!--table-->
+<div class="row">
+    <h2>Volno</h2>
+    <table class="table dataTable table-bordered">
+        <!--akce tabulky-->
+        <div class="table-header">
+            <a n:href="Workhours:createException" class="btn btn-blue ajax">Vytvořit přestávku</i></a>
+        </div>
+        <br>
+        <!--/akce tabulky-->
+        <!--head-->
+        <thead>
+        <tr>
+            <th>Název</th>
+            <th>Začátek</th>
+            <th>Konec</th>
+            <th>Akce</th>
+        </tr>
+        </thead>
+        <!--/head-->
+        <!--body-->
+        <tbody>
+        <tr n:foreach="$exceptions as $row">
+            <th>{$row->name}</th>
+            <th>{$row->start|date: "d.m.Y H:i"}</th>
+            <th>{$row->end|date: "d.m.Y H:i"}</th>
+            <th>
+                <a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="Workhours:editException $row->uuid"><i
+                            class="entypo-pencil"></i>Úprava</a>
+                <a class="btn btn-danger btn-sm btn-icon icon-left" n:href="deleteException! $row->uuid"
+                   onclick="deleteException(event)"><i class="entypo-pencil"></i>Smazat</a>
+                <a n:if="in_array($row->id, $conflicts)" n:href="excerptionsConflicts $row->uuid" class="btn btn-danger btn-sm btn-icon icon-left ajax"><i class="entypo-eye"></i>Konflikt</a>
+            </th>
+        </tr>
+        </tbody>
+        <!--/body-->
+    </table>
+
+</div>
+
+<!--/table-->

@@ -1,7 +1,0 @@
-mail:
-    smtp: true
-    host: localhost
-    port: 465
-    username: test@test.com
-    password: "1234"
-    secure: ssl

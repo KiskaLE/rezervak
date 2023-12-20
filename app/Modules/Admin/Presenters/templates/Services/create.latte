@@ -1,20 +1,76 @@
+{block title}Služby{/block}
 {block content}
-<h1>Create</h1>
-<div><a class="btn btn-default" n:href="Services:show">Back</a></div>
-<form n:name="form">
-    <input n:name="action" value="create">
-    <div class="form-group">
-        <label class="col-sm-3 control-label" n:name="name">Name</label>
-        <div class="col-sm-8"><input class="form-control" n:name="name" ></div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-3 control-label" n:name="duration"  >Duration</label>
-        <div class="col-sm-8"><input class="form-control" type="number" n:name="duration""></div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-3 control-label" n:name="price"  >Price</label>
-        <div class="col-sm-8"><input class="form-control" type="number" n:name="price" ></div>
-    </div>
-    <input class="btn btn-default" n:name="submit">
+<div class="row page-header"><h1>Služby</h1></div>
+<!--navigace-->
+<div class="row navbar">
+    <a n:href="show" class="btn btn-default ajax" class="btn btn-default">Zpět</i></a>
+</div>
+<!--/navigace-->
 
-</form>
+<!--form-->
+<div class="row">
+    <h2>Vytvoření služby</h2>
+    <!--content-->
+    <form n:name="createForm" class="ajax">
+
+        <div class="panel panel-primary" data-collapsed="0">
+            <!--body-->
+            <div class="panel-body" style="display: block;">
+                <div class="form-group">
+                    <label for="field-1" class="col-sm-3 control-label">Název</label>
+                    <div class="">
+                        <input class="form-control" n:name="name">
+                        <span class="description"></span>
+                        <span class="input-error" id="sampleRateError">Název je povinný</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="field-2" class="col-sm-3 control-label">Doba trvání [min]</label>
+
+                    <div class="">
+                        <input class="form-control" type="number" n:name="duration">
+                        <span class="description">Zadejte čas trvání v minutách</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="field-3" class="col-sm-3 control-label">Cena [Kč]</label>
+
+                    <div class="">
+                        <input class="form-control" type="number" n:name="price">
+                        <span class="description">Zadejte cenu v Kč</span>
+                        <span class="input-error"
+                              id="verificationTimeError">Čas musí být větší než 0.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="field-4" class="col-sm-3 control-label">Popis</label>
+
+                    <div class="">
+                        <textarea class="form-control" n:name="description"></textarea>
+                        <span class="description">Zadejte popis služby (max 100 znaků)</span>
+                        <span class="input-error" id="numberOfDaysError">Čas musí být větší než 0.</span>
+                    </div>
+                </div>
+
+                
+
+
+                <!--submit-->
+                <div class="form-group default-padding">
+                    <input n:name="submit" id="btn-submit" class="btn btn-success">
+                </div>
+                <!--/submit-->
+            </div>
+            <!--/body-->
+        </div>
+
+    </form>
+
+</div>
+
+<!--/form-->
+
+<script src="{$basePath}/assets/admin/js/datePicker.js"></script>

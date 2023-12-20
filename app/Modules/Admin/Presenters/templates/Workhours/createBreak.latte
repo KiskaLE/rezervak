@@ -1,0 +1,42 @@
+{block title}Pracovní doba{/block}
+{block content}
+<div class="row page-header"><h1>Přestávka</h1></div>
+<!--navigace-->
+<div class="row navbar">
+    <a n:href="Workhours:edit $day->id" class="btn btn-default ajax" class="btn btn-default">Zpět</i></a>
+</div>
+<!--/navigace-->
+<!--form-->
+<div class="row">
+    <!--<h2>Vytvoření</h2>-->
+    <!--content-->
+    <form n:name="createBreakForm" class="ajax">
+
+        <div class="panel panel-primary" data-collapsed="0">
+            <!--body-->
+            <div class="panel-body" style="display: block;">
+                <div class="time-picker-wrapper">
+                    <span>Časové okno </span>
+                    <span>
+                        <input n:name="start"  class="form-control timepicker">
+                    </span>
+                    <span><img src="{$basePath}/assets/admin/icons/time-separator.svg" alt="time separator"></span>
+                    <span>
+                        <input n:name="stop" class="form-control timepicker">
+                    </span>
+                </div>
+                <!--submit-->
+                <div class="form-group default-padding">
+                    <input n:name="submit" id="btn-submit" class="btn btn-success">
+                </div>
+                <!--/submit-->
+            </div>
+            <!--/body-->
+        </div>
+
+    </form>
+
+</div>
+
+<!--/form-->
+

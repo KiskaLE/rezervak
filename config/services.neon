@@ -3,7 +3,19 @@ services:
 	- App\Modules\Authenticator
 	- App\Modules\AvailableDates
 	- App\Modules\Mailer
+	- App\Modules\Payments
+	- App\Modules\DiscountCodes
+	- App\Modules\Moment
+	- App\Modules\Admin\Presenters\ApiPresenter
+	- App\Modules\Formater
+	- PHPMailer\PHPMailer\PHPMailer(true)
 
+	nette.latteFactory:
+	    setup:
+	        - addFilter(convertToAdminTimezone, [@App\Modules\Formater, convertToAdminTimezone])
+
+extensions:
+	- Contributte\FormMultiplier\DI\MultiplierExtension
 
 search:
 	-	in: %appDir%

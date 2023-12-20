@@ -1,25 +1,67 @@
+{block title}Služby{/block}
 {block content}
-<h1>Services</h1>
+<div class="row page-header"><h1>Služby</h1></div>
 
-<div class="table-wrapper">
+<!--table-->
+<div class="row">
+    <h2></h2>
     <table class="table dataTable table-bordered">
+        <!--akce tabulky-->
+        <div class="table-header">
+            <a n:href="Services:create" class="btn btn-blue ajax">Vytvořit službu</i></a>
+        </div>
+        <br>
+        <!--/akce tabulky-->
+        <!--head-->
         <thead>
-            <tr>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Duration</th>
-                <th>Actions</th>
+        <tr>
+            <th>Název</th>
+            <th>Popis</th>
+            <th>Cena</th>
+            <th>Doba trvání [min]</th>
+            <th>Akce</th>
         </tr>
         </thead>
+        <!--/head-->
+        <!--body-->
+        <tbody>
         {foreach $services as $service}
+            {var $serviceSchedules = $service->related("services_custom_schedules")->fetch()}
             <tr>
-                <th>{$service->name}</th>
-                <th>{$service->price}</th>
-                <th>{$service->duration}</th>
-                <th><a class="btn btn-default btn-sm btn-icon icon-left" n:href="Services:edit $service->id"><i class="entypo-pencil"></i>Edit</a></th>
+                <th class="text-left">{$service->name}</th>
+                <th class="text-left">{$service->description}</th>
+                <th class="text-right">{$service->price} Kč</th>
+                <th class="text-right">{$service->duration} min</th>
+                <th>
+                    <a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="edit $service->id"><i
+                                class="entypo-pencil"></i>Upravit</a>
+
+                    <a class="btn {!$service->hidden ? "btn-gold" : "btn-default"} btn-sm btn-icon icon-left ajax" n:href="Services:actionHide $service->id"><i
+                                class="entypo-eye"></i>{!$service->hidden ? "Zobrazeno" : "Skryto"}</a>
+                </th>
             </tr>
         {/foreach}
+        </tbody>
+        <!--/body-->
+        <!-- Paginator pages -->
+        <ul n:if="$paginator->getPageCount() > 1" class="pagination">
+
+            <li n:if="!$paginator->isFirst()">
+                <a n:href="show $paginator->getPage() - 1"><i class="entypo-left-open-mini"></i></a>
+            </li>
+
+
+            <li n:for="$i = max($paginator->getPage() - 2, 0); $i < min($paginator->getPageCount(), $paginator->getPage() + 2); $i++" class="{($i+1) == $paginator->getPage() ? 'active' : ''}">
+                <a n:href="show $i+1">{$i+1}</a>
+            </li>
+
+            <li n:if="!$paginator->isLast()">
+                <a n:href="show $paginator->getPage() + 1"><i class="entypo-right-open-mini"></i></a>
+            </li>
+        </ul>
+        <!-- /Paginator pages -->
     </table>
 
-    <div><a n:href="Services:create" class="btn btn-default">Create</a></div>
 </div>
+
+<!--/table-->
