@@ -49,6 +49,8 @@ final class ReservationPresenter extends BasePresenter
                 $user_settings = $this->user->related("settings")->fetch();
                 $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
                 $this->service = $service;
+                $this->payload->postGet = true;
+                $this->payload->url = $this->link("Reservation:create");
                 $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates($u, $service->duration, $user_settings->number_of_days, intval($service_id))]);
             } else if ($run == "setDate") {
                 $this->setDate($u, intval($service_id), $day);
@@ -59,7 +61,7 @@ final class ReservationPresenter extends BasePresenter
                 $this->sendJson(["serviceName" => $service->name]);
             }
             $this->payload->postGet = true;
-            $this->payload->url = $this->link("Reservation:create", $u);
+            $this->payload->url = $this->link("Reservation:create");
         }
 
         $services = $this->database->table("services")->where("user_id=? AND hidden=?", [$this->user->id, 0])

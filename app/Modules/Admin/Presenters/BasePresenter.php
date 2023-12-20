@@ -3,7 +3,6 @@
 namespace App\Modules\admin\Presenters;
 
 use Nette\Application\UI\Presenter;
-use App\Modules\Formater;
 use Nette\Database\Explorer;
 use Nette\Utils\Paginator;
 
@@ -13,7 +12,9 @@ class BasePresenter extends Presenter
     public $backlink;
 
 
-    public function __construct()
+    public function __construct(
+        private Explorer $database,
+    )
     {
         parent::__construct();
     }
@@ -41,7 +42,7 @@ class BasePresenter extends Presenter
         if ($this->backlink) {
             try {
                 $this->restoreRequest($this->backlink);
-            } catch (InvalidLinkException $e) {
+            } catch (\Throwable $e) {
                 // Handle invalid backlink, log error or redirect to a default route
                 $this->redirect($defaultRoute);
             }

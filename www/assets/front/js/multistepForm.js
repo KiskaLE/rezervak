@@ -203,15 +203,16 @@ function setRecap() {
 
 async function getServiceName(service_id) {
     let naja = window.Naja;
-    const res = await naja.makeRequest("GET", "/reservation/create", {
+    await naja.makeRequest("GET", "/reservation/create", {
         run: "getServiceName",
         service_id: service_id
     }, {
         fetch: {
             credentials: 'include',
         },
-    })
-    return Promise.resolve(res.serviceName)
+    }).then(payload => {
+        // processing the response
+    });
 }
 
 async function getTime(time_id) {
@@ -256,7 +257,9 @@ async function changeDay() {
         fetch: {
             credentials: 'include',
         },
-    })
+    }).then(payload => {
+        // processing the response
+    });
     let time = day.split("-");
     const timesTitle = document.querySelector("#calendar-selected-date")
     timesTitle.innerHTML = time[2] + "." + time[1] + "." + time[0];
@@ -475,7 +478,7 @@ async function createCalendar(month, year) {
     async function getAvailableDays() {
         let naja = window.Naja;
         const service_id = document.querySelector("[name='service']").value;
-        const req = await naja.makeRequest("GET", `/reservation/create`, {
+        const res = await naja.makeRequest("POST", `/reservation/create`, {
             u: searchParams.get("u"),
             run: "fetch",
             service_id: service_id
@@ -484,7 +487,8 @@ async function createCalendar(month, year) {
                 credentials: 'include',
             },
         })
-        return Promise.resolve(req.availableDates);
+        console.log(res);
+        return Promise.resolve(res.availableDates);
 
 
     }

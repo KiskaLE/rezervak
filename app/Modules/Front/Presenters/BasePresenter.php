@@ -7,8 +7,8 @@ use Nette\Database\Explorer;
 
 class BasePresenter extends Presenter
 {
-    private $database;
-    public function __construct()
+    public function __construct(
+    )
     {
         parent::__construct();
     }
@@ -17,5 +17,11 @@ class BasePresenter extends Presenter
     {
         parent::startup();
         // Your code here
+    }
+
+    protected function beforeRender()
+    {
+        parent::beforeRender();
+        
     }
 }

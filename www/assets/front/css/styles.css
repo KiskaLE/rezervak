@@ -57,9 +57,14 @@ body {
   font-family: "PT Sans Narrow", sans-serif;
   background-color: var(--background);
   margin: 0;
+}
+
+.body-wrapper {
+  min-height: 100vh !important;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
 }
 
 .back {
@@ -376,7 +381,7 @@ body {
   background-color: rgba(128, 128, 128, 0.32) !important;
 }
 #calendar .weekend {
-  color: red !important;
+  color: white;
 }
 #calendar .unavailable {
   background-color: var(--white);
@@ -447,10 +452,6 @@ body {
 }
 .btn-secondary p {
   color: var(--primary) !important;
-}
-
-footer {
-  height: 100px;
 }
 
 /* Style the input fields */
@@ -723,4 +724,40 @@ input.valid {
 
 .alert-danger {
   background-color: rgba(255, 0, 0, 0.87);
+}
+
+footer {
+  width: 100%;
+  background-color: #71717a;
+  margin-top: 50px;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.footer-wrapper {
+  display: flex;
+  gap: 30px;
+  box-sizing: border-box;
+  align-items: center;
+}
+@media (max-width: 700px) {
+  .footer-wrapper {
+    flex-direction: column;
+    gap: 10px;
+    align-items: start;
+  }
+}
+.footer-wrapper h4 {
+  margin: 0;
+}
+.footer-wrapper p {
+  margin: 0;
+  color: white;
+}
+
+.footer-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }/*# sourceMappingURL=styles.css.map */

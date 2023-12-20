@@ -63,9 +63,15 @@ body {
   font-family: 'PT Sans Narrow', sans-serif;
   background-color: var(--background);
   margin: 0;
+  
+}
+
+.body-wrapper {
+  min-height: 100vh !important;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
 }
 
 .back {
@@ -422,7 +428,7 @@ body {
 
 
   .weekend {
-    color: red !important;
+    color: white;
   }
 
   .unavailable {
@@ -510,9 +516,6 @@ body {
   }
 }
 
-footer {
-  height: 100px;
-}
 
 /* Style the input fields */
 input {
@@ -843,3 +846,47 @@ input.valid {
 }
 
 //flash messages end
+
+
+//footer start
+
+footer {
+  width: 100%;
+  background-color: #71717a;
+  margin-top: 50px;
+  padding: 20px;
+
+  display: flex;
+  justify-content: center;
+
+}
+
+.footer-wrapper {
+  display: flex;
+  gap: 30px;
+  box-sizing: border-box;
+  align-items: center;
+
+  @media (max-width: 700px) {
+    flex-direction: column;
+    gap: 10px;
+    align-items: start;
+  }
+
+  h4 {
+    margin: 0;
+  }
+  p {
+    margin: 0;
+    color: white;
+  }
+  
+}
+
+.footer-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+//footer end
