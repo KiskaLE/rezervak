@@ -199,7 +199,7 @@ final class ServicesPresenter extends SecurePresenter
 
         //$form->addText("scheduleName")->setRequired("Název je povinný");
         //$form->addText("range")->setRequired();
-        $form->addHidden("events")->setRequired("Vyberte časové okna");
+        $form->addHidden("events");
     
         $form->addSubmit("submit", "Uložit");
         $form->onSuccess[] = [$this, "editCustomScheduleFormSuccess"];
@@ -350,51 +350,52 @@ final class ServicesPresenter extends SecurePresenter
             ->setHtmlAttribute("type", "number")
             ->setRequired("Cena je povinná")
             ->addRule($form::Min, "Cena nesmí být meně než 0", 0);
-        $form->addCheckbox("customSchedule", "Custom Schedule")
-            ->addCondition($form::Equal, true)
-            ->toggle('#servicesCustomFields');
+        
+        // $form->addCheckbox("customSchedule", "Custom Schedule")
+        //     ->addCondition($form::Equal, true)
+        //     ->toggle('#servicesCustomFields');
 
-        $form->addText("range")
-            ->addConditionOn($form["customSchedule"], $form::Equal, true)
-            ->setRequired("Rozsah je povinný");
-        $form->addText("scheduleName")
-            ->addConditionOn($form["customSchedule"], $form::Equal, true)
-            ->setRequired("Název je povinný")
-            ->addRule($form::PATTERN, "Název může obsahovat pouze znaky", "^[a-zA-Z0-9 ]+$");
+        // $form->addText("range")
+        //     ->addConditionOn($form["customSchedule"], $form::Equal, true)
+        //     ->setRequired("Rozsah je povinný");
+        // $form->addText("scheduleName")
+        //     ->addConditionOn($form["customSchedule"], $form::Equal, true)
+        //     ->setRequired("Název je povinný")
+        //     ->addRule($form::PATTERN, "Název může obsahovat pouze znaky", "^[a-zA-Z0-9 ]+$");
 
-        $multiplier = $form->addMultiplier("multiplier", function (Nette\Forms\Container $container, Nette\Forms\Form $form) {
-            $container->addText("day", "text")
-                ->addConditionOn($form["customSchedule"], $form::Equal, true)
-                ->setRequired("Den je povinný");
-            $container->addText("timeStart", "Začátek")
-                ->setHtmlAttribute("type", "time")
-                ->addConditionOn($form["customSchedule"], $form::Equal, true)
-                ->setRequired("Začátek je povinný");
-            $container->addText("timeEnd", "Konec")
-                ->setHtmlAttribute("type", "time")
-                ->addConditionOn($form["customSchedule"], $form::Equal, true)
-                ->setRequired("Konec je povinný");
+        // $multiplier = $form->addMultiplier("multiplier", function (Nette\Forms\Container $container, Nette\Forms\Form $form) {
+        //     $container->addText("day", "text")
+        //         ->addConditionOn($form["customSchedule"], $form::Equal, true)
+        //         ->setRequired("Den je povinný");
+        //     $container->addText("timeStart", "Začátek")
+        //         ->setHtmlAttribute("type", "time")
+        //         ->addConditionOn($form["customSchedule"], $form::Equal, true)
+        //         ->setRequired("Začátek je povinný");
+        //     $container->addText("timeEnd", "Konec")
+        //         ->setHtmlAttribute("type", "time")
+        //         ->addConditionOn($form["customSchedule"], $form::Equal, true)
+        //         ->setRequired("Konec je povinný");
 
-            // Custom validation function
-            $validateTimeRange = function ($timeEndField) use ($container) {
-                $timeStart = $container['timeStart']->getValue();
-                $timeEnd = $timeEndField->getValue();
+        //     // Custom validation function
+        //     $validateTimeRange = function ($timeEndField) use ($container) {
+        //         $timeStart = $container['timeStart']->getValue();
+        //         $timeEnd = $timeEndField->getValue();
 
-                $start = strtotime($timeStart);
-                $end = strtotime($timeEnd);
+        //         $start = strtotime($timeStart);
+        //         $end = strtotime($timeEnd);
 
-                return $end > $start;
-            };
+        //         return $end > $start;
+        //     };
 
-            $container['timeEnd']->addConditionOn($form["customSchedule"], $form::Equal, true)->addRule($validateTimeRange, 'Čas ukončení musí být později než čas začátku.');
-        }, 1);
+        //     $container['timeEnd']->addConditionOn($form["customSchedule"], $form::Equal, true)->addRule($validateTimeRange, 'Čas ukončení musí být později než čas začátku.');
+        // }, 1);
 
         $form->addSubmit("submit", "Uložit");
         $form->onSuccess[] = [$this, "createFormSuccess"];
-        $multiplier->addCreateButton('Přidat')
-            ->addClass('btn btn-primary');
-        $multiplier->addRemoveButton('Odebrat')
-            ->addClass('btn btn-danger');
+        // $multiplier->addCreateButton('Přidat')
+        //     ->addClass('btn btn-primary');
+        // $multiplier->addRemoveButton('Odebrat')
+        //     ->addClass('btn btn-danger');
 
         return $form;
     }
@@ -404,7 +405,7 @@ final class ServicesPresenter extends SecurePresenter
         $res = $this->database->transaction(function ($database) use ($data) {
             $success = true;
             try {
-                $service = $this->database->table("services")->insert([
+                $service = $database->table("services")->insert([
                     "name" => $data->name,
                     "price" => $data->price,
                     "duration" => $data->duration,
@@ -412,6 +413,17 @@ final class ServicesPresenter extends SecurePresenter
                     "description" => $data->description
                 ]);
             } catch (\Exception $e) {
+                $success = false;
+            }
+            //create schedule
+            try {
+                $uuid = Uuid::uuid4();
+                $database->table("services_custom_schedules")->insert([
+                    "uuid" => $uuid,
+                    "service_id" => $service->id,
+                    "type" => 0
+                ]);
+            } catch (\Throwable $th) {
                 $success = false;
             }
             return $success;
