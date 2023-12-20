@@ -89,6 +89,24 @@ final class ServicesPresenter extends SecurePresenter
         //custom schedule conflicts
         $this->template->customScheduleConflicts = $this->availableDates->getCustomSchedulesConflictsIds($service);
 
+        //custom schedule
+        $schedule = $service->related("services_custom_schedules")->fetch();
+        $this->schedule = $schedule;
+
+        $service = $schedule->ref("services", "service_id");
+        $this->template->service = $service;
+        
+        $days = $schedule->related("service_custom_schedule_days")->fetchAll();
+        $this->days = $days;
+        $this->template->days = $days;
+        
+        $userSettings = $this->database->table("settings")->where("user_id=?" , $this->user->id)->fetch();
+        $this->template->userSettings = $userSettings;
+        
+
+        $calendarPeriod = gmdate("H:i:s", $userSettings->sample_rate * 60);
+        $this->template->calendarPeriod = $calendarPeriod;
+
     }
 
     public function actionEditCustomSchedule($id, $backlink)
@@ -179,8 +197,8 @@ final class ServicesPresenter extends SecurePresenter
 
         $form = new Form;
 
-        $form->addText("scheduleName")->setRequired("Název je povinný");
-        $form->addText("range")->setRequired();
+        //$form->addText("scheduleName")->setRequired("Název je povinný");
+        //$form->addText("range")->setRequired();
         $form->addHidden("events")->setRequired("Vyberte časové okna");
     
         $form->addSubmit("submit", "Uložit");
@@ -194,11 +212,11 @@ final class ServicesPresenter extends SecurePresenter
         $res = $this->database->transaction(function ($database) use ($data) {
             $success = true;
             try {
-                $range = $this->formater->getDataFromString($data->range);
+                //$range = $this->formater->getDataFromString($data->range);
                 $database->table("services_custom_schedules")->where("id=?", $this->schedule->id)->update([
-                    "start" => $range["start"],
-                    "name" => $data->scheduleName,
-                    "end" => $range["end"],
+                    //"start" => $range["start"],
+                    //"name" => $data->scheduleName,
+                   // "end" => $range["end"],
                     "updated_at" => date("Y-m-d H:i:s")
                 ]);
 
@@ -244,9 +262,11 @@ final class ServicesPresenter extends SecurePresenter
 
         if ($res) {
             $this->flashMessage("Vytvořeno", "alert-success");
-            $this->restoreRequest($this->backlink);
+            //$this->restoreRequest($this->backlink);
+            $this->redirect("this");
         } else {
             $this->flashMessage("Nepodarilo se vytvořit službu", "alert-danger");
+            $this->redirect("this");
         }
     }
 
