@@ -8,9 +8,9 @@ body {
   font-family: "Roboto", sans-serif;
   padding: 0;
   margin: 0;
+  padding: 100px 0 0 !important;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   min-height: 100vh;
 }
@@ -20,11 +20,21 @@ body {
   text-align: center;
 }
 
+#logo-login {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+#logo-login svg {
+  width: 200px;
+}
+
 .login-box {
   padding: 30px;
   border-radius: 27px;
   box-shadow: var(--shadow-secondary);
   width: 350px;
+  background-color: #ffffff;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -51,4 +61,9 @@ body {
 .login-box .form-group input[type=submit] {
   background-color: #3b82f6;
   color: white;
+}
+
+.login-info {
+  color: grey;
+  text-decoration: none;
 }/*# sourceMappingURL=login.css.map */

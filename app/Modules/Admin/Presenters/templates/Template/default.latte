@@ -1,12 +1,12 @@
 {block title}Nadpis karty{/block}
 {block content}
-
+<!-- page title start-->
 <div class="page-title">
     <h1>Nadpis</h1>
 </div>
+<!-- page title end -->
 
-<!--tabulka-->
-
+<!--table start-->
 <div class="table-wrapper">
     <table>
         <thead class="table-head">
@@ -28,6 +28,77 @@
                     <a class="btn btn-danger" href="#">Hrozba</a>
                 </th>
             </tr>
+            <tr>
+                <th class="text-left">Schůzka</th>
+                <th class="text-left">email@gmail.com</th>
+                <th class="text-right">4534</th>
+                <th class="text-left">
+                    <a class="btn" href="#">Základní</a>
+                    <a class="btn btn-primary" href="#">Primární</a>
+                    <a class="btn btn-danger" href="#">Hrozba</a>
+                </th>
+            </tr>
         </tbody>
     </table>
 </div>
+<!-- table end -->
+
+<!-- form start -->
+<div class="form-wrapper">
+    <form name="name">
+
+        <div class="form-head">
+            <h2>Form title</h2>
+        </div>
+
+        <div class="form-body">
+
+            <div class="form-group" style="width: 300px;">
+                <label for="">Label</label>
+                <input type="text">
+            </div>
+
+            <div class="form-group" style="width: 300px;">
+                <label for="">Label</label>
+                <input type="text">
+            </div>
+
+            <div class="form-group" style="width: 300px;">
+                <label for="">Label</label>
+                <input type="text">
+            </div>
+
+            <div class="form-group" style="width: 300px;">
+                <label for="">Label</label>
+                <textarea></textarea>
+            </div>
+            
+            <div class="form-group" style="width: 300px;">
+                <label for="">Label</label>
+                <select>
+                    <option value="test">Test</option>
+                    <option value="test">Test</option>
+                    <option value="test">Test</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <div class="form-checkbox">
+                    <input type="checkbox">
+                    <label for="">Label</label>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <div class="submit"><input type="submit" name="submit"></div>
+                <div class="reset"><button>Zrušit</button></div>
+            </div>
+
+        </div>
+
+
+
+    </form>
+</div>
+<!-- form end -->
+

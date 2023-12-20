@@ -49,7 +49,7 @@ final class SignPresenter extends BasePresenter
             $this->getUser()->setAuthenticator($this->authenticator)->login($data->username, $data->password);
             $this->redirect("Home:");
         } catch (Nette\Security\AuthenticationException $e) {
-            $this->flashMessage("Špatný email nebo heslo.", "alert-danger");
+            $this->flashMessage("Špatný email nebo heslo.", "error");
         }
 
 
