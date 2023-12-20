@@ -39,10 +39,11 @@ final class ReservationPresenter extends BasePresenter
         $this->template->backupTimes = [];
     }
 
-    public function actionCreate($u, $run, $day, $service_id, $discountCode = "")
+    public function actionCreate($run, $day, $service_id, $discountCode = "")
     {
-        $this->user_uuid = $u;
-        $this->user = $this->database->table("users")->where("uuid=?", $u)->fetch();
+        $this->user = $this->database->table("users")->fetch();
+        $this->user_uuid = $this->user->uuid;
+        $u = $this->user->uuid;
         if ($this->isAjax()) {
             if ($run == "fetch") {
                 $user_settings = $this->user->related("settings")->fetch();
@@ -69,17 +70,17 @@ final class ReservationPresenter extends BasePresenter
     }
 
     public
-    function actionConfirmation($r)
+    function actionConfirmation($id)
     {
-        $this->template->uuid = $r;
-        $reservation = $this->database->table("reservations")->where("uuid=?", $r)->fetch();
+        $this->template->uuid = $id;
+        $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
         $this->template->reservation = $reservation;
     }
 
     public
-    function actionBackup($r)
+    function actionBackup($id)
     {
-        $reservation = $this->database->table("reservations")->where("uuid=? AND type=1", $r)->fetch();
+        $reservation = $this->database->table("reservations")->where("uuid=? AND type=1", $id)->fetch();
         $this->template->reservation = $reservation;
     }
 
@@ -142,7 +143,7 @@ final class ReservationPresenter extends BasePresenter
                 $this->redirect("create", $this->user_uuid);
             }
             $this->mailer->sendConfirmationMail($email, $this->link("Payment:default", $uuid), $result);
-            $this->redirect("Reservation:confirmation", ["r" => $uuid]);
+            $this->redirect("Reservation:confirmation", ["id" => $uuid]);
         } else if ($data->dateType == "backup") {
             $times = $session->availableBackupTimes;
             $time = $times[$data->time];
@@ -156,7 +157,7 @@ final class ReservationPresenter extends BasePresenter
                 $this->redirect("create", $this->user_uuid);
             }
             $this->mailer->sendBackupConfiramationMail($email, $this->link("Payment:backup", $uuid), $result);
-            $this->redirect("Reservation:confirmation", ["r" => $uuid]);
+            $this->redirect("Reservation:confirmation", ["id" => $uuid]);
         }
         $this->redirect("create");
     }
@@ -267,17 +268,17 @@ final class ReservationPresenter extends BasePresenter
         $price = $service->price;
         if ($discount) {
 
-            if ($discount->type == 0) {
-                if ($discount->value >= $price) {
+            if ($discount["type"] == 0) {
+                if ($discount["value"] >= $price) {
                     $price = 0;
                 } else {
-                    $price = $service->price - $discount->value;
+                    $price = $service->price - $discount["value"];
                 }
             } else {
-                if ($discount->value >= 100) {
+                if ($discount["value"] >= 100) {
                     $price = 0;
                 } else {
-                    $price = $price - $service->price * $discount->value / 100;
+                    $price = $price - $service->price * $discount["value"] / 100;
                 }
             }
             $this->sendJson(["status" => true, "price" => $price]);
