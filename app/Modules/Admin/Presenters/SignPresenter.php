@@ -37,7 +37,7 @@ final class SignPresenter extends BasePresenter
         $form = new Form;
         $form->addText("username", "email")->setRequired();
         $form->addPassword("password", "password")->setRequired();
-        $form->addSubmit("submit", "login");
+        $form->addSubmit("submit", "Přihlásit se");
 
         $form->onSuccess[] = [$this, "signInFormSucceeded"];
         return $form;
@@ -49,7 +49,7 @@ final class SignPresenter extends BasePresenter
             $this->getUser()->setAuthenticator($this->authenticator)->login($data->username, $data->password);
             $this->redirect("Home:");
         } catch (Nette\Security\AuthenticationException $e) {
-            $this->flashMessage("Špatný email nebo heslo.", "alert-danger");
+            $this->flashMessage("Špatný email nebo heslo.", "error");
         }
 
 
@@ -60,7 +60,7 @@ final class SignPresenter extends BasePresenter
         $form = new Form;
         $form->addText("username", "email")->setRequired();
         $form->addPassword("password", "password")->setRequired();
-        $form->addSubmit("submit", "create");
+        $form->addSubmit("submit", "Vytvořit učet");
 
         $form->onSuccess[] = [$this, "createFormSucceeded"];
         return $form;
