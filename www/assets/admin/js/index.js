@@ -63,3 +63,16 @@ function closeDropdown(event) {
 // Event listener for closing the dropdown
 document.addEventListener('click', closeDropdown);
 
+
+function sidebarOpen() {
+    console.log("test")
+    const sidebar = document.querySelector('.left-sidebar-container');
+    sidebar.style.transform = 'translateX(0%)';
+}
+
+function sidebarClose() {
+    console.log("test")
+    const sidebar = document.querySelector('.left-sidebar-container');
+    sidebar.style.transform = 'translateX(-100%)';
+}
+

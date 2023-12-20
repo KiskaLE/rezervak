@@ -10,9 +10,9 @@ body {
   padding: 0;
   margin: 0;
 
+  padding: 100px 0 0 !important;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   min-height: 100vh;
 }
@@ -24,11 +24,21 @@ body {
   }
 }
 
+#logo-login {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  svg {
+    width: 200px;
+  }
+}
+
 .login-box {
   padding: 30px;
   border-radius: 27px;
   box-shadow: var(--shadow-secondary);
   width: 350px;
+  background-color: #ffffff;
 
   display: flex;
   flex-direction: column;
@@ -59,4 +69,9 @@ body {
       color: white;
     }
   }
+}
+
+.login-info {
+  color: grey;
+  text-decoration: none;
 }
