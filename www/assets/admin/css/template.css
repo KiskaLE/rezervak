@@ -470,6 +470,16 @@ h1 {
   background: white;
 }
 
+.form-input-row {
+  display: flex;
+  flex-direction: row !important;
+}
+.form-input-row div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
 .list-wrapper {
   background: white;
   width: 100%;

@@ -12,6 +12,7 @@ use App\Modules\Payments;
 use App\Modules\DiscountCodes;
 use Ramsey\Uuid\Uuid;
 use App\Modules\Moment;
+use Nette\DI\Attributes\Inject;
 
 
 final class ReservationPresenter extends BasePresenter
@@ -20,9 +21,10 @@ final class ReservationPresenter extends BasePresenter
     private $user;
     private $service;
 
+    #[Inject] public Nette\Database\Explorer $database;
+
 
     public function __construct(
-        private Nette\Database\Explorer $database,
         private AvailableDates          $availableDates,
         private Mailer                  $mailer,
         private Payments                $payments,

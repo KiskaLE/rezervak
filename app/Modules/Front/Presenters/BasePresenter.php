@@ -8,6 +8,7 @@ use Nette\Database\Explorer;
 class BasePresenter extends Presenter
 {
     public function __construct(
+        public Explorer $database
     )
     {
         parent::__construct();
@@ -22,6 +23,9 @@ class BasePresenter extends Presenter
     protected function beforeRender()
     {
         parent::beforeRender();
+        $user = $this->database->table("users")->fetch();
+        $this->template->user = $user;
+        $this->template->userSettings = $user->related("settings")->fetch();
         
     }
 }

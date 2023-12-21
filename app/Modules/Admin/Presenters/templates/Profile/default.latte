@@ -1,0 +1,55 @@
+{block title}Profil{/block}
+{block content}
+<!-- page title start-->
+<div class="page-title">
+    <h1>Profil</h1>
+</div>
+<!-- page title end -->
+
+<!-- form start -->
+<div class="form-wrapper">
+    <form n:name="editUserForm">
+
+        <div class="form-body">
+
+            <div class="form-group form-input-row">
+                <div class="" style="width: 147px;">
+                    <label for="">Jméno*</label>
+                    <input n:name="firstname">
+                </div> 
+                <div class="" style="width: 147px;">
+                    <label for="">Príjmení*</label>
+                    <input n:name="lastname">
+                </div> 
+            </div>
+            
+            <div class="form-group" style="width: 300px;">
+                <label for="">Ulice a čp.</label>
+                <input n:name="address">
+            </div>
+
+            <div class="form-group" style="width: 300px;">
+                <label for="">PSČ</label>
+                <input n:name="zip">
+            </div>
+            
+            <div class="form-group" style="width: 300px;">
+                <label for="">Město</label>
+                <input n:name="city">
+            </div>
+
+
+
+            <div class="form-actions">
+                <div class="submit"><input n:name="submit"></div>
+                <div class="reset"><a n:href="this">Zrušit</a></div>
+            </div>
+
+
+        </div>
+
+
+
+    </form>
+</div>
+<!-- form end -->

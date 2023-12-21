@@ -6,19 +6,20 @@ namespace App\Modules\Front\Presenters;
 
 use Nette;
 use App\Modules\Payments;
+use Nette\DI\Attributes\Inject;
 
 
 
 final class PaymentPresenter extends BasePresenter
 {
 
+    #[Inject] public Nette\Database\Explorer $database;
+
     private $user;
     public function __construct(
-        private Nette\Database\Explorer $database,
         private Payments $payments
     )
     {
-        parent::__construct();
     }
 
     public function actionDefault($id)

@@ -521,6 +521,17 @@ h1 {
 .fc-view-harness {
   background: white;
 }
+
+.form-input-row {
+  display: flex;
+  flex-direction: row !important;
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
 //form end
 
 //list start
