@@ -23,7 +23,7 @@
            {foreach $discountCodes as $discountCode}
                 <tr>
                     <th class="text-left">{$discountCode->code}</th>
-                    <th class="text-right">{$discountCode->value} {$discountCode->type == 0 ? " Kč" : " %" }</th>
+                    <th class="text-right">{$discountCode->value|currency} {$discountCode->type == 0 ? " Kč" : " %" }</th>
                     <th class="text-left">{$discountCode->type == 0 ? "cena" : "procento" }</th>
                     {* <th class="text-left">{$discountCode->active ? 'Ano' : 'Ne'}</th> *}
                     <th class="text-left">
@@ -36,7 +36,7 @@
             {/foreach}
 
              <tr>
-                <th class="text-left"><a n:href=":create" class=""><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></a></th>
+                <th class="text-left"><a n:href=":create" class="btn btn-primary">Přidat kód</a></th>
             </tr>
         </tbody>
     </table>

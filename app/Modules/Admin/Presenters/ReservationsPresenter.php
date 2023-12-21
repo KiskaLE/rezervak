@@ -15,6 +15,7 @@ final class ReservationsPresenter extends SecurePresenter
 
     private $uuid;
     private $reservation;
+    private $page;
 
     #[Inject] public Nette\Database\Explorer $database;
 
@@ -31,8 +32,15 @@ final class ReservationsPresenter extends SecurePresenter
 
     }
 
-    public function actionShow(int $page = 1)
+    public function actionDefault(int $page = 1)
     {
+        $this->page = $page;
+
+        $session = $this->getSession("reservations");
+        //tab
+        $tab = $session->reservations_tab ?? 0;
+        $this->template->tab = $tab;
+
         $numberOfReservations = $this->database->table('reservations')
             ->select('reservations.*',)
             ->where('reservations.status=?', 'VERIFIED')
@@ -40,17 +48,72 @@ final class ReservationsPresenter extends SecurePresenter
             ->where('user_id=?', $this->user->id)
             ->where(':payments.status=?', 1)->count();
 
-        $paginator = $this->createPagitator($numberOfReservations, $page, 10);
+        $paginator = $this->createPagitator($numberOfReservations, $page, 5);
 
 
-        $reservations = $this->database->table('reservations')
-            ->select('reservations.*',)
-            ->where('reservations.status=?', 'VERIFIED')
-            ->where("reservations.type=?", 0)
-            ->where('user_id=?', $this->user->id)
-            ->where(':payments.status=?', 1)
-            ->limit($paginator->getLength(), $paginator->getOffset())
-            ->fetchAll();
+        switch ($tab) {
+            case 0:
+                $numberOfReservations = $this->database->table('reservations')
+                ->select('reservations.*',)
+                ->where('reservations.status=?', 'VERIFIED')
+                ->where('start >= ?', date('Y-m-d'))
+                ->where("reservations.type=?", 0)
+                ->where('user_id=?', $this->user->id)
+                ->where(':payments.status=?', 1)
+                ->count();
+
+                $reservations = $this->database->table('reservations')
+                ->select('reservations.*',)
+                ->where('reservations.status=?', 'VERIFIED')
+                ->where('start >= ?', date('Y-m-d'))
+                ->where("reservations.type=?", 0)
+                ->where('user_id=?', $this->user->id)
+                ->where(':payments.status=?', 1)
+                ->order('start ASC')
+                ->limit($paginator->getLength(), $paginator->getOffset())
+                ->fetchAll();
+                break;
+            
+            case 1:
+                $numberOfReservations = $this->database->table('reservations')
+                ->select('reservations.*',)
+                ->where('reservations.status=?', 'VERIFIED')
+                ->where('start < ?', date('Y-m-d'))
+                ->where("reservations.type=?", 1)
+                ->where('user_id=?', $this->user->id)
+                ->where(':payments.status=?', 1)
+                ->count();
+
+                $reservations = $this->database->table('reservations')
+                ->select('reservations.*',)
+                ->where('reservations.status=?', 'VERIFIED')
+                ->where('start < ?', date('Y-m-d'))
+                ->where("reservations.type=?", 1)
+                ->where('user_id=?', $this->user->id)
+                ->where(':payments.status=?', 1)
+                ->order('start ASC')
+                ->limit($paginator->getLength(), $paginator->getOffset())
+                ->fetchAll();
+                break;
+            case 2:
+                $numberOfReservations = $this->database->table('reservations')
+                ->select('reservations.*',)
+                ->where('reservations.status=?', 'VERIFIED')
+                ->where("reservations.type=?", 0)
+                ->where('user_id=?', $this->user->id)
+                ->where(':payments.status=?', 0)
+                ->count();
+
+                $reservations = $this->database->table('reservations')
+                ->select('reservations.*',)
+                ->where('reservations.status=?', 'VERIFIED')
+                ->where("reservations.type=?", 0)
+                ->where('user_id=?', $this->user->id)
+                ->where(':payments.status=?', 0)
+                ->order('start ASC')
+                ->limit($paginator->getLength(), $paginator->getOffset())
+                ->fetchAll();
+        }
         $this->template->reservations = $reservations;
         $this->template->paginator = $paginator;
     }
@@ -115,7 +178,7 @@ final class ReservationsPresenter extends SecurePresenter
             $this->restoreRequest($this->backlink);
         }
         $this->flashMessage("Uloženo", "success");
-        $this->redirect('show');
+        $this->redirect('default');
     }
 
     protected function createComponentDeleteForm(string $name): Form
@@ -135,8 +198,16 @@ final class ReservationsPresenter extends SecurePresenter
         if ($this->backlink) {
             $this->redirect($this->backlink);
         }
-        $this->redirect('Reservations:show');
+        $this->redirect('Reservations:');
     }
 
+
+    public function handleSetTab($tab) {
+       
+        $session = $this->getSession("reservations");
+    
+        $session->reservations_tab = $tab;
+        $this->redirect('default');
+    }
 
 }

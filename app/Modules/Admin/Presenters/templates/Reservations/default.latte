@@ -1,0 +1,148 @@
+{block title}Rezervace{/block}
+{block content}
+<!-- page title start-->
+<div class="page-title">
+    <h1>Rezervace</h1>
+</div>
+<!-- page title end -->
+
+{* list start *}
+<div class="list-wrapper">
+
+    <div class="list-page">
+        <a n:href="setTab! 0" class="list-page-item" id="tab0">
+            Nadcházející
+        </a>
+        <a n:href="setTab! 1" class="list-page-item" id="tab1">
+            Proběhlé
+        </a>
+        <a n:href="setTab! 2" class="list-page-item" id="tab2">
+            Nezaplacené
+        </a>
+    </div>
+    {var $i = 0}
+    <div n:foreach="$reservations as $reservation" class="list-item" id="list-item-{$i}">
+        {var $service = $reservation->ref("services", "service_id")}
+        {var $payment = $reservation->related("payments")->fetch()}
+        
+        <div class="list-item-head" onclick="listItemToggle('list-item-{$i}')">
+            <div class="list-item-column">
+                {var $end = date( "Y-m-d H:i:s",strtotime(strval($reservation->start) . " " . $service->duration . " minutes"))}
+                <div class="list-item-info">{$reservation->start|date:'d.m.Y'}</div>
+                <div class="list-item-info">{$reservation->start|date:'H:i'} - {$end|date:"H:i"}</div>
+            </div>
+
+            <div class="list-item-column">
+                <div class="list-item-info"><b>{$reservation->firstname. " ". $reservation->lastname}</b></div>
+                <div class="list-item-info"> Typ rezervace <b>{$service->name|lower}</b></div>
+            </div>
+
+            <div class="list-item-column">
+                <div class="list-item-info">Vytvořeno <b>{$reservation->created_at|convertToAdminTimezone|date:'d.m.Y H:i'}</b></div>
+            </div>
+
+            <div class="list-item-column">
+                <div class="list-item-more">
+                    <div class="list-item-detail">
+                        <span>Detail</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#000000" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-play"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="list-item-body" style="display: none">
+            <div class="list-item-column list-item-actions">
+            <a class="btn btn-primary" n:href="edit $reservation->uuid">Upravit</a>
+            <a class="btn btn-danger" n:href="Reservations:delete $reservation->uuid">Zrušit</a>
+            </div>
+            <div class="list-item-column">
+                <div class="list-item-info">
+                <span class="list-item-label">E-mail</span>
+                <span>{$reservation->email}</span>
+                </div>
+                <div class="list-item-info">
+                <span class="list-item-label">Telefon</span>
+                <span>{$reservation->phone}</span>
+                </div>
+                <div class="list-item-info">
+                    <span class="list-item-label">Cena</span>
+                    <span>{$payment->price|currency} Kč</span>
+                </div>
+                <div class="list-item-info">
+                    <span class="list-item-label">Adresa</span>
+                    <span>{$reservation->address}</span>
+                    <span>{$reservation->code}</span>
+                    <span>{$reservation->city}</span>
+                </div>
+            </div>
+            <div class="list-item-column">
+            </div>
+            <div class="list-item-column">
+            </div>
+        </div>
+        {do $i++}
+    </div>
+    <!-- Paginator pages -->
+        <ul n:if="$paginator->getPageCount() > 1" class="pagination">
+
+            <li {if $paginator->isFirst()} style='visibility: hidden;' {/if}>
+                <a n:href="default $paginator->getPage() - 1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-left"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></a>
+            </li>
+
+
+            <li n:for="$i = max($paginator->getPage() - 2, 0); $i < min($paginator->getPageCount(), $paginator->getPage() + 2); $i++" class="{($i+1) == $paginator->getPage() ? 'active' : ''}">
+                <a n:href="default $i+1">{$i+1}</a>
+            </li>
+
+            <li {if $paginator->isLast()} style='visibility: hidden;' {/if}>
+                <a n:href="default $paginator->getPage() + 1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-right"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></a>
+            </li>
+        </ul>
+        <!-- /Paginator pages -->
+</div>
+{* list end *}
+
+
+<script>
+    setTab({$tab});
+</script>
+
+{* 
+<!--table start-->
+<div class="table-wrapper">
+    <table>
+        <thead class="table-head">
+            <tr>
+                <th class="text-left">Datum</th>
+                <th class="text-left">Jméno</th>
+                <th class="text-left">Příjmení</th>
+                <th class="text-left">E-mail</th>
+                <th class="text-left">Tel.</th>
+                <th class="text-left">Služba</th>
+                <th class="text-right">Cena</th>
+                <th class="text-left">Akce</th>
+            </tr>
+        </thead>
+        <tbody>
+           {foreach $reservations as $reservation}
+            <tr>
+                <th class="text-left">{$reservation->start|date:"d.m.Y"}</th>
+                <th class="text-left">{$reservation->firstname}</th>
+                <th class="text-left">{$reservation->lastname}</th>
+                <th class="text-left">{$reservation->email}</th>
+                <th class="text-left">{$reservation->phone}</th>
+                <th class="text-left">{$reservation->ref("services", "service_id")->name}</th>
+                <th class="text-right">{$reservation->related("payments")->fetch()->price} Kč</th>
+                <th class="text-left">
+                    <a class="btn btn-green" n:href="Reservations:detail $reservation->uuid">Detail</a>
+                    <a class="btn btn-primary" n:href="Reservations:edit $reservation->uuid">Upravit</a>
+                    <a class="btn" n:href="Reservations:delete $reservation->uuid">Smazat</a></th>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+</div>
+<!-- table end -->
+ *}

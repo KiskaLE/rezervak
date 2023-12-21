@@ -166,7 +166,6 @@ body {
   height: 40px;
   border-radius: 50%;
   background-color: #d4d4d4;
-  margin-right: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -209,7 +208,7 @@ ul {
 }
 .left-sidebar-container .nav-el {
   list-style-type: none;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
   margin-bottom: 10px;
   padding: 10px 20px;
@@ -302,30 +301,39 @@ h1 {
 .table-wrapper table tbody th {
   font-weight: 300;
 }
-.table-wrapper .btn {
+
+.btn {
   padding: 5px 10px;
+  font-size: 16px;
   border-radius: 12px;
   background-color: #9ca3af;
   text-decoration: none;
   color: white;
   font-weight: 400;
+  width: -moz-fit-content;
+  width: fit-content;
 }
-.table-wrapper .btn:hover {
+
+.btn:hover {
   filter: brightness(90%);
 }
-.table-wrapper .btn-primary {
+
+.btn-primary {
   background-color: #3b82f6;
   color: white;
 }
-.table-wrapper .btn-danger {
+
+.btn-danger {
   background-color: #ef4444;
   color: white;
 }
-.table-wrapper .btn-gold {
+
+.btn-gold {
   background: #fde68a;
   color: #713f12;
 }
-.table-wrapper .btn-green {
+
+.btn-green {
   background: #d9f99d;
   color: #365314;
 }
@@ -450,7 +458,8 @@ h1 {
 .fc-toolbar-chunk .fc-prevYear-button {
   border-radius: 17px 0 0 17px !important;
 }
-.fc-toolbar-chunk .fc-prev-button, .fc-toolbar-chunk .fc-next-button {
+.fc-toolbar-chunk .fc-prev-button,
+.fc-toolbar-chunk .fc-next-button {
   border-radius: 0px !important;
 }
 .fc-toolbar-chunk .fc-nextYear-button {
@@ -459,6 +468,123 @@ h1 {
 
 .fc-view-harness {
   background: white;
+}
+
+.list-wrapper {
+  background: white;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border: var(--border);
+  border-radius: 27px;
+  box-shadow: var(--shadow);
+  padding: 30px 0;
+  min-height: 100px;
+}
+.list-wrapper .list-item {
+  border-top: var(--border);
+  border-bottom: var(--border);
+}
+.list-wrapper .list-item .list-item-head {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+.list-wrapper .list-item .list-item-head:hover {
+  background-color: #e5e5e5;
+}
+.list-wrapper .list-item .list-item-column {
+  display: flex;
+  flex: 1;
+  gap: 5px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0px 30px;
+  font-size: 1.2em;
+  font-weight: 300;
+}
+.list-wrapper .list-item .list-item-column .list-item-info {
+  display: flex;
+  flex-direction: column;
+  font-weight: 300;
+  font-size: 16px;
+}
+.list-wrapper .list-item .list-item-column .list-item-info .list-item-label {
+  font-weight: 500;
+}
+.list-wrapper .list-item .list-item-column .list-item-more {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8em;
+}
+.list-wrapper .list-item .list-item-column .list-item-more .list-item-detail {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+.list-wrapper .list-item .list-item-actions {
+  justify-content: start !important;
+}
+.list-wrapper .list-item .list-item-body {
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  flex: 1;
+  gap: 10px;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.list-page {
+  display: flex;
+  gap: 15px;
+  padding: 15px 30px;
+}
+.list-page .list-page-item {
+  font-weight: 500;
+  color: grey;
+  text-decoration: none;
+}
+.list-page .list-page-item.selected {
+  color: var(--text-dark) !important;
+  -webkit-text-decoration: 2px underline #3b82f6;
+          text-decoration: 2px underline #3b82f6;
+  text-underline-offset: 9px;
+}
+
+.pagination {
+  display: flex;
+  gap: 5px;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  width: 100%;
+}
+.pagination li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style-type: none;
+}
+.pagination li a {
+  height: 30px;
+  width: 30px;
+  border-radius: 100%;
+  color: black;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pagination li.active a {
+  background: #3b82f6;
+  color: white;
 }
 
 #flash-messages {

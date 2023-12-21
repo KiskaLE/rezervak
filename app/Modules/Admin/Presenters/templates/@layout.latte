@@ -42,6 +42,7 @@
     <!-- /FullCalendar -->
 
     <script src="{$basePath}/assets/bundle.js"></script>
+    <script src="{$basePath}/assets/admin/js/index.js"></script>
 
     <!--[if lt IE 9
       ]><script src="{$basePath}/assets/js/ie8-responsive-file-warning.js"></script
@@ -118,7 +119,7 @@
               </li>
 
               <li class="nav-el" id="reservations">
-                <a n:href="Reservations:show">
+                <a n:href="Reservations:">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -216,7 +217,7 @@
                       fill="black"
                     />
                   </svg>
-                  <a n:href="Settings:show">Nastavení</a>
+                  <a n:href="Settings:">Nastavení</a>
                 </li>
                 <li>
                   <svg
@@ -271,7 +272,6 @@
       defer
       src="https://unpkg.com/nette-forms@3/src/assets/netteForms.js"
     ></script>
-    <script defer src="{$basePath}/assets/admin/js/index.js"></script>
     <script>
       function selectPage(pageId) {
         const page = document.getElementById(pageId);

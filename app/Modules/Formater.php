@@ -18,8 +18,15 @@ class Formater
 
     public function convertToAdminTimezone($time)
     {
-        $this->timezone = $this->database->table("settings")->where("user_id=?", $this->user->id)->fetch()->time_zone;
-        return $this->moment->getTimezoneTimeFromUTCTime($time . "", $this->timezone);
+        $timezone = "Europe/Prague";
+        $m = new \Moment\Moment($time."");
+        $m->setTimezone($timezone);
+        return $m->format("Y-m-d H:i");
+    }
+
+    public function currency($currency)
+    {
+        return number_format($currency, 2, ",", " ");
     }
 
     public function getDataFromString($string): array

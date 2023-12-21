@@ -11,8 +11,9 @@ services:
 	- PHPMailer\PHPMailer\PHPMailer(true)
 
 	nette.latteFactory:
-	    setup:
-	        - addFilter(convertToAdminTimezone, [@App\Modules\Formater, convertToAdminTimezone])
+		setup:
+			- addFilter(convertToAdminTimezone, [@App\Modules\Formater, convertToAdminTimezone])
+			- addFilter(currency, [@App\Modules\Formater, currency])
 
 extensions:
 	- Contributte\FormMultiplier\DI\MultiplierExtension

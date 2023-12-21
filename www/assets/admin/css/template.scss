@@ -176,7 +176,6 @@ body {
   height: 40px;
   border-radius: 50%;
   background-color: #d4d4d4;
-  margin-right: 50px;
 
   display: flex;
   justify-content: center;
@@ -224,7 +223,7 @@ ul {
 
   .nav-el {
     list-style-type: none;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 500;
     margin-bottom: 10px;
     padding: 10px 20px;
@@ -331,39 +330,45 @@ h1 {
       }
     }
   }
-
-  .btn {
-    padding: 5px 10px;
-    border-radius: 12px;
-    background-color: #9ca3af;
-    text-decoration: none;
-    color: white;
-    font-weight: 400;
-  }
-  .btn:hover {
-    filter: brightness(90%);
-  }
-
-  .btn-primary {
-    background-color: #3b82f6;
-    color: white;
-  }
-
-  .btn-danger {
-    background-color: #ef4444;
-    color: white;
-  }
-
-  .btn-gold {
-    background: #fde68a;
-    color: #713f12;
-  }
-
-  .btn-green {
-    background: #d9f99d;
-    color: #365314;
-  }
 }
+
+//buttons start
+
+.btn {
+  padding: 5px 10px;
+  font-size: 16px;
+  border-radius: 12px;
+  background-color: #9ca3af;
+  text-decoration: none;
+  color: white;
+  font-weight: 400;
+  width: fit-content;
+}
+.btn:hover {
+  filter: brightness(90%);
+}
+
+.btn-primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.btn-danger {
+  background-color: #ef4444;
+  color: white;
+}
+
+.btn-gold {
+  background: #fde68a;
+  color: #713f12;
+}
+
+.btn-green {
+  background: #d9f99d;
+  color: #365314;
+}
+
+//buttons end
 
 //tabulka end
 
@@ -505,7 +510,8 @@ h1 {
   .fc-prevYear-button {
     border-radius: 17px 0 0 17px !important;
   }
-  .fc-prev-button, .fc-next-button {
+  .fc-prev-button,
+  .fc-next-button {
     border-radius: 0px !important;
   }
   .fc-nextYear-button {
@@ -516,6 +522,142 @@ h1 {
   background: white;
 }
 //form end
+
+//list start
+
+.list-wrapper {
+  background: white;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border: var(--border);
+  border-radius: 27px;
+  box-shadow: var(--shadow);
+  padding: 30px 0;
+  min-height: 100px;
+
+  .list-item {
+    border-top: var(--border);
+    border-bottom: var(--border);
+    .list-item-head {
+      width: 100%;
+      height: 100px;
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+    }
+
+    .list-item-head:hover {
+      background-color: #e5e5e5;
+    }
+
+    .list-item-column {
+      display: flex;
+      flex: 1;
+      gap: 5px;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0px 30px;
+      font-size: 1.2em;
+      font-weight: 300;
+
+      .list-item-info {
+        display: flex;
+        flex-direction: column;
+        font-weight: 300;
+        font-size: 16px;
+
+        .list-item-label {
+          font-weight: 500;
+        }
+      }
+
+      .list-item-more {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 0.8em;
+
+        .list-item-detail {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 5px;
+        }
+      }
+    }
+
+    .list-item-actions {
+      justify-content: start !important;
+    }
+
+    .list-item-body {
+      box-sizing: border-box;
+      width: 100%;
+      display: flex;
+      flex: 1;
+      gap: 10px;
+      justify-content: space-between;
+      padding: 10px 0;
+    }
+  }
+}
+
+.list-page {
+  display: flex;
+  gap: 15px;
+  padding: 15px 30px;
+
+  .list-page-item {
+    font-weight: 500;
+    color: grey;
+    text-decoration: none;
+  }
+
+  .list-page-item.selected {
+    color: var(--text-dark) !important;
+    text-decoration: 2px underline #3b82f6;
+    text-underline-offset: 9px;
+  }
+}
+
+//list end
+
+//pagitation start
+.pagination {
+  display: flex;
+  gap: 5px;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  width: 100%;
+  li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style-type: none;
+
+    a {
+      height: 30px;
+      width: 30px;
+      border-radius: 100%;
+      color: black;
+      text-decoration: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  li.active {
+    a {
+      background: #3b82f6;
+      color: white;
+    }
+  }
+}
+//pagitation end
 
 //alerts
 

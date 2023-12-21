@@ -76,3 +76,31 @@ function sidebarClose() {
     sidebar.style.transform = 'translateX(-100%)';
 }
 
+function listItemToggle(listItemId) {
+    const listItem = document.getElementById(listItemId);
+    const listItemBody = listItem.querySelector('.list-item-body');
+    //close all .list-item-body if opening
+    if (listItemBody.style.display === 'none') {
+        const listItems = document.querySelectorAll('.list-item-body');
+        listItems.forEach(item => {
+            item.style.display = 'none';
+            const svg = item.parentElement.querySelector('svg');
+            svg.style.transform ='rotate(0deg)';
+        });
+    }
+    //get listItem by id
+    //get listItem children .list-item-body
+    const svg = listItem.querySelector('svg');
+    svg.style.transform = svg.style.transform === 'rotate(90deg)' ? 'rotate(0deg)' : 'rotate(90deg)';
+    listItemBody.style.display = listItemBody.style.display === 'none' ? 'flex' : 'none';
+
+
+
+}
+
+function setTab(tabId) {
+    const tab = document.getElementById('tab'+tabId);
+    tab.classList.add('selected');
+    
+}
+

@@ -1,69 +1,53 @@
 {block title}Rezervace{/block}
 {block content}
-<div class="content-wrapper">
-    <h1>Upravit</h1>
 
-    <div class="row row-box">
-        <a class="btn btn-default ajax" n:href="back! show">Zpět</a>
-    </div>
-    <div class="row row-center">
-        <form n:name="editForm" class="row-box ajax">
-            <div class="">
-                <div class="panel panel-primary" data-collapsed="0">
+<!-- page title start-->
+<div class="page-title">
+    <h1>Úprava rezervace</h1>
+</div>
+<!-- page title end -->
 
-                    <div class="panel-body" style="display: block;">
+{* navigation start *}
+<a class="back" n:href="default">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+</a>
+{* navigation end *}
 
-                        <div class="form-group">
-                            <label for="field-1" class="col-sm-3 control-label">Jméno</label>
+<!-- form start -->
+<div class="form-wrapper">
+    <form n:name="editForm">
 
-                            <div class="">
-                                <input n:name="firstname" class="form-control">
-                                <span class="description"></span>
-                                <span class="input-error" id="sampleRateError"></span>
-                            </div>
-                        </div>
+        <div class="form-body">
 
-                        <div class="form-group">
-                            <label for="field-1" class="col-sm-3 control-label">Příjmení</label>
-
-                            <div class="">
-                                <input n:name="lastname" class="form-control">
-                                <span class="description"></span>
-                                <span class="input-error" id="sampleRateError"></span>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="field-1" class="col-sm-3 control-label">Email</label>
-
-                            <div class="">
-                                <input n:name="email" class="form-control">
-                                <span class="description"></span>
-                                <span class="input-error" id="sampleRateError"></span>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="field-1" class="col-sm-3 control-label">Tel.</label>
-
-                            <div class="">
-                                <input n:name="phone" class="form-control">
-                                <span class="description"></span>
-                                <span class="input-error" id="sampleRateError"></span>
-                            </div>
-                        </div>
-
-                    </div>
-
-
-                </div>
-                <div class="form-group">
-                    <input n:name="submit" id="btn-submit" class="btn btn-success">
-                    <a n:href="this" class="btn ajax">Zrušit změny</a>
-                </div>
+            <div class="form-group" style="width: 300px;">
+                <label for="">Jméno</label>
+                <input n:name="firstname">
             </div>
 
-        </form>
-    </div>
+            <div class="form-group" style="width: 300px;">
+                <label for="">Příjmení</label>
+                <input n:name="lastname">
+            </div>
 
+            <div class="form-group" style="width: 300px;">
+                <label for="">E-mail</label>
+                <input n:name="email">
+            </div>
+            
+            <div class="form-group" style="width: 300px;">
+                <label for="">Telefon</label>
+                <input n:name="phone">
+            </div>
+
+            <div class="form-actions">
+                <div class="submit"><input type="submit" name="submit"></div>
+                <div class="reset"><a n:href="this">Zrušit</a></div>
+            </div>
+
+        </div>
+
+
+
+    </form>
 </div>
+<!-- form end -->
