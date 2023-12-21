@@ -4,14 +4,15 @@ namespace App\Modules\admin\Presenters;
 
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 
 class SettingsPresenter extends SecurePresenter
 {
 
     private $settings;
+    #[Inject] public Nette\Database\Explorer $database;
 
     public function __construct(
-        private Nette\Database\Explorer $database,
     )
     {
     }
@@ -19,6 +20,7 @@ class SettingsPresenter extends SecurePresenter
     protected function beforeRender()
     {
         parent::beforeRender();
+        $this->template->selectedPage = "settings";
     }
 
     protected function startup()
@@ -26,7 +28,7 @@ class SettingsPresenter extends SecurePresenter
         parent::startup();
     }
 
-    public function actionShow()
+    public function actionDefault()
     {
         $settings = $this->database->table('settings')->where("user_id=?", $this->user->id)->fetch();
         $this->settings = $settings;
@@ -70,12 +72,12 @@ class SettingsPresenter extends SecurePresenter
             ->setDefaultValue($this->settings->phone)
             ->setMaxLength(20);
 
-        $form->addEmail("email", "Email")
+        $form->addText("email", "Email")
             ->addRule($form::Email, "Neplatný mailový formát")
             ->setDefaultValue($this->settings->email)
             ->setMaxLength(255);
 
-        $form->addSubmit("submit", "Uložit");
+        $form->addSubmit("submit", "Uložit změny");
 
         $form->onSuccess[] = [$this, "basicSettingsFormSucceeded"];
 
@@ -97,9 +99,9 @@ class SettingsPresenter extends SecurePresenter
                 "email" => $data->email,
                 "updated_at" => date("Y-m-d H:i:s"),
             ]);
-            $this->flashMessage("Změny byly uloženy.", "alert-success");
+            $this->flashMessage("Změny byly uloženy.", "success");
         } catch (\Throwable $th) {
-            $this->flashMessage("Nepodarilo se uložit změny!", "alert-danger");
+            $this->flashMessage("Nepodarilo se uložit změny!", "error");
         }
         $this->redirect("this");
 

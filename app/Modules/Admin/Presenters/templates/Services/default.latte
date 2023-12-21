@@ -1,0 +1,48 @@
+{block title}Služby{/block}
+{block content}
+<!-- page title start-->
+<div class="page-title">
+    <h1>Služby</h1>
+</div>
+<!-- page title end -->
+
+<!--table start-->
+
+<div class="table-wrapper">
+    <table>
+        <thead class="table-head">
+            <tr>
+                <th class="text-left" >Název</th>
+                <th class="text-left">Popis</th>
+                <th class="text-right">Cena</th>
+                <th class="text-right">Doba trvání [min]</th>
+                <th class="text-left"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach $services as $service}
+                {var $serviceSchedules = $service->related("services_custom_schedules")->fetch()}
+                <tr>
+                    <th class="text-left">{$service->name}</th>
+                    <th class="text-left">{$service->description}</th>
+                    <th class="text-right">{$service->price} Kč</th>
+                    <th class="text-right">{$service->duration} min</th>
+                    <th class="text-left">
+                        <a class="btn btn-primary" n:href="edit $service->id">Upravit</a>
+                        {var $schedule = $service->related("services_custom_schedules")->fetch()}
+                        {dump $schedule}
+                        <a class="btn btn-green" n:href="editCustomSchedule $schedule?->uuid">rozvrh</a>
+                        <a class="btn {!$service->hidden ? "btn-gold" : "btn-default"}" n:href="deleteService! $service->id">{!$service->hidden ? "Zobrazeno" : "Skryto"}</a>
+                    </th>
+                </tr>
+        {/foreach}
+        <tr>
+            <th class="text-left"><a n:href="Services:create" class=""><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></a></th>
+        </tr>
+        </tbody>
+        
+    </table>
+</div>
+<!-- table end -->
+
+

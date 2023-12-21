@@ -1,99 +1,56 @@
 {block title}Služby{/block}
 {block content}
 <div class="row page-header"><h1>Služby</h1></div>
-<!--navigace-->
-<div class="row navbar">
-    <a n:href="show" class="btn btn-default ajax" class="btn btn-default">Zpět</i></a>
-</div>
-<!--/navigace-->
-<!--form-->
-<div class="row">
-    <h2>Služba  {$service->name}</h2>
-    <!--content-->
-    <form n:name="editForm" class="ajax">
+{* navigation start *}
+<a class="back" n:href="default">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+</a>
+{* navigation end *}
 
-        <div class="panel panel-primary" data-collapsed="0">
-            <!--body-->
-            <div class="panel-body" style="display: block;">
-                <!--input-->
-                <div class="form-group">
-                    <label for="field-1" class="col-sm-3 control-label">Název</label>
+<!-- form start -->
+<div class="form-wrapper">
+    <form n:name="editForm">
 
-                    <div class="">
-                        <input n:name="name" class="form-control">
-                        <span class="description"></span>
-                    </div>
-                </div>
-                <!--/input-->
-                <!--input-->
-                <div class="form-group">
-                    <label for="field-1" class="col-sm-3 control-label">Cena [Kč]</label>
-
-                    <div class="">
-                        <input n:name="price" class="form-control">
-                        <span class="description">Zadejte cenu v Kč</span>
-                    </div>
-                </div>
-                <!--/input-->
-                <!--input-->
-                <div class="form-group">
-                    <label for="field-1" class="col-sm-3 control-label">Popis</label>
-
-                    <div class="">
-                        <textarea class="form-control" n:name="description"></textarea>
-                        <span class="description">Zadejte popis služby (max 255 znaků)</span>
-                    </div>
-                </div>
-                <!--/input-->
-                <!--submit-->
-                <div class="form-group default-padding">
-                    <input n:name="submit" id="btn-submit" class="btn btn-success">
-                    <a n:href="this" class="btn ajax">Zrušit změny</a>
-                </div>
-                <!--/submit-->
-            </div>
-            <!--/body-->
+        <div class="form-head">
+            <h2>Úprava služby {$service->name}</h2>
         </div>
 
-    </form>
+        <div class="form-body">
 
-</div>
-
-<!--/form-->
-
-<!--form-->
-<div class="row">
-    <h2>Rozvrh služby</h2>
-    <!--content-->
-    <form n:name="editCustomScheduleForm" class="ajax">
-
-        <div class="panel panel-primary" data-collapsed="0">
-            <!--body-->
-            <div class="panel-body" style="display: block;">
-
-                <div class="form-group">
-                    <label for="field-3" class="col-sm-3 control-label"></label>
-                    <div class="">
-                        <input n:name="events" id="events">
-                        <div id="calendar">
-                    </div>
-                </div>
-                <br>
-
-                <!--submit-->
-                <div class="form-group">
-                    <input onclick="getAndProcessCalendarEvents('events')" n:name="submit" id="btn-submit" class="btn btn-success">
-                </div>
-                <!--/submit-->
+             <div class="form-group" style="width: 300px;">
+                <label for="">Název*</label>
+                <input n:name="name">
+                {* <span class="form-info">Dodatečné informace</span> *}
             </div>
-            <!--/body-->
+
+            <div class="form-group" style="width: 300px;">
+                <label for="">Cena*</label>
+                <input n:name="price">
+                <span class="form-info">Zadejte v CZK</span>
+            </div>
+
+            <div class="form-group" style="width: 300px;">
+                <label for="">Popis*</label>
+                <textarea n:name="description"></textarea>
+            </div>
+            
+
+            <div class="form-actions">
+                <div class="submit"><input onclick="getAndProcessCalendarEvents('events')" type="submit" name="submit"></div>
+                <div class="reset"><a n:href="this">Zrušit</a></div>
+            </div>
+
         </div>
 
+
+
     </form>
-
 </div>
+<!-- form end -->
 
-<!--/form-->
+
+
+
 
 <script src="{$basePath}/assets/admin/js/datePicker.js"></script>
 <!--<script src="{$basePath}/assets/admin/js/servicesCustom.js"></script>-->
@@ -103,46 +60,4 @@
         addEvent({$service->name}, {$day->start}, {$day->end});
     {/foreach}
 </script>
-
-<!--table-->
-{* <div class="row">
-    <h2>Vlastní rozvrh</h2>
-    <table class="table dataTable table-bordered">
-        <!--akce tabulky-->
-        <div class="table-header">
-            <a n:href="createCustomSchedule $service->id, $backlink" class="btn btn-blue ajax">Vytvořit rozvrh</i></a>
-        </div>
-        <br>
-        <!--/akce tabulky-->
-        <!--head-->
-        <thead>
-        <tr>
-            <th>Název</th>
-            <th>Od</th>
-            <th>Do</th>
-            <th>Akce</th>
-        </tr>
-        </thead>
-        <!--/head-->
-        <!--body-->
-        <tbody>
-        <tr n:foreach="$customSchedules as $customSchedule">
-            <th>{$customSchedule->name}</th>
-            <th>{$customSchedule->start|date:"d.m.Y H:i"}</th>
-            <th>{$customSchedule->end|date:"d.m.Y H:i"}</th>
-            <th><a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="editCustomSchedule $customSchedule->uuid, $backlink"><i
-                            class="entypo-pencil"></i>Upravit</a>
-                <a onclick="deleteServiceCustomSchedule(event)" class="btn btn-danger btn-sm btn-icon icon-left" n:href="deleteCustomSchedule! $customSchedule->uuid"><i
-                            class="entypo-trash"></i>Smazat</a>
-                <a n:if="in_array($customSchedule->id, $customScheduleConflicts)" class="btn btn-danger btn-sm btn-icon icon-left ajax" n:href="showCustomSchedulesConflicts $customSchedule->uuid, $backlink"><i
-                            class="entypo-eye"></i>Konflikt</a>
-            </th>
-        </tr>
-        </tbody>
-        <!--/body-->
-    </table>
-
-</div> *}
-
-<!--/table-->
 

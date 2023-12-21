@@ -7,6 +7,7 @@ namespace App\Modules\admin\Presenters;
 
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\DI\Attributes\Inject;
 
 
 final class ReservationsPresenter extends SecurePresenter
@@ -15,8 +16,10 @@ final class ReservationsPresenter extends SecurePresenter
     private $uuid;
     private $reservation;
 
+    #[Inject] public Nette\Database\Explorer $database;
+
     public function __construct(
-        private Nette\Database\Explorer $database,
+    
     )
     {
     }
@@ -24,6 +27,7 @@ final class ReservationsPresenter extends SecurePresenter
     protected function beforeRender()
     {
         parent::beforeRender();
+        $this->template->selectedPage = "reservations";
 
     }
 
@@ -110,7 +114,7 @@ final class ReservationsPresenter extends SecurePresenter
         if ($this->backlink) {
             $this->restoreRequest($this->backlink);
         }
-        $this->flashMessage("Uloženo", "alert-success");
+        $this->flashMessage("Uloženo", "success");
         $this->redirect('show');
     }
 

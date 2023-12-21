@@ -9,7 +9,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use Ramsey\Uuid\Uuid;
 use App\Modules\AvailableDates;
-use App\Modules\Moment;
+use Nette\DI\Attributes\Inject;
 
 final class WorkhoursPresenter extends SecurePresenter
 {
@@ -19,8 +19,9 @@ final class WorkhoursPresenter extends SecurePresenter
 
     private $exceptionUuid;
 
+    #[Inject] public Nette\Database\Explorer $database;
+
     public function __construct(
-        private Nette\Database\Explorer $database,
         private Nette\Security\User     $user,
         private AvailableDates          $availableDates
     )
@@ -103,14 +104,14 @@ final class WorkhoursPresenter extends SecurePresenter
     public function handleDeleteException($uuid)
     {
         $this->database->table("workinghours_exceptions")->where("uuid=?", $uuid)->delete();
-        $this->flashMessage("Smazano", "alert-success");
+        $this->flashMessage("Smazano", "success");
         $this->redirect("show");
     }
 
     public function handleDeleteBreak($break_id)
     {
         $this->database->table("breaks")->get($break_id)->delete();
-        $this->flashMessage("Smazano", "alert-success");
+        $this->flashMessage("Smazano", "success");
         $this->redirect("edit", $this->id);
     }
 
@@ -137,13 +138,13 @@ final class WorkhoursPresenter extends SecurePresenter
         $start = strtotime($data->start);
         $stop = strtotime($data->stop);
         if ($start > $stop) {
-            $this->flashMessage("Začátek nemůže být větší než konec", "alert-danger");
+            $this->flashMessage("Začátek nemůže být větší než konec", "error");
         } else {
             $this->database->table("workinghours")->where("id=?", $this->id)->update([
                 "start" => $data->start,
                 "stop" => $data->stop,
             ]);
-            $this->flashMessage("Uloženo", "alert-success");
+            $this->flashMessage("Uloženo", "success");
         }
 
     }
@@ -180,7 +181,7 @@ final class WorkhoursPresenter extends SecurePresenter
             $start = strtotime($data->start);
             $stop = strtotime($data->stop);
             if ($start > $stop) {
-                $this->flashMessage("Začátek nemůže být větší než konec", "alert-danger");
+                $this->flashMessage("Začátek nemůže být větší než konec", "error");
             } else {
                 $this->database->table("breaks")->insert([
                     "start" => $data->start,
@@ -188,11 +189,11 @@ final class WorkhoursPresenter extends SecurePresenter
                     "workinghour_id" => $this->id,
                     "type" => 0
                 ]);
-                $this->flashMessage("Přestávka byla úspešně vytvořenag", "alert-success");
+                $this->flashMessage("Přestávka byla úspešně vytvořenag", "success");
                 $this->redirect("Workhours:edit", $this->id);
             }
         } else {
-            $this->flashMessage("Přestávka musí být v rozsahu {$day->start} - {$day->stop} hodin", "alert-danger");
+            $this->flashMessage("Přestávka musí být v rozsahu {$day->start} - {$day->stop} hodin", "error");
         }
     }
 
@@ -210,9 +211,9 @@ final class WorkhoursPresenter extends SecurePresenter
     {
         try {
             $this->database->table("breaks")->where("id=?", $this->id)->delete();
-            $this->flashMessage("Smazáno", "alert-success");
+            $this->flashMessage("Smazáno", "success");
         } catch (\Throwable $th) {
-            $this->flashMessage("Nepodarilo se smazat", "alert-danger");
+            $this->flashMessage("Nepodarilo se smazat", "error");
         }
         $this->redirect("Workhours:edit", $this->editId);
     }
@@ -245,17 +246,17 @@ final class WorkhoursPresenter extends SecurePresenter
             $start = strtotime($data->start);
             $stop = strtotime($data->stop);
             if ($start > $stop) {
-                $this->flashMessage("Začátek nemůže být větší než konec", "alert-danger");
+                $this->flashMessage("Začátek nemůže být větší než konec", "error");
             } else {
                 $this->database->table("breaks")->where("id=?", $this->id)->update([
                     "start" => $data->start,
                     "end" => $data->stop,
                 ]);
-                $this->flashMessage("Uloženo", "alert-success");
+                $this->flashMessage("Uloženo", "success");
                 $this->redirect("Workhours:edit", $this->editId);
             }
         } else {
-            $this->flashMessage("Přestávka musí být v rozsahu {$day->start} - {$day->stop} hodin", "alert-danger");
+            $this->flashMessage("Přestávka musí být v rozsahu {$day->start} - {$day->stop} hodin", "error");
         }
     }
 
@@ -301,7 +302,7 @@ final class WorkhoursPresenter extends SecurePresenter
             "end" => $end,
             "user_id" => $this->user->id,
         ]);
-        $this->flashMessage("Vytvořeno", "alert-success");
+        $this->flashMessage("Vytvořeno", "success");
         $this->redirect("Workhours:show");
     }
 
@@ -345,7 +346,7 @@ final class WorkhoursPresenter extends SecurePresenter
             "start" => $start,
             "end" => $end,
         ]);
-        $this->flashMessage("Uloženo", "alert-success");
+        $this->flashMessage("Uloženo", "success");
         $this->redirect("Workhours:show");
     }
 

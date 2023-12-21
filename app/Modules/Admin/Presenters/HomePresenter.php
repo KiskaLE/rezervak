@@ -7,13 +7,14 @@ namespace App\Modules\admin\Presenters;
 
 use Nette;
 use App\Modules\Moment;
-
+use Nette\DI\Attributes\Inject;
 
 final class HomePresenter extends SecurePresenter
 {
+    //inject database
 
+    #[Inject] public Nette\Database\Explorer $database;
     public function __construct(
-        private Nette\Database\Explorer $database,
         private Moment $moment,
     )
     {
@@ -22,6 +23,7 @@ final class HomePresenter extends SecurePresenter
     public function beforeRender()
     {
         parent::beforeRender();
+        $this->template->selectedPage = "dashboard";
 
     }
 

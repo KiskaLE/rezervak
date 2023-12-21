@@ -1,97 +1,57 @@
 {block title}Slevové kódy{/block}
 {block content}
-<div class="row page-header"><h1>Slevové kódy</h1></div>
-<!--navigace-->
-<div class="row navbar">
-    <a n:href="show" class="btn btn-default ajax" class="btn btn-default">Zpět</i></a>
+<!-- page title start-->
+<div class="page-title">
+    <h1>Úprava zákaznického kódu {$discountCode->code}</h1>
 </div>
-<!--/navigace-->
-<!--form-->
-<div class="row">
-    <h2>Upravit kód</h2>
-    <!--content-->
-    <form n:name="editForm" class="ajax">
+<!-- page title end -->
 
-        <div class="panel panel-primary" data-collapsed="0">
-            <!--body-->
-            <div class="panel-body" style="display: block;">
-                <!--select-->
-                <div class="form-group">
-                    <label for="field-1" class="col-sm-3 control-label">Typ slevy</label>
+{* navigation start *}
+<a class="back">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+</a>
+{* navigation end *}
 
-                    <div class="">
-                        <div class="form-control">{$discountCode->type == 0 ? "cena" : "procento" }</div>
-                        <span class="description"></span>
-                    </div>
-                </div>
-                <!--/select-->
-                <!--input-->
-                <div class="form-group">
-                    <label for="field-1" class="col-sm-3 control-label">Kód</label>
+<!-- form start -->
+<div class="form-wrapper">
+    <form n:name="editForm">
 
-                    <div class="">
-                        <input n:name="code" value="{$discountCode->code}" class="form-control">
-                        <span class="description">Zde zadejte v jakém intervalu se bude váš kalendář rozdělovat.</span>
-                    </div>
-                </div>
-                <!--/input-->
-                <!--input-->
-                <div class="form-group">
-                    <label for="field-1" class="col-sm-3 control-label">Hodnota</label>
+        <div class="form-body">
 
-                    <div class="">
-                        <input n:name="value" value="{$discountCode->value}" class="form-control">
-                        <span class="description">Zadejte hodnotu v CZK</span>
-                    </div>
-                </div>
-                <!--/input-->
-                <!--checkbox-->
-                <div class="form-group">
-                    <label for="field-1" class="col-sm-3 control-label">Vyberte služby</label>
-                    <br>
-                    <div style="max-height: 100px; overflow-y: scroll;">
-                        {var $i = 1}
-                        <div n:foreach="$services as $service" class="">
-                            {var $checked = in_array( $service->id, $selectedServices)}
-                            <div class="form-checkbox"><input n:name="service{$i}" {if $checked}checked="checked"{/if} ><span>{$service->name}</span></div>
-                            <span class="description"></span>
-                            {do $i++}
-                        </div>
-                    </div>
-
-                </div>
-                <!--/checkbox-->
-
-
-                <!--submit-->
-                <div class="form-group">
-                    <input n:name="save" id="btn-submit" class="btn btn-success">
-                    <a n:href="this" class="btn ajax">Zrušit změny</a>
-                </div>
-                <!--/submit-->
+            <div class="form-group" style="width: 300px;">
+                <label for="">Typ slevy</label>
+                <input type="text" value='{$discountCode->type == 0 ? "cena" : "procento" }' readonly="readonly">
             </div>
-            <!--/body-->
+
+            <div class="form-group" style="width: 300px;">
+                <label for="">Hodnota</label>
+                <input n:name="value">
+            </div>
+
+            <div class="form-group" style="width: 300px;">
+                <label for="">Slevový kód</label>
+                <input n:name="code">
+            </div>
+
+            <div class="form-group" style="width: 300px; max-height: 100px; overflow: scroll;">
+                    {var $i = 1}
+                    <div n:foreach="$services as $service" class="form-checkbox">
+                            {var $checked = in_array( $service->id, $selectedServices)}
+                            <input n:name="service{$i}" {if $checked}checked="checked"{/if} >
+                            <label>{$service->name}</label>
+                            {do $i++}
+                    </div>
+            </div>
+
+            <div class="form-actions">
+                <div class="submit"><input n:name="submit"></div>
+                <div class="reset"><a n:href="this">Zrušit</a></div>
+            </div>
+
         </div>
 
+
+
     </form>
-
 </div>
-
-<!--/form-->
-
-
-<h1>Úprava kódu - {$discountCode->code}</h1>
-<div><a n:href="DiscountCodes:show" class="btn btn-default ajax">Zpět</i></a></div>
-<form n:name="editForm" class="ajax">
-    <div><input n:name="active" {if $discountCode->active}checked="checked"{/if}><label for="">Aktivní</label></div>
-    <div><label for="">Typ:</label><span> {$discountCode->type == 0 ? "cena" : "procento" }</span></div>
-    <div><label for="">Kód:</label><input n:name="code" value="{$discountCode->code}"></div>
-    <div><label for="">Hodnota: </label><input n:name="value" value="{$discountCode->value}"></div>
-    {var $i = 1}
-    <div n:inner-foreach="$services as $service" >
-        {var $checked = in_array( $service->id, $selectedServices)}
-        <div><input n:name="service{$i}" {if $checked}checked="checked"{/if} ><label for="">{$service->name}</label></div>
-        {do $i++}
-    </div>
-    <div><input n:name="save"></div>
-</form>
+<!-- form end -->

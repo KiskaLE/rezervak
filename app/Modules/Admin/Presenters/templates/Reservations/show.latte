@@ -1,28 +1,26 @@
 {block title}Rezervace{/block}
 {block content}
-<div class="row page-header"><h1>Rezervace</h1></div>
-
-<!--table-->
-<div class="row">
-    <h2>Zaplacené</h2>
-    <table class="table dataTable table-bordered">
-        <!--head-->
-        <thead>
-        <tr>
-            <th>Datum</th>
-            <th>Jméno</th>
-            <th>Příjmení</th>
-            <th>E-mail</th>
-            <th>Tel.</th>
-            <th>Služba</th>
-            <th>Akce</th>
-        </tr>
+<!-- page title start-->
+<div class="page-title">
+    <h1>Rezervace</h1>
+</div>
+<!-- page title end -->
+<!--table start-->
+<div class="table-wrapper">
+    <table>
+        <thead class="table-head">
+            <tr>
+                <th class="text-left">Datum</th>
+                <th class="text-left">Jméno</th>
+                <th class="text-left">Příjmení</th>
+                <th class="text-left">E-mail</th>
+                <th class="text-left">Tel.</th>
+                <th class="text-left">Služba</th>
+                <th class="text-left">Akce</th>
+            </tr>
         </thead>
-        <!--/head-->
-        <!--body-->
         <tbody>
-        {foreach $reservations as $reservation}
-            {dump $reservation}
+           {foreach $reservations as $reservation}
             <tr>
                 <th>{$reservation->start|date:"d.m.Y"}</th>
                 <th>{$reservation->firstname}</th>
@@ -31,35 +29,16 @@
                 <th>{$reservation->phone}</th>
                 <th>{$reservation->ref("services", "service_id")->name}</th>
                 <th>
-                    <a class="btn btn-default btn-sm btn-icon icon-left ajax" n:href="Reservations:detail $reservation->uuid"><i
+                    <a class="btn" n:href="Reservations:detail $reservation->uuid"><i
                                 class="entypo-eye"></i>Detail</a>
-                    <a class="btn btn-green btn-sm btn-icon icon-left ajax" n:href="Reservations:edit $reservation->uuid"><i
+                    <a class="btn btn-primary" n:href="Reservations:edit $reservation->uuid"><i
                                 class="entypo-pencil"></i>Upravit</a>
-                    <a class="btn btn-danger btn-sm btn-icon icon-left ajax" n:href="Reservations:delete $reservation->uuid"><i
+                    <a class="btn btn-danger" n:href="Reservations:delete $reservation->uuid"><i
                                 class="entypo-cancel"></i>Smazat</a></th>
             </tr>
         {/foreach}
         </tbody>
-        <!--/body-->
-        <!-- Paginator pages -->
-        <ul n:if="$paginator->getPageCount() > 1" class="pagination">
-
-            <li n:if="!$paginator->isFirst()">
-                <a n:href="show $paginator->getPage() - 1"><i class="entypo-left-open-mini"></i></a>
-            </li>
-
-
-            <li n:for="$i = max($paginator->getPage() - 2, 0); $i < min($paginator->getPageCount(), $paginator->getPage() + 2); $i++" class="{($i+1) == $paginator->getPage() ? 'active' : ''}">
-                <a n:href="show $i+1">{$i+1}</a>
-            </li>
-
-            <li n:if="!$paginator->isLast()">
-                <a n:href="show $paginator->getPage() + 1"><i class="entypo-right-open-mini"></i></a>
-            </li>
-       </ul>
-        <!-- /Paginator pages -->
     </table>
-
 </div>
+<!-- table end -->
 
-<!--/table-->

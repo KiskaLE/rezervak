@@ -30,6 +30,7 @@ class BasePresenter extends Presenter
         parent::beforeRender();
     }
 
+
     /**
      * Handles the "back" functionality of the application.
      *

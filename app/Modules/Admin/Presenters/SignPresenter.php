@@ -6,6 +6,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use Nette\Security\Passwords;
 use App\Modules\Authenticator;
+use Nette\DI\Attributes\Inject;
 
 final class SignPresenter extends BasePresenter
 {
@@ -75,7 +76,7 @@ final class SignPresenter extends BasePresenter
         if (!$error) {
             $this->redirect("Sign:in");
         }
-        $this->flashMessage("Účet s tímto emailem již existuje.", "alert-danger");
+        $this->flashMessage("Účet s tímto emailem již existuje.", "error");
 
 
     }

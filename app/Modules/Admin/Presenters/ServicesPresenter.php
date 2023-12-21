@@ -10,6 +10,7 @@ use Nette\Application\UI\Form;
 use Ramsey\Uuid\Uuid;
 use App\Modules\Formater;
 use App\Modules\AvailableDates;
+use Nette\DI\Attributes\Inject;
 
 
 final class ServicesPresenter extends SecurePresenter
@@ -21,8 +22,9 @@ final class ServicesPresenter extends SecurePresenter
     private $schedule;
     private $days;
 
+    #[Inject] public Nette\Database\Explorer $database;
+
     public function __construct(
-        private Nette\Database\Explorer $database,
         private Nette\Security\User     $user,
         private Formater       $formater,
         private AvailableDates $availableDates
@@ -34,9 +36,10 @@ final class ServicesPresenter extends SecurePresenter
     protected function beforeRender()
     {
         parent::beforeRender();
+        $this->template->selectedPage = "services";
     }
 
-    public function actionShow(int $page = 1)
+    public function actionDefault(int $page = 1)
     {
         $numberOfServices = $this->database->table("services")->where("user_id", $this->user->id)->count();
         $paginator = new Nette\Utils\Paginator;
@@ -165,30 +168,28 @@ final class ServicesPresenter extends SecurePresenter
         $this->template->calendarPeriod = $calendarPeriod;
     }
 
-    public function actionActionHide($id)
+    public function handleDeleteService($id)
     {
         $hidden = $this->database->table("services")->get($id)->hidden;
         if ($hidden) {
             $this->database->table("services")->where("id=?", $id)->update([
                 "hidden" => 0
             ]);
-            $this->flashMessage("Služba je zobrazena", "alert-success");
+            $this->flashMessage("Služba je zobrazena", "success");
         } else {
             $this->database->table("services")->where("id=?", $id)->update([
                 "hidden" => 1
             ]);
-            $this->flashMessage("Služba je Skryta", "alert-success");
+            $this->flashMessage("Služba je Skryta", "success");
         }
 
-        $this->redirect("Services:show");
-
-        die("success");
+        $this->redirect("Services:");
     }
 
     public function handleDeleteCustomSchedule($cutomScheduleId)
     {
         $this->database->table("services_custom_schedules")->where("uuid=?", $cutomScheduleId)->delete();
-        $this->flashMessage("Smazano", "alert-success");
+        $this->flashMessage("Smazano", "success");
         $this->redirect("edit", $this->id);
     }
 
@@ -261,11 +262,11 @@ final class ServicesPresenter extends SecurePresenter
         });
 
         if ($res) {
-            $this->flashMessage("Vytvořeno", "alert-success");
+            $this->flashMessage("Vytvořeno", "success");
             //$this->restoreRequest($this->backlink);
             $this->redirect("this");
         } else {
-            $this->flashMessage("Nepodarilo se vytvořit službu", "alert-danger");
+            $this->flashMessage("Nepodarilo se vytvořit službu", "error");
             $this->redirect("this");
         }
     }
@@ -322,10 +323,10 @@ final class ServicesPresenter extends SecurePresenter
         });
 
         if ($res) {
-            $this->flashMessage("Vytvořeno", "alert-success");
+            $this->flashMessage("Vytvořeno", "success");
             $this->restoreRequest($this->backlink);
         } else {
-            $this->flashMessage("Nepodarilo se vytvořit službu", "alert-danger");
+            $this->flashMessage("Nepodarilo se vytvořit službu", "error");
         }
     }
 
@@ -430,10 +431,10 @@ final class ServicesPresenter extends SecurePresenter
         });
 
         if ($res) {
-            $this->flashMessage("Vytvořeno", "alert-success");
-            $this->redirect("Services:show");
+            $this->flashMessage("Služba byla vytvořena", "success");
+            $this->redirect("Services:");
         } else {
-            $this->flashMessage("Nepodarilo se vytvořit službu", "alert-danger");
+            $this->flashMessage("Nepodarilo se vytvořit službu", "error");
         }
 
 
@@ -469,7 +470,7 @@ final class ServicesPresenter extends SecurePresenter
             "description" => $data->description
         ]);
 
-        $this->flashMessage("Uloženo", "alert-success");
+        $this->flashMessage("Uloženo", "success");
 
         $this->redirect("this");
     }

@@ -3,11 +3,12 @@
 namespace App\Modules\admin\Presenters;
 
 use Nette;
+use Nette\DI\Attributes\Inject;
 
 final class TemplatePresenter extends SecurePresenter {
 
+    #[Inject] public Nette\Database\Explorer $database;
     public function __construct(
-        private Nette\Database\Explorer $database,
     )
     {
 
@@ -16,7 +17,6 @@ final class TemplatePresenter extends SecurePresenter {
     public function beforeRender() {
 
         parent::beforeRender();
-        $this->setLayout("new");
     }
 
     public function renderDefault() {

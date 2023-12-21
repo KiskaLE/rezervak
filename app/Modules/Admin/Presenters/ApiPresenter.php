@@ -73,7 +73,7 @@ class ApiPresenter extends BasePresenter
                         //update reservation
                         $database->table("reservations")->where("id=?", $backup->id)->update(["updated_at" => date("Y-m-d H:i:s")]);
                         $this->payments->updateTime($backup->id);
-                        $this->mailer->sendConfirmationMail($backup->email, "/payment/?uuid=" . $backup->uuid);
+                        $this->mailer->sendConfirmationMail($backup->email, "/payment/?uuid=" . $backup->uuid, $backup);
                         dump("odeslano");
                     });
 

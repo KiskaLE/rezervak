@@ -136,12 +136,12 @@ final class ReservationPresenter extends BasePresenter
             $times = $session->availableTimes;
             $time = $times[$data->time];
             if (!$this->checkAvailability($this->user_uuid, $data->date, $data->service, $time)) {
-                $this->flashMessage("Nepovedlo se vytvořit rezervaci. Termín je již obsazen", "alert-danger");
+                $this->flashMessage("Nepovedlo se vytvořit rezervaci. Termín je již obsazen", "error");
                 $this->redirect("create", $this->user_uuid);
             }
             $result = $this->insertReservation($uuid, $data, "default", $time);
             if (!$result) {
-                $this->flashMessage("Nepovedlo se uložit rezervaci.", "alert-danger");
+                $this->flashMessage("Nepovedlo se uložit rezervaci.", "error");
                 $this->redirect("create", $this->user_uuid);
             }
             $this->mailer->sendConfirmationMail($email, $this->link("Payment:default", $uuid), $result);
@@ -150,12 +150,12 @@ final class ReservationPresenter extends BasePresenter
             $times = $session->availableBackupTimes;
             $time = $times[$data->time];
             if (!$this->checkAvailability($this->user_uuid, $data->date, $data->service, $time, "backup")) {
-                $this->flashMessage("Nepovedlo se vytvořit rezervaci. Termín je již obsazen", "alert-danger");
+                $this->flashMessage("Nepovedlo se vytvořit rezervaci. Termín je již obsazen", "error");
                 $this->redirect("create", $this->user_uuid);
             }
             $result = $this->insertReservation($uuid, $data, "backup", $time);
             if (!$result) {
-                $this->flashMessage("Nepovedlo se uložit rezervaci.", "alert-danger");
+                $this->flashMessage("Nepovedlo se uložit rezervaci.", "error");
                 $this->redirect("create", $this->user_uuid);
             }
             $this->mailer->sendBackupConfiramationMail($email, $this->link("Payment:backup", $uuid), $result);

@@ -9,6 +9,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\Json;
 use Ramsey\Uuid\Uuid;
+use Nette\DI\Attributes\Inject;
 
 
 final class DiscountCodesPresenter extends SecurePresenter
@@ -18,8 +19,9 @@ final class DiscountCodesPresenter extends SecurePresenter
     private $selectedServices;
     private $discountCode;
 
+    #[Inject] public Nette\Database\Explorer $database;
+
     public function __construct(
-        private Nette\Database\Explorer $database
     )
     {
     }
@@ -27,10 +29,11 @@ final class DiscountCodesPresenter extends SecurePresenter
     public function beforeRender()
     {
         parent::beforeRender();
+        $this->template->selectedPage = "discountCodes";
 
     }
 
-    public function actionShow(int $page = 1)
+    public function actionDefault(int $page = 1)
     {
         $discountCodesCount = $this->database->table("discount_codes")
             ->where("user_id=?", $this->user->id)
@@ -89,12 +92,12 @@ final class DiscountCodesPresenter extends SecurePresenter
             $this->database->table("discount_codes")->where("uuid=?", $uuid)->update([
                 "active" => 0
             ]);
-            $this->flashMessage("Kód není neaktivní", "alert-success");
+            $this->flashMessage("Kód není neaktivní", "success");
         } else {
             $this->database->table("discount_codes")->where("uuid=?", $uuid)->update([
                 "active" => 1
             ]);
-            $this->flashMessage("Kód je aktivní", "alert-success");
+            $this->flashMessage("Kód je aktivní", "success");
         }
 
         $this->redirect("this");
@@ -159,7 +162,7 @@ final class DiscountCodesPresenter extends SecurePresenter
                     ]);
                 }
             } catch (\Throwable $th) {
-                $this->flashMessage("Nepodarilo se vytvořit, kód nesmí být duplicitní", "alert-danger");
+                $this->flashMessage("Nepodarilo se vytvořit, kód nesmí být duplicitní", "error");
                 $isSuccess = false;
             }
             return $isSuccess;
@@ -167,8 +170,8 @@ final class DiscountCodesPresenter extends SecurePresenter
         if (!$status) {
             $this->redirect("this");
         }
-        $this->flashMessage("Vytvořeno", "alert-success");
-        $this->redirect("DiscountCodes:show");
+        $this->flashMessage("Vytvořeno", "success");
+        $this->redirect("DiscountCodes:");
     }
 
     protected function createComponentEditForm(): Form
@@ -177,10 +180,11 @@ final class DiscountCodesPresenter extends SecurePresenter
         $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
         $type = $this->discountCode->type;
         $form = new Form;
-        $form->addCheckbox("active", "Aktivní");
         $form->addText("code", "Code")
+            ->setDefaultValue($this->discountCode->code)
             ->setRequired("Zadejte slevový kód");
         $form->addText("value", "Hodnota")
+            ->setDefaultValue($this->discountCode->value)
             ->setHtmlAttribute("type", "number")
             ->setRequired("Zadejte hodnotu slevy")
             ->addRule($form::Min, "Hodnota musí být větě než 0", 1)
@@ -191,7 +195,7 @@ final class DiscountCodesPresenter extends SecurePresenter
             $form->addCheckbox(strval("service" . $i), $service->name);
             $i++;
         }
-        $form->addSubmit("save", "Uložit");
+        $form->addSubmit("submit", "Uložit");
 
         $form->onSuccess[] = [$this, "editFormSucceeded"];
 
@@ -214,14 +218,14 @@ final class DiscountCodesPresenter extends SecurePresenter
         $status = $this->database->transaction(function ($database) use ($values, $enabled) {
             $isSuccess = true;
             try {
-                $this->database->table("discount_codes")->where("id=?", $this->id)->update([
+                $database->table("discount_codes")->where("id=?", $this->id)->update([
                     "code" => $values->code,
                     "value" => $values->value,
                 ]);
                 //add new services
                 foreach ($enabled as $row) {
                     if (!in_array($row, $this->selectedServices)) {
-                        $this->database->table("service2discount_code")->insert([
+                        $database->table("service2discount_code")->insert([
                             "discount_code_id" => $this->id,
                             "service_id" => $row
                         ]);
@@ -234,15 +238,17 @@ final class DiscountCodesPresenter extends SecurePresenter
                     }
                 }
             } catch (\Throwable $th) {
-                $this->flashMessage("Nepodarilo se uložit", "alert-danger");
                 $isSuccess = false;
             }
             return $isSuccess;
         });
 
         if ($status) {
-            $this->flashMessage("Uloženo", "alert-success");
-            $this->redirect("DiscountCodes:show");
+            $this->flashMessage("Uloženo", "success");
+            $this->redirect("DiscountCodes:");
+        } else {
+            $this->flashMessage("Nepodarilo se uložit", "error");
+            $this->redirect("this");
         }
 
     }

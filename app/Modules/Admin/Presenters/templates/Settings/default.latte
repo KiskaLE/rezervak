@@ -1,0 +1,73 @@
+{block title}Nastavení{/block}
+{block content}
+<!-- page title start-->
+<div class="page-title">
+    <h1>Nastavení</h1>
+</div>
+<!-- page title end -->
+<!-- form start -->
+<div class="form-wrapper">
+    <form n:name="basicSettingsForm">
+
+        <div class="form-body">
+
+            <div class="form-group" style="width: 300px;">
+                <label for="">Společnost</label>
+                <input n:name="company">
+                {* <span class="form-info">Dodatečné informace</span> *}
+            </div>
+
+            <div class="form-group" style="width: 300px;">
+                <label for="">Kontaktní telefon</label>
+                <input n:name="phone">
+                {* <span class="form-info">Dodatečné informace</span> *}
+            </div>
+
+            <div class="form-group" style="width: 300px;">
+                <label for="">Kontaktní e-mail</label>
+                <input n:name="email">
+                {* <span class="form-info">Dodatečné informace</span> *}
+            </div>
+            
+            <div class="form-group" style="width: 300px;">
+                <label for="">Číslo bankovního účtu</label>
+                <input n:name="paymentInfo">
+                {* <span class="form-info">Dodatečné informace</span> *}
+            </div>
+
+            <div class="form-group" style="width: 300px;">
+                <label for="">Dělení kalendáře</label>
+                <input n:name="sampleRate">
+                <span class="form-info">Zde zadejte v jakém intervalu se bude váš kalendář rozdělovat</span>
+            </div>
+            
+            <div class="form-group" style="width: 300px;">
+                <label for="">čas na ověření rezervace</label>
+                <input n:name="verificationTime">
+                <span class="form-info">Zadejte čas v minutách</span>
+            </div>
+
+            <div class="form-group" style="width: 300px;">
+                <label for="">Počet dní</label>
+                <input n:name="numberOfDays">
+                <span class="form-info">Zde zadejte kolik dní je možno rezervovat do budoucnosti</span>
+            </div>
+
+            <div class="form-group" style="width: 300px;">
+                <label for="">Čas na zaplacení</label>
+                <input n:name="timeToPay">
+                <span class="form-info">Zadejte čas v hodinách</span>
+            </div>
+
+            <div class="form-actions">
+                <div class="submit"><input n:name="submit"></div>
+                <div class="reset"><a n:href="this">Zrušit</a></div>
+            </div>
+
+        </div>
+
+
+
+    </form>
+</div>
+<!-- form end -->
