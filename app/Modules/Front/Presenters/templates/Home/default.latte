@@ -6,7 +6,7 @@
 <h2><a href="{$baseUrl}/admin">admin</a></h2>
 {foreach $users as $userRow}
     <div>
-        <a n:href="Reservation:create $userRow->uuid">rezervace {$userRow->username}</a>
+        <a n:href="Reservation: $userRow->uuid">rezervace {$userRow->username}</a>
     </div>
 {/foreach}
 

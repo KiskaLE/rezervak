@@ -77,6 +77,10 @@ class SettingsPresenter extends SecurePresenter
             ->setDefaultValue($this->settings->email)
             ->setMaxLength(255);
 
+        $form->addText("homepage")
+        ->setDefaultValue($this->settings->homepage)
+        ->addRule($form::URL, "Neplatný url formát");
+
         $form->addSubmit("submit", "Uložit změny");
 
         $form->onSuccess[] = [$this, "basicSettingsFormSucceeded"];
@@ -97,6 +101,7 @@ class SettingsPresenter extends SecurePresenter
                 "company" => $data->company,
                 "phone" => $data->phone,
                 "email" => $data->email,
+                "homepage" => $data->homepage,
                 "updated_at" => date("Y-m-d H:i:s"),
             ]);
             $this->flashMessage("Změny byly uloženy.", "success");

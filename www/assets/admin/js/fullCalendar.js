@@ -144,3 +144,13 @@ function addEvent(title, start, end) {
             end: end
         })
 }
+
+function addEvents(events) {
+    JSON.parse(events).forEach(function(event) {
+        calendar.addEvent({
+            title: event.title,
+            start: event.start,
+            end: event.end
+        })
+    })
+}

@@ -23,6 +23,10 @@ class Formater
         $m->setTimezone($timezone);
         return $m->format("Y-m-d H:i");
     }
+    
+    public function json(array $array) {
+        return json_encode($array);
+    }
 
     public function currency($currency)
     {

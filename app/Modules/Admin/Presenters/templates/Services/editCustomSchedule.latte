@@ -38,8 +38,10 @@
 <!--<script src="{$basePath}/assets/admin/js/servicesCustom.js"></script>-->
 <script>
     createFullCalendar({$calendarPeriod}, {$userSettings->sample_rate}, {$service->duration}, {$service->name}, "calendar")
+    {var $daysJson = []}
     {foreach $days as $day}
-        addEvent({$service->name}, {$day->start}, {$day->end});
+        {do $daysJson[] = ["title" => $service->name, "start" => $day->start, "end" => $day->end]}
     {/foreach}
+    addEvents({$daysJson|json})
 </script>
 

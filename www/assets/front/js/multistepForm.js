@@ -203,7 +203,7 @@ function setRecap() {
 
 async function getServiceName(service_id) {
     let naja = window.Naja;
-    await naja.makeRequest("GET", "/reservation/create", {
+    await naja.makeRequest("GET", "/reservation/", {
         run: "getServiceName",
         service_id: service_id
     }, {
@@ -217,7 +217,7 @@ async function getServiceName(service_id) {
 
 async function getTime(time_id) {
     let naja = window.Naja;
-    const res = await naja.makeRequest("GET", "/reservation/create", {
+    const res = await naja.makeRequest("GET", "/reservation/", {
         u: searchParams.get("u"),
         run: "getTime",
         time_id: time_id
@@ -248,7 +248,7 @@ async function changeDay() {
     const day = document.querySelector("[name='date']").value;
     const service = document.querySelector("[name='service']").value;
     let naja = window.Naja;
-    await naja.makeRequest("GET", "/reservation/create", {
+    await naja.makeRequest("GET", "/reservation/", {
         u: searchParams.get("u"),
         run: "setDate",
         day: day,
@@ -478,7 +478,7 @@ async function createCalendar(month, year) {
     async function getAvailableDays() {
         let naja = window.Naja;
         const service_id = document.querySelector("[name='service']").value;
-        const res = await naja.makeRequest("POST", `/reservation/create`, {
+        const res = await naja.makeRequest("POST", `/reservation/`, {
             u: searchParams.get("u"),
             run: "fetch",
             service_id: service_id
@@ -515,7 +515,7 @@ async function verify() {
         console.log(service)
         console.log(code)
         let naja = window.Naja;
-        const res = await naja.makeRequest("GET", "/reservation/create", {
+        const res = await naja.makeRequest("GET", "/reservation/", {
             u: searchParams.get("u"),
             run: "verifyCode",
             discountCode: code,

@@ -41,7 +41,7 @@ final class ReservationPresenter extends BasePresenter
         $this->template->backupTimes = [];
     }
 
-    public function actionCreate($run, $day, $service_id, $discountCode = "")
+    public function actionDefault($run, $day, $service_id, $discountCode = "")
     {
         $this->user = $this->database->table("users")->fetch();
         $this->user_uuid = $this->user->uuid;
@@ -52,7 +52,7 @@ final class ReservationPresenter extends BasePresenter
                 $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
                 $this->service = $service;
                 $this->payload->postGet = true;
-                $this->payload->url = $this->link("Reservation:create");
+                $this->payload->url = $this->link("default");
                 $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates($u, $service->duration, $user_settings->number_of_days, intval($service_id))]);
             } else if ($run == "setDate") {
                 $this->setDate($u, intval($service_id), $day);
@@ -63,7 +63,7 @@ final class ReservationPresenter extends BasePresenter
                 $this->sendJson(["serviceName" => $service->name]);
             }
             $this->payload->postGet = true;
-            $this->payload->url = $this->link("Reservation:create");
+            $this->payload->url = $this->link("default");
         }
 
         $services = $this->database->table("services")->where("user_id=? AND hidden=?", [$this->user->id, 0])
@@ -139,12 +139,12 @@ final class ReservationPresenter extends BasePresenter
             $time = $times[$data->time];
             if (!$this->checkAvailability($this->user_uuid, $data->date, $data->service, $time)) {
                 $this->flashMessage("Nepovedlo se vytvořit rezervaci. Termín je již obsazen", "error");
-                $this->redirect("create", $this->user_uuid);
+                $this->redirect("default", $this->user_uuid);
             }
             $result = $this->insertReservation($uuid, $data, "default", $time);
             if (!$result) {
                 $this->flashMessage("Nepovedlo se uložit rezervaci.", "error");
-                $this->redirect("create", $this->user_uuid);
+                $this->redirect("default", $this->user_uuid);
             }
             $this->mailer->sendConfirmationMail($email, $this->link("Payment:default", $uuid), $result);
             $this->redirect("Reservation:confirmation", ["id" => $uuid]);
@@ -153,17 +153,17 @@ final class ReservationPresenter extends BasePresenter
             $time = $times[$data->time];
             if (!$this->checkAvailability($this->user_uuid, $data->date, $data->service, $time, "backup")) {
                 $this->flashMessage("Nepovedlo se vytvořit rezervaci. Termín je již obsazen", "error");
-                $this->redirect("create", $this->user_uuid);
+                $this->redirect("default", $this->user_uuid);
             }
             $result = $this->insertReservation($uuid, $data, "backup", $time);
             if (!$result) {
                 $this->flashMessage("Nepovedlo se uložit rezervaci.", "error");
-                $this->redirect("create", $this->user_uuid);
+                $this->redirect("default", $this->user_uuid);
             }
             $this->mailer->sendBackupConfiramationMail($email, $this->link("Payment:backup", $uuid), $result);
             $this->redirect("Reservation:confirmation", ["id" => $uuid]);
         }
-        $this->redirect("create");
+        $this->redirect("default");
     }
 
 

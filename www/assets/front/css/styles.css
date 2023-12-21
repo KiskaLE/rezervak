@@ -9,7 +9,7 @@
   --accent: #FD4D4D;
   --shadow: var(--primary) 0px 10px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
   --shadow-secondary: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-  --radius: 27px;
+  --radius: 12px;
   font-size: 16px;
 }
 
@@ -186,11 +186,17 @@ body {
   transition-duration: 300ms;
   cursor: pointer;
   margin: 0;
+  text-decoration: none;
+  color: black;
+}
+
+.button:hover {
+  filter: brightness(90%);
 }
 
 .button.xl {
-  font-size: 20px;
-  padding: 10px 20px;
+  font-size: 1rem;
+  padding: 10px 10px;
   border-radius: 10px;
 }
 
@@ -499,7 +505,7 @@ input.valid {
   min-width: 370px !important;
   height: 100%;
   box-sizing: border-box;
-  padding: 40px;
+  padding: 20px;
   border-radius: var(--radius);
   max-width: 400px;
   box-shadow: var(--shadow-secondary);
@@ -508,24 +514,25 @@ input.valid {
   margin-bottom: 25px;
 }
 .service-card .card-title h2 {
-  font-size: 2.375rem;
+  font-size: 1.7rem;
   font-weight: bolder;
   letter-spacing: 0px;
   margin: 0;
 }
 .service-card .card-text p {
-  font-size: 1.263rem;
+  font-size: 1rem;
   margin: 0;
-  line-height: 1.875rem;
+  line-height: 1.2rem;
 }
 .service-card .card-price {
   padding: 10px 0;
-  font-size: 1.789rem;
+  font-size: 1rem;
+  font-weight: 700;
   color: var(--accent);
 }
 .service-card .card-button {
-  border-radius: 10px;
-  height: 60px;
+  padding: 10px 14px;
+  border-radius: calc(var(--radius) / 2);
   background-color: var(--primary);
   display: flex;
   justify-content: center;
@@ -535,7 +542,7 @@ input.valid {
   box-shadow: var(--shadow-secondary);
 }
 .service-card .card-button span {
-  font-size: 1.671rem;
+  font-size: 1rem;
   font-weight: bold;
   color: var(--text-light);
 }
@@ -627,7 +634,7 @@ input.valid {
     width: 100%;
   }
   .payment-wrapper h2 {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
   .payment-wrapper .payment-qr-code img {
     width: 80vw;

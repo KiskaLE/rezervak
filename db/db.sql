@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db:3306
--- Generation Time: Dec 21, 2023 at 01:51 PM
+-- Generation Time: Dec 21, 2023 at 02:41 PM
 -- Server version: 8.2.0
 -- PHP Version: 8.2.12
 
@@ -201,6 +201,7 @@ CREATE TABLE `settings` (
   `company` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci DEFAULT NULL,
   `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8mb4_czech_ci NOT NULL,
+  `homepage` varchar(500) COLLATE utf8mb4_czech_ci DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;

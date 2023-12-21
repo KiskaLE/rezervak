@@ -18,5 +18,6 @@ final class HomePresenter extends BasePresenter
     }
 
     public function renderDefault() {
+        $this->template->users =  $this->database->table("users")->fetchAll();
     }
 }
