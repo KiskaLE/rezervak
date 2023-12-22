@@ -10,7 +10,7 @@
     <div style="max-width: 600px; padding: 5px;">
         <h1 style="font-size: 32px;
             font-weight: bolder;
-            color: #2563eb;
+            color: #d0482b;
             margin: 0 0 20px;">Vaše rezervace je skoro hotová!</h1>
         <p style="font-size: 16px;
             line-height: 30px;">Dobrý den,<br>
@@ -21,10 +21,11 @@
         <h3>Detaily vaší Rezervace:</h3>
         <p style="font-size: 16px;
             line-height: 30px;">
+            <b>Služba:</b> {$reservation->ref("services", "service_id")->name} <br>
+            <b>Datum:</b> {$reservation->start|date:"d.m.Y"}<br>
+            <b>Čas:</b> {$reservation->start|date:"H:i"}<br>
             <b>Jméno:</b> {$reservation->firstname}<br>
             <b>Příjmení:</b> {$reservation->lastname}<br>
-            <b>Datum:</b> {$reservation->start|date:"d.m.Y"}<br>
-           <b>Čas:</b> {$reservation->start|date:"H:i"}<br>
             {var $price = $reservation->related("payments")->fetch()->price}
             <b>Cena:</b> {$price} Kč<br>
         </p>
@@ -38,13 +39,12 @@
         <br>
         <div style="padding: 5px 10px;
             border: none !important;
-            border-radius: 5px;
             transition-duration: 300ms;
             cursor: pointer;
             margin: 0;
-            background-color: #2563eb;
+            background-color: #d0482b;
             width: fit-content;
-            border-radius: 22.62px;
+            border-radius: 10px;
             font-size: 20px;
             padding: 10px 20px;
 ">
@@ -63,7 +63,6 @@
         <br>
         <p style="font-size: 16px;
             line-height: 30px;">S pozdravem, <br>
-            Rezerevační systém <br>
             <span n:if="$userSettings->company">{$userSettings->company}</span><br>
             <span n:if="$userSettings->email">{$userSettings->email}</span><br>
             <span n:if="$userSettings->phone">{$userSettings->phone}</span>

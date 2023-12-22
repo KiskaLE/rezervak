@@ -10,7 +10,7 @@
     <div style="max-width: 600px; padding: 5px;">
         <h1 style="font-size: 32px;
             font-weight: bolder;
-            color: #2563eb;
+            color: #d0482b;
             margin: 0 0 20px;">Vaše rezervace byla zrušena!</h1>
         <p style="font-size: 16px;
             line-height: 30px;">Dobrý den,<br>
@@ -21,10 +21,13 @@
         <h3>Detaily zrušené rezervace:</h3>
         <p style="font-size: 16px;
             line-height: 30px;">
+            <b>Služba:</b> {$reservation->ref("services", "service_id")->name} <br>
+            <b>Datum:</b> {$reservation->start|date:"d.m.Y"}<br>
+            <b>Čas:</b> {$reservation->start|date:"H:i"}<br>
             <b>Jméno:</b> {$reservation->firstname}<br>
             <b>Příjmení:</b> {$reservation->lastname}<br>
-            <b>Datum:</b> {$reservation->start|date:"d.m.Y"}<br>
-           <b>Čas:</b> {$reservation->start|date:"H:i"}
+            {var $price = $reservation->related("payments")->fetch()->price}
+            <b>Cena:</b> {$price} Kč<br>
         </p>
         <br>
         <h3>Důvod Zrušení:</h3>
@@ -35,7 +38,6 @@
         <br>
         <p style="font-size: 16px;
             line-height: 30px;">S pozdravem, <br>
-            Rezerevační systém <br>
             <span n:if="$userSettings->company">{$userSettings->company}</span><br>
             <span n:if="$userSettings->email">{$userSettings->email}</span> <br>
             <span n:if="$userSettings->phone">{$userSettings->phone}</span>
