@@ -8,6 +8,7 @@ namespace App\Modules\admin\Presenters;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\DI\Attributes\Inject;
+use App\Modules\Formater;
 
 
 final class ReservationsPresenter extends SecurePresenter
@@ -20,6 +21,8 @@ final class ReservationsPresenter extends SecurePresenter
     #[Inject] public Nette\Database\Explorer $database;
 
     public function __construct(
+
+        private Formater $formater
     
     )
     {
@@ -41,78 +44,55 @@ final class ReservationsPresenter extends SecurePresenter
         $tab = $session->reservations_tab ?? 0;
         $this->template->tab = $tab;
 
-        $numberOfReservations = $this->database->table('reservations')
-            ->select('reservations.*',)
-            ->where('reservations.status=?', 'VERIFIED')
-            ->where("reservations.type=?", 0)
-            ->where('user_id=?', $this->user->id)
-            ->where(':payments.status=?', 1)->count();
+        //filter
+        $start = $session->filterStart ?? null;
+        $end = $session->filterEnd ?? null;
+        $this->template->start = $start;
+        $this->template->end = $end;
 
-        $paginator = $this->createPagitator($numberOfReservations, $page, 5);
+        // $numberOfReservations = $this->database->table('reservations')
+        //     ->select('reservations.*',)
+        //     ->where('reservations.status=?', 'VERIFIED')
+        //     ->where("reservations.type=?", 0)
+        //     ->where('user_id=?', $this->user->id)
+        //     ->where(':payments.status=?', 1)->count();
 
+
+        $q = $this->database->table('reservations')
+        ->select('reservations.*',)
+        ->where('reservations.status=?', 'VERIFIED')
+        ->where('user_id=?', $this->user->id)
+        ->where("reservations.type=?", 0);
+
+        if ($start) {
+            $q = $q->where('start >= ?', $start);
+        }
+        if ($end) {
+            $q = $q->where('start <= ?', $end);
+        }
 
         switch ($tab) {
             case 0:
-                $numberOfReservations = $this->database->table('reservations')
-                ->select('reservations.*',)
-                ->where('reservations.status=?', 'VERIFIED')
-                ->where('start >= ?', date('Y-m-d'))
-                ->where("reservations.type=?", 0)
-                ->where('user_id=?', $this->user->id)
-                ->where(':payments.status=?', 1)
-                ->count();
-
-                $reservations = $this->database->table('reservations')
-                ->select('reservations.*',)
-                ->where('reservations.status=?', 'VERIFIED')
-                ->where('start >= ?', date('Y-m-d'))
-                ->where("reservations.type=?", 0)
-                ->where('user_id=?', $this->user->id)
-                ->where(':payments.status=?', 1)
-                ->order('start ASC')
-                ->limit($paginator->getLength(), $paginator->getOffset())
-                ->fetchAll();
+                //nadcházející
+                $q = $q->where('start >= ?', date('Y-m-d'))->where(':payments.status=?', 1)->order('start ASC');
+                $numberOfReservations = $q->count();
+                $paginator = $this->createPagitator($numberOfReservations, $page, 5);
+                $reservations = $q->limit($paginator->getLength(), $paginator->getOffset())->fetchAll();
                 break;
             
             case 1:
-                $numberOfReservations = $this->database->table('reservations')
-                ->select('reservations.*',)
-                ->where('reservations.status=?', 'VERIFIED')
-                ->where('start < ?', date('Y-m-d'))
-                ->where("reservations.type=?", 1)
-                ->where('user_id=?', $this->user->id)
-                ->where(':payments.status=?', 1)
-                ->count();
-
-                $reservations = $this->database->table('reservations')
-                ->select('reservations.*',)
-                ->where('reservations.status=?', 'VERIFIED')
-                ->where('start < ?', date('Y-m-d'))
-                ->where("reservations.type=?", 1)
-                ->where('user_id=?', $this->user->id)
-                ->where(':payments.status=?', 1)
-                ->order('start ASC')
-                ->limit($paginator->getLength(), $paginator->getOffset())
-                ->fetchAll();
+                //proběhlé
+                $q = $q->where('start < ?', date('Y-m-d'))->where(':payments.status=?', 1)->order('start ASC');
+                $numberOfReservations = $q->count();
+                $paginator = $this->createPagitator($numberOfReservations, $page, 5);
+                $reservations = $q->limit($paginator->getLength(), $paginator->getOffset())->fetchAll();
                 break;
             case 2:
-                $numberOfReservations = $this->database->table('reservations')
-                ->select('reservations.*',)
-                ->where('reservations.status=?', 'VERIFIED')
-                ->where("reservations.type=?", 0)
-                ->where('user_id=?', $this->user->id)
-                ->where(':payments.status=?', 0)
-                ->count();
-
-                $reservations = $this->database->table('reservations')
-                ->select('reservations.*',)
-                ->where('reservations.status=?', 'VERIFIED')
-                ->where("reservations.type=?", 0)
-                ->where('user_id=?', $this->user->id)
-                ->where(':payments.status=?', 0)
-                ->order('start ASC')
-                ->limit($paginator->getLength(), $paginator->getOffset())
-                ->fetchAll();
+                //nezaplacené
+                $q = $q->where(':payments.status=?', 0)->order('start ASC');
+                $numberOfReservations = $q->count();
+                $paginator = $this->createPagitator($numberOfReservations, $page, 5);
+                $reservations = $q->limit($paginator->getLength(), $paginator->getOffset())->fetchAll();
         }
         $this->template->reservations = $reservations;
         $this->template->paginator = $paginator;
@@ -135,9 +115,8 @@ final class ReservationsPresenter extends SecurePresenter
         $this->template->reservation = $reservation;
     }
 
-    public function actionDelete($id, $backlink)
+    public function actionDelete($id)
     {
-        $this->backlink = $backlink;
         $this->uuid = $id;
         $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
         $this->template->reservation = $reservation;
@@ -201,12 +180,65 @@ final class ReservationsPresenter extends SecurePresenter
         $this->redirect('Reservations:');
     }
 
+    protected function createComponentSetRangeForm(): Form
+    {
+        $form = new Form;
+        $form->addText("range")->setRequired("Prosím nastavte rozsah");
+        $form->addSubmit("submit", "Nastavit");
+
+        $form->onSuccess[] = [$this, "setRangeFormSucceeded"];
+
+        return $form;
+    }
+
+    public function setRangeFormSucceeded(Form $form, \stdClass $data): void
+    {
+        $session = $this->getSession("reservations");
+        $range = $this->formater->getDataFromRange($data->range);
+        bdump($range);
+        $session->filterStart = $range['start'];
+        $session->filterEnd = $range['end']. " 23:59:59";
+        $this->redirect('default');
+    }
+
 
     public function handleSetTab($tab) {
        
         $session = $this->getSession("reservations");
     
         $session->reservations_tab = $tab;
+        $this->redirect('default');
+    }
+
+    public function handleCancel($reservationId) {
+        $isSuccess = true;
+        try {
+            $res = $this->database->table('reservations')->where('id=?', $reservationId)->update([
+                'status' => 'CANCELED',
+            ]);
+            if (!$res) {
+                $isSuccess = false;
+            }
+        } catch (\Throwable $th) {
+            $isSuccess = false;
+        }
+        if ($isSuccess) {
+            $this->flashMessage("Rezervace byla zrušena", "success");
+            $this->redirect('Reservations:');
+        }
+        $this->flashMessage("Rezervaci se nepodařilo zrušit", "error");
+
+    }
+
+    public function handleDeleteFilter($filter) {
+        $session = $this->getSession("reservations");
+        switch($filter) {
+            case "range":
+                $session->filterStart = null;
+                $session->filterEnd = null;
+            break;
+        }
+
         $this->redirect('default');
     }
 

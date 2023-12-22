@@ -552,8 +552,73 @@ h1 {
 
 .list-page {
   display: flex;
-  gap: 15px;
-  padding: 15px 30px;
+  padding: 5px 30px;
+  justify-content: space-between;
+}
+.list-page .list-tabs {
+  display: flex;
+  gap: 10px;
+}
+.list-page .filter-toggle {
+  cursor: pointer;
+}
+.list-page #list-filter {
+  position: relative;
+  top: -5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.list-page #list-filter span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.list-page #list-filter span a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.list-page #list-filter .filter-toggle svg {
+  height: 20px;
+  width: 20px;
+  transition: 100ms;
+  padding: 5px;
+  border-radius: 5px;
+}
+.list-page #list-filter .filter-toggle svg:hover {
+  background-color: #dbeafe;
+}
+.list-page #list-filter .filter-toggle svg {
+  height: 20px;
+  width: 20px;
+  transition: 100ms;
+  padding: 5px;
+  border-radius: 5px;
+}
+.list-page #list-filter .filter-toggle svg:hover {
+  background-color: #dbeafe;
+}
+.list-page #list-filter .filter-dropdown {
+  z-index: 10;
+  position: absolute;
+  top: 100%;
+  right: 5px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  border: var(--border);
+  box-shadow: var(--shadow);
+}
+.list-page #list-filter .filter-dropdown ul {
+  list-style: none;
+}
+.list-page #list-filter .filter-dropdown ul li {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 .list-page .list-page-item {
   font-weight: 500;

@@ -49,6 +49,20 @@ class Formater
         return ["start" => $start, "end" => $end, "timeStart" => $timeStart, "timeEnd" => $timeEnd];
     }
 
+    public function getDataFromRange($string) {
+        $string = explode("-", $string);
+        $start = trim($string[0]);
+        $end = trim($string[1]);
+        $start = explode("/", $start);
+        $end = explode("/", $end);
+
+        $start = trim($start[2] . "-" . $start[0] . "-" . $start[1]);
+        $end = trim($end[2] . "-" . $end[0] . "-" . $end[1]);
+
+
+        return ["start" =>$start, "end" => $end];
+    }
+
     public function getDateFromTimeStamp($timestamp)
     {
         return date("Y-m-d", strtotime($timestamp));

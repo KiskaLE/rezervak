@@ -10,15 +10,39 @@
 <div class="list-wrapper">
 
     <div class="list-page">
-        <a n:href="setTab! 0" class="list-page-item" id="tab0">
-            Nadcházející
-        </a>
-        <a n:href="setTab! 1" class="list-page-item" id="tab1">
-            Proběhlé
-        </a>
-        <a n:href="setTab! 2" class="list-page-item" id="tab2">
-            Nezaplacené
-        </a>
+        <div class="list-tabs">
+            <a n:href="setTab! 0" class="list-page-item" id="tab0">
+                Nadcházející
+            </a>
+            <a n:href="setTab! 1" class="list-page-item" id="tab1">
+                Proběhlé
+            </a>
+            <a n:href="setTab! 2" class="list-page-item" id="tab2">
+                Nezaplacené
+            </a>
+        </div>
+        <div id="list-filter">
+            <span n:if="$start && $end">
+                <a n:href="deleteFilter! 'range'" style="color: black;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></a>
+                <span>{$start|date:"d.m.Y"} - {$end|date:"d.m.Y"}</span>
+            </span>
+            <div class="filter-toggle">
+                <svg onclick="listFilterToggle()" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                <div class="filter-dropdown" id="list-filter-toggle" style="display: none;">
+                    <form n:name="setRangeForm">
+                    <div class="form-body">
+                        <div class="form-group" style="width: 180px;">
+                            <label for="">Rozsah</label>
+                            <input id="filter-range" n:name="range">
+                        </div>
+                        <div class="form-actions">
+                            <div class="submit"><input n:name="submit"></div>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
     {var $i = 0}
     <div n:foreach="$reservations as $reservation" class="list-item" id="list-item-{$i}">
@@ -55,7 +79,7 @@
         <div class="list-item-body" style="display: none">
             <div class="list-item-column list-item-actions">
             <a class="btn btn-primary" n:href="edit $reservation->uuid">Upravit</a>
-            <a class="btn btn-danger" n:href="Reservations:delete $reservation->uuid">Zrušit</a>
+            <a class="btn btn-danger" n:href="cancel! $reservation->id">Zrušit</a>
             </div>
             <div class="list-item-column">
                 <div class="list-item-info">
@@ -108,6 +132,7 @@
 <script>
     setTab({$tab});
 </script>
+<script src="{$basePath}/assets/admin/js/datePicker.js"></script>
 
 {* 
 <!--table start-->

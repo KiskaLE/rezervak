@@ -153,6 +153,8 @@ $(function() {
         console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
     });
 
+    
+
 
 
 
@@ -166,4 +168,51 @@ $(function() {
 
         return day + '/' + month + '/' + year;
     }
+});
+
+$('#filter-range').daterangepicker({
+    "showWeekNumbers": true,
+    "showISOWeekNumbers": true,
+    "autoApply": true,
+    "locale": {
+        "format": "MM/DD/YYYY",
+        "separator": " - ",
+        "applyLabel": "Potvrdit",
+        "cancelLabel": "Zrušit",
+        "fromLabel": "Od",
+        "toLabel": "Do",
+        "customRangeLabel": "Vlastní",
+        "weekLabel": "T",
+        "daysOfWeek": [
+            "Ne",
+            "Po",
+            "Ut",
+            "St",
+            "Čt",
+            "Pá",
+            "So"
+        ],
+        "monthNames": [
+            "Leden",
+            "Únor",
+            "Březen",
+            "Duben",
+            "Květen",
+            "Červen",
+            "Červenec",
+            "Srpen",
+            "Září",
+            "Ríjen",
+            "Listopad",
+            "Prosinec"
+        ],
+        "firstDay": 1
+    },
+    "alwaysShowCalendars": true,
+    "parentEl": "filter-range",
+    "opens": "left",
+    "buttonClasses": "btn",
+    "cancelClass": "btn"
+}, function(start, end, label) {
+  console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
 });

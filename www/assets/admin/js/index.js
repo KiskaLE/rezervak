@@ -98,6 +98,22 @@ function listItemToggle(listItemId) {
 
 }
 
+function listFilterToggle() {
+    const toggle = document.getElementById("list-filter-toggle");
+    toggle.style.display = toggle.style.display === 'none' ? 'block' : 'none';
+}
+
+function closelistFilterToggle(event) {
+    var dropdown = document.getElementById('list-filter-toggle');
+    var filter = document.getElementById('list-filter');
+    
+    if (!dropdown.contains(event.target) && !filter.contains(event.target)) {
+        dropdown.style.display = 'none';
+    }
+}
+
+document.addEventListener('click', closelistFilterToggle);
+
 function setTab(tabId) {
     const tab = document.getElementById('tab'+tabId);
     tab.classList.add('selected');
