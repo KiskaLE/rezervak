@@ -4,6 +4,7 @@
   --shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   --border: 1px solid #d4d4d4;
   --text-dark: #0a0a0a;
+  --border-radius: 10px;
 }
 
 .back {
@@ -73,7 +74,7 @@ body {
   display: flex;
   align-items: center;
   padding: 3px;
-  border-radius: 5px;
+  border-radius: calc(var(--border-radius) / 2);
   cursor: pointer;
 }
 #sidepanel-toggle svg {
@@ -100,9 +101,10 @@ body {
 }
 
 #user-dropdown {
+  z-index: 1000;
   position: absolute;
   padding: 5px 0px;
-  border-radius: 27px;
+  border-radius: var(--border-radius);
   box-shadow: var(--shadow);
   top: 100%; /* Adjust as needed */
   right: 0;
@@ -131,7 +133,7 @@ body {
   display: flex;
   align-items: center;
   padding: 5px 5px;
-  border-radius: 10px;
+  border-radius: calc(var(--border-radius) / 2);
   gap: 5px;
   width: 100%;
   box-sizing: border-box;
@@ -150,7 +152,7 @@ body {
   padding: 5px 5px;
   width: 100%;
   box-sizing: border-box;
-  border-radius: 10px;
+  border-radius: calc(var(--border-radius) / 2);
 }
 #user-dropdown .user-dropdown-footer a {
   color: var(--text-dark);
@@ -208,11 +210,10 @@ ul {
 }
 .left-sidebar-container .nav-el {
   list-style-type: none;
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 400;
   margin-bottom: 10px;
-  padding: 10px 20px;
-  border-radius: 8px;
+  border-radius: calc(var(--border-radius) / 2);
 }
 .left-sidebar-container .nav-el svg {
   width: 16px;
@@ -222,6 +223,7 @@ ul {
 }
 .left-sidebar-container .nav-el a {
   display: flex;
+  padding: 10px 20px;
   align-items: center;
   gap: 10px;
   text-decoration: none;
@@ -287,7 +289,7 @@ h1 {
   width: 100%;
   padding: 30px;
   box-shadow: var(--shadow);
-  border-radius: 27px;
+  border-radius: var(--border-radius);
 }
 .table-wrapper table th {
   padding: 10px 10px;
@@ -300,12 +302,14 @@ h1 {
 }
 .table-wrapper table tbody th {
   font-weight: 300;
+  line-height: 30px;
+  max-width: 200px;
 }
 
 .btn {
   padding: 5px 10px;
   font-size: 16px;
-  border-radius: 12px;
+  border-radius: calc(var(--border-radius) / 2);
   background-color: #9ca3af;
   text-decoration: none;
   color: white;
@@ -412,7 +416,7 @@ h1 {
 .form-body .form-actions .submit input {
   cursor: pointer;
   background-color: #3b82f6;
-  border-radius: 27px;
+  border-radius: var(--border-radius);
   padding: 10px 15px;
   border: 1px solid #3b82f6;
   color: #ffffff;
@@ -426,7 +430,7 @@ h1 {
   display: flex;
   align-items: center;
   padding: 10px 15px;
-  border-radius: 27px;
+  border-radius: var(--border-radius);
   border: 1px solid black;
   background: #e5e7eb;
   text-decoration: none;
@@ -446,7 +450,7 @@ h1 {
 .fc-toolbar-chunk button {
   background-color: #3b82f6 !important;
   border: none !important;
-  border-radius: 17px !important;
+  border-radius: calc(var(--border-radius) / 2) !important;
   padding: 8px 15px !important;
   transition: 100ms !important;
 }
@@ -456,14 +460,14 @@ h1 {
   outline: none !important;
 }
 .fc-toolbar-chunk .fc-prevYear-button {
-  border-radius: 17px 0 0 17px !important;
+  border-radius: calc(var(--border-radius) / 2) 0 0 calc(var(--border-radius) / 2) !important;
 }
 .fc-toolbar-chunk .fc-prev-button,
 .fc-toolbar-chunk .fc-next-button {
   border-radius: 0px !important;
 }
 .fc-toolbar-chunk .fc-nextYear-button {
-  border-radius: 0 17px 17px 0 !important;
+  border-radius: 0 calc(var(--border-radius) / 2) calc(var(--border-radius) / 2) 0 !important;
 }
 
 .fc-view-harness {
@@ -486,7 +490,7 @@ h1 {
   display: flex;
   flex-direction: column;
   border: var(--border);
-  border-radius: 27px;
+  border-radius: var(--border-radius);
   box-shadow: var(--shadow);
   padding: 30px 0;
   min-height: 100px;
@@ -608,7 +612,7 @@ h1 {
   right: 5px;
   background-color: white;
   padding: 20px;
-  border-radius: 12px;
+  border-radius: var(--border-radius);
   border: var(--border);
   box-shadow: var(--shadow);
 }
@@ -673,7 +677,7 @@ h1 {
   right: calc(50vw - var(--width) / 2);
   padding: 15px;
   margin-bottom: 17px;
-  border-radius: 27px;
+  border-radius: var(--border-radius);
 }
 
 .success {

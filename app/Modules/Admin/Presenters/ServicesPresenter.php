@@ -262,7 +262,7 @@ final class ServicesPresenter extends SecurePresenter
         });
 
         if ($res) {
-            $this->flashMessage("Vytvořeno", "success");
+            $this->flashMessage("Rozvrh byl uložen", "success");
             //$this->restoreRequest($this->backlink);
             $this->redirect("this");
         } else {
@@ -341,7 +341,7 @@ final class ServicesPresenter extends SecurePresenter
         $form->addText("name", "Name")
             ->setRequired("Jméno je povinné");
         $form->addTextArea("description", "Description")
-            ->setMaxLength(100)
+            ->setMaxLength(500)
             ->setRequired("Popis je povinný");
         $form->addText("duration", "Duration")
             ->setHtmlAttribute("type", "number")
@@ -432,9 +432,10 @@ final class ServicesPresenter extends SecurePresenter
 
         if ($res) {
             $this->flashMessage("Služba byla vytvořena", "success");
-            $this->redirect("Services:");
+            $this->redirect("default");
         } else {
             $this->flashMessage("Nepodarilo se vytvořit službu", "error");
+            $this->redirect("this");
         }
 
 
@@ -448,8 +449,7 @@ final class ServicesPresenter extends SecurePresenter
             ->setRequired("Jméno je povinné");
         $form->addTextArea("description", "Description")
             ->setDefaultValue($this->service->description)
-            ->setMaxLength(100)
-            ->setRequired("Popis je povinny");
+            ->setMaxLength(500);
         $form->addText("price", "Price")
             ->setDefaultValue($this->service->price)
             ->setHtmlAttribute("type", "number")
@@ -464,15 +464,23 @@ final class ServicesPresenter extends SecurePresenter
 
     public function editFormSuccess(Form $form, $data)
     {
-        $this->database->table("services")->where("id=?", $this->id)->update([
-            "name" => $data->name,
-            "price" => $data->price,
-            "description" => $data->description
-        ]);
+        $isSuccess = true;
+        try {
+            $this->database->table("services")->where("id=?", $this->id)->update([
+                "name" => $data->name,
+                "price" => $data->price,
+                "description" => $data->description
+            ]);
+        } catch (\Throwable $th) {
+            $isSuccess = false;
+        }
 
-        $this->flashMessage("Uloženo", "success");
-
-        $this->redirect("this");
+        if ($isSuccess) {
+            $this->flashMessage("Změny byly uloženy", "success");
+            $this->redirect("default");
+        }
+            $this->flashMessage("Změny se nepodařili uložit", "error");
+            $this->redirect("this");
     }
 
 }

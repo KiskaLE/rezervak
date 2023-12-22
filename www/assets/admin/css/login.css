@@ -2,6 +2,7 @@
 :root {
   --shadow-secondary: rgba(0, 0, 0, 0.12) 0px 1px 3px,
     rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  --border-radius: 10px;
 }
 
 body {
@@ -31,7 +32,7 @@ body {
 
 .login-box {
   padding: 30px;
-  border-radius: 27px;
+  border-radius: var(--border-radius);
   box-shadow: var(--shadow-secondary);
   width: 350px;
   background-color: #ffffff;
@@ -56,11 +57,12 @@ body {
 .login-box .form-group input {
   padding: 10px 15px;
   border: 1px solid grey;
-  border-radius: 12px;
+  border-radius: 5px;
 }
 .login-box .form-group input[type=submit] {
   background-color: #3b82f6;
   color: white;
+  border-radius: calc(var(--border-radius) / 2) !important;
 }
 
 .login-info {

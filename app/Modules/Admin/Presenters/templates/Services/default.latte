@@ -15,7 +15,7 @@
                 <th class="text-left" >Název</th>
                 <th class="text-left">Popis</th>
                 <th class="text-right">Cena</th>
-                <th class="text-right">Doba trvání [min]</th>
+                <th class="text-right">Doba trvání</th>
                 <th class="text-left"></th>
             </tr>
         </thead>
@@ -24,7 +24,7 @@
                 {var $serviceSchedules = $service->related("services_custom_schedules")->fetch()}
                 <tr>
                     <th class="text-left">{$service->name}</th>
-                    <th class="text-left">{$service->description}</th>
+                    <th class="text-left">{$service->description|truncate:20}</th>
                     <th class="text-right">{$service->price|currency} Kč</th>
                     <th class="text-right">{$service->duration} min</th>
                     <th class="text-left">
