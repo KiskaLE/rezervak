@@ -26,10 +26,12 @@ class DiscountCodes
         if ($discountCodeRow) {
             $services2discountCode = $discountCodeRow->related("service2discount_code.discount_code_id")->fetchAll();
             $selectedServices = [];
+           if ($services2discountCode) {
             foreach ($services2discountCode as $row) {
-                $selectedServices[] = $row->ref("services", "service_id")->id;
+                $selectedServices[] = $row->ref("services", "service_id")?->id;
             }
-            in_array($service_id, $selectedServices) ?: $discountCodeRow = [];
+           } 
+           in_array($service_id, $selectedServices) ?: $discountCodeRow = [];
         }
         return $discountCodeRow;
     }

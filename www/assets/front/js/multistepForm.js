@@ -575,7 +575,10 @@ async function verify() {
     } else {
       document.querySelector("[name='dicountCode']").className = "valid";
     }
-    document.querySelector("#price").innerHTML = res.price;
+
+    if (res.price != undefined) {
+        document.querySelector("#price").innerHTML = res.price;
+    }
     //show code success
   }
 }

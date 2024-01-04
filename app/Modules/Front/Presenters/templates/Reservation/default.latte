@@ -53,7 +53,7 @@
             </div>
                 <div class="calendar-box">
                     <div class="calendar-date">
-                        <h2 class="h2-center">Vyberte datum a čas</h2>
+                        <h2 class="h2-center">Vyberte datum a čas služby</h2>
 
                         <div class="calender-wrapper">
                             <div id="calendar-nav"><img
@@ -187,7 +187,9 @@
                     <input id="verify-code" name="dicountCode" type="text" oninput="verify()">
                 </div>
                 </div>
-                <div class="recap-button"><button class="button xl primary">Zaregistrovat službu</button>
+                <div class="recap-button"><button class="button xl primary" onclick="(e) => {
+
+                }">Zaregistrovat službu</button>
                 </div>
             </div>
 
@@ -195,7 +197,15 @@
     </div>
     <script src="{$basePath}/assets/front/js/multistepForm.js"></script>
 
+<script>
 
+   document.getElementById("regForm").onkeypress = function(e) {
+    var key = e.charCode || e.keyCode || 0;     
+    if (key == 13) {
+      e.preventDefault();
+    }
+  } 
+</script>
 </div>
 
 

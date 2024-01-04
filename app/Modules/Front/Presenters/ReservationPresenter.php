@@ -51,6 +51,7 @@ final class ReservationPresenter extends BasePresenter
                 $user_settings = $this->user->related("settings")->fetch();
                 $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
                 $this->service = $service;
+                $this->template->selectedService = $service;
                 $this->payload->postGet = true;
                 $this->payload->url = $this->link("default");
                 $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates($u, $service->duration, $user_settings->number_of_days, intval($service_id))]);
