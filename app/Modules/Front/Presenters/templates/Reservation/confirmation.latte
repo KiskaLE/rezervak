@@ -3,7 +3,8 @@
     <div id="confirmation" class="card">
         <h1 class="text-center">Děkujeme za rezervaci!</h1>
 
-        <p class="text-center">Na váš emailový účet
+        <div>
+            <p class="text-center">Na váš emailový účet
             <bold>{$reservation->email}</bold>
             byl odeslán email pro potvzení rezervace.
         </p>
@@ -13,9 +14,10 @@
                 potvzení vaší rezervace.
             </bold>
         </p>
+        </div>
 
         <div class="center">
-        <a n:if="$userSettings->homepage" href="{$userSettings->homepage}" class="button primary">Zpět na domovskou stánku</a>
+        <a n:if="$userSettings->homepage" href="{$userSettings->homepage}" class="button btn-secondary">Zpět na domovskou stánku</a>
         </div>
 
     </div>

@@ -13,25 +13,105 @@
   }
 }
 
+$primary-50: #fdf5f3;
+$primary-100: #fde8e3;
+$primary-200: #fcd4cc;
+$primary-300: #f8b7a9;
+$primary-400: #f28d77;
+$primary-500: #e7674c;
+$primary-600: #d0482b;
+$primary-700: #b23c23;
+$primary-800: #933521;
+$primary-900: #7b3121;
+$primary-950: #42160d;
+
+$secondary-50: #f0fdf1;
+$secondary-100: #ddfbe0;
+$secondary-200: #bdf5c5;
+$secondary-300: #89ec98;
+$secondary-400: #4fd963;
+$secondary-500: #27c03e;
+$secondary-600: #19962c;
+$secondary-700: #187d28;
+$secondary-800: #186325;
+$secondary-900: #165120;
+$secondary-950: #062d0e;
+
+$gray-50: #f6f6f6;
+$gray-100: #e7e7e7;
+$gray-200: #d1d1d1;
+$gray-300: #b0b0b0;
+$gray-400: #888888;
+$gray-500: #666666;
+$gray-600: #5d5d5d;
+$gray-700: #4f4f4f;
+$gray-800: #454545;
+$gray-900: #3d3d3d;
+$gray-950: #262626;
+
+$yellow-50: #fef9e8;
+$yellow-100: #fef0c3;
+$yellow-200: #fee28a;
+$yellow-300: #fdd147;
+$yellow-400: #fac215;
+$yellow-500: #eab308;
+$yellow-600: #ca9a04;
+$yellow-700: #a17c07;
+$yellow-800: #85680e;
+$yellow-900: #715a12;
+$yellow-950: #423306;
+
+$accent-50: #ecf1ff;
+$accent-100: #dde5ff;
+$accent-200: #c2d0ff;
+$accent-300: #9cafff;
+$accent-400: #7584ff;
+$accent-500: #5359ff;
+$accent-600: #3e36f5;
+$accent-700: #352ad8;
+$accent-800: #2b25ae;
+$accent-900: #282689;
+$accent-950: #191650;
+
+
+$text: 12px;
+$text-1: 14px;
+$text-2: 16px;
+$text-3: 18px;
+$text-4: 20px;
+$text-5: 24px;
+$text-6: 30px;
+$text-7: 36px;
+$text-8: 48px;
+$text-9: 60px;
+$text-10: 72px;
+
+
+
+
+
+$text-dark: rgb(29, 27, 39);
+$text-light: rgb(248, 248, 255);
+$background: #F6F6F6;
+$white: #f9fafb;
+
+$shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px,
+rgba(0, 0, 0, 0.24) 0px 1px 2px;
+
+$radius: 12px;
+
 :root {
-  --text-dark: rgb(29, 27, 39);
-  --text-light: rgb(248, 248, 255);
-  --background: #eeeeee;
-  --white: #f9fafb;
-  --primary: #d0482b;
-  --secondary: rgb(29, 27, 39);
-  --accent: #fd4d4d;
 
-  --shadow: var(--primary) 0px 10px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
-  --shadow-secondary: rgba(0, 0, 0, 0.12) 0px 1px 3px,
-    rgba(0, 0, 0, 0.24) 0px 1px 2px;
-
-  --radius: 12px;
+  
   font-size: 16px;
 }
 
 .hidden {
   display: none !important;
+}
+
+.row {
+  width: 90%;
 }
 
 .text-center {
@@ -43,20 +123,21 @@
 }
 
 p {
-  color: var(--text);
+  color: $text-dark;
 }
 
 .h2-center {
   text-align: center;
   font-weight: 500;
+  font-size: $text-4;
 }
 
 .card {
   width: 100%;
   padding: 20px;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-secondary);
-  background-color: var(--white);
+  border-radius: $radius;
+  box-shadow: $shadow;
+  background-color: $white;
 
   @include w(sm) {
     background: inherit;
@@ -69,7 +150,7 @@ bold {
 }
 
 h1 {
-  color: var(--primary);
+  color: $primary-700;
   font-size: 3.5rem;
   margin-bottom: 50px;
 
@@ -79,7 +160,7 @@ h1 {
 
 body {
   font-family: "PT Sans Narrow", sans-serif;
-  background-color: var(--background);
+  background-color: $background;
   margin: 0;
 
   @include w(sm) {
@@ -93,15 +174,17 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  background: $background;
 }
 
 .back {
   display: flex;
+  width: 100%;
   justify-content: center;
   align-items: center;
   height: 40px;
   width: 40px;
-  border: 1px solid rgba(94, 94, 94, 0.8);
+  border: 1px solid $gray-300;
   border-radius: 25px;
 
   @include w(sm) {
@@ -112,7 +195,7 @@ body {
 
   img {
     width: 28px;
-    color: var(--primary);
+    color: $primary-600;
   }
 }
 
@@ -129,7 +212,7 @@ body {
 }
 
 .back:hover {
-  background-color: rgba(139, 157, 248, 0.72);
+  background-color: $secondary-100;
 }
 
 .body-container {
@@ -146,7 +229,7 @@ body {
   width: 100%;
   flex-direction: column;
   align-items: center;
-  padding: 20px 20px;
+  box-sizing: border-box;
 }
 
 .items-table {
@@ -161,7 +244,7 @@ body {
   }
 
   .table-header {
-    background-color: inherit;
+    background: $background;
   }
 }
 
@@ -174,21 +257,21 @@ body {
   .step {
     height: 50px;
     width: 50px;
-    border: var(--secondary) 3px solid;
-    border-radius: var(--radius);
+    border: $secondary-500 3px solid;
+    border-radius: $radius;
     display: inline-block;
   }
 
   .step.active {
     opacity: 1 !important;
-    border: var(--primary) 3px solid;
-    background-color: var(--primary);
+    border: $primary-600 3px solid;
+    background-color: $primary-600;
     cursor: pointer;
   }
 
   .step.finish {
     opacity: 0.5;
-    background-color: var(--secondary);
+    background-color: $secondary-500;
     cursor: pointer;
   }
 }
@@ -216,15 +299,37 @@ body {
   margin-top: 10rem;
   max-width: 800px;
   height: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  div {
+    max-width: 400px;
+    text-align: center;
+  }
 
   h1 {
     text-align: center;
-    font-size: 2rem;
+    font-size: $text-8;
+    margin-bottom: 20px;
+    margin-top: 0;
+    color: $primary-700;
   }
 
   p {
-    font-size: 1rem;
+    font-size: $text-4;
   }
+}
+
+.btn-secondary {
+  background: none !important;
+  border: 2px solid $secondary-600 !important;
+  color: $primary-800 !important
+}
+
+.btn-secondary:hover {
+  background: $primary-600;
+  color: $white !important
 }
 
 #calendar-selected-date {
@@ -249,33 +354,33 @@ body {
 }
 
 .button-time {
-  border: 1px solid var(--primary) !important;
-  color: var(--primary) !important;
+  border: 1px solid $secondary-500 !important;
+  color: $secondary-900 !important;
   font-weight: 500;
   font-size: 1rem;
 }
 
 .button-time:hover {
-  background: var(--primary) !important;
-  color: var(--text-light) !important;
+  background: $secondary-500 !important;
+  color: white !important;
 }
 
 .button-backup {
-  border: 1px solid var(--secondary) !important;
-  color: var(--secondary) !important;
+  border: 1px solid $yellow-300 !important;
+  color: $yellow-900 !important;
   font-weight: 500;
   font-size: 1rem;
 }
 
 .button-backup:hover {
-  background: var(--secondary) !important;
-  color: var(--text-light) !important;
+  background: $yellow-300 !important;
+  color: white !important;
 }
 
 .button.xl {
   font-size: 1rem;
   padding: 10px 10px;
-  border-radius: 10px;
+  //border-radius: 5px;
 }
 
 .nav-buttons {
@@ -288,10 +393,16 @@ body {
 
 .select-wrapper {
   display: flex;
+  flex-direction: column;
+  //padding: 0px 10px;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
   gap: 50px;
+
+  @include w(sm) {
+    width: 100%;
+    display: flex;
+  }
 }
 
 .services-grid {
@@ -300,20 +411,31 @@ body {
   grid-template-columns: 1fr 1fr;
 }
 
+.form-group-multiple {
+  flex-direction: row !important;
+  @include w(sm) {
+    flex-direction: column !important;
+  }
+  div {
+    width: 100%;
+  }
+}
+
 .info-form {
   background: white;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 20px;
+  gap: 13px;
+  padding: 30px;
   width: 500px;
-  box-shadow: var(--shadow-secondary);
-  border-radius: var(--radius);
+  box-shadow: $shadow;
+  border-radius: $radius;
 
   @include w(sm) {
     width: 90%;
     background: none;
     box-shadow: none;
+    padding: 0;
   }
 
   div {
@@ -324,31 +446,31 @@ body {
 }
 
 .backup {
-  background-color: var(--secondary);
+  background-color: $secondary-500;
   border: none;
 }
 
 .backup:hover {
-  box-shadow: var(--shadow-secondary) !important;
+  box-shadow: $shadow !important;
 }
 
 .primary {
-  background-color: var(--primary) !important;
-  color: var(--text-light);
+  background-color: $primary-600 !important;
+  color: $text-light;
 }
 
 .secondary {
-  background-color: var(--secondary);
-  color: var(--text-light);
+  background-color: $secondary-500;
+  color: $text-light;
   border: none;
 }
 
 .secondary:hover {
-  box-shadow: var(--shadow-secondary) !important;
+  box-shadow: $shadow !important;
 }
 
 .service-button:hover {
-  color: var(--white);
+  color: $white;
   cursor: pointer;
 }
 
@@ -373,6 +495,7 @@ body {
 .time-wrapper {
   max-height: 380px;
   overflow-y: scroll;
+  padding: 0 5px;
 
   @include w(sm) {
     height: max-content !important;
@@ -392,9 +515,9 @@ body {
     align-items: center;
     box-sizing: border-box;
     padding: 0 10px;
+    flex-direction: column;
 
     @include w(sm) {
-      flex-direction: row;
     }
 
     p {
@@ -406,8 +529,8 @@ body {
     }
 
     p:hover {
-      color: var(--white);
-      background-color: var(--secondary);
+      color: $white;
+      background-color: $secondary-500;
     }
   }
 
@@ -428,13 +551,13 @@ body {
 
 .calendar-box {
   display: flex;
-  background: var(--white);
-  box-shadow: var(--shadow-secondary);
+  background: $white;
+  box-shadow: $shadow;
   padding: 20px;
-  border-radius: var(--radius);
+  border-radius: $radius;
   gap: 10px;
 
-  @include w(sm) {
+  @include w(md) {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -442,6 +565,7 @@ body {
     border: none;
     box-shadow: none;
     width: 100%;
+    padding: 0;
   }
 }
 
@@ -450,15 +574,16 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 5px;
 }
 
 .calendar-times {
   display: none;
-  padding-top: 136px;
+  padding-top: 87px;
   height: 100px;
   width: 150px;
 
-  @include w(sm) {
+  @include w(md) {
     padding-top: 10px;
     height: fit-content;
     width: 100%;
@@ -478,12 +603,12 @@ body {
 
   img {
     height: 37px;
-    border: 1px solid grey;
+    border: 1px solid $gray-300;
     border-radius: 50%;
   }
 
   img:hover {
-    background-color: #ffedd5;
+    background-color: $secondary-100;
   }
 
   h2 {
@@ -499,6 +624,8 @@ body {
     width: 100%;
     min-width: 170px;
     text-align: center;
+    font-size: $text-3;
+    font-weight: 400;
   }
 }
 
@@ -506,13 +633,29 @@ body {
   position: relative;
   display: grid;
   grid-template-columns: repeat(7, minmax(min-content, 1fr));
+  min-width: 550px;
+  min-height: 426px;
+  @include w(md) {
+    min-width: unset;
+    min-height: unset;
+  }
+
+  #calendar-cover {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 50;
+  }
 
   .day {
     padding: 25px; /* Default padding based on viewport width */
-    box-shadow: var(--shadow-secondary);
+    box-shadow: $shadow;
     border-radius: 9px;
     margin: 5px;
     text-align: center;
+    font-size: $text-2;
 
     @media (max-width: 768px) {
       padding: 3vw; /* Reduce padding for smaller screens */
@@ -538,23 +681,23 @@ body {
   }
 
   .unavailable {
-    background-color: var(--white);
-    color: grey;
+    background-color: $white;
+    color: $gray-700;
   }
 
   .available {
-    background-color: var(--primary);
-    color: var(--white);
+    background-color: $secondary-500;
+    color: black;
     transition-duration: 300ms;
   }
 
   .available.selected {
-    background-color: var(--secondary);
+    background-color: $secondary-800;
   }
 
   .available:hover {
     cursor: pointer;
-    background-color: var(--secondary);
+    background-color: $secondary-800;
   }
 
   div {
@@ -565,10 +708,10 @@ body {
 //calendar end
 
 #recap {
-  background-color: var(--white);
-  box-shadow: var(--shadow-secondary);
-  padding: 50px;
-  border-radius: var(--radius);
+  background-color: $white;
+  box-shadow: $shadow;
+  padding: 30px;
+  border-radius: $radius;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -577,19 +720,45 @@ body {
   @include w(sm) {
     width: 90%;
     box-shadow: none;
+    background: none;
+    padding: 0;
   }
 
+  #service {
+    font-size: $text-4;
+    margin: 10px 0 5px;
+    font-weight: 600;
+  }
+
+  .event-info {
+    font-size: $text-4;
+  }
+
+  #price {
+    font-size: $text-5;
+    font-weight: 600;
+    color: $secondary-500;
+  }
+  #currency {
+    font-size: $text-5;
+  }
   img {
-    width: 30px;
+    width: 25px;
   }
 
   #address::after {
     content: ",";
   }
 
+  .event-info {
+    div {
+      padding: 0 10px;
+
+    }
+  }
+
   div {
     display: flex;
-    gap: 10px;
     align-items: center;
 
     h2 {
@@ -615,40 +784,45 @@ body {
 
     @include w(sm) {
       width: 100%;
-      gap: 20px;
+      gap: 10px;
     }
 
     .button {
-      width: fit-content;
+      width: 100px;
+      text-align: center;
     }
   }
 }
 
 .btn-secondary {
-  border: 2px solid var(--primary) !important;
+  border: 2px solid $primary-600 !important;
 
   p {
-    color: var(--primary) !important;
+    color: $primary-600 !important;
   }
+}
+.btn-secondary:hover {
+  color: $primary-600 !important;
+
 }
 
 /* Style the input fields */
 input {
   font-family: "PT Sans Narrow", sans-serif;
-  padding: 10px 15px;
+  padding: 5px 15px;
   width: 100%;
   font-size: 1rem;
   font-weight: lighter;
-  color: var(--text);
-  border-radius: 10px;
+  color: $text-dark;
+  border-radius: 5px;
   box-sizing: border-box;
-  border: 1px solid gray !important;
+  border: 1px solid $gray-300 !important;
   background-color: inherit;
 }
 
 input:focus {
-  outline: var(--primary);
-  border: 1px solid var(--primary) !important;
+  outline: $primary-600;
+  border: 1px solid $primary-600 !important;
 }
 
 /* Mark input boxes that gets an error on validation: */
@@ -657,7 +831,7 @@ input.invalid {
 }
 
 input.valid {
-  background-color: #60f87599;
+  background-color: $secondary-100;
 }
 
 /* Hide all steps by default: */
@@ -665,21 +839,31 @@ input.valid {
   display: none;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  @include w(sm) {
+    min-height: 90vh;
+    background-color: inherit;
+  }
 }
 
 /* Make circles that indicate the steps of the form: */
 
 /* Mark the active step: */
 .step.active {
-  background-color: var(--primary) !important;
+  background-color: $primary-600 !important;
 }
 
 /* Mark the steps that are finished and valid: */
 
 /* Service cards */
 
+.service-card:last-child {
+  border-bottom: none;
+}
 .service-card {
-  background-color: var(--white);
+  background-color: $white;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -687,29 +871,32 @@ input.valid {
   min-width: 370px !important;
   height: 100%;
   box-sizing: border-box;
-  padding: 20px;
-  border-radius: var(--radius);
+  padding: 30px;
+  border-radius: $radius;
   max-width: 400px;
-  box-shadow: var(--shadow-secondary);
+  box-shadow: $shadow;
 
   @include w(sm) {
     background: none;
     border: none;
     box-shadow: none !important;
     min-width: unset !important;
+    border-bottom: 2px solid $gray-100;
+    border-radius: 0;
   }
 
   .card-info {
     gap: 5px;
     display: flex;
     align-items: center;
+    font-size: $text-2;
   }
 
   .card-title {
     margin-bottom: 10px;
 
     h2 {
-      font-size: 1.7rem;
+      font-size: $text-4;
       font-weight: bolder;
       letter-spacing: 0px;
       margin: 0;
@@ -718,34 +905,35 @@ input.valid {
 
   .card-text {
     p {
-      font-size: 1rem;
+      font-size: $text-2;
       margin: 0;
-      line-height: 1.2rem;
+      line-height: 29px;
+      color: $primary-950;
     }
   }
 
   .card-price {
     padding: 10px 0;
-    font-size: 1rem;
+    font-size: $text-4;
     font-weight: 700;
-    color: var(--accent);
+    color: $secondary-600;
   }
 
   .card-button {
     padding: 10px 14px;
-    border-radius: calc(var(--radius) / 2);
-    background-color: var(--primary);
+    border-radius: calc($radius / 2);
+    background-color: $primary-600;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     transition: 300ms;
-    box-shadow: var(--shadow-secondary);
+    box-shadow: $shadow;
 
     span {
       font-size: 1rem;
       font-weight: bold;
-      color: var(--text-light);
+      color: $text-light;
     }
   }
 
@@ -757,73 +945,12 @@ input.valid {
   }
 }
 
-.service-primary {
-  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
-}
-
-.service-secondary {
-  background-color: var(--secondary);
-  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
-
-  p,
-  h2 {
-    color: white !important;
-  }
-}
-
-// @media (max-width: 900px) {
-
-//   #recap {
-//     box-shadow: none;
-//     padding: 0;
-//     width: 100%;
-//   }
-
-//   .calendar-box {
-//     background-color: var(--white);
-//     box-shadow: none;
-//     padding: 0;
-//   }
-
-//   .info-form {
-//     width: 100%;
-//     box-shadow: none;
-//     padding: 0;
-//   }
-
-//   .back {
-//     position: fixed;
-//     top: 20px;
-//     left: 20px;
-//   }
-
-//   .services-grid {
-//     grid-template-columns: 1fr;
-//   }
-
-//   .calendar-times {
-//     padding-top: 0;
-
-//     .time-wrapper {
-//       height: fit-content;
-//       overflow-y: unset
-
-//     }
-//   }
-
-//   .calendar-times {
-//     height: fit-content;
-//     width: 80vw;
-//   }
-
-// }
-
 //payment start
 .payment-wrapper {
   display: flex;
   align-items: center;
-  box-shadow: var(--shadow-secondary);
-  border-radius: var(--radius);
+  box-shadow: $shadow;
+  border-radius: $radius;
   gap: 50px;
   padding: 30px;
   font-size: 1.2rem;
@@ -845,89 +972,6 @@ input.valid {
     }
   }
 }
-
-//payment end
-
-// @media (max-width: 500px) {
-
-//   .payment-wrapper {
-//     flex-direction: column;
-//     box-shadow: none;
-//     width: 100%;
-
-//     h2 {
-//       font-size: 1.5rem;
-//     }
-
-//     .payment-qr-code {
-//       img {
-//         width: 80vw;
-//         height: 80vw;
-//       }
-//     }
-//   }
-
-//   .service-card {
-//     width: 100%;
-//     min-width: unset;
-//     box-shadow: none;
-//   }
-//   .services-grid.services-grid {
-//     gap: 0;
-//     width: 100vw;
-
-//     .service-card.service-card {
-//       width: 100vw;
-//       max-width: unset;
-//       border-radius: unset;
-//       border-bottom: 1px dotted grey;
-//     }
-//     .service-card.service-card:last-child {
-//       border-bottom: none;
-//     }
-
-//   }
-
-//   .time-wrapper {
-//     padding: 0;
-
-//   }
-
-//   .select-wrapper {
-//     flex-direction: column;
-
-//     gap: 30px;
-
-//     p {
-//       width: 100% !important;
-//     }
-//   }
-//   .backup-time {
-//     flex-direction: column;
-
-//     div {
-//       flex-direction: column;
-//       width: 100%;
-//     }
-//   }
-//   .button {
-//     width: 100%;
-//     box-sizing: border-box;
-//   }
-
-//   //calendar start
-
-//   #calendar-nav {
-//     justify-content: center;
-//   }
-
-//   .calender-wrapper {
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-//     justify-content: center;
-//   }
-// }
 
 //calendar end
 
@@ -984,11 +1028,11 @@ input.valid {
 //footer start
 
 footer {
+  box-sizing: border-box;
   width: 100%;
-  background-color: #71717a;
+  background-color: $gray-400;
   margin-top: 50px;
   padding: 20px;
-
   display: flex;
   justify-content: center;
 }
@@ -1025,3 +1069,76 @@ footer {
 }
 
 //footer end
+
+//recap service card
+
+#recap-service-card {
+  display: flex;
+  justify-content: space-between;
+  background: white;
+  padding: 20px;
+  width: 300px;
+  border-radius: 10px;
+  box-shadow: $shadow;
+
+  @include w(sm) {
+    width: 80%;
+  }
+  .recap-service-title  {
+    margin: 0;
+    font-size: $text-3;
+   }
+
+   .service-price {
+    font-size: $text-3;
+    font-weight: 600;
+    color: $secondary-900;
+    padding: 5px 10px;
+    background: $secondary-100;
+    border-radius: 5px;
+   }
+
+   .service-text {
+    font-size: $text-3;
+    color: $gray-500;
+   }
+}
+
+#recap-customer-info {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: $shadow;
+  gap: 10px;
+  background: white;
+
+  @include w(sm) {
+    width: 80%;
+  }
+
+  .recap-customer-info-title {
+    margin: 0;
+    font-size: $text-3;
+  }
+  .recap-custome-info-data {
+    color: $gray-500;
+    font-size: $text-3;
+  }
+}
+
+.recap-button {
+  display: flex;
+  justify-content: center;
+  
+  @include w(sm) {
+    width: 100%;
+  }
+  button {
+    width: 340px;
+    @include w(sm) {
+      width: 92%;
+    }
+  }
+}

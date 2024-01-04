@@ -82,6 +82,7 @@ final class DiscountCodesPresenter extends SecurePresenter
     public function handleDelete($uuid)
     {
         $this->database->table("discount_codes")->where("uuid=?", $uuid)->delete();
+        $this->flashMessage("Kód byl smazán", "success");
         $this->redirect("this");
     }
 

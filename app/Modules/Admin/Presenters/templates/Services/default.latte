@@ -28,11 +28,10 @@
                     <th class="text-right">{$service->price|currency} Kč</th>
                     <th class="text-right">{$service->duration} min</th>
                     <th class="text-left">
-                        <a class="btn btn-primary" n:href="edit $service->id">Upravit</a>
                         {var $schedule = $service->related("services_custom_schedules")->fetch()}
-                        {dump $schedule}
-                        <a class="btn btn-green" n:href="editCustomSchedule $schedule?->uuid">rozvrh</a>
-                        <a class="btn {!$service->hidden ? "btn-gold" : "btn-default"}" n:href="deleteService! $service->id">{!$service->hidden ? "Zobrazeno" : "Skryto"}</a>
+                        <a class="btn btn-primary" n:href="editCustomSchedule $schedule?->uuid">rozvrh</a>
+                        <a class="btn btn-secondary btn-green" n:href="edit $service->id">Upravit</a>
+                        <a class="btn btn-secondary {!$service->hidden ? 'btn-gold' : 'btn-default'}" n:href="deleteService! $service->id">{!$service->hidden ? "Zobrazeno" : "Skryto"}</a>
                     </th>
                 </tr>
         {/foreach}

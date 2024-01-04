@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Roboto:ital,wght@0,300;0,400;0,500;1,500&family=Source+Code+Pro:wght@500&display=swap");
 :root {
+  --main-padding: 20px;
   --left-nav-with: 250px;
   --shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   --border: 1px solid #d4d4d4;
@@ -36,6 +37,7 @@ body {
   margin: 0;
   padding: 0;
   display: flex;
+  justify-content: center;
   background-color: rgb(245, 245, 245);
 }
 
@@ -44,8 +46,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: start;
-  margin-left: calc(var(--left-nav-with) + 50px);
-  padding: 0 20px;
 }
 
 .menu-top {
@@ -202,6 +202,11 @@ ul {
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
   padding: 0px 10px;
 }
+@media (max-width: 900px) {
+  .left-sidebar-container {
+    transform: translateX(-100%);
+  }
+}
 .left-sidebar-container .menu-wrapper {
   display: flex;
   flex-direction: column;
@@ -245,22 +250,23 @@ ul {
   stroke: #3b82f6;
 }
 
-@media (max-width: 1000px) {
-  .left-sidebar-container {
-    transform: translateX(-100%);
-  }
-  .page-wrapper {
-    margin-left: 0;
-  }
-}
 main {
+  margin-left: calc(var(--left-nav-with) + var(--main-padding));
+  padding: 0 var(--main-padding);
   width: 100%;
   max-width: 1200px;
   padding-bottom: 50px !important;
+  transition: 200ms;
+}
+@media (max-width: 900px) {
+  main {
+    margin-left: 0 !important;
+  }
 }
 
 h1 {
-  font-size: 28px;
+  font-size: 1.5rem;
+  font-weight: 400;
 }
 
 .text-right {
@@ -277,7 +283,7 @@ h1 {
 
 .page-title {
   width: 100%;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 
 .table-wrapper {
@@ -310,12 +316,22 @@ h1 {
   padding: 5px 10px;
   font-size: 16px;
   border-radius: calc(var(--border-radius) / 2);
-  background-color: #9ca3af;
+  background: #9ca3af;
   text-decoration: none;
-  color: white;
+  color: black;
   font-weight: 400;
   width: -moz-fit-content;
   width: fit-content;
+}
+
+.btn-secondary {
+  background: none !important;
+}
+
+.btn-tertiary {
+  background: none !important;
+  border: none;
+  color: #3b82f6;
 }
 
 .btn:hover {
@@ -324,6 +340,7 @@ h1 {
 
 .btn-primary {
   background-color: #3b82f6;
+  border: 2px solid #3b82f6;
   color: white;
 }
 
@@ -334,12 +351,18 @@ h1 {
 
 .btn-gold {
   background: #fde68a;
+  border: 2px solid #fde68a !important;
   color: #713f12;
 }
 
 .btn-green {
   background: #d9f99d;
+  border: 2px solid #d9f99d;
   color: #365314;
+}
+
+.btn-default {
+  border: 2px solid #4b5563;
 }
 
 .form-wrapper {

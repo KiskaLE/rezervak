@@ -179,7 +179,14 @@
       </div>
     </div>
 
-    <div class="page-wrapper">
+      <main>
+        {snippet flashMessages}
+            <div n:foreach="$flashes as $flash" n:class="flash, $flash->type"
+                    id="flash-messages">{$flash->message}</div>
+
+            <script src="{$basePath}/assets/admin/js/flashmessages.js"></script>
+        {/snippet}
+        <div class="page-wrapper">
       <div class="menu-top">
         <div class="menu-top-left"></div>
         <div class="menu-top-right">
@@ -262,15 +269,7 @@
             </div>
           </div>
         </div>
-      </div>
-
-      <main>
-        {snippet flashMessages}
-            <div n:foreach="$flashes as $flash" n:class="flash, $flash->type"
-                    id="flash-messages">{$flash->message}</div>
-
-            <script src="{$basePath}/assets/admin/js/flashmessages.js"></script>
-        {/snippet}
+    </div>
         
         {include content}
       </main>

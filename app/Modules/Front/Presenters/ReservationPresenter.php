@@ -252,6 +252,7 @@ final class ReservationPresenter extends BasePresenter
         $session->availableBackupTimes = $availableBackup;
 
         $this->template->times = $availableTimes;
+        $this->template->selectedService = $service;
         $this->template->backupTimes = $availableBackup;
         $this->redrawControl("content");
     }

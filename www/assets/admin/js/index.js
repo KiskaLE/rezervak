@@ -65,15 +65,17 @@ document.addEventListener('click', closeDropdown);
 
 
 function sidebarOpen() {
-    console.log("test")
     const sidebar = document.querySelector('.left-sidebar-container');
+    const mainContent = document.querySelector('main');
     sidebar.style.transform = 'translateX(0%)';
+    mainContent.style.marginLeft = 'calc(var(--left-nav-with) + var(--main-padding))';
 }
 
 function sidebarClose() {
-    console.log("test")
     const sidebar = document.querySelector('.left-sidebar-container');
+    const mainContent = document.querySelector('main');
     sidebar.style.transform = 'translateX(-100%)';
+    mainContent.style.marginLeft = '0px';
 }
 
 function listItemToggle(listItemId) {

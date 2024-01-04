@@ -20,18 +20,18 @@
                 <div class="select-wrapper">
                     {var $i = 0}
                     {foreach $services as $service}
-                        <div class="service-card service-primary">
+                        <div class="service-card">
                             <div class="card-title"><h2>{$service->name}</h2></div>
                             <div>
                                 <div class="card-info">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                    {* <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> *}
                                     <span>{$service->duration} minut</span>
                                 </div>
                                 <div class="card-price card-info">
-                                    <svg width="24px" height="24px" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M21.6185 10.2153C22.6769 9.15692 22.6769 7.44086 21.6185 6.38243C20.5601 5.32399 18.844 5.32399 17.7856 6.38243C16.7271 7.44086 16.7271 9.15692 17.7856 10.2153C18.844 11.2738 20.5601 11.2738 21.6185 10.2153ZM20.4897 7.51122C20.9247 7.94623 20.9247 8.65154 20.4897 9.08656C20.0547 9.52158 19.3494 9.52158 18.9144 9.08656C18.4793 8.65154 18.4793 7.94623 18.9144 7.51122C19.3494 7.0762 20.0547 7.0762 20.4897 7.51122Z" fill="#000000" fill-rule="evenodd"/> <path clip-rule="evenodd" d="M1.58445 13.9772C0.805182 14.7564 0.805185 16.0199 1.58445 16.7991L11.2009 26.4155C11.9801 27.1948 13.2436 27.1948 14.0228 26.4155L26.4156 14.0228C26.7898 13.6486 27 13.1411 27 12.6119V2.99543C27 1.89339 26.1066 1 25.0046 1H15.3881C14.8589 1 14.3514 1.21023 13.9772 1.58445L1.58445 13.9772ZM13.319 24.2975C12.9284 24.688 12.2953 24.688 11.9047 24.2975L3.70254 16.0952C3.31202 15.7047 3.31202 15.0716 3.70254 14.681L15.0952 3.28833C15.2828 3.10079 15.5371 2.99543 15.8024 2.99543H24.0046C24.5568 2.99543 25.0046 3.44315 25.0046 3.99543V12.1976C25.0046 12.4629 24.8992 12.7172 24.7117 12.9047L13.319 24.2975Z" fill="#000000" fill-rule="evenodd"/></svg>
+                                    {* <svg width="24px" height="24px" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M21.6185 10.2153C22.6769 9.15692 22.6769 7.44086 21.6185 6.38243C20.5601 5.32399 18.844 5.32399 17.7856 6.38243C16.7271 7.44086 16.7271 9.15692 17.7856 10.2153C18.844 11.2738 20.5601 11.2738 21.6185 10.2153ZM20.4897 7.51122C20.9247 7.94623 20.9247 8.65154 20.4897 9.08656C20.0547 9.52158 19.3494 9.52158 18.9144 9.08656C18.4793 8.65154 18.4793 7.94623 18.9144 7.51122C19.3494 7.0762 20.0547 7.0762 20.4897 7.51122Z" fill="#000000" fill-rule="evenodd"/> <path clip-rule="evenodd" d="M1.58445 13.9772C0.805182 14.7564 0.805185 16.0199 1.58445 16.7991L11.2009 26.4155C11.9801 27.1948 13.2436 27.1948 14.0228 26.4155L26.4156 14.0228C26.7898 13.6486 27 13.1411 27 12.6119V2.99543C27 1.89339 26.1066 1 25.0046 1H15.3881C14.8589 1 14.3514 1.21023 13.9772 1.58445L1.58445 13.9772ZM13.319 24.2975C12.9284 24.688 12.2953 24.688 11.9047 24.2975L3.70254 16.0952C3.31202 15.7047 3.31202 15.0716 3.70254 14.681L15.0952 3.28833C15.2828 3.10079 15.5371 2.99543 15.8024 2.99543H24.0046C24.5568 2.99543 25.0046 3.44315 25.0046 3.99543V12.1976C25.0046 12.4629 24.8992 12.7172 24.7117 12.9047L13.319 24.2975Z" fill="#000000" fill-rule="evenodd"/></svg> *}
                                     <span>{$service->price}</span><span> Kč</span>
                                 </div>
-                                <div class="card-text"><p>{$service->description}</p></div>
+                                {* <div class="card-text"><p>{$service->description}</p></div> *}
                             </div>
                             <br>
                             <div class="card-button"
@@ -46,11 +46,13 @@
 
 
             <div class="tab">
-                <div class="calendar-box">
-                    <div class="calendar-date">
-                        <div class="back">
+            <div class="row">
+            <div class="back">
                             <img src="{$basePath}/assets/front/icons/back.svg" alt="zpět" onclick="nextPrev(-1)">
                         </div>
+            </div>
+                <div class="calendar-box">
+                    <div class="calendar-date">
                         <h2 class="h2-center">Vyberte datum a čas</h2>
 
                         <div class="calender-wrapper">
@@ -74,14 +76,15 @@
                                                                       alt="zpět"></div>
                         <h3 id="calendar-selected-date" class="text-center"></h3>
                         <div class="time-wrapper">
-                            <input n:name="time" value="{$times ? $times[0] : ""}" id="timeInput" class="multiform">
+                            <input n:name="time" value="{$times ? $times[0] : ''}" id="timeInput" class="multiform">
                             <input n:name="dateType">
 
                             {snippet content}
                                 <div class="time select-wrapper">
                                     {var $i = 0}
                                 {foreach $times as $time}
-                                        <p onclick="setTime({$i},'default', {$time})"
+                                    {var $end = date("H:i", strtotime($time."+".$selectedService->duration." minutes"))}
+                                        <p onclick="setTime({$i},'default', {$time}, {$end})"
                                            class="button button-time">{$time}</p>
                                         {do $i++}
                                     {/foreach}
@@ -104,19 +107,25 @@
             </div>
 
             <div class="tab">
-                <div class="info-form">
-                    <div class="">
-                        <div class="back">
+            <div class="row">
+            <div class="back">
                             <img src="{$basePath}/assets/front/icons/back.svg" alt="zpět" onclick="nextPrev(-1)">
                         </div>
+            </div>
+                <div class="info-form">
+                    <div class="">
                         <h2 class="h2-center">Zadejte osobní údaje</h2>
                     </div>
-                    <div><label for="">Jméno:</label><input autocomplete="off" autocorrect="off" autocapitalize="off"
-                                                            spellcheck="false" n:name="firstname"
-                                                            class="multiform data"></div>
-                    <div><label for="">Příjmení:</label><input autocomplete="off" autocorrect="off" autocapitalize="off"
-                                                               spellcheck="false" n:name="lastname"
-                                                               class="multiform data"></div>
+                    <div class="form-group-multiple">
+                        <div>
+                            <label for="">Jméno:</label>
+                            <input autocomplete="off" autocorrect="off" autocapitalize="on" spellcheck="false" n:name="firstname" class="multiform data">
+                        </div>
+                        <div>
+                            <label for="">Příjmení:</label>
+                            <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="lastname" class="multiform data">
+                        </div>
+                    </div>
                     <div><label for="">Tel.:</label><input autocomplete="off" autocorrect="off" autocapitalize="off"
                                                            spellcheck="false" n:name="phone" class="multiform data">
                     </div>
@@ -140,51 +149,46 @@
                 </div>
             </div>
 
+{* TODO odstranit text *}
+            
 
             <div class="tab">
-                <div id="recap">
-                    <div class="back"><img src="{$basePath}/assets/front/icons/back.svg" alt="zpět"
-                                           onclick="nextPrev(-1)"></div>
-                    <h2 id="service"></h2>
-                    <div><img src="{$basePath}/assets/front/icons/calendar.svg" alt="datum">
-                        <span id="date"></span></div>
-                    <div><img src="{$basePath}/assets/front/icons/time.svg" alt="čas">
-                        <span id="time"></span></div>
-                    <div>
-                        <img src="{$basePath}/assets/front/icons/user-info.svg" alt="jméno a příjmení">
-                        <div>
-                            <span id="firstname"></span><span id="lastname"></span>
-                        </div>
-                    </div>
-                    <div><img src="{$basePath}/assets/front/icons/phone.svg" alt="telefoní číslo">
-                        <span id="phone"></span></div>
-                    <div><img src="{$basePath}/assets/front/icons/email.svg" alt="email">
-                        <span id="email"></span></div>
-                    <div><img src="{$basePath}/assets/front/icons/address.svg" alt="adresa">
-                        <div>
-                            <span id="address"></span><span id="city"></span><span id="code"></span>
-                        </div>
-                    </div>
-                    <div>
-                        <img src="{$basePath}/assets/front/icons/price.svg" alt="cena">
-                        <div>
-                            <span id="price"></span><span id="currency">Kč</span>
-                        </div>
-                    </div>
 
+            <div class="row">
+            <div class="back">
+                <img src="{$basePath}/assets/front/icons/back.svg" alt="zpět" onclick="nextPrev(-1)">
+            </div> 
+            </div>
 
-                    <div class="discount-code-wrapper">
-                        <label for="">Kód zákazníka</label>
-                        <div><input n:name="dicountCode" onfocusout="verify()" autocomplete="off">
-                            <p id="verify-code" class="button secondary xl" onclick="verify()">Ověřit</p></div>
-                    </div>
-                    <div class="nav-buttons">
-                        <button class="button xl primary" id="nextBtn" type="button" onclick="nextPrev(1)">Objednat
-                        </button>
-                    </div>
+            <div id="recap-service-card">
+               <div>
+                    <h2 class="recap-service-title" id="service"></h2>
+                    <span class="service-text"><span id="date"></span> <br>
+                    <span>od&nbsp;</span><span id="time"></span><span>&nbsp;do&nbsp;</span><span id="time-end"></span></span>
+               </div>
+               <div>
+                    <div class="service-price"><span id="price">500</span><span> Kč</span></div>
+               </div>
+            </div>
+            <div id="recap-customer-info">
+                <div>
+                    <h2 class="recap-customer-info-title">Osobní údaje</h2>
+                    <span class="recap-custome-info-data">
+                    <span id="firstname"></span><span id="lastname"></span><br>
+                    <span id="phone"></span> <br>
+                    <span id="email"></span> <br>
+                    <span id="address"></span><span></span> <br>
+                    <span id="city"></span> <br>
+                    <span id="code"></span> <br>
+                    </span>
                 </div>
-
-
+                <div>
+                    <h2 class="recap-customer-info-title">Kód zákazníka</h2>
+                    <input id="verify-code" name="dicountCode" type="text" oninput="verify()">
+                </div>
+                </div>
+                <div class="recap-button"><button class="button xl primary">Zaregistrovat službu</button>
+                </div>
             </div>
 
         </form>

@@ -78,9 +78,10 @@
 
         <div class="list-item-body" style="display: none">
             <div class="list-item-column list-item-actions">
-            <a class="btn btn-primary" n:href="edit $reservation->uuid">Upravit</a>
-            <a class="btn btn-danger" n:href="cancel! $reservation->id">Zrušit</a>
-            </div>
+            <a class="btn btn-tertiary" n:href="edit $reservation->uuid">Upravit</a>
+            <a class="btn btn-tertiary" n:href="cancel! $reservation->id" onclick="if(confirm('Opravdu chcete zrušit rezervaci?')) { handleDelete(this, {$reservation->id}); } else { event.preventDefault(); }">Zrušit</a>
+
+             </div>
             <div class="list-item-column">
                 <div class="list-item-info">
                 <span class="list-item-label">E-mail</span>
