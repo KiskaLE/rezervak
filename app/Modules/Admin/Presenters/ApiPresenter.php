@@ -36,25 +36,24 @@ class ApiPresenter extends BasePresenter
 
     public function actionClean()
     {
-
         $database = $this->database;
         $admins = $database->table("users")
-            ->where("role=?", "ADMIN")
-            ->fetchAll();
+        ->where("role=?", "ADMIN")
+        ->fetchAll();
         foreach ($admins as $admin) {
             $settings = $admin->related("settings")->fetch();
             $database->transaction(function ($database) use ($admin, $settings) {
                 $yesterday = date("Y-m-d H:i:s", strtotime("-" . $settings->time_to_pay . " hours"));
                 //$yesterday = date("Y-m-d H:i:s", strtotime("-2" . " minutes"));
                 $database->query("DELETE FROM reservations_canceled WHERE 1;");
-                $database->query("INSERT INTO reservations_canceled SELECT reservations.* FROM reservations LEFT JOIN payments ON reservations.id=payments.reservation_id WHERE payments.status=0 AND reservations.type = 0 AND reservations.updated_at < '$yesterday' AND reservations.user_id = '$admin->id';");
-                $database->query("DELETE reservations.*, payments.* FROM reservations LEFT JOIN payments ON reservations.id=payments.reservation_id WHERE payments.status=0 AND reservations.type = 0 AND reservations.updated_at < '$yesterday' AND reservations.user_id = '$admin->id';");
+                $database->query("INSERT INTO reservations_canceled SELECT reservations.* FROM reservations LEFT JOIN payments ON reservations.id=payments.reservation_id WHERE payments.status=0 AND reservations.updated_at < '$yesterday' AND reservations.user_id = '$admin->id' AND reservations.status = 'VERIFIED';");
+                $database->query("UPDATE reservations JOIN payments ON reservations.id=payments.reservation_id SET reservations.status = 'CANCELED' WHERE payments.status=0 AND reservations.updated_at < '$yesterday' AND reservations.user_id = '$admin->id' AND reservations.status = 'VERIFIED';");
                 //get all canceled reservations
                 $canceledReservations = $database->table("reservations_canceled")->fetchAll();
                 foreach ($canceledReservations as $reservation) {
                     $this->mailer->sendCancelationMail($reservation->email, $reservation, "Nezaplacení rezervace v určeném čase.");
                     dump("zrušeno");
-
+                    
                 }
             });
             // check if any backup reservation can be booked

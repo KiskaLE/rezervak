@@ -33,7 +33,7 @@ p {
   width: 100%;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   background-color: #f9fafb;
 }
 @media (max-width: 500px) {
@@ -226,6 +226,7 @@ body {
 #calendar-selected-date {
   font-size: 1rem;
   font-weight: 400;
+  margin-top: 0;
 }
 
 .button {
@@ -285,7 +286,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 50px;
+  gap: 25px;
 }
 @media (max-width: 500px) {
   .select-wrapper {
@@ -319,15 +320,14 @@ body {
   gap: 13px;
   padding: 30px;
   width: 500px;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
 }
 @media (max-width: 500px) {
   .info-form {
     width: 90%;
-    background: none;
-    box-shadow: none;
-    padding: 0;
+    box-sizing: border-box;
+    padding: 20px;
   }
 }
 .info-form div {
@@ -342,7 +342,7 @@ body {
 }
 
 .backup:hover {
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1) !important;
 }
 
 .primary {
@@ -357,7 +357,7 @@ body {
 }
 
 .secondary:hover {
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1) !important;
 }
 
 .service-button:hover {
@@ -434,7 +434,7 @@ body {
 .calendar-box {
   display: flex;
   background: #f9fafb;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   padding: 20px;
   border-radius: 12px;
   gap: 10px;
@@ -444,11 +444,10 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: none !important;
     border: none;
-    box-shadow: none;
-    width: 100%;
-    padding: 0;
+    width: 90%;
+    padding: 20px;
+    box-sizing: border-box;
   }
 }
 
@@ -462,7 +461,7 @@ body {
 
 .calendar-times {
   display: none;
-  padding-top: 87px;
+  padding-top: 103px;
   height: 100px;
   width: 150px;
 }
@@ -530,7 +529,7 @@ body {
 }
 #calendar .day {
   padding: 25px; /* Default padding based on viewport width */
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   border-radius: 9px;
   margin: 5px;
   text-align: center;
@@ -563,14 +562,16 @@ body {
 #calendar .available {
   background-color: #27c03e;
   color: black;
-  transition-duration: 300ms;
+  transition-duration: 200ms;
 }
 #calendar .available.selected {
   background-color: #186325;
+  color: white;
 }
 #calendar .available:hover {
   cursor: pointer;
-  background-color: #186325;
+  filter: brightness(0.9);
+  color: white;
 }
 #calendar div {
   padding: 25px;
@@ -578,7 +579,7 @@ body {
 
 #recap {
   background-color: #f9fafb;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   padding: 30px;
   border-radius: 12px;
   display: flex;
@@ -675,6 +676,7 @@ input {
   box-sizing: border-box;
   border: 1px solid #b0b0b0 !important;
   background-color: inherit;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
 }
 
 input:focus {
@@ -730,7 +732,7 @@ input.valid {
   padding: 30px;
   border-radius: 12px;
   max-width: 400px;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
 }
 @media (max-width: 500px) {
   .service-card {
@@ -778,7 +780,7 @@ input.valid {
   align-items: center;
   cursor: pointer;
   transition: 300ms;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
 }
 .service-card .card-button span {
   font-size: 1rem;
@@ -794,7 +796,7 @@ input.valid {
 .payment-wrapper {
   display: flex;
   align-items: center;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   gap: 50px;
   padding: 30px;
@@ -900,25 +902,27 @@ footer {
   align-items: center;
 }
 
-#recap-service-card {
+.recap-service-card {
   display: flex;
   justify-content: space-between;
   background: white;
   padding: 20px;
   width: 300px;
   border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  transition-duration: 200ms;
+  gap: 10px;
 }
 @media (max-width: 500px) {
-  #recap-service-card {
+  .recap-service-card {
     width: 80%;
   }
 }
-#recap-service-card .recap-service-title {
+.recap-service-card .recap-service-title {
   margin: 0;
   font-size: 18px;
 }
-#recap-service-card .service-price {
+.recap-service-card .service-price {
   font-size: 18px;
   font-weight: 600;
   color: #165120;
@@ -926,9 +930,14 @@ footer {
   background: #ddfbe0;
   border-radius: 5px;
 }
-#recap-service-card .service-text {
+.recap-service-card .service-text {
   font-size: 18px;
   color: #666666;
+}
+
+.service-card-button:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
 
 #recap-customer-info {
@@ -937,7 +946,7 @@ footer {
   width: 300px;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   gap: 10px;
   background: white;
 }
@@ -971,4 +980,10 @@ footer {
   .recap-button button {
     width: 92%;
   }
+}
+
+.service-availability {
+  color: #2b25ae;
+  font-size: 16px;
+  font-weight: 600;
 }/*# sourceMappingURL=styles.css.map */

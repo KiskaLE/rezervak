@@ -322,10 +322,21 @@ h1 {
   font-weight: 400;
   width: -moz-fit-content;
   width: fit-content;
+  transition-duration: 100ms;
+}
+
+.btn-c-primary {
+  background-color: #3b82f6;
+  border-color: #3b82f6 !important;
 }
 
 .btn-secondary {
   background: none !important;
+  border: 2px solid #666666;
+}
+
+.btn:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
 }
 
 .btn-tertiary {
@@ -390,6 +401,7 @@ h1 {
   font-size: 14px;
 }
 .form-body .form-group input {
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
   padding: 10px 14px;
   border-radius: 5px;
   border: 1px solid #d4d4d4;

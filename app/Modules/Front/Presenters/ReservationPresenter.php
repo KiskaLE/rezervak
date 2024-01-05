@@ -46,9 +46,11 @@ final class ReservationPresenter extends BasePresenter
         $this->user = $this->database->table("users")->fetch();
         $this->user_uuid = $this->user->uuid;
         $u = $this->user->uuid;
+        $user_settings = $this->user->related("settings")->fetch();
+
+
         if ($this->isAjax()) {
             if ($run == "fetch") {
-                $user_settings = $this->user->related("settings")->fetch();
                 $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
                 $this->service = $service;
                 $this->template->selectedService = $service;
@@ -69,6 +71,11 @@ final class ReservationPresenter extends BasePresenter
 
         $services = $this->database->table("services")->where("user_id=? AND hidden=?", [$this->user->id, 0])
             ->fetchAll();
+        $servicesAvailableTimesCount = [];
+        foreach ($services as $service) {
+            $servicesAvailableTimesCount[$service->id] = $this->availableDates->getNumberOfAvailableTimes($u, $service->duration, $user_settings->number_of_days, intval($service->id));
+        }
+        $this->template->servicesAvailableTimesCount = $servicesAvailableTimesCount;
         $this->template->services = $services;
         $this->redrawControl("content");
 

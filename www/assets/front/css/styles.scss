@@ -86,6 +86,10 @@ $text-8: 48px;
 $text-9: 60px;
 $text-10: 72px;
 
+$shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+$shadow-lx: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+$shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+
 
 
 
@@ -95,8 +99,8 @@ $text-light: rgb(248, 248, 255);
 $background: #F6F6F6;
 $white: #f9fafb;
 
-$shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px,
-rgba(0, 0, 0, 0.24) 0px 1px 2px;
+//$shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px,
+//rgba(0, 0, 0, 0.24) 0px 1px 2px;
 
 $radius: 12px;
 
@@ -335,6 +339,7 @@ body {
 #calendar-selected-date {
   font-size: 1rem;
   font-weight: 400;
+  margin-top: 0;
 }
 
 .button {
@@ -397,7 +402,7 @@ body {
   //padding: 0px 10px;
   justify-content: center;
   align-items: center;
-  gap: 50px;
+  gap: 25px;
 
   @include w(sm) {
     width: 100%;
@@ -433,9 +438,10 @@ body {
 
   @include w(sm) {
     width: 90%;
-    background: none;
-    box-shadow: none;
-    padding: 0;
+    box-sizing: border-box;
+    //background: none;
+    //box-shadow: none;
+    padding: 20px;
   }
 
   div {
@@ -561,11 +567,12 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: none !important;
+    //background: none !important;
     border: none;
-    box-shadow: none;
-    width: 100%;
-    padding: 0;
+    //box-shadow: none;
+    width: 90%;
+    padding: 20px;
+    box-sizing: border-box;
   }
 }
 
@@ -579,7 +586,7 @@ body {
 
 .calendar-times {
   display: none;
-  padding-top: 87px;
+  padding-top: 103px;
   height: 100px;
   width: 150px;
 
@@ -688,16 +695,18 @@ body {
   .available {
     background-color: $secondary-500;
     color: black;
-    transition-duration: 300ms;
+    transition-duration: 200ms;
   }
 
   .available.selected {
     background-color: $secondary-800;
+    color:white;
   }
 
   .available:hover {
     cursor: pointer;
-    background-color: $secondary-800;
+    filter: brightness(0.9);
+    color: white;
   }
 
   div {
@@ -818,6 +827,7 @@ input {
   box-sizing: border-box;
   border: 1px solid $gray-300 !important;
   background-color: inherit;
+  box-shadow: $shadow-inner;
 }
 
 input:focus {
@@ -845,6 +855,7 @@ input.valid {
   @include w(sm) {
     min-height: 90vh;
     background-color: inherit;
+    //padding-top: 30px;
   }
 }
 
@@ -1072,7 +1083,7 @@ footer {
 
 //recap service card
 
-#recap-service-card {
+.recap-service-card {
   display: flex;
   justify-content: space-between;
   background: white;
@@ -1080,6 +1091,8 @@ footer {
   width: 300px;
   border-radius: 10px;
   box-shadow: $shadow;
+  transition-duration: 200ms;
+  gap: 10px;
 
   @include w(sm) {
     width: 80%;
@@ -1102,6 +1115,11 @@ footer {
     font-size: $text-3;
     color: $gray-500;
    }
+}
+
+.service-card-button:hover {
+  box-shadow: $shadow-lx;
+  cursor: pointer;
 }
 
 #recap-customer-info {
@@ -1141,4 +1159,10 @@ footer {
       width: 92%;
     }
   }
+}
+
+.service-availability {
+  color: $accent-800;
+  font-size: $text-2;
+  font-weight: 600;
 }

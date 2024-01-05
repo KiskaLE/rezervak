@@ -90,7 +90,7 @@ class AvailableDates
         $this->user_settings = $userSettings;
         $service = $this->database->table("services")->get($service_id);
 
-        if ($serviceCustomSchedules = $service->related("services_custom_schedules")->where("start <= ? AND end >= ?", [$date, $date])->fetchAll()) {
+        if ($serviceCustomSchedules = $service?->related("services_custom_schedules")->where("start <= ? AND end >= ?", [$date, $date])->fetchAll()) {
             foreach ($serviceCustomSchedules as $schedule) {
                 if ($results = $this->getCustomScheduleAvailability($userSettings, $schedule, $duration, $date, $service_id, $userSettings->sample_rate)) {
                     foreach ($results as $result) {
@@ -180,6 +180,22 @@ class AvailableDates
         }
         return $available;
 
+    }
+
+    public function getNumberOfAvailableTimes(string $u, int $duration, int $numberOfDays, int $service_id): int {
+        $date = date("Y-m-d");
+        $available = 0;
+        for ($i = 0; $i < $numberOfDays; $i++) {
+            if ($available > 10) {
+                break;
+            }
+            if ($count = count($this->getAvailableStartingHours($u, $date, $duration, $service_id))) {
+                $available += $count;
+            }
+            //add one day to curDay
+            $date = date('Y-m-d', strtotime($date . ' +1 days'));
+        }
+        return $available;
     }
 
 

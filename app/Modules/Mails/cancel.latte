@@ -26,8 +26,8 @@
             <b>Čas:</b> {$reservation->start|date:"H:i"}<br>
             <b>Jméno:</b> {$reservation->firstname}<br>
             <b>Příjmení:</b> {$reservation->lastname}<br>
-            {var $price = $reservation->related("payments")->fetch()->price}
-            <b>Cena:</b> {$price} Kč<br>
+            {* {var $price = $reservation->related("payments")?->fetch()->price}
+            <b>Cena:</b> {$price} Kč<br> *}
         </p>
         <br>
         <h3>Důvod Zrušení:</h3>
