@@ -411,7 +411,9 @@ final class ServicesPresenter extends SecurePresenter
                     "price" => $data->price,
                     "duration" => $data->duration,
                     "user_id" => $this->user->id,
-                    "description" => $data->description
+                    "description" => $data->description,
+                    // for custom schedules only
+                    "type" => 1
                 ]);
             } catch (\Exception $e) {
                 $success = false;

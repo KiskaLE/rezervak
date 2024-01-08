@@ -13,17 +13,28 @@
   }
 }
 
-$primary-50: #fdf5f3;
-$primary-100: #fde8e3;
-$primary-200: #fcd4cc;
-$primary-300: #f8b7a9;
-$primary-400: #f28d77;
-$primary-500: #e7674c;
-$primary-600: #d0482b;
-$primary-700: #b23c23;
-$primary-800: #933521;
-$primary-900: #7b3121;
-$primary-950: #42160d;
+// $primary-50: #fdf5f3;
+// $primary-100: #fde8e3;
+// $primary-200: #fcd4cc;
+// $primary-300: #f8b7a9;
+// $primary-400: #f28d77;
+// $primary-500: #e7674c;
+// $primary-600: #d0482b;
+// $primary-700: #b23c23;
+// $primary-800: #933521;
+// $primary-900: #7b3121;
+// $primary-900: #42160d;
+
+$primary-50: #fff4f0;
+$primary-100: #ffc5b5;
+$primary-200: #fe9880;
+$primary-300: #eb6c51;
+$primary-400: #ce4629;
+$primary-500: #a62b0e;
+$primary-600: #781d08;
+$primary-700: #4b1308;
+$primary-800: #230803;
+$primary-900: #050100;
 
 $secondary-50: #f0fdf1;
 $secondary-100: #ddfbe0;
@@ -37,17 +48,28 @@ $secondary-800: #186325;
 $secondary-900: #165120;
 $secondary-950: #062d0e;
 
-$gray-50: #f6f6f6;
-$gray-100: #e7e7e7;
-$gray-200: #d1d1d1;
-$gray-300: #b0b0b0;
-$gray-400: #888888;
-$gray-500: #666666;
-$gray-600: #5d5d5d;
-$gray-700: #4f4f4f;
-$gray-800: #454545;
-$gray-900: #3d3d3d;
-$gray-950: #262626;
+// $gray-50: #f6f6f6;
+// $gray-100: #e7e7e7;
+// $gray-200: #d1d1d1;
+// $gray-300: #b0b0b0;
+// $gray-400: #888888;
+// $gray-500: #666666;
+// $gray-600: #5d5d5d;
+// $gray-700: #4f4f4f;
+// $gray-800: #454545;
+// $gray-900: #3d3d3d;
+// $gray-950: #262626;
+
+$gray-50: #F7F9F9;
+$gray-100: #D5D8D9;
+$gray-200: #B4B8B9;
+$gray-300: #94999A;
+$gray-400: #767C7D;
+$gray-500: #595F60;
+$gray-600: #3F4344;
+$gray-700: #27292A;
+$gray-800: #111212;
+$gray-900: #020202;
 
 $yellow-50: #fef9e8;
 $yellow-100: #fef0c3;
@@ -61,17 +83,39 @@ $yellow-800: #85680e;
 $yellow-900: #715a12;
 $yellow-950: #423306;
 
-$accent-50: #ecf1ff;
-$accent-100: #dde5ff;
-$accent-200: #c2d0ff;
-$accent-300: #9cafff;
-$accent-400: #7584ff;
-$accent-500: #5359ff;
-$accent-600: #3e36f5;
-$accent-700: #352ad8;
-$accent-800: #2b25ae;
-$accent-900: #282689;
-$accent-950: #191650;
+// $accent-50: #ecf1ff;
+// $accent-100: #dde5ff;
+// $accent-200: #c2d0ff;
+// $accent-300: #9cafff;
+// $accent-400: #7584ff;
+// $accent-500: #5359ff;
+// $accent-600: #3e36f5;
+// $accent-700: #352ad8;
+// $accent-800: #2b25ae;
+// $accent-900: #282689;
+// $accent-950: #191650;
+
+$accent-50:  #E7FDFF;
+$accent-100: #ADE2F0;
+$accent-200: #74C5DA;
+$accent-300: #31A8C3;
+$accent-400: #008AA6;
+$accent-500: #006B82;
+$accent-600: #004C5E;
+$accent-700: #002F3B;
+$accent-800: #00151B;
+$accent-900: #000203;
+
+$green-50:  #E9FFE4;
+$green-100: #BCE5B4;
+$green-200: #8DCA81;
+$green-300: #60AE51;
+$green-400: #3A9027;
+$green-500: #20710A;
+$green-600: #155006;
+$green-700: #0F3207;
+$green-800: #061603;
+$green-900: #000200;
 
 
 $text: 12px;
@@ -90,13 +134,9 @@ $shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 $shadow-lx: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 $shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
 
-
-
-
-
 $text-dark: rgb(29, 27, 39);
 $text-light: rgb(248, 248, 255);
-$background: #F6F6F6;
+$background: $gray-50;
 $white: #f9fafb;
 
 //$shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px,
@@ -105,8 +145,6 @@ $white: #f9fafb;
 $radius: 12px;
 
 :root {
-
-  
   font-size: 16px;
 }
 
@@ -154,8 +192,8 @@ bold {
 }
 
 h1 {
-  color: $primary-700;
-  font-size: 3.5rem;
+  color: $primary-500;
+  font-size: $text-7;
   margin-bottom: 50px;
 
   font-weight: bolder;
@@ -190,6 +228,7 @@ body {
   width: 40px;
   border: 1px solid $gray-300;
   border-radius: 25px;
+  transition-duration: 150ms;
 
   @include w(sm) {
     position: fixed;
@@ -216,7 +255,7 @@ body {
 }
 
 .back:hover {
-  background-color: $secondary-100;
+  background-color: $primary-50;
 }
 
 .body-container {
@@ -317,7 +356,7 @@ body {
     font-size: $text-8;
     margin-bottom: 20px;
     margin-top: 0;
-    color: $primary-700;
+    color: $primary-500;
   }
 
   p {
@@ -327,13 +366,13 @@ body {
 
 .btn-secondary {
   background: none !important;
-  border: 2px solid $secondary-600 !important;
-  color: $primary-800 !important
+  border: 2px solid $secondary-200 !important;
+  color: $primary-500 !important;
 }
 
 .btn-secondary:hover {
   background: $primary-600;
-  color: $white !important
+  color: $white !important;
 }
 
 #calendar-selected-date {
@@ -359,14 +398,14 @@ body {
 }
 
 .button-time {
-  border: 1px solid $secondary-500 !important;
-  color: $secondary-900 !important;
+  border: 1px solid $primary-400 !important;
+  color: $primary-400 !important;
   font-weight: 500;
   font-size: 1rem;
 }
 
 .button-time:hover {
-  background: $secondary-500 !important;
+  background: $primary-400 !important;
   color: white !important;
 }
 
@@ -461,7 +500,7 @@ body {
 }
 
 .primary {
-  background-color: $primary-600 !important;
+  background-color: $primary-300 !important;
   color: $text-light;
 }
 
@@ -615,7 +654,7 @@ body {
   }
 
   img:hover {
-    background-color: $secondary-100;
+    background-color: $primary-50;
   }
 
   h2 {
@@ -693,20 +732,20 @@ body {
   }
 
   .available {
-    background-color: $secondary-500;
+    background-color: $primary-200;
     color: black;
     transition-duration: 200ms;
   }
 
   .available.selected {
-    background-color: $secondary-800;
-    color:white;
+    background-color: $accent-200;
+    //color: white;
   }
 
   .available:hover {
     cursor: pointer;
     filter: brightness(0.9);
-    color: white;
+    //color: white;
   }
 
   div {
@@ -762,7 +801,6 @@ body {
   .event-info {
     div {
       padding: 0 10px;
-
     }
   }
 
@@ -804,7 +842,7 @@ body {
 }
 
 .btn-secondary {
-  border: 2px solid $primary-600 !important;
+  border: 2px solid $primary-400 !important;
 
   p {
     color: $primary-600 !important;
@@ -812,7 +850,6 @@ body {
 }
 .btn-secondary:hover {
   color: $primary-600 !important;
-
 }
 
 /* Style the input fields */
@@ -837,11 +874,24 @@ input:focus {
 
 /* Mark input boxes that gets an error on validation: */
 input.invalid {
-  background-color: #ffdddd;
+  border: 1px solid red !important;
 }
 
 input.valid {
-  background-color: $secondary-100;
+  border: 1px solid $green-400 !important;
+  background-color: $green-50;
+}
+
+.form-group.invalid {
+  .form-error {
+    display: block !important;
+  }
+}
+
+.form-error {
+  color: red;
+  font-size: $text-1;
+  display: none;
 }
 
 /* Hide all steps by default: */
@@ -919,7 +969,7 @@ input.valid {
       font-size: $text-2;
       margin: 0;
       line-height: 29px;
-      color: $primary-950;
+      color: $primary-900;
     }
   }
 
@@ -1041,7 +1091,7 @@ input.valid {
 footer {
   box-sizing: border-box;
   width: 100%;
-  background-color: $gray-400;
+  background-color: $gray-300;
   margin-top: 50px;
   padding: 20px;
   display: flex;
@@ -1097,24 +1147,24 @@ footer {
   @include w(sm) {
     width: 80%;
   }
-  .recap-service-title  {
+  .recap-service-title {
     margin: 0;
     font-size: $text-3;
-   }
+  }
 
-   .service-price {
+  .service-price {
     font-size: $text-3;
     font-weight: 600;
-    color: $secondary-900;
+    color: $accent-700;
     padding: 5px 10px;
-    background: $secondary-100;
+    background: $accent-100;
     border-radius: 5px;
-   }
+  }
 
-   .service-text {
+  .service-text {
     font-size: $text-3;
     color: $gray-500;
-   }
+  }
 }
 
 .service-card-button:hover {
@@ -1141,7 +1191,7 @@ footer {
     font-size: $text-3;
   }
   .recap-custome-info-data {
-    color: $gray-500;
+    color: $gray-600;
     font-size: $text-3;
   }
 }
@@ -1149,7 +1199,7 @@ footer {
 .recap-button {
   display: flex;
   justify-content: center;
-  
+
   @include w(sm) {
     width: 100%;
   }
@@ -1162,7 +1212,7 @@ footer {
 }
 
 .service-availability {
-  color: $accent-800;
+  color: $primary-400;
   font-size: $text-2;
   font-weight: 600;
 }

@@ -13,17 +13,78 @@
   }
 }
 
-$gray-50: #f6f6f6;
-$gray-100: #e7e7e7;
-$gray-200: #d1d1d1;
-$gray-300: #b0b0b0;
-$gray-400: #888888;
-$gray-500: #666666;
-$gray-600: #5d5d5d;
-$gray-700: #4f4f4f;
-$gray-800: #454545;
-$gray-900: #3d3d3d;
-$gray-950: #262626;
+$primary-50: #fff4f0;
+$primary-100: #ffc5b5;
+$primary-200: #fe9880;
+$primary-300: #eb6c51;
+$primary-400: #ce4629;
+$primary-500: #a62b0e;
+$primary-600: #781d08;
+$primary-700: #4b1308;
+$primary-800: #230803;
+$primary-900: #050100;
+
+$accent-50:  #E7FDFF;
+$accent-100: #ADE2F0;
+$accent-200: #74C5DA;
+$accent-300: #31A8C3;
+$accent-400: #008AA6;
+$accent-500: #006B82;
+$accent-600: #004C5E;
+$accent-700: #002F3B;
+$accent-800: #00151B;
+$accent-900: #000203;
+
+
+$green-50:  #E9FFE4;
+$green-100: #BCE5B4;
+$green-200: #8DCA81;
+$green-300: #60AE51;
+$green-400: #3A9027;
+$green-500: #20710A;
+$green-600: #155006;
+$green-700: #0F3207;
+$green-800: #061603;
+$green-900: #000200;
+
+$yellow-50:  #FFF9D6;
+$yellow-100: #E6D89A;
+$yellow-200: #CDB753;
+$yellow-300: #B39700;
+$yellow-400: #927900;
+$yellow-500: #715C00;
+$yellow-600: #524100;
+$yellow-700: #342800;
+$yellow-800: #171100;
+$yellow-900: #030200;
+
+$gray-50: #F7F9F9;
+$gray-100: #D5D8D9;
+$gray-200: #B4B8B9;
+$gray-300: #94999A;
+$gray-400: #767C7D;
+$gray-500: #595F60;
+$gray-600: #3F4344;
+$gray-700: #27292A;
+$gray-800: #111212;
+$gray-900: #020202;
+
+
+
+$text: 12px;
+$text-1: 14px;
+$text-2: 16px;
+$text-3: 18px;
+$text-4: 20px;
+$text-5: 24px;
+$text-6: 30px;
+$text-7: 36px;
+$text-8: 48px;
+$text-9: 60px;
+$text-10: 72px;
+
+
+
 
 $shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 $shadow-lx: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
@@ -57,10 +118,10 @@ $shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
 
 .back:hover {
   cursor: pointer;
-  background: #eff6ff;
+  background: $primary-50;
 
   svg {
-    stroke: #3b82f6 !important;
+    stroke: $primary-400 !important;
   }
 }
 
@@ -70,7 +131,7 @@ body {
   padding: 0;
   display: flex;
   justify-content: center;
-  background-color: rgb(245, 245, 245);
+  background-color: $gray-50;
 }
 
 .page-wrapper {
@@ -152,7 +213,7 @@ body {
 
   .user-dropdown-content {
     padding: 10px 20px;
-    border-top: 1px solid #d4d4d4;
+    border-top: 1px solid $gray-100;
     //border-bottom: 1px solid #d4d4d4;
 
     ul {
@@ -177,7 +238,7 @@ body {
         }
       }
       li:hover {
-        background-color: #dbeafe;
+        background-color: $primary-50;
       }
     }
   }
@@ -197,9 +258,13 @@ body {
       text-decoration: none;
     }
     div:hover {
-      background-color: #bfdbfe;
+      background-color: $primary-50;
     }
   }
+}
+
+#user-avatar:hover {
+  background-color: $primary-100;
 }
 
 #user-avatar {
@@ -207,7 +272,8 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #d4d4d4;
+  background-color: $gray-100;
+  transition: 150ms;
 
   display: flex;
   justify-content: center;
@@ -218,7 +284,7 @@ body {
     padding: 0;
     text-transform: uppercase;
     font-size: 20px;
-    color: #3b82f6;
+    color: $primary-400;
     font-weight: 500;
   }
 }
@@ -282,17 +348,17 @@ ul {
   }
 
   .nav-el:hover {
-    background-color: #eff6ff;
+    background-color: $primary-50;
   }
 
   .selected {
-    background-color: #eff6ff;
+    background-color: $primary-50;
 
     a {
-      color: #3b82f6;
+      color: $primary-500;
     }
     svg path {
-      stroke: #3b82f6;
+      stroke: $primary-500;
     }
   }
 }
@@ -386,8 +452,9 @@ h1 {
 }
 
 .btn-c-primary {
-  background-color: #3b82f6;
-  border-color: #3b82f6 !important;
+  background-color: $primary-300;
+  border-color: $primary-300 !important;
+  color: $primary-400;
 }
 
 .btn-secondary {
@@ -395,24 +462,20 @@ h1 {
   border: 2px solid $gray-500;
 }
 
-.btn:hover {
-  box-shadow: $shadow;
-}
-
 
 .btn-tertiary {
   background: none !important;
   border: none;
-  color: #3b82f6;
+  color: $primary-400;
 }
 .btn:hover {
   filter: brightness(90%);
 }
 
 .btn-primary {
-  background-color: #3b82f6;
-  border: 2px solid #3b82f6;
-  color: white;
+  background-color: $primary-200;
+  border: 2px solid $primary-200;
+  color: $primary-900;
 }
 
 .btn-danger {
@@ -421,19 +484,21 @@ h1 {
 }
 
 .btn-gold {
-  background: #fde68a;
-  border: 2px solid #fde68a !important;
-  color: #713f12;
+  background: $yellow-200;
+  border: 2px solid $yellow-200 !important;
+  color: $yellow-500;
 }
 
 .btn-green {
-  background: #d9f99d;
-  border: 2px solid #d9f99d;
-  color: #365314;
+  background: $green-200;
+  border: 2px solid $green-200;
+  color: $green-500;
 }
 
 .btn-default {
-  border: 2px solid #4b5563;
+  background: $gray-200;
+  border: 2px solid $gray-200;
+  color: $gray-500;
 }
 
 //buttons end
@@ -448,7 +513,7 @@ h1 {
 .form-info {
   font-size: 13px;
   font-weight: 300;
-  color: grey;
+  color: $gray-500;
 }
 
 .form-body {
@@ -462,19 +527,19 @@ h1 {
     gap: 5px;
 
     label {
-      font-weight: 700;
-      font-size: 14px;
+      font-weight: 500;
+      font-size: $text-1;
     }
 
     input {
       box-shadow: $shadow-inner;
       padding: 10px 14px;
       border-radius: 5px;
-      border: 1px solid #d4d4d4;
+      border: 1px solid $gray-100;
     }
     input:focus {
-      border: 1px solid #3b82f6;
-      outline: #3b82f6;
+      border: 1px solid $primary-200;
+      outline: $primary-100;
     }
 
     textarea {
@@ -485,8 +550,8 @@ h1 {
     }
 
     textarea:focus {
-      border: 1px solid #3b82f6;
-      outline: #3b82f6;
+      border: 1px solid $primary-400;
+      outline: $primary-400;
     }
 
     select {
@@ -498,8 +563,8 @@ h1 {
     }
 
     select:focus {
-      border: 1px solid #3b82f6;
-      outline: #3b82f6;
+      border: 1px solid $primary-400;
+      outline: $primary-400;
     }
 
     .form-checkbox {
@@ -524,12 +589,12 @@ h1 {
     .submit {
       input {
         cursor: pointer;
-        background-color: #3b82f6;
-        border-radius: var(--border-radius);
-        padding: 10px 15px;
-        border: 1px solid #3b82f6;
+        background-color: $primary-400;
+        border-radius: calc(var(--border-radius) / 2);
+        padding: 5px 10px;
+        border: 2px solid $primary-400;
         color: #ffffff;
-        font-size: 16px;
+        font-size: $text-2;
       }
     }
     .submit:hover {
@@ -541,10 +606,10 @@ h1 {
         font-size: 16px;
         display: flex;
         align-items: center;
-        padding: 10px 15px;
-        border-radius: var(--border-radius);
-        border: 1px solid black;
-        background: #e5e7eb;
+        padding: 5px 10px;
+        border-radius: calc(var(--border-radius) / 2);
+        border: 2px solid $gray-400;
+        background: none;
         text-decoration: none;
         color: var(--text-dark);
         cursor: pointer;
@@ -563,18 +628,36 @@ h1 {
 }
 
 //full calendar
+
+.fc-event-main {
+  background-color: $primary-300 !important;
+  border:none;
+}
 .fc-toolbar-chunk {
+
   button {
-    background-color: #3b82f6 !important;
+    background-color: $primary-300 !important;
     border: none !important;
     border-radius: calc(var(--border-radius) / 2) !important;
-    padding: 8px 15px !important;
+    padding: 5px 10px !important;
     transition: 100ms !important;
+    outline: none !important;
+  }
+
+  button:focus {
+    outline: none !important;
+  }
+  button:hover {
+    filter: brightness(90%);
   }
   .fc-button-active {
-    background-color: #9ca3af !important;
+    background-color: $gray-300 !important;
     border: none !important;
     outline: none !important;
+  }
+  .fc-toolbar-title {
+    font-size: $text-4;
+    font-weight: 400;
   }
   .fc-prevYear-button {
     border-radius: calc(var(--border-radius)/ 2) 0 0 calc(var(--border-radius)/ 2) !important;
@@ -637,6 +720,7 @@ h1 {
       gap: 5px;
       flex-direction: column;
       justify-content: center;
+      align-items: start;
       padding: 0px 30px;
       font-size: 1.2em;
       font-weight: 300;
@@ -648,6 +732,10 @@ h1 {
         font-size: 16px;
 
         .list-item-label {
+          font-weight: 500;
+        }
+
+        b {
           font-weight: 500;
         }
       }
@@ -775,7 +863,7 @@ h1 {
 
   .list-page-item.selected {
     color: var(--text-dark) !important;
-    text-decoration: 2px underline #3b82f6;
+    text-decoration: 2px underline $primary-300;
     text-underline-offset: 9px;
   }
 }
@@ -810,7 +898,7 @@ h1 {
   }
   li.active {
     a {
-      background: #3b82f6;
+      background: $primary-400;
       color: white;
     }
   }

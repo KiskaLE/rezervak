@@ -103,6 +103,8 @@ function validateForm() {
     let name = y[i].name;
     let value = y[i].value;
     y[i].className = "multiform";
+    const parentEl = y[i].parentNode;
+    parentEl.classList.remove("invalid")
     if (name == "service" || name == "time") {
       if (!value.match(/\d+/)) {
         y[i].className += " invalid";
@@ -116,31 +118,37 @@ function validateForm() {
     } else if (name == "firstname" || name == "lastname" || name == "city") {
       if (value.match(/\d+/) || value.length == 0) {
         y[i].className += " invalid";
+        parentEl.classList.add("invalid")
         valid = false;
       }
     } else if (name == "phone") {
       if (!value.match(/^\+?[1-9]\d{1,14}$/)) {
         y[i].className += " invalid";
+        parentEl.classList.add("invalid")
         valid = false;
       }
     } else if (name == "email") {
       if (!value.match(/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/)) {
         y[i].className += " invalid";
+        parentEl.classList.add("invalid")
         valid = false;
       }
     } else if (name == "address") {
       if (value == "") {
         y[i].className += " invalid";
+        parentEl.classList.add("invalid")
         valid = false;
       }
     } else if (name == "code") {
       if (!value.match(/^\d{5}$/)) {
         y[i].className += " invalid";
+        parentEl.classList.add("invalid")
         valid = false;
       }
     } else if (name == "dateType") {
       if (!(value == "default" || value == "backup")) {
         y[i].className += " invalid";
+        parentEl.classList.add("invalid")
         valid = false;
       }
     } else if (name == "discountCode") {

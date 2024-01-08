@@ -48,8 +48,8 @@ bold {
 }
 
 h1 {
-  color: #b23c23;
-  font-size: 3.5rem;
+  color: #a62b0e;
+  font-size: 36px;
   margin-bottom: 50px;
   font-weight: bolder;
   letter-spacing: -1px;
@@ -57,7 +57,7 @@ h1 {
 
 body {
   font-family: "PT Sans Narrow", sans-serif;
-  background-color: #F6F6F6;
+  background-color: #F7F9F9;
   margin: 0;
 }
 @media (max-width: 500px) {
@@ -72,7 +72,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  background: #F6F6F6;
+  background: #F7F9F9;
 }
 
 .back {
@@ -82,8 +82,9 @@ body {
   align-items: center;
   height: 40px;
   width: 40px;
-  border: 1px solid #b0b0b0;
+  border: 1px solid #94999A;
   border-radius: 25px;
+  transition-duration: 150ms;
 }
 @media (max-width: 500px) {
   .back {
@@ -94,7 +95,7 @@ body {
 }
 .back img {
   width: 28px;
-  color: #d0482b;
+  color: #781d08;
 }
 
 .text-left {
@@ -110,7 +111,7 @@ body {
 }
 
 .back:hover {
-  background-color: #ddfbe0;
+  background-color: #fff4f0;
 }
 
 .body-container {
@@ -141,7 +142,7 @@ body {
   padding: 5px;
 }
 .items-table .table-header {
-  background: #F6F6F6;
+  background: #F7F9F9;
 }
 
 #reservation-steps {
@@ -159,8 +160,8 @@ body {
 }
 #reservation-steps .step.active {
   opacity: 1 !important;
-  border: #d0482b 3px solid;
-  background-color: #d0482b;
+  border: #781d08 3px solid;
+  background-color: #781d08;
   cursor: pointer;
 }
 #reservation-steps .step.finish {
@@ -206,7 +207,7 @@ body {
   font-size: 48px;
   margin-bottom: 20px;
   margin-top: 0;
-  color: #b23c23;
+  color: #a62b0e;
 }
 #confirmation p {
   font-size: 20px;
@@ -214,12 +215,12 @@ body {
 
 .btn-secondary {
   background: none !important;
-  border: 2px solid #19962c !important;
-  color: #933521 !important;
+  border: 2px solid #bdf5c5 !important;
+  color: #a62b0e !important;
 }
 
 .btn-secondary:hover {
-  background: #d0482b;
+  background: #781d08;
   color: #f9fafb !important;
 }
 
@@ -246,14 +247,14 @@ body {
 }
 
 .button-time {
-  border: 1px solid #27c03e !important;
-  color: #165120 !important;
+  border: 1px solid #ce4629 !important;
+  color: #ce4629 !important;
   font-weight: 500;
   font-size: 1rem;
 }
 
 .button-time:hover {
-  background: #27c03e !important;
+  background: #ce4629 !important;
   color: white !important;
 }
 
@@ -346,7 +347,7 @@ body {
 }
 
 .primary {
-  background-color: #d0482b !important;
+  background-color: #eb6c51 !important;
   color: rgb(248, 248, 255);
 }
 
@@ -485,11 +486,11 @@ body {
 }
 #calendar-nav img {
   height: 37px;
-  border: 1px solid #b0b0b0;
+  border: 1px solid #94999A;
   border-radius: 50%;
 }
 #calendar-nav img:hover {
-  background-color: #ddfbe0;
+  background-color: #fff4f0;
 }
 #calendar-nav h2 {
   margin: 0;
@@ -557,21 +558,19 @@ body {
 }
 #calendar .unavailable {
   background-color: #f9fafb;
-  color: #4f4f4f;
+  color: #27292A;
 }
 #calendar .available {
-  background-color: #27c03e;
+  background-color: #fe9880;
   color: black;
   transition-duration: 200ms;
 }
 #calendar .available.selected {
-  background-color: #186325;
-  color: white;
+  background-color: #74C5DA;
 }
 #calendar .available:hover {
   cursor: pointer;
   filter: brightness(0.9);
-  color: white;
 }
 #calendar div {
   padding: 25px;
@@ -654,14 +653,14 @@ body {
 }
 
 .btn-secondary {
-  border: 2px solid #d0482b !important;
+  border: 2px solid #ce4629 !important;
 }
 .btn-secondary p {
-  color: #d0482b !important;
+  color: #781d08 !important;
 }
 
 .btn-secondary:hover {
-  color: #d0482b !important;
+  color: #781d08 !important;
 }
 
 /* Style the input fields */
@@ -674,23 +673,34 @@ input {
   color: rgb(29, 27, 39);
   border-radius: 5px;
   box-sizing: border-box;
-  border: 1px solid #b0b0b0 !important;
+  border: 1px solid #94999A !important;
   background-color: inherit;
   box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
 }
 
 input:focus {
-  outline: #d0482b;
-  border: 1px solid #d0482b !important;
+  outline: #781d08;
+  border: 1px solid #781d08 !important;
 }
 
 /* Mark input boxes that gets an error on validation: */
 input.invalid {
-  background-color: #ffdddd;
+  border: 1px solid red !important;
 }
 
 input.valid {
-  background-color: #ddfbe0;
+  border: 1px solid #3A9027 !important;
+  background-color: #E9FFE4;
+}
+
+.form-group.invalid .form-error {
+  display: block !important;
+}
+
+.form-error {
+  color: red;
+  font-size: 14px;
+  display: none;
 }
 
 /* Hide all steps by default: */
@@ -711,7 +721,7 @@ input.valid {
 /* Make circles that indicate the steps of the form: */
 /* Mark the active step: */
 .step.active {
-  background-color: #d0482b !important;
+  background-color: #781d08 !important;
 }
 
 /* Mark the steps that are finished and valid: */
@@ -740,7 +750,7 @@ input.valid {
     border: none;
     box-shadow: none !important;
     min-width: unset !important;
-    border-bottom: 2px solid #e7e7e7;
+    border-bottom: 2px solid #D5D8D9;
     border-radius: 0;
   }
 }
@@ -763,7 +773,7 @@ input.valid {
   font-size: 16px;
   margin: 0;
   line-height: 29px;
-  color: #42160d;
+  color: #050100;
 }
 .service-card .card-price {
   padding: 10px 0;
@@ -774,7 +784,7 @@ input.valid {
 .service-card .card-button {
   padding: 10px 14px;
   border-radius: 6px;
-  background-color: #d0482b;
+  background-color: #781d08;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -864,7 +874,7 @@ input.valid {
 footer {
   box-sizing: border-box;
   width: 100%;
-  background-color: #888888;
+  background-color: #94999A;
   margin-top: 50px;
   padding: 20px;
   display: flex;
@@ -925,14 +935,14 @@ footer {
 .recap-service-card .service-price {
   font-size: 18px;
   font-weight: 600;
-  color: #165120;
+  color: #002F3B;
   padding: 5px 10px;
-  background: #ddfbe0;
+  background: #ADE2F0;
   border-radius: 5px;
 }
 .recap-service-card .service-text {
   font-size: 18px;
-  color: #666666;
+  color: #595F60;
 }
 
 .service-card-button:hover {
@@ -960,7 +970,7 @@ footer {
   font-size: 18px;
 }
 #recap-customer-info .recap-custome-info-data {
-  color: #666666;
+  color: #3F4344;
   font-size: 18px;
 }
 
@@ -983,7 +993,7 @@ footer {
 }
 
 .service-availability {
-  color: #2b25ae;
+  color: #ce4629;
   font-size: 16px;
   font-weight: 600;
 }/*# sourceMappingURL=styles.css.map */
