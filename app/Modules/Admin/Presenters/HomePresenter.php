@@ -20,14 +20,14 @@ final class HomePresenter extends SecurePresenter
     {
     }
 
-    public function beforeRender()
+    public function beforeRender(): void
     {
         parent::beforeRender();
         $this->template->selectedPage = "dashboard";
 
     }
 
-    public function renderDefault()
+    public function renderDefault(): void
     {
         $numberOfReservationsToday = $this->database->table("reservations")->where("start=? AND user_id=? AND status='VERIFIED' AND type=0", [date("Y-m-d"), $this->user->id])->count();
         $this->template->numberOfReservationsToday = $numberOfReservationsToday;
@@ -36,7 +36,7 @@ final class HomePresenter extends SecurePresenter
         $this->template->numberOfReservations = $numberOfReservations;
     }
 
-    public function actionDefault($run)
+    public function actionDefault($run): void
     {
         if ($this->isAjax()) {
             $this->getChartData();

@@ -34,7 +34,7 @@ p {
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  background-color: #f9fafb;
+  background-color: #ffffff;
 }
 @media (max-width: 500px) {
   .card {
@@ -57,12 +57,12 @@ h1 {
 
 body {
   font-family: "PT Sans Narrow", sans-serif;
-  background-color: #F7F9F9;
+  background-color: #f5f5f5;
   margin: 0;
 }
 @media (max-width: 500px) {
   body {
-    background: white;
+    background: #ffffff;
   }
 }
 
@@ -72,7 +72,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  background: #F7F9F9;
+  background: #f5f5f5;
 }
 
 .back {
@@ -82,7 +82,7 @@ body {
   align-items: center;
   height: 40px;
   width: 40px;
-  border: 1px solid #94999A;
+  border: 1px solid #94999a;
   border-radius: 25px;
   transition-duration: 150ms;
 }
@@ -142,7 +142,7 @@ body {
   padding: 5px;
 }
 .items-table .table-header {
-  background: #F7F9F9;
+  background: #f5f5f5;
 }
 
 #reservation-steps {
@@ -221,7 +221,7 @@ body {
 
 .btn-secondary:hover {
   background: #781d08;
-  color: #f9fafb !important;
+  color: #ffffff !important;
 }
 
 #calendar-selected-date {
@@ -249,25 +249,27 @@ body {
 .button-time {
   border: 1px solid #ce4629 !important;
   color: #ce4629 !important;
+  padding: 13px 10px !important;
   font-weight: 500;
-  font-size: 1rem;
+  font-size: 18px;
 }
 
 .button-time:hover {
   background: #ce4629 !important;
-  color: white !important;
+  color: #ffffff !important;
 }
 
 .button-backup {
-  border: 1px solid #fdd147 !important;
-  color: #715a12 !important;
-  font-weight: 500;
-  font-size: 1rem;
+  border: 1px solid #006b82 !important;
+  color: #006b82 !important;
+  font-weight: 600;
+  font-size: 18px;
+  padding: 13px 10px !important;
 }
 
 .button-backup:hover {
-  background: #fdd147 !important;
-  color: white !important;
+  background: #006b82 !important;
+  color: #ffffff !important;
 }
 
 .button.xl {
@@ -315,7 +317,8 @@ body {
 }
 
 .info-form {
-  background: white;
+  border: 1px solid rgba(26, 26, 26, 0.1);
+  background: #ffffff;
   display: flex;
   flex-direction: column;
   gap: 13px;
@@ -362,7 +365,7 @@ body {
 }
 
 .service-button:hover {
-  color: #f9fafb;
+  color: #ffffff;
   cursor: pointer;
 }
 
@@ -386,7 +389,7 @@ body {
 
 .time-wrapper {
   max-height: 380px;
-  overflow-y: scroll;
+  overflow-y: auto;
   padding: 0 5px;
 }
 @media (max-width: 500px) {
@@ -418,7 +421,7 @@ body {
   }
 }
 .time-wrapper .time p:hover {
-  color: #f9fafb;
+  color: #ffffff;
   background-color: #27c03e;
 }
 .time-wrapper .backup-time {
@@ -433,8 +436,9 @@ body {
 }
 
 .calendar-box {
+  border: 1px solid rgba(26, 26, 26, 0.1);
   display: flex;
-  background: #f9fafb;
+  background: #ffffff;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   padding: 20px;
   border-radius: 12px;
@@ -486,7 +490,7 @@ body {
 }
 #calendar-nav img {
   height: 37px;
-  border: 1px solid #94999A;
+  border: 1px solid #94999a;
   border-radius: 50%;
 }
 #calendar-nav img:hover {
@@ -554,11 +558,11 @@ body {
   background-color: rgba(128, 128, 128, 0.32) !important;
 }
 #calendar .weekend {
-  color: white;
+  color: #ffffff;
 }
 #calendar .unavailable {
-  background-color: #f9fafb;
-  color: #27292A;
+  background-color: #ffffff;
+  color: #27292a;
 }
 #calendar .available {
   background-color: #fe9880;
@@ -566,7 +570,8 @@ body {
   transition-duration: 200ms;
 }
 #calendar .available.selected {
-  background-color: #74C5DA;
+  background-color: #ce4629;
+  color: #ffffff;
 }
 #calendar .available:hover {
   cursor: pointer;
@@ -577,7 +582,7 @@ body {
 }
 
 #recap {
-  background-color: #f9fafb;
+  background-color: #ffffff;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   padding: 30px;
   border-radius: 12px;
@@ -673,7 +678,7 @@ input {
   color: rgb(29, 27, 39);
   border-radius: 5px;
   box-sizing: border-box;
-  border: 1px solid #94999A !important;
+  border: 1px solid #94999a !important;
   background-color: inherit;
   box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
 }
@@ -689,8 +694,8 @@ input.invalid {
 }
 
 input.valid {
-  border: 1px solid #3A9027 !important;
-  background-color: #E9FFE4;
+  border: 1px solid #3a9027 !important;
+  background-color: #e9ffe4;
 }
 
 .form-group.invalid .form-error {
@@ -731,7 +736,7 @@ input.valid {
 }
 
 .service-card {
-  background-color: #f9fafb;
+  background-color: #ffffff;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -750,7 +755,7 @@ input.valid {
     border: none;
     box-shadow: none !important;
     min-width: unset !important;
-    border-bottom: 2px solid #D5D8D9;
+    border-bottom: 2px solid #d5d8d9;
     border-radius: 0;
   }
 }
@@ -874,7 +879,7 @@ input.valid {
 footer {
   box-sizing: border-box;
   width: 100%;
-  background-color: #94999A;
+  background-color: #94999a;
   margin-top: 50px;
   padding: 20px;
   display: flex;
@@ -903,7 +908,7 @@ footer {
 }
 .footer-wrapper p {
   margin: 0;
-  color: white;
+  color: #ffffff;
 }
 
 .footer-row {
@@ -913,9 +918,10 @@ footer {
 }
 
 .recap-service-card {
+  border: 1px solid rgba(26, 26, 26, 0.1);
   display: flex;
   justify-content: space-between;
-  background: white;
+  background: #ffffff;
   padding: 20px;
   width: 300px;
   border-radius: 10px;
@@ -935,14 +941,14 @@ footer {
 .recap-service-card .service-price {
   font-size: 18px;
   font-weight: 600;
-  color: #002F3B;
+  color: #002f3b;
   padding: 5px 10px;
-  background: #ADE2F0;
+  background: #ade2f0;
   border-radius: 5px;
 }
 .recap-service-card .service-text {
   font-size: 18px;
-  color: #595F60;
+  color: #595f60;
 }
 
 .service-card-button:hover {
@@ -951,6 +957,7 @@ footer {
 }
 
 #recap-customer-info {
+  border: 1px solid rgba(26, 26, 26, 0.1);
   display: flex;
   flex-direction: column;
   width: 300px;
@@ -958,7 +965,7 @@ footer {
   border-radius: 10px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   gap: 10px;
-  background: white;
+  background: #ffffff;
 }
 @media (max-width: 500px) {
   #recap-customer-info {
@@ -970,7 +977,7 @@ footer {
   font-size: 18px;
 }
 #recap-customer-info .recap-custome-info-data {
-  color: #3F4344;
+  color: #3f4344;
   font-size: 18px;
 }
 
