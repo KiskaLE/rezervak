@@ -38,7 +38,7 @@ body {
   padding: 0;
   display: flex;
   justify-content: center;
-  background-color: #F7F9F9;
+  background-color: #f7f9f9;
 }
 
 .page-wrapper {
@@ -120,7 +120,7 @@ body {
 }
 #user-dropdown .user-dropdown-content {
   padding: 10px 20px;
-  border-top: 1px solid #D5D8D9;
+  border-top: 1px solid #d5d8d9;
 }
 #user-dropdown .user-dropdown-content ul {
   list-style: none;
@@ -171,7 +171,7 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #D5D8D9;
+  background-color: #d5d8d9;
   transition: 150ms;
   display: flex;
   justify-content: center;
@@ -338,7 +338,7 @@ h1 {
 
 .btn-secondary {
   background: none !important;
-  border: 2px solid #595F60;
+  border: 2px solid #595f60;
 }
 
 .btn-tertiary {
@@ -363,21 +363,21 @@ h1 {
 }
 
 .btn-gold {
-  background: #CDB753;
-  border: 2px solid #CDB753 !important;
-  color: #715C00;
+  background: #cdb753;
+  border: 2px solid #cdb753 !important;
+  color: #715c00;
 }
 
 .btn-green {
-  background: #8DCA81;
-  border: 2px solid #8DCA81;
-  color: #20710A;
+  background: #8dca81;
+  border: 2px solid #8dca81;
+  color: #20710a;
 }
 
 .btn-default {
-  background: #B4B8B9;
-  border: 2px solid #B4B8B9;
-  color: #595F60;
+  background: #b4b8b9;
+  border: 2px solid #b4b8b9;
+  color: #595f60;
 }
 
 .form-wrapper {
@@ -387,7 +387,7 @@ h1 {
 .form-info {
   font-size: 13px;
   font-weight: 300;
-  color: #595F60;
+  color: #595f60;
 }
 
 .form-body {
@@ -408,7 +408,7 @@ h1 {
   box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
   padding: 10px 14px;
   border-radius: 5px;
-  border: 1px solid #D5D8D9;
+  border: 1px solid #d5d8d9;
 }
 .form-body .form-group input:focus {
   border: 1px solid #fe9880;
@@ -470,7 +470,7 @@ h1 {
   align-items: center;
   padding: 5px 10px;
   border-radius: calc(var(--border-radius) / 2);
-  border: 2px solid #767C7D;
+  border: 2px solid #767c7d;
   background: none;
   text-decoration: none;
   color: var(--text-dark);
@@ -506,7 +506,7 @@ h1 {
   filter: brightness(90%);
 }
 .fc-toolbar-chunk .fc-button-active {
-  background-color: #94999A !important;
+  background-color: #94999a !important;
   border: none !important;
   outline: none !important;
 }
@@ -571,7 +571,7 @@ h1 {
   justify-content: center;
   align-items: start;
   padding: 0px 30px;
-  font-size: 1.2em;
+  font-size: 18px;
   font-weight: 300;
 }
 .list-wrapper .list-item .list-item-column .list-item-info {
@@ -586,18 +586,21 @@ h1 {
 .list-wrapper .list-item .list-item-column .list-item-info b {
   font-weight: 500;
 }
+.list-wrapper .list-item .list-item-column .list-item-detail {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 5px;
+}
+.list-wrapper .list-item .list-item-column .list-item-detail svg {
+  transition-duration: 100ms;
+}
 .list-wrapper .list-item .list-item-column .list-item-more {
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 0.8em;
-}
-.list-wrapper .list-item .list-item-column .list-item-more .list-item-detail {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
+  font-size: 12px !important;
 }
 .list-wrapper .list-item .list-item-actions {
   justify-content: start !important;

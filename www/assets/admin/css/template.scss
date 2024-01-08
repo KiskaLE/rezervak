@@ -24,52 +24,49 @@ $primary-700: #4b1308;
 $primary-800: #230803;
 $primary-900: #050100;
 
-$accent-50:  #E7FDFF;
-$accent-100: #ADE2F0;
-$accent-200: #74C5DA;
-$accent-300: #31A8C3;
-$accent-400: #008AA6;
-$accent-500: #006B82;
-$accent-600: #004C5E;
-$accent-700: #002F3B;
-$accent-800: #00151B;
+$accent-50: #e7fdff;
+$accent-100: #ade2f0;
+$accent-200: #74c5da;
+$accent-300: #31a8c3;
+$accent-400: #008aa6;
+$accent-500: #006b82;
+$accent-600: #004c5e;
+$accent-700: #002f3b;
+$accent-800: #00151b;
 $accent-900: #000203;
 
-
-$green-50:  #E9FFE4;
-$green-100: #BCE5B4;
-$green-200: #8DCA81;
-$green-300: #60AE51;
-$green-400: #3A9027;
-$green-500: #20710A;
+$green-50: #e9ffe4;
+$green-100: #bce5b4;
+$green-200: #8dca81;
+$green-300: #60ae51;
+$green-400: #3a9027;
+$green-500: #20710a;
 $green-600: #155006;
-$green-700: #0F3207;
+$green-700: #0f3207;
 $green-800: #061603;
 $green-900: #000200;
 
-$yellow-50:  #FFF9D6;
-$yellow-100: #E6D89A;
-$yellow-200: #CDB753;
-$yellow-300: #B39700;
+$yellow-50: #fff9d6;
+$yellow-100: #e6d89a;
+$yellow-200: #cdb753;
+$yellow-300: #b39700;
 $yellow-400: #927900;
-$yellow-500: #715C00;
+$yellow-500: #715c00;
 $yellow-600: #524100;
 $yellow-700: #342800;
 $yellow-800: #171100;
 $yellow-900: #030200;
 
-$gray-50: #F7F9F9;
-$gray-100: #D5D8D9;
-$gray-200: #B4B8B9;
-$gray-300: #94999A;
-$gray-400: #767C7D;
-$gray-500: #595F60;
-$gray-600: #3F4344;
-$gray-700: #27292A;
+$gray-50: #f7f9f9;
+$gray-100: #d5d8d9;
+$gray-200: #b4b8b9;
+$gray-300: #94999a;
+$gray-400: #767c7d;
+$gray-500: #595f60;
+$gray-600: #3f4344;
+$gray-700: #27292a;
 $gray-800: #111212;
 $gray-900: #020202;
-
-
 
 $text: 12px;
 $text-1: 14px;
@@ -82,9 +79,6 @@ $text-7: 36px;
 $text-8: 48px;
 $text-9: 60px;
 $text-10: 72px;
-
-
-
 
 $shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 $shadow-lx: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
@@ -311,7 +305,7 @@ ul {
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 
   padding: 0px 10px;
-  
+
   @include w(md) {
     transform: translateX(-100%);
   }
@@ -431,7 +425,6 @@ h1 {
         font-weight: 300;
         line-height: 30px;
         max-width: 200px;
-
       }
     }
   }
@@ -461,7 +454,6 @@ h1 {
   background: none !important;
   border: 2px solid $gray-500;
 }
-
 
 .btn-tertiary {
   background: none !important;
@@ -631,10 +623,9 @@ h1 {
 
 .fc-event-main {
   background-color: $primary-300 !important;
-  border:none;
+  border: none;
 }
 .fc-toolbar-chunk {
-
   button {
     background-color: $primary-300 !important;
     border: none !important;
@@ -660,14 +651,16 @@ h1 {
     font-weight: 400;
   }
   .fc-prevYear-button {
-    border-radius: calc(var(--border-radius)/ 2) 0 0 calc(var(--border-radius)/ 2) !important;
+    border-radius: calc(var(--border-radius) / 2) 0 0
+      calc(var(--border-radius) / 2) !important;
   }
   .fc-prev-button,
   .fc-next-button {
     border-radius: 0px !important;
   }
   .fc-nextYear-button {
-    border-radius: 0 calc(var(--border-radius)/ 2) calc(var(--border-radius)/ 2) 0 !important;
+    border-radius: 0 calc(var(--border-radius) / 2)
+      calc(var(--border-radius) / 2) 0 !important;
   }
 }
 .fc-view-harness {
@@ -721,7 +714,7 @@ h1 {
       justify-content: center;
       align-items: start;
       padding: 0px 30px;
-      font-size: 1.2em;
+      font-size: $text-3;
       font-weight: 300;
 
       .list-item-info {
@@ -739,19 +732,23 @@ h1 {
         }
       }
 
+      .list-item-detail {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 5px;
+
+        svg {
+          transition-duration: 100ms;
+        }
+      }
+
       .list-item-more {
         height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 0.8em;
-
-        .list-item-detail {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          gap: 5px;
-        }
+        font-size: $text !important;
       }
     }
 
@@ -768,7 +765,6 @@ h1 {
     }
   }
 }
-
 .list-page {
   display: flex;
   padding: 5px 30px;
