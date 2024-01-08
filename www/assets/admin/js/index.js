@@ -94,7 +94,7 @@ function listItemToggle(listItemId) {
     //get listItem children .list-item-body
     const svg = listItem.querySelector('svg');
     svg.style.transform = svg.style.transform === 'rotate(90deg)' ? 'rotate(0deg)' : 'rotate(90deg)';
-    listItemBody.style.display = listItemBody.style.display === 'none' ? 'flex' : 'none';
+    listItemBody.style.display = listItemBody.style.display === 'none' ? 'grid' : 'none';
 
 
 

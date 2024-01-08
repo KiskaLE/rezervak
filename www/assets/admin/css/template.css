@@ -557,9 +557,8 @@ h1 {
 .list-wrapper .list-item .list-item-head {
   width: 100%;
   height: 100px;
-  display: flex;
-  gap: 10px;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 .list-wrapper .list-item .list-item-head:hover {
   background-color: #e5e5e5;
@@ -606,10 +605,8 @@ h1 {
 .list-wrapper .list-item .list-item-body {
   box-sizing: border-box;
   width: 100%;
-  display: flex;
-  flex: 1;
-  gap: 10px;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
   padding: 10px 0;
 }
 
