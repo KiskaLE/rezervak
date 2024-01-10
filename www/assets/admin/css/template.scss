@@ -1007,7 +1007,15 @@ h1 {
   }
 }
 
+.info-card.hover:hover {
+  box-shadow: $shadow-lx;
+  cursor: pointer;
+}
+
 .info-card {
+  text-decoration: none;
+  color: black;
+  transition: 150ms;
   background-color: white;
   border: $border;
   display: flex;

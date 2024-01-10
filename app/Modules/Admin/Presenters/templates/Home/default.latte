@@ -5,18 +5,18 @@
 </div>
     <div class="info-cards-grid">
         {* info-card *}
-        <div class="info-card">
+        <a n:href="upcommingReservations! 1" class="info-card hover">
             <div class="info-card-img">
                 <img src="{$basePath}/assets/admin/icons/book.svg" alt="ikona">
             </div>
             <div class="info-card-data">
-                <span class="info-card-value">{$allReservations}</span>
-                <span class="info-card-title">Rezervací celkem</span>
+                <span class="info-card-value">{$doneReservations}</span>
+                <span class="info-card-title">Dokončené rezervace</span>
             </div>
-        </div>
+        </a>
         {* info-card-end *}
         {* info-card *}
-        <div class="info-card">
+        <a n:href="upcommingReservations! 0" class="info-card hover">
             <div class="info-card-img">
                 <div style="position: relative; left: 1px">
                     <img src="{$basePath}/assets/admin/icons/future-events.svg" alt="ikona">
@@ -26,10 +26,10 @@
                 <span class="info-card-value">{$futureReservations}</span>
                 <span class="info-card-title">Budoucí rezervace</span>
             </div>
-        </div>
+        </a>
         {* info-card-end *}
         {* info-card *}
-        <div class="info-card">
+        <a n:href="upcommingReservations! 2" class="info-card hover">
             <div class="info-card-img">
                 <img src="{$basePath}/assets/admin/icons/credit-card-unpaid.svg" alt="ikona">
             </div>
@@ -37,7 +37,7 @@
                 <span class="info-card-value">{$unpaidReservations}</span>
                 <span class="info-card-title">Nezaplacené</span>
             </div>
-        </div>
+        </a>
         {* info-card-end *}
         {* info-card *}
         <div class="info-card">

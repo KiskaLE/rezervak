@@ -821,7 +821,15 @@ h1 {
   }
 }
 
+.info-card.hover:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
 .info-card {
+  text-decoration: none;
+  color: black;
+  transition: 150ms;
   background-color: white;
   border: 1px solid rgba(26, 26, 26, 0.1);
   display: flex;

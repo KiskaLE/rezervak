@@ -51,8 +51,8 @@ final class HomePresenter extends SecurePresenter
         //info-cards
         $futureReservations = $this->database->table("reservations")->where("start>? AND user_id=? AND reservations.status='VERIFIED' AND :payments.status=1 AND reservations.type=0", [date("Y-m-d"), $this->user->id])->count();
         $this->template->futureReservations = $futureReservations;
-        $allReservations = $this->database->table("reservations")->where("user_id=? AND reservations.status='VERIFIED' AND :payments.status=1 AND reservations.type=0", $this->user->id)->count();
-        $this->template->allReservations = $allReservations;
+        $doneReservations = $this->database->table("reservations")->where("start<? AND user_id=? AND reservations.status='VERIFIED' AND :payments.status=1 AND reservations.type=0", [date("Y-m-d H:i:s") ,$this->user->id])->count();
+        $this->template->doneReservations = $doneReservations;
         $sales = $this->database->table("payments")->where("status=1")->sum("price");
         $this->template->sales = $sales;
         $unpaidReservations = $this->database->table("reservations")->where("user_id=? AND reservations.status='VERIFIED' AND :payments.status=0 AND reservations.type=0", $this->user->id)->count();
@@ -105,6 +105,13 @@ final class HomePresenter extends SecurePresenter
             $this->redirect('Reservations:');
         }
         $this->flashMessage("Rezervaci se nepodařilo zrušit", "error");
+
+    }
+
+    public function handleUpcommingReservations($tab) {
+        $session = $this->getSession("reservations");
+        $session->reservations_tab = $tab;
+        $this->redirect('Reservations:default');
 
     }
 
