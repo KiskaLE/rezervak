@@ -112,6 +112,18 @@ final class Mailer
 
     }
 
+    public function sendPaymentConfirmationMail(string $to, $reservation): void
+    {
+        $user = $reservation->ref("users", "user_id");
+        $userSettings = $user->related("settings")->fetch();
+        $params = [
+            'user' => $user,
+            'userSettings' => $userSettings,
+            'reservation' => $reservation
+        ];
+        $this->sendMail($to, "Potvrzení platby", $this->latte->renderToString(__DIR__ . '/Mails/paymentConfirmation.latte', $params));
+    }
+
     private function sendMail(string $to, string $subject, $message)
     {
 

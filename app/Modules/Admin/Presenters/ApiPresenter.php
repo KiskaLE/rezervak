@@ -36,6 +36,7 @@ class ApiPresenter extends BasePresenter
 
     public function actionClean()
     {
+
         $database = $this->database;
         $admins = $database->table("users")
         ->where("role=?", "ADMIN")

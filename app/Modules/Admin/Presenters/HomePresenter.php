@@ -7,6 +7,7 @@ namespace App\Modules\admin\Presenters;
 
 use Nette;
 use App\Modules\Moment;
+use App\Modules\Payments;
 use Nette\DI\Attributes\Inject;
 
 final class HomePresenter extends SecurePresenter
@@ -27,16 +28,38 @@ final class HomePresenter extends SecurePresenter
 
     }
 
-    public function renderDefault(): void
+    public function renderDefault(int $page = 1): void
     {
         $numberOfReservationsToday = $this->database->table("reservations")->where("start=? AND user_id=? AND status='VERIFIED' AND type=0", [date("Y-m-d"), $this->user->id])->count();
         $this->template->numberOfReservationsToday = $numberOfReservationsToday;
 
         $numberOfReservations = $this->database->table("reservations")->where("start>=? AND user_id=? AND status='VERIFIED' AND type=0", [date("Y-m-d"), $this->user->id])->count();
         $this->template->numberOfReservations = $numberOfReservations;
+
+        //Table with today reservations
+        $q = $this->database->table("reservations")
+        ->where("start>=? AND start<? AND user_id=? AND status='VERIFIED' AND type=0", [date("Y-m-d"), date("Y-m-d") . " 23:59:59", $this->user->id])
+        ->order("start ASC");
+        $numberOfTodaysReservations = $q->count();
+        $paginator = $this->createPagitator($numberOfTodaysReservations, $page, 5);
+        $todayReservations = $q
+            ->limit($paginator->getLength(), $paginator->getOffset())
+            ->fetchAll();
+        $this->template->todayReservations = $todayReservations;
+        $this->template->paginator = $paginator;
+
+        //info-cards
+        $futureReservations = $this->database->table("reservations")->where("start>? AND user_id=? AND reservations.status='VERIFIED' AND :payments.status=1 AND reservations.type=0", [date("Y-m-d"), $this->user->id])->count();
+        $this->template->futureReservations = $futureReservations;
+        $allReservations = $this->database->table("reservations")->where("user_id=? AND reservations.status='VERIFIED' AND :payments.status=1 AND reservations.type=0", $this->user->id)->count();
+        $this->template->allReservations = $allReservations;
+        $sales = $this->database->table("payments")->where("status=1")->sum("price");
+        $this->template->sales = $sales;
+        $unpaidReservations = $this->database->table("reservations")->where("user_id=? AND reservations.status='VERIFIED' AND :payments.status=0 AND reservations.type=0", $this->user->id)->count();
+        $this->template->unpaidReservations = $unpaidReservations;
     }
 
-    public function actionDefault($run): void
+    public function actionDefault(): void
     {
         if ($this->isAjax()) {
             $this->getChartData();
@@ -61,6 +84,27 @@ final class HomePresenter extends SecurePresenter
         }
         $this->sendJson($data);
 
+
+    }
+
+
+    public function handleCancel($reservationId) {
+        $isSuccess = true;
+        try {
+            $res = $this->database->table('reservations')->where('id=?', $reservationId)->update([
+                'status' => 'CANCELED',
+            ]);
+            if (!$res) {
+                $isSuccess = false;
+            }
+        } catch (\Throwable $th) {
+            $isSuccess = false;
+        }
+        if ($isSuccess) {
+            $this->flashMessage("Rezervace byla zrušena", "success");
+            $this->redirect('Reservations:');
+        }
+        $this->flashMessage("Rezervaci se nepodařilo zrušit", "error");
 
     }
 

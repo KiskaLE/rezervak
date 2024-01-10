@@ -1,9 +1,154 @@
 {block content}
-<div class="row page-header"><h1>Nástěnka</h1></div>
+<!-- page title start-->
+<div class="page-title">
+    <h1>Nástěnka</h1>
+</div>
+    <div class="info-cards-grid">
+        {* info-card *}
+        <div class="info-card">
+            <div class="info-card-img">
+                <img src="{$basePath}/assets/admin/icons/book.svg" alt="ikona">
+            </div>
+            <div class="info-card-data">
+                <span class="info-card-value">{$allReservations}</span>
+                <span class="info-card-title">Rezervací celkem</span>
+            </div>
+        </div>
+        {* info-card-end *}
+        {* info-card *}
+        <div class="info-card">
+            <div class="info-card-img">
+                <div style="position: relative; left: 1px">
+                    <img src="{$basePath}/assets/admin/icons/future-events.svg" alt="ikona">
+                </div>
+            </div>
+            <div class="info-card-data">
+                <span class="info-card-value">{$futureReservations}</span>
+                <span class="info-card-title">Budoucí rezervace</span>
+            </div>
+        </div>
+        {* info-card-end *}
+        {* info-card *}
+        <div class="info-card">
+            <div class="info-card-img">
+                <img src="{$basePath}/assets/admin/icons/credit-card-unpaid.svg" alt="ikona">
+            </div>
+            <div class="info-card-data">
+                <span class="info-card-value">{$unpaidReservations}</span>
+                <span class="info-card-title">Nezaplacené</span>
+            </div>
+        </div>
+        {* info-card-end *}
+        {* info-card *}
+        <div class="info-card">
+            <div class="info-card-img">
+                <img src="{$basePath}/assets/admin/icons/dollar-sign.svg" alt="ikona">
+            </div>
+            <div class="info-card-data">
+                <span class="info-card-value">{$sales|currency} <span class="info-card-value-currency">Kč</span></span>
+                <span class="info-card-title">Tržby</span>
+            </div>
+        </div>
+        {* info-card-end *}
+    </div>
+
 <div class="row">
     <div class="well">
         {var $date = date('d.m.Y')}
         <h1>Dneska je {$date}</h1>
-        <h3>Máte naplánováno {$numberOfReservationsToday} {$numberOfReservationsToday < 5 ? 'rezervaci' : 'rezervací'}.</h3>
     </div>
 </div>
+
+{* list start *}
+<div class="list-wrapper">
+
+    <div class="list-page">
+        <div class="list-tabs">
+            <span class="list-page-item selected">
+                Dnes
+            </span>
+        </div>
+    </div>
+    {var $i = 0}
+    {if $todayReservations}
+        <div n:foreach="$todayReservations as $reservation" class="list-item" id="list-item-{$i}">
+            {var $service = $reservation->ref("services", "service_id")}
+            {var $payment = $reservation->related("payments")->fetch()}
+            
+            <div class="list-item-head" onclick="listItemToggle('list-item-{$i}')">
+                <div class="list-item-column">
+                    {var $end = date( "Y-m-d H:i:s",strtotime(strval($reservation->start) . " " . $service->duration . " minutes"))}
+                    <div class="list-item-info">{$reservation->start|date:'d.m.Y'}</div>
+                    <div class="list-item-info">{$reservation->start|date:'H:i'} - {$end|date:"H:i"}</div>
+                </div>
+
+                <div class="list-item-column">
+                    <div class="list-item-info"><b>{$reservation->firstname. " ". $reservation->lastname}</b></div>
+                    <div class="list-item-info"> Typ rezervace <b>{$service->name|lower}</b></div>
+                </div>
+
+                <div class="list-item-column">
+                    <div class="list-item-info">Vytvořeno <b>{$reservation->created_at|convertToAdminTimezone|date:'d.m.Y H:i'}</b></div>
+                </div>
+
+                <div class="list-item-column list-item-more">
+                        <div class="list-item-detail">
+                            <span>Detail</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#000000" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-play"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                            
+                        </div>
+                </div>
+            </div>
+
+            <div class="list-item-body" style="display: none">
+                <div class="list-item-column list-item-actions">
+                {* <a class="btn btn-tertiary" n:href="edit $reservation->uuid">Upravit</a> *}
+                <a class="btn btn-tertiary" n:href="cancel! $reservation->id" onclick="if(confirm('Opravdu chcete zrušit rezervaci?')) { handleDelete(this, {$reservation->id}); } else { event.preventDefault(); }">Zrušit</a>
+
+                </div>
+                <div class="list-item-column">
+                    <div class="list-item-info">
+                        <span class="list-item-label">E-mail</span>
+                        <span>{$reservation->email}</span>
+                    </div>
+                    <div class="list-item-info">
+                        <span class="list-item-label">Telefon</span>
+                        <span>{$reservation->phone}</span>
+                    </div>
+                    <div class="list-item-info">
+                        <span class="list-item-label">Cena</span>
+                        <span>{$payment->price|currency} Kč</span>
+                    </div>
+                    <div class="list-item-info">
+                        <span class="list-item-label">Adresa</span>
+                        <span>{$reservation->address}</span>
+                        <span>{$reservation->code}</span>
+                        <span>{$reservation->city}</span>
+                    </div>
+                </div>
+            </div>
+            {do $i++}
+        </div>
+    {else}
+        <div class="list-no-data"><span>Na dneska nemáte naplánované žádné rezervace</span></div>
+    {/if}
+    <!-- Paginator pages -->
+        <ul n:if="$paginator->getPageCount() > 1" class="pagination">
+
+            <li {if $paginator->isFirst()} style='visibility: hidden;' {/if}>
+                <a n:href="default $paginator->getPage() - 1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-left"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></a>
+            </li>
+
+
+            <li n:for="$i = max($paginator->getPage() - 2, 0); $i < min($paginator->getPageCount(), $paginator->getPage() + 2); $i++" class="{($i+1) == $paginator->getPage() ? 'active' : ''}">
+                <a n:href="default $i+1">{$i+1}</a>
+            </li>
+
+            <li {if $paginator->isLast()} style='visibility: hidden;' {/if}>
+                <a n:href="default $paginator->getPage() + 1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-right"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></a>
+            </li>
+        </ul>
+        <!-- /Paginator pages -->
+</div>
+{* list end *}
+

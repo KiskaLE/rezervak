@@ -1,0 +1,30 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Potvrzení rezervace</title>
+</head>
+<body style="background-color: #ffffff;
+            padding: 20px;
+            margin: 0;">
+<div style="display: flex; flex-direction: column; align-items: center">
+    <div style="max-width: 600px; padding: 5px;">
+        <h1 style="font-size: 24px;">Potvzení platby</h1>
+        <p style="font-size: 16px; line-height: 30px;">Dobrý den, <br> style="font-size: 16px; line-height: 30px;">Vaše platba za službu <b>č.[číslo služby]</b> v hodnotě [cena] byla <b>úspěšně přijata</b>.</p>
+        <h3>Detaily vaší Rezervace:</h3>
+        <p style="font-size: 16px;
+            line-height: 30px;">
+            <b>Služba:</b> {$reservation->ref("services", "service_id")->name} <br>
+            <b>Datum:</b> {$reservation->start|date:"d.m.Y"}<br>
+            <b>Čas:</b> {$reservation->start|date:"H:i"}<br>
+        </p>
+        <p style="font-size: 16px;
+        line-height: 30px;">S pozdravem, <br>
+        <span n:if="$userSettings->company">{$userSettings->company}</span><br>
+        <span n:if="$userSettings->email">{$userSettings->email}</span> <br>
+        <span n:if="$userSettings->phone">{$userSettings->phone}</span>
+    </p>
+    </div>
+</div>
+
+</body>
+</html>

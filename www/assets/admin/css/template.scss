@@ -88,6 +88,8 @@ $shadow-lx:
   0 8px 10px -6px rgb(0 0 0 / 0.1);
 $shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
 
+$border: 1px solid rgba(26,26,26,0.1);
+
 :root {
   --main-padding: 20px;
   --left-nav-with: 250px;
@@ -95,6 +97,12 @@ $shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
   --border: 1px solid #d4d4d4;
   --text-dark: #0a0a0a;
   --border-radius: 10px;
+}
+.page-title {
+  h1 {
+    color: $gray-600;
+    font-size: $text-4;
+  }
 }
 
 .back {
@@ -163,9 +171,15 @@ body {
 
 #sidepanel-toggle {
   display: flex;
+  visibility: hidden;
   align-items: center;
   padding: 3px;
   border-radius: calc(var(--border-radius) / 2);
+
+  @include w(md) {
+    visibility: visible;
+  }
+
   cursor: pointer;
   svg {
     margin: 0;
@@ -194,8 +208,9 @@ body {
   z-index: 1000;
   position: absolute;
   padding: 5px 0px;
+  border: $border;
   border-radius: var(--border-radius);
-  box-shadow: var(--shadow);
+  box-shadow: $shadow-lx;
   top: 100%; /* Adjust as needed */
   right: 0;
   background-color: #ffffff;
@@ -304,7 +319,7 @@ ul {
   transition: 200ms;
 
   background-color: #ffffff;
-  border-right: 1px solid grey;
+  border-right: $border;
   width: var(--left-nav-with);
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 
@@ -323,7 +338,7 @@ ul {
 
   .nav-el {
     list-style-type: none;
-    font-size: 16px;
+    font-size: $text-2;
     font-weight: 400;
     margin-bottom: 10px;
     border-radius: calc(var(--border-radius) / 2);
@@ -342,6 +357,7 @@ ul {
       text-decoration: none;
       color: var(--text-dark);
       user-select: none;
+      cursor: pointer;
     }
   }
 
@@ -402,13 +418,21 @@ h1 {
 
 .table-wrapper {
   width: 100%;
+  box-sizing: border-box;
+
+  @include w(md) {
+    width: unset;
+    overflow-x: auto;
+  }
 
   table {
-    border: var(--border);
+    border: $border;
     background-color: #ffffff;
     width: 100%;
+    min-width: 600px;
+    overflow-x: auto;
     padding: 30px;
-    box-shadow: var(--shadow);
+    box-shadow: $shadow;
     border-radius: var(--border-radius);
 
     th {
@@ -427,7 +451,7 @@ h1 {
       }
       th {
         font-weight: 300;
-        line-height: 30px;
+        line-height: 35px;
         max-width: 200px;
       }
     }
@@ -532,6 +556,7 @@ h1 {
       padding: 10px 14px;
       border-radius: 5px;
       border: 1px solid $gray-100;
+      font-size: $text-2;
     }
     input:focus {
       border: 1px solid $primary-200;
@@ -674,6 +699,7 @@ h1 {
 .form-input-row {
   display: flex;
   flex-direction: row !important;
+  width: 100%;
   div {
     display: flex;
     flex-direction: column;
@@ -685,16 +711,27 @@ h1 {
 
 //list start
 
+.list-no-data {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  span {
+    text-align: center;
+  }
+}
+
 .list-wrapper {
   background: white;
   width: 100%;
   display: flex;
   flex-direction: column;
-  border: var(--border);
+  border: $border;
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
-  padding: 30px 0;
+  padding: 15px 0 30px;
   min-height: 100px;
+  box-sizing: border-box;
 
   .list-item {
     border-top: var(--border);
@@ -704,6 +741,7 @@ h1 {
       height: 100px;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr 1fr;
+      transition-duration: 100ms;
     }
 
     .list-item-head:hover {
@@ -773,6 +811,7 @@ h1 {
   display: flex;
   padding: 5px 30px;
   justify-content: space-between;
+  min-height: 30px;
 
   .list-tabs {
     display: flex;
@@ -950,3 +989,71 @@ h1 {
   }
 }
 // alerts end
+
+// info-card 
+
+.info-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+
+  @media (max-width: 1150px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.info-card {
+  background-color: white;
+  border: $border;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  //max-width: 400px;
+  box-shadow: $shadow;
+  padding: 15px;
+  border-radius: var(--border-radius);
+  box-sizing: border-box;
+  div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .info-card-data {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: right;
+
+    .info-card-value {
+      font-weight: 500;
+      font-size: $text-4;
+    }
+
+    .info-card-title {
+      font-size: $text-2;
+      font-weight: 300;
+    }
+  }
+
+  .info-card-img {
+    margin-left: 10px;
+    padding: 12px;
+    background-color: $primary-200;
+    border-radius: 100px;
+    
+  }
+
+  img {
+    width: $text-6;
+    
+  }
+}
+
+// info-card end
