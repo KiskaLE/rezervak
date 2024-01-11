@@ -7,14 +7,15 @@ use App\Modules\Mailer;
 use App\Modules\AvailableDates;
 use App\Modules\Payments;
 use GuzzleHttp\Client;
+use Nette\DI\Attributes\Inject;
 
 class ApiPresenter extends BasePresenter
 {
 
     private $client;
+    #[Inject] public Nette\Database\Explorer $database;
 
     public function __construct(
-        private Nette\Database\Explorer $database,
         private Mailer         $mailer,
         private AvailableDates $availableDates,
         private Payments       $payments

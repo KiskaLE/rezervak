@@ -21,22 +21,30 @@ final class Mailer
     )
     {
         $mailerConfig = $this->container->getParameters();
-        //$this->url = "http://".$_SERVER['SERVER_NAME'];
-        $this->url = "http://" . "localhost:8000";
+        if (isset($_SERVER['SERVER_NAME'])) {
+            if ($_SERVER['SERVER_NAME'] === "localhost") {
+                $this->url = "http://" . "localhost:8000";
+            } else {
+                $this->url = "http://".$_SERVER['SERVER_NAME'];
+            }
+        } else {
+            $this->url = "http://" . "localhost:8000";
+        }
+        
 
-        $this->phpMailer->isSMTP();
-        $this->phpMailer->Host = 'smtp.seznam.cz';
-        $this->phpMailer->SMTPAuth = true;
-        $this->phpMailer->Username = 'rezervkainfo@seznam.cz';
-        $this->phpMailer->Password = 'sxqOgSNiXQ8TQbG';
-        $this->phpMailer->SMTPSecure = 'ssl';
-        $this->phpMailer->Port = 465;
+        // $this->phpMailer->isSMTP();
+        // $this->phpMailer->Host = 'smtp.seznam.cz';
+        // $this->phpMailer->SMTPAuth = true;
+        // $this->phpMailer->Username = 'rezervkainfo@seznam.cz';
+        // $this->phpMailer->Password = '';
+        // $this->phpMailer->SMTPSecure = 'ssl';
+        // $this->phpMailer->Port = 465;
 
-        $this->phpMailer->setFrom("rezervkainfo@seznam.cz");
-        $this->phpMailer->CharSet = "UTF-8";
+        // $this->phpMailer->setFrom("rezervkainfo@seznam.cz");
+        // $this->phpMailer->CharSet = "UTF-8";
 
-        $this->phpMailer->isHTML(true);
-        $this->phpMailer->setLanguage("cs");
+        // $this->phpMailer->isHTML(true);
+        // $this->phpMailer->setLanguage("cs");
 
         $this->latte = new Engine;
 
@@ -126,9 +134,9 @@ final class Mailer
 
     private function sendMail(string $to, string $subject, $message)
     {
-
+        $from = $this->database->table("settings")->fetch()->info_email;
         $mail = new Nette\Mail\Message;
-        $mail->setFrom("rezervkainfo@seznam.cz")
+        $mail->setFrom($from ?? "info@rezervak.cz")
             ->addTo($to)
             ->setSubject($subject)
             ->setHtmlBody($message);

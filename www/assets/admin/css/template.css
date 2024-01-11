@@ -105,10 +105,11 @@ body {
 
 #logo {
   align-self: center;
-  width: -moz-fit-content;
-  width: fit-content;
   text-align: center;
   margin: 20px 0;
+}
+#logo img {
+  height: 70px;
 }
 
 #user-dropdown {
@@ -227,7 +228,7 @@ ul {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 90vh;
+  height: 86vh;
 }
 .left-sidebar-container .nav-el {
   list-style-type: none;

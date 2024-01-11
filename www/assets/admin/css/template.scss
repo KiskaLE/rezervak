@@ -196,9 +196,12 @@ body {
 
 #logo {
   align-self: center;
-  width: fit-content;
+  
   text-align: center;
   margin: 20px 0;
+  img {
+    height: 70px;
+  }
 }
 
 #user-dropdown {
@@ -330,7 +333,7 @@ ul {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 90vh;
+    height: 86vh;
   }
 
   .nav-el {

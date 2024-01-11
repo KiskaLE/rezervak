@@ -69,6 +69,9 @@ class SettingsPresenter extends SecurePresenter
         ->setDefaultValue($this->settings->homepage)
         ->addRule($form::URL, "Neplatný url formát");
 
+        $form->addText("email")
+            ->setDefaultValue($this->settings->info_email)->addRule($form::EMAIL, "Neplatný mailový formát");
+
         $form->addSubmit("submit", "Uložit změny");
 
         $form->onSuccess[] = [$this, "basicSettingsFormSucceeded"];
@@ -86,6 +89,7 @@ class SettingsPresenter extends SecurePresenter
                 "number_of_days" => $data->numberOfDays,
                 "time_to_pay" => $data->timeToPay,
                 "homepage" => $data->homepage,
+                "info_email" => $data->email,
                 "updated_at" => date("Y-m-d H:i:s"),
             ]);
             $this->flashMessage("Změny byly uloženy.", "success");

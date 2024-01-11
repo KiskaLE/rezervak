@@ -1,5 +1,18 @@
 @import url("https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Roboto:ital,wght@0,300;0,400;0,500;1,500&family=Source+Code+Pro:wght@500&display=swap");
 
+
+$text: 12px;
+$text-1: 14px;
+$text-2: 16px;
+$text-3: 18px;
+$text-4: 20px;
+$text-5: 24px;
+$text-6: 30px;
+$text-7: 36px;
+$text-8: 48px;
+$text-9: 60px;
+$text-10: 72px;
+
 :root {
   --shadow-secondary: rgba(0, 0, 0, 0.12) 0px 1px 3px,
     rgba(0, 0, 0, 0.24) 0px 1px 2px;
@@ -29,9 +42,10 @@ body {
   width: 100%;
   display: flex;
   justify-content: center;
-  svg {
-    width: 200px;
+  svg, img {
+    height: 200px;
   }
+
 }
 
 .login-box {

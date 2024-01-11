@@ -2,15 +2,15 @@
 
 namespace App\Modules\admin\Presenters;
 
+use Nette\DI\Attributes\Inject;
 use Nette\Database\Explorer;
-
 class SecurePresenter extends BasePresenter
 {
 
     public $timezones;
+    #[Inject] public Explorer $database;
 
     public function __construct(
-        public Explorer $database
     )
     {
     

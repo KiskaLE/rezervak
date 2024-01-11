@@ -5,15 +5,16 @@ namespace App\Modules\admin\Presenters;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Explorer;
 use Nette\Utils\Paginator;
+use Nette\DI\Attributes\Inject;
 
 class BasePresenter extends Presenter
 {
 
     public $backlink;
+    #[Inject] public Explorer $database;
 
 
     public function __construct(
-        private Explorer $database,
     )
     {
         parent::__construct();
@@ -22,14 +23,16 @@ class BasePresenter extends Presenter
     protected function startup()
     {
         parent::startup();
-        // Your code here
     }
 
     protected function beforeRender()
     {
         parent::beforeRender();
-    }
+        //$this->template->logoUrl = null;
+        $user = $this->database->table("users")->fetch();
+        $this->template->logoUrl = $user->logo_url;
 
+    }
 
     /**
      * Handles the "back" functionality of the application.

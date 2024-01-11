@@ -4,6 +4,7 @@ namespace App\Modules\admin\Presenters;
 
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\ComponentModel\IComponent;
 use Nette\DI\Attributes\Inject;
 
 class ProfilePresenter extends SecurePresenter
@@ -81,6 +82,10 @@ class ProfilePresenter extends SecurePresenter
         $form->addText("zip")
             ->setDefaultValue($this->userRow->zip);
 
+        $form->addUpload("logo", "Logo")
+            ->setAttribute("accept", "image/*")
+            ->addRule(Form::MAX_FILE_SIZE, 'Maximální velikost souboru 2 MB.', 2 * 1024 * 1024 /* 2 MB in bytes */);
+
         $form->addSubmit("submit", "Uložit změny");
 
         $form->onSuccess[] = [$this, 'editUserFormSubmitted'];
@@ -89,6 +94,22 @@ class ProfilePresenter extends SecurePresenter
     }
 
     public function editUserFormSubmitted(Form $form, $values) {
+        //save logo
+        if ($values->logo) {
+            $logoName = $values->logo->getSanitizedName();
+            $filePath = __DIR__ . "/../../../../www/assets/images/" . $logoName;
+            if (file_exists($filePath)) {
+                if (is_writable($filePath)) {
+                    // Delete the file
+                    unlink($filePath);
+                }
+            }
+            $values->logo->move($filePath);
+            $this->database->table("users")->where("id=?" , $this->user->id)->update([
+                "logo_url" => $logoName
+            ]);
+            
+        }
         $this->database->transaction(function ($database) use ($values) {
             //user table
             $database->table("users")->where("id=?" , $this->user->id)->update([
