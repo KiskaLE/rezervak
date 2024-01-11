@@ -197,7 +197,6 @@ final class ReservationsPresenter extends SecurePresenter
     {
         $session = $this->getSession("reservations");
         $range = $this->formater->getDataFromRange($data->range);
-        bdump($range);
         $session->filterStart = $range['start'];
         $session->filterEnd = $range['end']. " 23:59:59";
         $this->redirect('default');

@@ -234,8 +234,6 @@ final class ServicesPresenter extends SecurePresenter
                     foreach ($events as $day) {
                         $uuid = Uuid::uuid4();
                         $start = date("Y-m-d H:i:s", strtotime($day->start));
-                        bdump(strtotime($day->start));
-                        bdump($start);
                         $end = date("Y-m-d H:i:s", strtotime($day->end));
                         $this->database->table("service_custom_schedule_days")->insert([
                             "uuid" => $uuid,
@@ -298,8 +296,6 @@ final class ServicesPresenter extends SecurePresenter
                 foreach ($events as $day) {
                     $uuid = Uuid::uuid4();
                     $start = date("Y-m-d H:i:s", strtotime($day->start));
-                    bdump(strtotime($day->start));
-                    bdump($start);
                     $end = date("Y-m-d H:i:s", strtotime($day->end));
                     $this->database->table("service_custom_schedule_days")->insert([
                         "uuid" => $uuid,

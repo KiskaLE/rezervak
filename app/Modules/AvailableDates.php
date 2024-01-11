@@ -414,7 +414,6 @@ class AvailableDates
             $start = strtotime($day->start);
             $end = strtotime($day->end);
             while ($start < $end) {
-                bdump(date("H:i", $start));
                 $isAvailable = true;
                 $newReservationEnd = strtotime(date("Y-m-d H:i", $start) . " + " . $duration - 1 . " minutes");
 

@@ -22,7 +22,10 @@ class DiscountCodes
      */
     public function isCodeValid(int $user_id, int $service_id, string $discountCode)
     {
-        $discountCodeRow = $this->database->table("discount_codes")->where("user_id=? AND code=? AND active=1", [strval($user_id), $discountCode])->fetch();
+        $discountCodeRow = $this->database->table("discount_codes")->where("user_id=? AND code LIKE ? AND active=1", [strval($user_id), $discountCode])->fetch();
+        if (strval($discountCodeRow?->code) != $discountCode) {
+            return [];
+        }
         if ($discountCodeRow) {
             $services2discountCode = $discountCodeRow->related("service2discount_code.discount_code_id")->fetchAll();
             $selectedServices = [];

@@ -555,6 +555,19 @@ function removeDaySelected() {
   }
 }
 
+function debounce(func, delay) {
+  let debounceTimer;
+  return function() {
+    const context = this;
+    const args = arguments;
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => func.apply(context, args), delay);
+  };
+}
+
+const debouncedVerify = debounce(verify, 300);
+
+
 async function verify() {
   let code = document.querySelector("[name='dicountCode']").value;
   const service = document.querySelector("[name='service']").value;

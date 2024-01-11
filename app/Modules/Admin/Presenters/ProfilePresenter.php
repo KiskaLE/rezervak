@@ -95,10 +95,10 @@ class ProfilePresenter extends SecurePresenter
 
     public function editUserFormSubmitted(Form $form, $values) {
         //save logo
-        if ($values->logo) {
-            $logoName = $values->logo->getSanitizedName();
-            $filePath = __DIR__ . "/../../../../www/assets/images/" . $logoName;
-            if (file_exists($filePath)) {
+        if ($values->logo && $values->logo->hasFile()) {
+                $logoName = $values->logo->getSanitizedName();
+                $filePath = __DIR__ . "/../../../../www/assets/images/" . $logoName;
+                if (file_exists($filePath)) {
                 if (is_writable($filePath)) {
                     // Delete the file
                     unlink($filePath);
@@ -108,6 +108,7 @@ class ProfilePresenter extends SecurePresenter
             $this->database->table("users")->where("id=?" , $this->user->id)->update([
                 "logo_url" => $logoName
             ]);
+            
             
         }
         $this->database->transaction(function ($database) use ($values) {
