@@ -221,7 +221,7 @@ async function getServiceName(service_id) {
   await naja
     .makeRequest(
       "GET",
-      "/reservation/",
+      "/",
       {
         run: "getServiceName",
         service_id: service_id,
@@ -241,7 +241,7 @@ async function getTime(time_id) {
   let naja = window.Naja;
   const res = await naja.makeRequest(
     "GET",
-    "/reservation/",
+    "/",
     {
       u: searchParams.get("u"),
       run: "getTime",
@@ -277,7 +277,7 @@ async function changeDay() {
   await naja
     .makeRequest(
       "GET",
-      "/reservation/",
+      "/",
       {
         u: searchParams.get("u"),
         run: "setDate",
@@ -530,7 +530,7 @@ async function createCalendar(month, year) {
     const service_id = document.querySelector("[name='service']").value;
     const res = await naja.makeRequest(
       "POST",
-      `/reservation/`,
+      `/`,
       {
         u: searchParams.get("u"),
         run: "fetch",
@@ -565,7 +565,7 @@ async function verify() {
     let naja = window.Naja;
     const res = await naja.makeRequest(
       "POST",
-      "/reservation/",
+      "/",
       {
         u: searchParams.get("u"),
         run: "verifyCode",

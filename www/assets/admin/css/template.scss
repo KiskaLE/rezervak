@@ -86,6 +86,8 @@ $shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
 
 $border: 1px solid rgba(26, 26, 26, 0.1);
 
+$background: #f5f5f5;
+
 :root {
   --main-padding: 20px;
   --left-nav-with: 250px;
@@ -129,6 +131,7 @@ $border: 1px solid rgba(26, 26, 26, 0.1);
 }
 
 body {
+  background-color: $background;
   font-family: "Roboto", sans-serif;
   margin: 0;
   padding: 0;
