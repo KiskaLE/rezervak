@@ -24,7 +24,7 @@
                 <tr>
                     <th class="text-left">{$discountCode->code}</th>
                     <th class="text-right">{$discountCode->value|currency} {$discountCode->type == 0 ? " Kč" : " %" }</th>
-                    <th class="text-left">{$discountCode->type == 0 ? "cena" : "procento" }</th>
+                    <th class="text-left"><span n:if="!$discountCode->type" class="tag tag-purple">cena</span><span n:if="$discountCode->type" class="tag tag-blue">procento</span></th>
                     {* <th class="text-left">{$discountCode->active ? 'Ano' : 'Ne'}</th> *}
                     <th class="text-left">
                         <a class="btn btn-primary" n:href="DiscountCodes:edit $discountCode->id">Upravit</a>

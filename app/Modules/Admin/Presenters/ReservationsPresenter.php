@@ -60,7 +60,6 @@ final class ReservationsPresenter extends SecurePresenter
 
         $q = $this->database->table('reservations')
         ->select('reservations.*',)
-        ->where('reservations.status=?', 'VERIFIED')
         ->where('user_id=?', $this->user->id)
         ->where("reservations.type=?", 0);
 
@@ -74,26 +73,29 @@ final class ReservationsPresenter extends SecurePresenter
         switch ($tab) {
             case 0:
                 //nadcházející
-                $q = $q->where('start >= ?', date('Y-m-d'))->where(':payments.status=?', 1)->order('start ASC');
-                $numberOfReservations = $q->count();
-                $paginator = $this->createPagitator($numberOfReservations, $page, 5);
-                $reservations = $q->limit($paginator->getLength(), $paginator->getOffset())->fetchAll();
+                $q = $q->where('reservations.status=?', 'VERIFIED')
+                    ->where('start >= ?', date('Y-m-d'))
+                    ->where(':payments.status=?', 1)->order('start ASC');
                 break;
             
             case 1:
                 //proběhlé
-                $q = $q->where('start < ?', date('Y-m-d'))->where(':payments.status=?', 1)->order('start ASC');
-                $numberOfReservations = $q->count();
-                $paginator = $this->createPagitator($numberOfReservations, $page, 5);
-                $reservations = $q->limit($paginator->getLength(), $paginator->getOffset())->fetchAll();
+                $q = $q->where('reservations.status=?', 'VERIFIED')->where('start < ?', date('Y-m-d'))->where(':payments.status=?', 1)->order('start ASC');
                 break;
             case 2:
                 //nezaplacené
-                $q = $q->where(':payments.status=?', 0)->order('start ASC');
-                $numberOfReservations = $q->count();
-                $paginator = $this->createPagitator($numberOfReservations, $page, 5);
-                $reservations = $q->limit($paginator->getLength(), $paginator->getOffset())->fetchAll();
+                $q = $q->where('reservations.status=?', 'VERIFIED')->where(':payments.status=?', 0)->order('start ASC');
+                break;
+            case 3:
+                $q = $q->where('reservations.status !=?', 'UNVERIFIED')->order('created_at DESC');
+                break;
+
         }
+        $numberOfReservations = $q->count();
+        $paginator = $this->createPagitator($numberOfReservations, $page, 5);
+        $reservations = $q->limit($paginator->getLength(), $paginator->getOffset())->fetchAll();
+
+
         $this->template->reservations = $reservations;
         $this->template->paginator = $paginator;
     }
@@ -240,6 +242,26 @@ final class ReservationsPresenter extends SecurePresenter
         }
 
         $this->redirect('default');
+    }
+
+    public function handleSetPaid($id) {
+        $isSuccess = true;
+        try {
+            $res = $this->database->table('payments')->where('reservation_id=?', $id)->update([
+                'status' => '1',
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+            if (!$res) {
+                $isSuccess = false;
+            }
+        } catch (\Throwable $th) {
+            $isSuccess = false;
+        }
+        if ($isSuccess) {
+            $this->flashMessage("Rezervace byla zaplacena", "success");
+            $this->redirect('Reservations:');
+        }
+        $this->flashMessage("Nepovedlo se zaplatit", "error");
     }
 
 }

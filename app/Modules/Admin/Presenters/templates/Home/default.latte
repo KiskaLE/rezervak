@@ -88,7 +88,7 @@
                 </div>
 
                 <div class="list-item-column">
-                    <div class="list-item-info">Vytvořeno <b>{$reservation->created_at|convertToAdminTimezone|date:'d.m.Y H:i'}</b></div>
+                    <div class="list-item-info row"><span class="tag tag-blue">{$payment->price} Kč</span></div>
                 </div>
 
                 <div class="list-item-column list-item-more">
@@ -126,6 +126,17 @@
                         <span>{$reservation->city}</span>
                     </div>
                 </div>
+
+                <div class="list-item-column top">
+                 <div class="list-item-info">
+                    <span class="list-item-label">Vytvořeno</span>
+                    <span>{$reservation->created_at}</span>
+                </div>
+                <div n:if="$payment->status" class="list-item-info">
+                    <span class="list-item-label">Zaplaceno</span>
+                    <span>{$payment->updated_at}</span>
+                </div>
+            </div>
             </div>
             {do $i++}
         </div>

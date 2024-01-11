@@ -11,6 +11,9 @@
 
     <div class="list-page">
         <div class="list-tabs">
+            <a n:href="setTab! 3" class="list-page-item" id="tab3">
+                Všechny
+            </a>
             <a n:href="setTab! 0" class="list-page-item" id="tab0">
                 Nadcházející
             </a>
@@ -59,10 +62,15 @@
             <div class="list-item-column">
                 <div class="list-item-info"><b>{$reservation->firstname. " ". $reservation->lastname}</b></div>
                 <div class="list-item-info"> Typ rezervace <b>{$service->name|lower}</b></div>
+                <div class="list-item-info row">č.{$reservation->id}</div>
             </div>
 
             <div class="list-item-column">
-                <div class="list-item-info">Vytvořeno <b>{$reservation->created_at|convertToAdminTimezone|date:'d.m.Y H:i'}</b></div>
+                {* <div class="list-item-info row">Vytvořeno {$reservation->created_at|convertToAdminTimezone|date:'d.m.Y H:i'}</div> *}
+                <div n:if="!$payment->status && $reservation->status !='CANCELED'" class="list-item-info row"><span class="tag tag-yellow">čeká na zaplacení</span></div>
+                <div n:if="$payment->status && $reservation->status !='CANCELED'" class="list-item-info row"><span class="tag tag-green">zaplaceno</span></div>
+                <div n:if="$reservation->status =='CANCELED'" class="list-item-info row"><span class="tag tag-red">zrušeno</span></div>
+                <div class="list-item-info row"><span class="tag tag-blue">{$payment->price} Kč</span></div>
             </div>
 
             <div class="list-item-column list-item-more">
@@ -76,11 +84,12 @@
 
         <div class="list-item-body" style="display: none">
             <div class="list-item-column list-item-actions">
-            <a class="btn btn-tertiary" n:href="edit $reservation->uuid">Upravit</a>
-            <a class="btn btn-tertiary" n:href="cancel! $reservation->id" onclick="if(confirm('Opravdu chcete zrušit rezervaci?')) { handleDelete(this, {$reservation->id}); } else { event.preventDefault(); }">Zrušit</a>
+            <a n:if="$payment->status != 1 && $reservation->status == 'VERIFIED'" class="btn btn-tertiary" n:href="setPaid! $reservation->id">Označit zaplaceno</a>
+            {* <a class="btn btn-tertiary" n:href="edit $reservation->uuid">Upravit</a> *}
+            <a n:if="$reservation->status != 'CANCELED'" class="btn btn-tertiary" n:href="cancel! $reservation->id" onclick="if(confirm('Opravdu chcete zrušit rezervaci?')) { handleDelete(this, {$reservation->id}); } else { event.preventDefault(); }">Zrušit</a>
 
              </div>
-            <div class="list-item-column">
+            <div class="list-item-column top">
                 <div class="list-item-info">
                     <span class="list-item-label">E-mail</span>
                     <span>{$reservation->email}</span>
@@ -98,6 +107,17 @@
                     <span>{$reservation->address}</span>
                     <span>{$reservation->code}</span>
                     <span>{$reservation->city}</span>
+                </div>
+            </div>
+
+            <div class="list-item-column top">
+                 <div class="list-item-info">
+                    <span class="list-item-label">Vytvořeno</span>
+                    <span>{$reservation->created_at}</span>
+                </div>
+                <div n:if="$payment->status" class="list-item-info">
+                    <span class="list-item-label">Zaplaceno</span>
+                    <span>{$payment->updated_at}</span>
                 </div>
             </div>
         </div>

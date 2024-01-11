@@ -57,6 +57,19 @@ $yellow-700: #342800;
 $yellow-800: #171100;
 $yellow-900: #030200;
 
+$red-100: #ffc8c4;
+$red-800: #270304;
+
+$purple-100: #e8caff;
+$purple-800: #1c032a;
+
+$pink-100: #ffc4de;
+$pink-800: #270016;
+
+$blue-100: #b5ddff;
+$blue-800: #001324;
+
+
 $gray-50: #f7f9f9;
 $gray-100: #d5d8d9;
 $gray-200: #b4b8b9;
@@ -776,11 +789,20 @@ h1 {
       font-size: $text-3;
       font-weight: 300;
 
+      &.top {
+        justify-content: start;
+      }
+
       .list-item-info {
         display: flex;
         flex-direction: column;
         font-weight: 300;
         font-size: 16px;
+
+        &.row {
+          flex-direction: row;
+          gap: 5px;
+        }
 
         .list-item-label {
           font-weight: 500;
@@ -793,6 +815,7 @@ h1 {
 
       .list-item-detail {
         display: flex !important;
+        width: 100%;
         justify-content: center !important;
         align-items: center !important;
         gap: 5px;
@@ -806,7 +829,7 @@ h1 {
         height: 100%;
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: end !important;
         font-size: $text !important;
       }
     }
@@ -819,7 +842,7 @@ h1 {
       box-sizing: border-box;
       width: 100%;
       display: grid;
-      grid-template-columns: 1fr 3fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
       padding: 10px 0;
     }
   }
@@ -1070,3 +1093,42 @@ h1 {
 }
 
 // info-card end
+
+//tags start
+.tag {
+  background-color: $gray-200;
+  padding: 5px 10px;
+  border-radius: 20px;
+
+  &.tag-yellow {
+    background-color: $yellow-100;
+    color: $yellow-800;
+  }
+
+  &.tag-green {
+    background-color: $green-100;
+    color: $green-800;
+  }
+
+  &.tag-red {
+    background-color: $red-100;
+    color: $red-800;
+  }
+
+  &.tag-blue {
+    background-color: $blue-100;
+    color: $blue-800;
+  }
+
+  &.tag-pink {
+    background-color: $pink-100;
+    color: $pink-800;
+  }
+
+  &.tag-purple {
+    background-color: $purple-100;
+    color: $purple-800;
+  }
+}
+
+//tags end
