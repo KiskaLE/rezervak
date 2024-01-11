@@ -26,6 +26,7 @@ final class PaymentPresenter extends BasePresenter
     {
         $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
         $this->user = $reservation->ref("users", "user_id");
+        $this->template->user = $this->user;
         if ($reservation) {
             $this->verify($reservation, $id, "reservations");
             if ($reservation->status != "VERIFIED") {

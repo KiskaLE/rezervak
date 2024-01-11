@@ -80,15 +80,11 @@ $text-8: 48px;
 $text-9: 60px;
 $text-10: 72px;
 
-$shadow:
-  0 4px 6px -1px rgb(0 0 0 / 0.1),
-  0 2px 4px -2px rgb(0 0 0 / 0.1);
-$shadow-lx:
-  0 20px 25px -5px rgb(0 0 0 / 0.1),
-  0 8px 10px -6px rgb(0 0 0 / 0.1);
+$shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+$shadow-lx: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 $shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
 
-$border: 1px solid rgba(26,26,26,0.1);
+$border: 1px solid rgba(26, 26, 26, 0.1);
 
 :root {
   --main-padding: 20px;
@@ -114,20 +110,21 @@ $border: 1px solid rgba(26,26,26,0.1);
   align-items: center;
   justify-content: center;
   width: fit-content;
+  transition: 100ms;
 
   margin-bottom: 10px;
 
+  &:hover {
+    cursor: pointer;
+    background: $primary-50;
+  
+    svg {
+      stroke: $primary-400 !important;
+    }
+  }
+
   svg {
     stroke: #9ca3af !important;
-  }
-}
-
-.back:hover {
-  cursor: pointer;
-  background: $primary-50;
-
-  svg {
-    stroke: $primary-400 !important;
   }
 }
 
@@ -276,10 +273,6 @@ body {
   }
 }
 
-#user-avatar:hover {
-  background-color: $primary-100;
-}
-
 #user-avatar {
   cursor: pointer;
   width: 40px;
@@ -291,6 +284,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  &:hover {
+    background-color: $primary-100;
+  }
 
   span {
     margin: 0;
@@ -342,6 +339,10 @@ ul {
     font-weight: 400;
     margin-bottom: 10px;
     border-radius: calc(var(--border-radius) / 2);
+
+    &:hover {
+      background-color: $primary-50;
+    }
     svg {
       width: 16px;
       path {
@@ -359,10 +360,6 @@ ul {
       user-select: none;
       cursor: pointer;
     }
-  }
-
-  .nav-el:hover {
-    background-color: $primary-50;
   }
 
   .selected {
@@ -557,10 +554,21 @@ h1 {
       border-radius: 5px;
       border: 1px solid $gray-100;
       font-size: $text-2;
+
+      &:focus {
+        border: 1px solid $primary-200;
+        outline: $primary-100;
+      }
     }
-    input:focus {
-      border: 1px solid $primary-200;
-      outline: $primary-100;
+
+    input.disabled {
+      background: $gray-100;
+      cursor: not-allowed;
+
+      &:focus {
+        border: 1px solid $gray-100;
+        outline: $gray-100;
+      }
     }
 
     textarea {
@@ -568,11 +576,11 @@ h1 {
       border-radius: 5px;
       border: 1px solid #d4d4d4;
       min-height: 100px;
-    }
 
-    textarea:focus {
-      border: 1px solid $primary-400;
-      outline: $primary-400;
+      &:focus {
+        border: 1px solid $primary-400;
+        outline: $primary-400;
+      }
     }
 
     select {
@@ -581,11 +589,11 @@ h1 {
       border-radius: 5px;
       border: 1px solid #d4d4d4;
       width: 100%;
-    }
 
-    select:focus {
-      border: 1px solid $primary-400;
-      outline: $primary-400;
+      &:focus {
+        border: 1px solid $primary-400;
+        outline: $primary-400;
+      }
     }
 
     .form-checkbox {
@@ -608,6 +616,10 @@ h1 {
     gap: 10px;
 
     .submit {
+
+      &:hover {
+        filter: brightness(90%);
+      }
       input {
         cursor: pointer;
         background-color: $primary-400;
@@ -618,11 +630,11 @@ h1 {
         font-size: $text-2;
       }
     }
-    .submit:hover {
-      filter: brightness(90%);
-    }
 
     .reset {
+      &:hover {
+        filter: brightness(90%);
+      }
       a {
         font-size: 16px;
         display: flex;
@@ -635,9 +647,6 @@ h1 {
         color: var(--text-dark);
         cursor: pointer;
       }
-    }
-    .reset:hover {
-      filter: brightness(90%);
     }
   }
 }
@@ -662,14 +671,16 @@ h1 {
     padding: 5px 10px !important;
     transition: 100ms !important;
     outline: none !important;
+
+    &:hover {
+      filter: brightness(90%) !important;
+    }
+
+    &:focus {
+      outline: none !important;
+    }
   }
 
-  button:focus {
-    outline: none !important;
-  }
-  button:hover {
-    filter: brightness(90%);
-  }
   .fc-button-active {
     background-color: $gray-300 !important;
     border: none !important;
@@ -843,29 +854,18 @@ h1 {
     }
 
     .filter-toggle {
+
+
       svg {
         height: 20px;
         width: 20px;
         transition: 100ms;
-
         padding: 5px;
         border-radius: 5px;
-      }
 
-      svg:hover {
-        background-color: #dbeafe;
-      }
-      svg {
-        height: 20px;
-        width: 20px;
-        transition: 100ms;
-
-        padding: 5px;
-        border-radius: 5px;
-      }
-
-      svg:hover {
-        background-color: #dbeafe;
+        &:hover {
+          background-color: #dbeafe;
+        }
       }
     }
 
@@ -921,6 +921,13 @@ h1 {
     align-items: center;
     list-style-type: none;
 
+    &.active {
+      a {
+        background: $primary-400;
+        color: white;
+      }
+    }
+
     a {
       height: 30px;
       width: 30px;
@@ -930,12 +937,6 @@ h1 {
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-  }
-  li.active {
-    a {
-      background: $primary-400;
-      color: white;
     }
   }
 }
@@ -990,7 +991,7 @@ h1 {
 }
 // alerts end
 
-// info-card 
+// info-card
 
 .info-cards-grid {
   display: grid;
@@ -1055,12 +1056,10 @@ h1 {
     padding: 12px;
     background-color: $primary-200;
     border-radius: 100px;
-    
   }
 
   img {
     width: $text-6;
-    
   }
 }
 

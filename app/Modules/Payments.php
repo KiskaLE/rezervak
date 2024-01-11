@@ -52,7 +52,7 @@ final class Payments
     public function generatePaymentCode($payment, int $user_id)
     {
         $qrPlatba = new QRPlatba();
-        $account = $this->database->table("settings")->where("user_id", $user_id)->fetch()->payment_info;
+        $account = $this->database->table("users")->get($user_id)->payment_info;
 
         $qrPlatba->setAccount($account)
             ->setVariableSymbol($payment->id_transaction)

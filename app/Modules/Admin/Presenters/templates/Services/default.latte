@@ -32,6 +32,7 @@
                         <a class="btn btn-primary" n:href="editCustomSchedule $schedule?->uuid">rozvrh</a>
                         <a class="btn btn-secondary btn-green" n:href="edit $service->id">Upravit</a>
                         <a class="btn btn-secondary {!$service->hidden ? 'btn-gold' : 'btn-default'}" n:href="deleteService! $service->id">{!$service->hidden ? "Zobrazeno" : "Skryto"}</a>
+                        <a class="btn btn-tertiary" n:if="!$service->related('reservations')->count()" n:href="delete! $service->id" onclick="if(confirm('Opravdu chcete zrušit službu?')) { handleDelete(this, {$service->id}); } else { event.preventDefault(); }">Smazat</a>
                     </th>
                 </tr>
         {/foreach}

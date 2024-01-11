@@ -13,7 +13,7 @@
         <div class="form-body">
 
             <div class="form-group" style="width: 300px;">
-                <label for="">Slevový kód*</label>
+                <label for="">Kód*</label>
                 <input n:name="code">
             </div>
 
@@ -26,7 +26,7 @@
                 <label for="">Hodnota*</label>
                 <input n:name="value">
             </div>
-
+            <span>Vyberte služby</span>
             <div class="form-group" style="max-height: 100px; overflow: scroll; width: 300px;">
                 {var $i = 1}
                 <div n:foreach="$services as $service" class="form-checkbox">
@@ -37,8 +37,8 @@
             </div>
 
             <div class="form-actions">
-                <div class="submit"><input type="submit" name="submit"></div>
-                <div class="reset"><a n:href="this">Zrušit</a></div>
+                <div class="submit"><input type="submit" n:name="save"></div>
+                {* <div class="reset"><a n:href="this">Zrušit</a></div> *}
             </div>
 
         </div>

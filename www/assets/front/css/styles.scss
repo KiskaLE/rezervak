@@ -1017,13 +1017,15 @@ input.valid {
 
 //payment start
 .payment-wrapper {
+  background-color: white;
+  border: $border;
   display: flex;
   align-items: center;
   box-shadow: $shadow;
   border-radius: $radius;
   gap: 50px;
-  padding: 30px;
-  font-size: 1.2rem;
+  padding: 20px;
+  font-size: $text-3;
 
   h2 {
     margin: 0;

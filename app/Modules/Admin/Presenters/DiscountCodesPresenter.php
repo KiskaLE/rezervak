@@ -125,7 +125,7 @@ final class DiscountCodesPresenter extends SecurePresenter
             $form->addCheckbox(strval("service" . $i), $service->name);
             $i++;
         }
-        $form->addSubmit("save", "Vytvořit");
+        $form->addSubmit("save", "Vytvořit kód");
 
         $form->onSuccess[] = [$this, "formSucceeded"];
 
@@ -196,7 +196,7 @@ final class DiscountCodesPresenter extends SecurePresenter
             $form->addCheckbox(strval("service" . $i), $service->name);
             $i++;
         }
-        $form->addSubmit("submit", "Uložit");
+        $form->addSubmit("submit", "Uložit změny");
 
         $form->onSuccess[] = [$this, "editFormSucceeded"];
 

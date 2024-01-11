@@ -16,7 +16,7 @@
             line-height: 30px;">Dobrý den,<br>
 
             s lítostí Vám oznamujeme, že Vaše rezervace
-            <b>č.{$reservation->id} u {$userSettings->company} na {$reservation->start|date:"d.m.Y"} byla zrušena.</b>
+            <b>č.{$reservation->id} u {$user->company} na {$reservation->start|date:"d.m.Y"} byla zrušena.</b>
         </p>
         <h3>Detaily zrušené rezervace:</h3>
         <p style="font-size: 16px;
@@ -38,9 +38,9 @@
         <br>
         <p style="font-size: 16px;
             line-height: 30px;">S pozdravem, <br>
-            <span n:if="$userSettings->company">{$userSettings->company}</span><br>
-            <span n:if="$userSettings->email">{$userSettings->email}</span> <br>
-            <span n:if="$userSettings->phone">{$userSettings->phone}</span>
+            <span n:if="$user->company">{$user->company}</span><br>
+            <span n:if="$user->email">{$user->email}</span> <br>
+            <span n:if="$user->phone">{$user->phone}</span>
 
         </p>
     </div>

@@ -144,13 +144,6 @@ final class ServicesPresenter extends SecurePresenter
                 "timeEnd" => $this->formater->getTimeFormatedFromTimeStamp($day->end)
             ];
         }
-
-        $defaults = [
-            "scheduleName" => $schedule->name,
-            "range" => $this->formater->getDateFormatedFromTimestamp($schedule->start) . " " . $this->formater->getTimeFormatedFromTimeStamp($schedule->start) . " - " . $this->formater->getDateFormatedFromTimestamp($schedule->end) . " " . $this->formater->getTimeFormatedFromTimeStamp($schedule->end),
-            "multiplier" => $daysDefaults
-        ];
-        $this["editCustomScheduleForm"]->setDefaults($defaults);
     }
 
     public function actionCreateCustomSchedule($id, $backlink)
@@ -340,9 +333,9 @@ final class ServicesPresenter extends SecurePresenter
         $form->addHidden("action");
         $form->addText("name", "Name")
             ->setRequired("Jméno je povinné");
-        $form->addTextArea("description", "Description")
-            ->setMaxLength(500)
-            ->setRequired("Popis je povinný");
+        // $form->addTextArea("description", "Description")
+        //     ->setMaxLength(500)
+        //     ->setRequired("Popis je povinný");
         $form->addText("duration", "Duration")
             ->setHtmlAttribute("type", "number")
             ->setRequired("Doba je povinná")
@@ -411,7 +404,6 @@ final class ServicesPresenter extends SecurePresenter
                     "price" => $data->price,
                     "duration" => $data->duration,
                     "user_id" => $this->user->id,
-                    "description" => $data->description,
                     // for custom schedules only
                     "type" => 1
                 ]);
@@ -449,15 +441,18 @@ final class ServicesPresenter extends SecurePresenter
         $form->addText("name", "Name")
             ->setDefaultValue($this->service->name)
             ->setRequired("Jméno je povinné");
-        $form->addTextArea("description", "Description")
-            ->setDefaultValue($this->service->description)
-            ->setMaxLength(500);
+        // $form->addTextArea("description", "Description")
+        //     ->setDefaultValue($this->service->description)
+        //     ->setMaxLength(500);
+
+        $form->addText("duration", "Duration")
+            ->setDefaultValue($this->service->duration);
         $form->addText("price", "Price")
             ->setDefaultValue($this->service->price)
             ->setHtmlAttribute("type", "number")
             ->setRequired("Cena je povinna")
             ->addRule($form::Min, "Cena musí být větší než 0", 0);
-        $form->addSubmit("submit", "Uložit");
+        $form->addSubmit("submit", "Uložit změny");
 
         $form->onSuccess[] = [$this, "editFormSuccess"];
 
@@ -483,6 +478,21 @@ final class ServicesPresenter extends SecurePresenter
         }
             $this->flashMessage("Změny se nepodařili uložit", "error");
             $this->redirect("this");
+    }
+
+    public function handleDelete($id) {
+        $isSuccess = false;
+        $this->database->transaction(function ($database) use ($id) {
+            $service = $database->table("services")->get($id);
+            if ($service->related("reservations")->count() == 0) {
+                $service->delete();
+                $isSuccess = true;
+                $this->flashMessage("Služba byla smazána", "success");
+            } else {
+                $this->flashMessage("Služba se nepodařila smazat", "error");
+            }
+        });
+        $this->redirect("this");
     }
 
 }

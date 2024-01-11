@@ -61,9 +61,9 @@
         <br>
         <p style="font-size: 16px;
             line-height: 30px;">S pozdravem, <br>
-            <span n:if="$userSettings->company">{$userSettings->company}</span><br>
-            <span n:if="$userSettings->email">{$userSettings->email}</span> <br>
-            <span n:if="$userSettings->phone">{$userSettings->phone}</span>
+            <span n:if="$user->company">{$user->company}</span><br>
+            <span n:if="$user->email">{$user->email}</span> <br>
+            <span n:if="$user->phone">{$user->phone}</span>
         </p>
     </div>
 </div>
