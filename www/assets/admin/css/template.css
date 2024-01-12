@@ -667,7 +667,15 @@ h1 {
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  padding: 10px 0;
+  transition: all 0.3s ease;
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+.list-wrapper .list-item .list-item-body.open {
+  height: auto;
+  opacity: 1;
+  margin-bottom: 10px;
 }
 
 .list-page {

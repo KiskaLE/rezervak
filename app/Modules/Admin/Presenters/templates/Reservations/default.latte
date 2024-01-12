@@ -91,7 +91,7 @@
             </div>
         </div>
 
-        <div class="list-item-body" style="display: none">
+        <div class="list-item-body">
             <div class="list-item-column list-item-actions">
             <a n:if="$payment->status != 1 && $reservation->status == 'VERIFIED'" class="btn btn-tertiary" n:href="setPaid! $reservation->id">Označit zaplaceno</a>
             {* <a class="btn btn-tertiary" n:href="edit $reservation->uuid">Upravit</a> *}

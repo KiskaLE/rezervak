@@ -81,24 +81,43 @@ function sidebarClose() {
 function listItemToggle(listItemId) {
     const listItem = document.getElementById(listItemId);
     const listItemBody = listItem.querySelector('.list-item-body');
-    //close all .list-item-body if opening
-    if (listItemBody.style.display === 'none') {
-        const listItems = document.querySelectorAll('.list-item-body');
-        listItems.forEach(item => {
-            item.style.display = 'none';
-            const svg = item.parentElement.querySelector('svg');
-            svg.style.transform ='rotate(0deg)';
-        });
+    const isClosed = listItemBody.style.height === "" || listItemBody.style.height === "0px";
+
+    // Close all other items first
+    document.querySelectorAll('.list-item-body').forEach(item => {
+        item.style.height = "0px";
+        item.style.opacity = "0";
+        item.classList.remove('open');
+    });
+
+    // Toggle the current item
+    if (isClosed) {
+        // Temporarily display the element to get its height
+        listItemBody.style.display = 'grid';
+        const height = listItemBody.scrollHeight + 'px';
+        listItemBody.style.height = '0px';
+        listItemBody.style.opacity = '0';
+        setTimeout(() => {
+            listItemBody.style.height = height;
+            listItemBody.style.opacity = '1';
+        }, 10); // Start the animation after a small delay
+        listItemBody.classList.add('open');
+    } else {
+        listItemBody.style.height = '0px';
+        listItemBody.style.opacity = '0';
+        listItemBody.classList.remove('open');
     }
-    //get listItem by id
-    //get listItem children .list-item-body
-    const svg = listItem.querySelector('svg');
-    svg.style.transform = svg.style.transform === 'rotate(90deg)' ? 'rotate(0deg)' : 'rotate(90deg)';
-    listItemBody.style.display = listItemBody.style.display === 'none' ? 'grid' : 'none';
 
-
-
+    // Clean up after the transition ends
+    listItemBody.addEventListener('transitionend', function() {
+        if (isClosed) {
+            listItemBody.style.display = 'grid';
+        } else {
+            listItemBody.style.display = 'none';
+        }
+    }, { once: true });
 }
+
 
 function listFilterToggle() {
     const toggle = document.getElementById("list-filter-toggle");
