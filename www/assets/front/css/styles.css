@@ -469,9 +469,13 @@ body {
 }
 
 .calendar-times {
-  display: none;
-  padding-top: 103px;
-  height: 100px;
+  padding-top: 97px;
+  height: 420px;
+  width: 0px;
+  overflow-x: hidden;
+  transition: all 0.3s;
+}
+.calendar-times.open {
   width: 150px;
 }
 @media (max-width: 900px) {
@@ -1009,4 +1013,34 @@ footer {
   color: #ce4629;
   font-size: 16px;
   font-weight: 600;
+}
+
+.loading {
+  --width: 50px;
+  position: absolute;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: calc(50% - var(--width) / 2);
+  left: calc(50% - var(--width) / 2);
+  width: var(--width);
+  height: var(--width);
+  filter: none !important;
+  border: 6px solid #d5d8d9;
+  border-top: 6px solid #74c5da;
+  animation: rotate 1s linear infinite;
+  border-radius: 50%;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }/*# sourceMappingURL=styles.css.map */

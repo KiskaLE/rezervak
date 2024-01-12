@@ -104,7 +104,7 @@ function validateForm() {
     let value = y[i].value;
     y[i].className = "multiform";
     const parentEl = y[i].parentNode;
-    parentEl.classList.remove("invalid")
+    parentEl.classList.remove("invalid");
     if (name == "service" || name == "time") {
       if (!value.match(/\d+/)) {
         y[i].className += " invalid";
@@ -118,37 +118,37 @@ function validateForm() {
     } else if (name == "firstname" || name == "lastname" || name == "city") {
       if (value.match(/\d+/) || value.length == 0) {
         y[i].className += " invalid";
-        parentEl.classList.add("invalid")
+        parentEl.classList.add("invalid");
         valid = false;
       }
     } else if (name == "phone") {
       if (!value.match(/^\+?[1-9]\d{1,14}$/)) {
         y[i].className += " invalid";
-        parentEl.classList.add("invalid")
+        parentEl.classList.add("invalid");
         valid = false;
       }
     } else if (name == "email") {
       if (!value.match(/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/)) {
         y[i].className += " invalid";
-        parentEl.classList.add("invalid")
+        parentEl.classList.add("invalid");
         valid = false;
       }
     } else if (name == "address") {
       if (value == "") {
         y[i].className += " invalid";
-        parentEl.classList.add("invalid")
+        parentEl.classList.add("invalid");
         valid = false;
       }
     } else if (name == "code") {
       if (!value.match(/^\d{5}$/)) {
         y[i].className += " invalid";
-        parentEl.classList.add("invalid")
+        parentEl.classList.add("invalid");
         valid = false;
       }
     } else if (name == "dateType") {
       if (!(value == "default" || value == "backup")) {
         y[i].className += " invalid";
-        parentEl.classList.add("invalid")
+        parentEl.classList.add("invalid");
         valid = false;
       }
     } else if (name == "discountCode") {
@@ -273,7 +273,12 @@ async function changeDay() {
   const button = document.querySelector("#load-day");
   const day = document.querySelector("[name='date']").value;
   const service = document.querySelector("[name='service']").value;
+  const box = document.querySelector(".calendar-times");
   let naja = window.Naja;
+  if (!box.classList.contains("open")) {
+    calendarLoading(true);
+  }
+  timesLoading(true);
   await naja
     .makeRequest(
       "GET",
@@ -301,11 +306,13 @@ async function changeDay() {
   const date = document.getElementById("date");
   date.innerHTML = time[2] + "." + time[1] + "." + time[0];
   if (window.innerWidth > 770) {
-    const box = document.querySelector(".calendar-times");
-    box.style.display = "block";
+    //box.style.display = "block";
+    box.classList.add("open");
   } else {
     toggleCalendarTimes();
   }
+  calendarLoading(false);
+  timesLoading(false);
 }
 
 function toggleCalendarTimes() {
@@ -330,7 +337,7 @@ function setService(id, name, price) {
     document.querySelector("[name='service']").value = id;
     const recap = document.querySelector("#service");
     const box = document.querySelector(".calendar-times");
-    box.style.display = "none";
+    box.classList.remove("open");
 
     recap.innerHTML = name;
     document.querySelector("#price").innerHTML = price;
@@ -360,38 +367,45 @@ function calNext(n) {
   createCalendar(showMonth, showYear);
 }
 
+function timesLoading(isLoading) {
+  const loading = $("#times-loading");
+  const container = document.querySelector("#snippet--content");
+  const timesList = document.querySelectorAll(".button-time");
+  console.log(container);
+  if (isLoading) {
+    loading.show();
+    container.style.filter = "grayscale(100%)";
+    timesList.forEach((item) => {
+      item.style = "pointer-events: none;";
+    });
+  } else {
+    loading.hide();
+    container.style.filter = "grayscale(0%)";
+  }
+}
+
+function calendarLoading(isLoading) {
+  const loading = $("#calendar-times-loading");
+  const container = document.querySelector("#calendar");
+  if (isLoading) {
+    loading.show();
+    container.style.filter = "grayscale(100%)";
+    const cover = document.createElement("div");
+    cover.id = "calendar-cover";
+    container.appendChild(cover);
+  } else {
+    loading.hide();
+    container.style.filter = "grayscale(0%)";
+    const cover = document.getElementById("calendar-cover");
+    if (cover) {
+      cover.remove();
+    }
+  }
+}
+
 async function createCalendar(month, year) {
   const container = document.querySelector("#calendar");
-  //container.style.visibility = "hidden";
-//   container.style.background= "gray";
-  //container.innerHTML = "";
-  container.style.filter = "grayscale(100%)";
-  const cover = document.createElement("div");
-  cover.id = "calendar-cover";
-  container.appendChild(cover);
-  const circleRadius = 30
-  const spinner = new mojs.Shape({
-    parent: "#calendar",
-    shape: "circle",
-    stroke: "#e7674c",
-    strokeDasharray: "125, 125",
-    strokeDashoffset: { 0: "-125" },
-    strokeWidth: 7,
-    fill: "none",
-    rotate: { "-90": "270" },
-    radius: circleRadius,
-    isShowStart: false,
-    duration: 500,
-    easing: "back.in",
-  }).then({
-    rotate: { "-90": "270" },
-    strokeDashoffset: { "-125": "-250" },
-    duration: 3000,
-    easing: "cubic.out",
-    repeat: 1000,
-  });
-
-  spinner.play();
+  calendarLoading(true);
 
   const calendarTitle = document.querySelector("#calendar-month");
   const curDate = new Date();
@@ -518,8 +532,7 @@ async function createCalendar(month, year) {
     div.innerHTML = i + 1;
     container.appendChild(div);
   }
-
-  spinner.stop();
+  calendarLoading(false);
 
   function getDayIndexMondaySunday(date) {
     return date.getDay() === 0 ? 6 : date.getDay() - 1;
@@ -557,7 +570,7 @@ function removeDaySelected() {
 
 function debounce(func, delay) {
   let debounceTimer;
-  return function() {
+  return function () {
     const context = this;
     const args = arguments;
     clearTimeout(debounceTimer);
@@ -566,7 +579,6 @@ function debounce(func, delay) {
 }
 
 const debouncedVerify = debounce(verify, 300);
-
 
 async function verify() {
   let code = document.querySelector("[name='dicountCode']").value;
@@ -598,7 +610,7 @@ async function verify() {
     }
 
     if (res.price != undefined) {
-        document.querySelector("#price").innerHTML = res.price;
+      document.querySelector("#price").innerHTML = res.price;
     }
     //show code success
   }
