@@ -129,19 +129,15 @@ $text-8: 48px;
 $text-9: 60px;
 $text-10: 72px;
 
-$shadow:
-  0 4px 6px -1px rgb(0 0 0 / 0.1),
-  0 2px 4px -2px rgb(0 0 0 / 0.1);
-$shadow-lx:
-  0 20px 25px -5px rgb(0 0 0 / 0.1),
-  0 8px 10px -6px rgb(0 0 0 / 0.1);
+$shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+$shadow-lx: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 $shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
 
 $text-dark: rgb(29, 27, 39);
 $text-light: rgb(248, 248, 255);
 $background: #f5f5f5;
 $white: #ffffff;
-$border: 1px solid rgba(26,26,26,0.1);
+$border: 1px solid rgba(26, 26, 26, 0.1);
 
 //$shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px,
 //rgba(0, 0, 0, 0.24) 0px 1px 2px;
@@ -662,6 +658,11 @@ body {
 }
 
 #calendar-nav {
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
   display: flex;
   gap: 10px;
   align-items: center;
@@ -1019,8 +1020,7 @@ input.valid {
 
   .card-button:hover {
     transform: translateY(-3px);
-    box-shadow:
-      rgba(0, 0, 0, 0.19) 0px 10px 20px,
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
       rgba(0, 0, 0, 0.23) 0px 6px 6px;
     filter: brightness(1.05);
   }
@@ -1121,7 +1121,6 @@ footer {
 }
 
 #logo-footer {
-
   img {
     height: 50px;
   }
@@ -1244,8 +1243,6 @@ footer {
   font-weight: 600;
 }
 
-
-
 .loading {
   --width: 50px;
   position: absolute;
@@ -1253,8 +1250,8 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
-  top: calc(50% - var(--width)/2);
-  left: calc(50% - var(--width)/2);
+  top: calc(50% - var(--width) / 2);
+  left: calc(50% - var(--width) / 2);
   width: var(--width);
   height: var(--width);
   filter: none !important;

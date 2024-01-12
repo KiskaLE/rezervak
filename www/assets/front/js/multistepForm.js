@@ -376,7 +376,7 @@ function timesLoading(isLoading) {
     loading.show();
     container.style.filter = "grayscale(100%)";
     timesList.forEach((item) => {
-      item.style = "pointer-events: none;";
+      item.style.pointerEvents = "none";
     });
   } else {
     loading.hide();
@@ -387,13 +387,20 @@ function timesLoading(isLoading) {
 function calendarLoading(isLoading) {
   const loading = $("#calendar-times-loading");
   const container = document.querySelector("#calendar");
+  const navList = document.querySelectorAll("#calendar-nav img");
   if (isLoading) {
+    navList.forEach((item) => {
+      item.style.pointerEvents = "none";
+    });
     loading.show();
     container.style.filter = "grayscale(100%)";
     const cover = document.createElement("div");
     cover.id = "calendar-cover";
     container.appendChild(cover);
   } else {
+    navList.forEach((item) => {
+      item.style.pointerEvents = "auto";
+    });
     loading.hide();
     container.style.filter = "grayscale(0%)";
     const cover = document.getElementById("calendar-cover");
