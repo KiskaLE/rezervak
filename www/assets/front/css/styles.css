@@ -892,8 +892,8 @@ footer {
   justify-content: center;
 }
 
-#logo-footer {
-  align-self: center;
+#logo-footer img {
+  height: 50px;
 }
 
 .footer-wrapper {

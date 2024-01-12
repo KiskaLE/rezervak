@@ -28,7 +28,6 @@ class BasePresenter extends Presenter
     protected function beforeRender()
     {
         parent::beforeRender();
-        //$this->template->logoUrl = null;
         $user = $this->database->table("users")->fetch();
         $this->template->logoUrl = $user->logo_url;
 

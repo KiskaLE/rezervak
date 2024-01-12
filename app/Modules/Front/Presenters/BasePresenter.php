@@ -4,11 +4,14 @@ namespace App\Modules\Front\Presenters;
 
 use Nette\Application\UI\Presenter;
 use Nette\Database\Explorer;
+use Nette\DI\Attributes\Inject;
+
 
 class BasePresenter extends Presenter
 {
+
+    #[Inject] public Explorer $database;
     public function __construct(
-        public Explorer $database
     )
     {
         parent::__construct();
@@ -26,6 +29,9 @@ class BasePresenter extends Presenter
         $user = $this->database->table("users")->fetch();
         $this->template->user = $user;
         $this->template->userSettings = $user->related("settings")->fetch();
+
+        $user = $this->database->table("users")->fetch();
+        $this->template->logoUrl = $user->logo_url;
         
     }
 }

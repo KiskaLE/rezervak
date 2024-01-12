@@ -1114,7 +1114,10 @@ footer {
 }
 
 #logo-footer {
-  align-self: center;
+
+  img {
+    height: 50px;
+  }
 }
 
 .footer-wrapper {
