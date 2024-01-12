@@ -148,6 +148,10 @@ $border: 1px solid rgba(26,26,26,0.1);
 
 $radius: 12px;
 
+* {
+  min-width: 0;
+}
+
 :root {
   font-size: 16px;
 }
@@ -656,7 +660,7 @@ body {
   align-items: center;
 
   img {
-    height: 37px;
+    width: 45px;
     border: 1px solid $gray-300;
     border-radius: 50%;
   }

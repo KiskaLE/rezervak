@@ -101,6 +101,11 @@ $border: 1px solid rgba(26, 26, 26, 0.1);
 
 $background: #f5f5f5;
 
+* {
+  min-width: 0;
+}
+
+
 :root {
   --main-padding: 20px;
   --left-nav-with: 250px;

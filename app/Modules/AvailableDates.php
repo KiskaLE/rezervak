@@ -90,7 +90,7 @@ class AvailableDates
         $this->user_settings = $userSettings;
         $service = $this->database->table("services")->get($service_id);
 
-        if ($service->type == 1 && $serviceCustomSchedules = $service?->related("services_custom_schedules")->where("start <= ? AND end >= ?", [$date, $date])->fetchAll()) {
+        if ($service->type == 1 && $serviceCustomSchedules = $service?->related("services_custom_schedules")->fetchAll()) {
             foreach ($serviceCustomSchedules as $schedule) {
                 if ($results = $this->getCustomScheduleAvailability($userSettings, $schedule, $duration, $date, $service_id, $userSettings->sample_rate)) {
                     foreach ($results as $result) {

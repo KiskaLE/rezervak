@@ -27,10 +27,10 @@
                     <th class="text-left"><span n:if="!$discountCode->type" class="tag tag-purple">cena</span><span n:if="$discountCode->type" class="tag tag-blue">procento</span></th>
                     {* <th class="text-left">{$discountCode->active ? 'Ano' : 'Ne'}</th> *}
                     <th class="text-left">
-                        <a class="btn btn-primary" n:href="DiscountCodes:edit $discountCode->id">Upravit</a>
-                        <a class="btn btn-secondary {$discountCode->active ? 'btn-gold' : 'btn-default'}" n:href="hide! $discountCode->uuid">{$discountCode->active ? 'Aktivní' : 'Neaktivní'}</a>
+                        <a class="btn btn-primary" n:href="DiscountCodes:edit $discountCode->id">upravit</a>
+                        <a class="btn btn-secondary {$discountCode->active ? 'btn-gold' : 'btn-default'}" n:href="hide! $discountCode->uuid">{$discountCode->active ? 'aktivní' : 'neaktivní'}</a>
                         <a class="btn btn-tertiary" n:href="delete! $discountCode->uuid"
-                        onclick="deleteCode(event)">Smazat</a>
+                        onclick="deleteCode(event)">smazat</a>
                     </th>
                 </tr>
             {/foreach}

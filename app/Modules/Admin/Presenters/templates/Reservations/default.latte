@@ -29,14 +29,23 @@
                 <a n:href="deleteFilter! 'range'" style="color: black;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></a>
                 <span>{$start|date:"d.m.Y"} - {$end|date:"d.m.Y"}</span>
             </span>
+            <span n:if="$filterService">
+                <a n:href="deleteFilter! 'service'" style="color: black;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></a>
+                <span>{$filterService}</span>
+            </span>
             <div class="filter-toggle">
                 <svg onclick="listFilterToggle()" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
                 <div class="filter-dropdown" id="list-filter-toggle" style="display: none;">
-                    <form n:name="setRangeForm">
+                    <form n:name="setFilterForm">
                     <div class="form-body">
-                        <div class="form-group" style="width: 180px;">
+                        <div class="form-group" style="width: 220px;">
                             <label for="">Rozsah</label>
-                            <input id="filter-range" n:name="range">
+                            <input id="filter-range" data-start={$start|date:'d/m/y'} data-end="{$end|date:'d/m/y'}" n:name="range">
+                        </div>
+                        <div class="form-group" style="width: 220px;">
+                            <label for="">Služba</label>
+                            <select n:name="service">
+                            </select>
                         </div>
                         <div class="form-actions">
                             <div class="submit"><input n:name="submit"></div>
@@ -113,11 +122,11 @@
             <div class="list-item-column top">
                  <div class="list-item-info">
                     <span class="list-item-label">Vytvořeno</span>
-                    <span>{$reservation->created_at}</span>
+                    <span>{$reservation->created_at|date:"d.m.Y H:i"}</span>
                 </div>
                 <div n:if="$payment->status" class="list-item-info">
                     <span class="list-item-label">Zaplaceno</span>
-                    <span>{$payment->updated_at}</span>
+                    <span>{$payment->updated_at|date:"d.m.Y H:i"}</span>
                 </div>
             </div>
         </div>

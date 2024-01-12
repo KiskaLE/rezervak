@@ -17,6 +17,7 @@ final class ReservationsPresenter extends SecurePresenter
     private $uuid;
     private $reservation;
     private $page;
+    private $filterServices;
 
     #[Inject] public Nette\Database\Explorer $database;
 
@@ -40,6 +41,8 @@ final class ReservationsPresenter extends SecurePresenter
         $this->page = $page;
 
         $session = $this->getSession("reservations");
+        // $session->filterStart = null;
+        // $session->filterEnd = null;
         //tab
         $tab = $session->reservations_tab ?? 0;
         $this->template->tab = $tab;
@@ -49,6 +52,15 @@ final class ReservationsPresenter extends SecurePresenter
         $end = $session->filterEnd ?? null;
         $this->template->start = $start;
         $this->template->end = $end;
+
+        $filterService = $session->filterService ?? null;
+        if ($filterService) {
+            $filterServiceName = $this->database->table('services')->get($filterService)->name;
+            $this->template->filterService = $filterServiceName;
+        } else {
+            $this->template->filterService = null;
+        }
+        
 
         // $numberOfReservations = $this->database->table('reservations')
         //     ->select('reservations.*',)
@@ -68,6 +80,10 @@ final class ReservationsPresenter extends SecurePresenter
         }
         if ($end) {
             $q = $q->where('start <= ?', $end);
+        }
+
+        if ($filterService) {
+            $q = $q->where('service_id = ?', $filterService);
         }
 
         switch ($tab) {
@@ -182,11 +198,19 @@ final class ReservationsPresenter extends SecurePresenter
         $this->redirect('Reservations:');
     }
 
-    protected function createComponentSetRangeForm(): Form
+    protected function createComponentSetFilterForm(): Form
     {
+        $this->filterServices = $this->database->table("services")
+            ->where("user_id=?", $this->user->id)
+            ->where("hidden<?", 2)
+            ->fetchAll();
+
         $form = new Form;
-        $form->addText("range")->setRequired("Prosím nastavte rozsah");
+        $form->addText("range");
         $form->addSubmit("submit", "Nastavit");
+        $form->addSelect("service", "Služba", ['' => 'Vyberte službu'] + array_map(function ($service) {
+            return $service->name;
+        }, $this->filterServices));
 
         $form->onSuccess[] = [$this, "setRangeFormSucceeded"];
 
@@ -196,9 +220,14 @@ final class ReservationsPresenter extends SecurePresenter
     public function setRangeFormSucceeded(Form $form, \stdClass $data): void
     {
         $session = $this->getSession("reservations");
-        $range = $this->formater->getDataFromRange($data->range);
-        $session->filterStart = $range['start'];
-        $session->filterEnd = $range['end']. " 23:59:59";
+        if ($data->range) {
+            $range = $this->formater->getDataFromRangeInFormatDMY($data->range);
+            $session->filterStart = $range['start'];
+            $session->filterEnd = $range['end']. " 23:59:59";
+        }
+        if ($data->service) {
+            $session->filterService = $data->service;
+        }
         $this->redirect('default');
     }
 
@@ -237,7 +266,10 @@ final class ReservationsPresenter extends SecurePresenter
             case "range":
                 $session->filterStart = null;
                 $session->filterEnd = null;
-            break;
+                break;
+            case "service":
+                $session->filterService = null;
+                break;
         }
 
         $this->redirect('default');

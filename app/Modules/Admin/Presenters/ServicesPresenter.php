@@ -11,7 +11,7 @@ use Ramsey\Uuid\Uuid;
 use App\Modules\Formater;
 use App\Modules\AvailableDates;
 use Nette\DI\Attributes\Inject;
-
+use Tester\Runner\Output\Logger;
 
 final class ServicesPresenter extends SecurePresenter
 {
@@ -41,7 +41,8 @@ final class ServicesPresenter extends SecurePresenter
 
     public function actionDefault(int $page = 1)
     {
-        $numberOfServices = $this->database->table("services")->where("user_id", $this->user->id)->count();
+        $q = $this->database->table("services")->where("user_id", $this->user->id)->where("hidden<?", 2);
+        $numberOfServices = $q->count();
         $paginator = new Nette\Utils\Paginator;
         $paginator->setItemCount($numberOfServices);
         $paginator->setItemsPerPage(10);
@@ -49,7 +50,7 @@ final class ServicesPresenter extends SecurePresenter
 
         $this->template->paginator = $paginator;
 
-        $services = $this->database->table("services")->where("user_id", $this->user->id)->limit($paginator->getLength(), $paginator->getOffset())->fetchAll();
+        $services = $q->limit($paginator->getLength(), $paginator->getOffset())->fetchAll();
         $this->template->services = $services;
 
     }
@@ -477,15 +478,27 @@ final class ServicesPresenter extends SecurePresenter
     }
 
     public function handleDelete($id) {
-        $isSuccess = false;
         $this->database->transaction(function ($database) use ($id) {
             $service = $database->table("services")->get($id);
             if ($service->related("reservations")->count() == 0) {
                 $service->delete();
-                $isSuccess = true;
                 $this->flashMessage("Služba byla smazána", "success");
             } else {
                 $this->flashMessage("Služba se nepodařila smazat", "error");
+            }
+        });
+        $this->redirect("this");
+    }
+
+    public function handleArchive($id) {
+        $this->database->transaction(function ($database) use ($id) {
+            try {
+                $database->table("services")->where("id=?", $id)->update([
+                    "hidden" => 2
+                ]);
+                $this->flashMessage("Služba byla archivována", "success");
+            } catch (\Throwable $th) {
+                $this->flashMessage("Služba se nepodařila archivovat", "error");
             }
         });
         $this->redirect("this");

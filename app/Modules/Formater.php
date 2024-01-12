@@ -63,6 +63,20 @@ class Formater
         return ["start" =>$start, "end" => $end];
     }
 
+    public function getDataFromRangeInFormatDMY($string) {
+        $string = explode("-", $string);
+        $start = trim($string[0]);
+        $end = trim($string[1]);
+        $start = explode("/", $start);
+        $end = explode("/", $end);
+
+        $start = trim($start[2] . "-" . $start[1] . "-" . $start[0]);
+        $end = trim($end[2] . "-" . $end[1] . "-" . $end[0]);
+
+
+        return ["start" =>$start, "end" => $end];
+    }
+
     public function getDateFromTimeStamp($timestamp)
     {
         return date("Y-m-d", strtotime($timestamp));
