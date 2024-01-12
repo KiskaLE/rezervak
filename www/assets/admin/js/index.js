@@ -102,10 +102,12 @@ function listItemToggle(listItemId) {
             listItemBody.style.opacity = '1';
         }, 10); // Start the animation after a small delay
         listItemBody.classList.add('open');
+        listItem.classList.add('open');
     } else {
         listItemBody.style.height = '0px';
         listItemBody.style.opacity = '0';
         listItemBody.classList.remove('open');
+        listItem.classList.remove('open');
     }
 
     // Clean up after the transition ends

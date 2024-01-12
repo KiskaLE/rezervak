@@ -602,6 +602,9 @@ h1 {
   border-top: var(--border);
   border-bottom: var(--border);
 }
+.list-wrapper .list-item.open .list-item-detail svg {
+  transform: rotate(90deg);
+}
 .list-wrapper .list-item .list-item-head {
   width: 100%;
   height: 100px;
@@ -648,6 +651,9 @@ h1 {
   justify-content: center !important;
   align-items: center !important;
   gap: 5px;
+}
+.list-wrapper .list-item .list-item-column .list-item-detail span {
+  font-size: 16px;
 }
 .list-wrapper .list-item .list-item-column .list-item-detail svg {
   transition-duration: 100ms;
