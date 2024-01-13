@@ -25,6 +25,9 @@ final class PaymentPresenter extends BasePresenter
     public function actionDefault($id)
     {
         $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
+        $this->template->reservation = $reservation;
+        $service = $reservation->ref("services", "service_id");
+        $this->template->service = $service;
         $this->user = $reservation->ref("users", "user_id");
         $this->template->user = $this->user;
         if ($reservation) {
@@ -33,7 +36,7 @@ final class PaymentPresenter extends BasePresenter
                 $this->redirect("Payment:notFound");
             }
             $payment = $this->database->table("payments")->where("reservation_id=?", $reservation->id)->fetch();
-            $this->template->service = $reservation;
+            $this->template->reservation = $reservation;
             $this->template->payment = $payment;
             $qrCode = $this->payments->generatePaymentCode($payment, $this->user->id);
             $user = $reservation->ref("users", "user_id");
