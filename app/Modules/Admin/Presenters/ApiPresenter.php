@@ -65,10 +65,8 @@ class ApiPresenter extends BasePresenter
                 ->order("created_at ASC")
                 ->fetchAll();
             foreach ($backups as $backup) {
-                $duration = $backup->ref("services", "service_id")->duration;
-                $email = $backup->email;
-                $uuid = $backup->uuid;
-                if ($this->availableDates->isTimeAvailable($admin->uuid, $backup->start, $duration, intval($backup->service_id)) && $this->availableDates->isTimeToPay($backup->start, $settings->time_to_pay)) {
+                $service = $backup->ref("services", "service_id");
+                if ($this->availableDates->isTimeAvailable($admin->uuid, $backup, $service) && $this->availableDates->isTimeToPay($backup->start, $settings->time_to_pay)) {
                     $database->transaction(function ($database) use ($backup) {
                         $database->table("reservations")->where("id=?", $backup->id)->update(["type" => 0]);
                         //update reservation

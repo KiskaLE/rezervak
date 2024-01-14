@@ -56,7 +56,7 @@ final class HomePresenter extends BasePresenter
                 $this->template->selectedService = $service;
                 $this->payload->postGet = true;
                 $this->payload->url = $this->link("default");
-                $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates($u, $service->duration, $user_settings->number_of_days, intval($service_id))]);
+                $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates($u, $user_settings->number_of_days, $service)]);
             } else if ($run == "setDate") {
                 $this->setDate($u, intval($service_id), $day);
             } else if ($run == "verifyCode") {
@@ -73,7 +73,7 @@ final class HomePresenter extends BasePresenter
             ->fetchAll();
         $servicesAvailableTimesCount = [];
         foreach ($services as $service) {
-            $servicesAvailableTimesCount[$service->id] = $this->availableDates->getNumberOfAvailableTimes($u, $service->duration, $user_settings->number_of_days, intval($service->id));
+            $servicesAvailableTimesCount[$service->id] = $this->availableDates->getNumberOfAvailableTimes($u, $user_settings->number_of_days, $service);
         }
         $this->template->servicesAvailableTimesCount = $servicesAvailableTimesCount;
         $this->template->services = $services;
@@ -178,13 +178,12 @@ final class HomePresenter extends BasePresenter
     private function checkAvailability(string $u, $date, $service_id, $time, $type = "default"): bool
     {
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
-        $duration = $service->duration;
         switch ($type) {
             case "backup":
-                $available = $this->availableDates->getBackupHours($u, $date, intval($service->duration), intval($service_id));
+                $available = $this->availableDates->getBackupHours($u, $date, $service);
                 break;
             default:
-                $available = $this->availableDates->getAvailableStartingHours($u, $date, intval($duration), intval($service_id));
+                $available = $this->availableDates->getAvailableStartingHours($u, $date, $service);
                 break;
         }
         if (in_array($time, $available)) {
@@ -250,9 +249,8 @@ final class HomePresenter extends BasePresenter
     function setDate(string $u, int $service_id, string $day): void
     {
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
-        $duration = $service->duration;
-        $availableTimes = $this->availableDates->getAvailableStartingHours($u, $day, intval($duration), intval($service_id));
-        $availableBackup = $this->availableDates->getBackupHours($u, $day, intval($duration), intval($service_id));
+        $availableTimes = $this->availableDates->getAvailableStartingHours($u, $day, $service);
+        $availableBackup = $this->availableDates->getBackupHours($u, $day, $service);
 
         //store data in session
         $session = $this->getSession('Reservation');
