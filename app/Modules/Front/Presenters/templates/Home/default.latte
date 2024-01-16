@@ -32,23 +32,6 @@
                                 <div class="service-price"><span>{$service->price}</span><span>&nbsp;Kč</span></div>
                             </div>
                         </div>
-
-
-                        {* <div class="service-card">
-                            <div class="card-title"><h2>{$service->name}</h2></div>
-                            <div>
-                                <div class="card-info">
-                                    <span>{$service->duration} minut</span>
-                                </div>
-                                <div class="card-price card-info">
-                                    <span>{$service->price}</span><span> Kč</span>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="card-button"
-                                 onclick="setService({$service->id}, {$service->name}, {$service->price})"><span>Rezervovat</span>
-                            </div>
-                        </div> *}
                         {do $i++}
                     {/foreach}
                 </div>
@@ -67,7 +50,9 @@
                         <h2 class="h2-center">Vyberte datum a čas služby</h2>
 
                         <div class="calender-wrapper" style="position:relative;">
-                        <div id="calendar-times-loading" class="loading" style="display:none;"></div>
+                        <div id="calendar-times-loading" class="loading" style="display:none;">
+                            <div></div>
+                        </div>
                             <div id="calendar-nav"><img
                                         src="{$basePath}/assets/front/icons/arrow-calendar-left.svg"
                                         alt="předchozí měsíc"
@@ -83,12 +68,14 @@
                         <input n:name="date" class="multiform data">
                     </div>
 
-                    <div class="calendar-times">
+                    <div class="calendar-times" style="position:relative;">
+                     <div id="times-loading" class="loading">
+                                <div></div>
+                            </div>
                         <div class="back hidden" id="times-back" onclick="toggleCalendarTimes()"><img src="{$basePath}/assets/front/icons/back.svg"
                                                                       alt="zpět"></div>
                         <h3 id="calendar-selected-date" class="text-center"></h3>
-                        <div class="time-wrapper" style="position:relative;">
-                            <div id="times-loading" class="loading"></div>
+                        <div class="time-wrapper">
                             <input n:name="time" value="{$times ? $times[0] : ''}" id="timeInput" class="multiform">
                             <input n:name="dateType">
 

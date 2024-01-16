@@ -545,9 +545,9 @@ body {
 }
 
 .time-wrapper {
-  max-height: 380px;
+  height: 370px;
   overflow-y: auto;
-  padding: 0 5px;
+  padding: 5px;
 
   @include w(sm) {
     height: max-content !important;
@@ -608,7 +608,7 @@ body {
   box-shadow: $shadow;
   padding: 20px;
   border-radius: $radius;
-  gap: 10px;
+  //gap: 10px;
 
   @include w(md) {
     display: flex;
@@ -629,11 +629,12 @@ body {
   align-items: center;
   justify-content: center;
   gap: 5px;
+  padding: 5px;
 }
 
 .calendar-times {
   //display: none;
-  padding-top: 97px;
+  margin-top: 97px;
   height: 420px;
   //width: 150px;
   width: 0px;
@@ -1245,21 +1246,46 @@ footer {
 
 .loading {
   --width: 50px;
+  transition: 200ms;
   position: absolute;
   z-index: 1000;
   display: flex;
   justify-content: center;
   align-items: center;
-  top: calc(50% - var(--width) / 2);
-  left: calc(50% - var(--width) / 2);
-  width: var(--width);
-  height: var(--width);
-  filter: none !important;
+  top: 0;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  background: rgba(20, 20, 20, 0.05);
+  box-shadow: 0 0 15px 10px rgba(255, 255, 255, 0.5);
+  /* Apply a blur filter */
+  //filter: blur(2px);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  // transform: translate(-50%, -50%);
+  // top: calc(50% - var(--width) / 2);
+  // left: calc(50% - var(--width) / 2);
+  // width: var(--width);
+  // height: var(--width);
+  // filter: none !important;
 
-  border: 6px solid $gray-100;
-  border-top: 6px solid $accent-200;
-  animation: rotate 1s linear infinite;
-  border-radius: 50%;
+  // border: 6px solid $gray-100;
+  // border-top: 6px solid $accent-200;
+  // animation: rotate 1s linear infinite;
+  // border-radius: 50%;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  div {
+    width: var(--width);
+    height: var(--width);
+    border: 6px solid $gray-100;
+    border-top: 6px solid $accent-200;
+    animation: rotate 1s linear infinite;
+    border-radius: 50%;
+  }
 }
 
 @keyframes rotate {
