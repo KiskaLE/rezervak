@@ -3,6 +3,11 @@
   min-width: 0;
 }
 
+h2 {
+  font-size: 24px;
+  font-weight: 500;
+}
+
 :root {
   font-size: 16px;
 }
@@ -90,7 +95,7 @@ body {
   border-radius: 25px;
   transition-duration: 150ms;
 }
-@media (max-width: 500px) {
+@media (max-width: 900px) {
   .back {
     position: fixed;
     top: 20px;
@@ -469,7 +474,7 @@ body {
 }
 
 .calendar-times {
-  margin-top: 97px;
+  margin-top: 70px;
   height: 420px;
   width: 0px;
   overflow-x: hidden;
@@ -477,6 +482,11 @@ body {
 }
 .calendar-times.open {
   width: 150px;
+}
+@media (max-width: 900px) {
+  .calendar-times.open {
+    width: 100%;
+  }
 }
 @media (max-width: 900px) {
   .calendar-times {
@@ -523,6 +533,7 @@ body {
   text-align: center;
   font-size: 18px;
   font-weight: 400;
+  color: #595f60;
 }
 
 #calendar {
@@ -953,6 +964,7 @@ footer {
 .recap-service-card .recap-service-title {
   margin: 0;
   font-size: 18px;
+  font-weight: 600;
 }
 .recap-service-card .service-price {
   font-size: 18px;
@@ -1050,6 +1062,34 @@ footer {
   border-top: 6px solid #74c5da;
   animation: rotate 1s linear infinite;
   border-radius: 50%;
+}
+
+.calendar-date {
+  padding-left: 20px;
+}
+@media (max-width: 900px) {
+  .calendar-date {
+    padding-left: 0;
+  }
+  .calendar-date h2 {
+    text-align: center;
+  }
+}
+
+#calendar-reservation-info {
+  padding-right: 50px;
+  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  border-right: 2px solid #d5d8d9;
+}
+@media (max-width: 900px) {
+  #calendar-reservation-info {
+    display: none;
+  }
+}
+#calendar-reservation-info div {
+  color: #595f60;
 }
 
 @keyframes rotate {

@@ -21,7 +21,7 @@
                     {var $i = 0}
                     {foreach $services as $service}
 
-                        <div class="recap-service-card service-card-button" onclick="setService({$service->id}, {$service->name}, {$service->price})">
+                        <div class="recap-service-card service-card-button" onclick="setService({$service->id}, {$service->name}, {$service->price}, {$service->duration})">
                             <div>
                                 <h2 class="recap-service-title">{$service->name}</h2>
                                 <span class="service-availability" n:if="$servicesAvailableTimesCount">{$servicesAvailableTimesCount[$service->id] > 10 ? "termínů > 10" : "termínů ".$servicesAvailableTimesCount[$service->id]}<br></span> 
@@ -46,8 +46,14 @@
                         </div>
             </div>
                 <div class="calendar-box">
+                <div  id="calendar-reservation-info">
+                        <h2 id="calendar-reservation-service">Rezervace</h2>
+                        <div><span id="calendar-reservation-duration">50</span><span> minut</span></div>
+                        <div><span id="calendar-reservation-price">500</span><span> Kč</span></div>
+                    </div>
+                    
                     <div class="calendar-date">
-                        <h2 class="h2-center">Vyberte datum a čas služby</h2>
+                        <h2>Vyberte datum a čas služby</h2>
 
                         <div class="calender-wrapper" style="position:relative;">
                         <div id="calendar-times-loading" class="loading" style="display:none;">

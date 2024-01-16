@@ -148,6 +148,12 @@ $radius: 12px;
   min-width: 0;
 }
 
+h2 {
+  font-size: $text-5;
+  font-weight: 500;
+  // margin: 0;
+}
+
 :root {
   font-size: 16px;
 }
@@ -234,7 +240,7 @@ body {
   border-radius: 25px;
   transition-duration: 150ms;
 
-  @include w(sm) {
+  @include w(md) {
     position: fixed;
     top: 20px;
     left: 20px;
@@ -634,7 +640,7 @@ body {
 
 .calendar-times {
   //display: none;
-  margin-top: 97px;
+  margin-top: 70px;
   height: 420px;
   //width: 150px;
   width: 0px;
@@ -643,6 +649,10 @@ body {
 
   &.open {
     width: 150px;
+
+    @include w(md) {
+      width: 100%;
+    }
   }
 
   @include w(md) {
@@ -694,6 +704,7 @@ body {
     text-align: center;
     font-size: $text-3;
     font-weight: 400;
+    color: $gray-500;
   }
 }
 
@@ -1177,6 +1188,7 @@ footer {
   .recap-service-title {
     margin: 0;
     font-size: $text-3;
+    font-weight: 600;
   }
 
   .service-price {
@@ -1286,6 +1298,32 @@ footer {
     border-top: 6px solid $accent-200;
     animation: rotate 1s linear infinite;
     border-radius: 50%;
+  }
+}
+
+.calendar-date {
+  padding-left: 20px;
+  @include w(md) {
+    padding-left: 0;
+    h2 {
+      text-align: center;
+    }
+  }
+}
+
+#calendar-reservation-info {
+  //min-width: 200px;
+  padding-right: 50px;
+  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  border-right: 2px solid $gray-100;
+
+  @include w(md) {
+    display: none;
+  }
+  div {
+    color: $gray-500;
   }
 }
 

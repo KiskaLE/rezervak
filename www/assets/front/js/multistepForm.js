@@ -340,7 +340,7 @@ function toggleCalendarTimes() {
   }
 }
 
-function setService(id, name, price) {
+function setService(id, name, price, duration) {
   if (document.readyState === "complete") {
     // Fully loaded!
     document.querySelector("[name='service']").value = id;
@@ -349,6 +349,10 @@ function setService(id, name, price) {
     box.classList.remove("open");
 
     recap.innerHTML = name;
+    document.querySelector('#calendar-reservation-service').innerHTML = name;
+    document.querySelector('#calendar-reservation-price').innerHTML = price;
+    document.querySelector('#calendar-reservation-duration').innerHTML = duration;
+    
     document.querySelector("#price").innerHTML = price;
     nextPrev(1);
   }
