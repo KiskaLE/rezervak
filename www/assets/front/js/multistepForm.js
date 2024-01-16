@@ -307,7 +307,7 @@ async function changeDay() {
   //set recap
   const date = document.getElementById("date");
   date.innerHTML = time[2] + "." + time[1] + "." + time[0];
-  if (window.innerWidth > 770) {
+  if (window.innerWidth > 900) {
     //box.style.display = "block";
     box.classList.add("open");
   } else {
