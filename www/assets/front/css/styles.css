@@ -1097,6 +1097,7 @@ footer {
 }
 #calendar-reservation-info div {
   color: #595f60;
+  font-size: 18px;
 }
 
 @keyframes rotate {
