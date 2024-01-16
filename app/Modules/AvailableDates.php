@@ -65,7 +65,6 @@ class AvailableDates
     public function getAvailableStartingHours(string $u, string $date, $service)
     {
         $available = [];
-
         $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
         $userSettings = $user->related("settings")->fetch();
         $service = $this->database->table("services")->get($service->id);
@@ -76,17 +75,12 @@ class AvailableDates
                     foreach ($results as $result) {
                         $available[] = $result;
                     }
-
                 }
-
             }
-
         } else if($service->type == 0) {
             $workingHours = $this->database->table("workinghours")->where("user_id=? AND weekday=?", [$user->id, $this->getDay($date)])->fetch();
             $start = $date . " " . $workingHours->start;
             $end = $date . " " . $workingHours->stop;
-
-
             $available = $this->checkAvailability($user->id ,$userSettings, $start, $end, $service, $workingHours);
         }
         return $available;
@@ -274,15 +268,7 @@ class AvailableDates
                 foreach ($exceptions as $row) {
                     $rowStart = strtotime($row->start . " + 1 minute");
                     $rowEnd = strtotime($row->end . " - 1 minute");
-
-
-                    //check if the reservation intersect row
-                    $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
-                        ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
-                        ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
-                        ($rowEnd >= $start && $rowEnd <= $newReservationEnd) ||    // End of the first period is within the second period
-                        ($rowStart == $start) || // Starts of both periods are the same
-                        ($rowEnd == $newReservationEnd); // Ends of both periods are the same
+                    $overlap = $this->timesOverlaps($start, $newReservationEnd, $rowStart, $rowEnd);
                     if ($overlap) {
                         $isAvailable = false;
                         break;
@@ -295,12 +281,7 @@ class AvailableDates
                 foreach ($breaks as $break) {
                     $rowStart = strtotime($date . " " . $break->start);
                     $rowEnd = strtotime($date . " " . $break->end . "- 1 minute");
-                    $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
-                        ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
-                        ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
-                        ($rowEnd >= $start && $rowEnd <= $newReservationEnd) ||    // End of the first period is within the second period
-                        ($rowStart == $start) || // Starts of both periods are the same
-                        ($rowEnd == $newReservationEnd); // Ends of both periods are the same
+                    $overlap = $this->timesOverlaps($start, $newReservationEnd, $rowStart, $rowEnd);
                     if ($overlap) {
                         $isAvailable = false;
                         break;
@@ -314,14 +295,7 @@ class AvailableDates
                     $rowDuration = $row->ref("services", "service_id")->duration;
                     $rowStart = strtotime($row->start);
                     $rowEnd = strtotime($row->start . " + " . $rowDuration - 1 . " minutes");
-
-                    //check if the reservation intersect row
-                    $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
-                        ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
-                        ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
-                        ($rowEnd >= $start && $rowEnd <= $newReservationEnd) ||    // End of the first period is within the second period
-                        ($rowStart == $start) || // Starts of both periods are the same
-                        ($rowEnd == $newReservationEnd); // Ends of both periods are the same
+                    $overlap = $this->timesOverlaps($start, $newReservationEnd, $rowStart, $rowEnd);
                     if ($overlap) {
                         $isAvailable = false;
                         break;
@@ -335,14 +309,7 @@ class AvailableDates
                     $rowDuration = $row->ref("services", "service_id")->duration;
                     $rowStart = strtotime($row->start);
                     $rowEnd = strtotime($row->start . " + " . $rowDuration - 1 . " minutes");
-
-                    //check if the reservation intersect row
-                    $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
-                        ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
-                        ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
-                        ($rowEnd >= $start && $rowEnd <= $newReservationEnd) ||    // End of the first period is within the second period
-                        ($rowStart == $start) || // Starts of both periods are the same
-                        ($rowEnd == $newReservationEnd); // Ends of both periods are the same
+                    $overlap = $this->timesOverlaps($start, $newReservationEnd, $rowStart, $rowEnd);
                     if ($overlap) {
                         $isAvailable = false;
                         break;
@@ -399,14 +366,7 @@ class AvailableDates
                         $rowStart = strtotime($row->start . " + 1 minute");
                         $rowEnd = strtotime($row->end . " - 1 minute");
 
-
-                        //check if the reservation intersect row
-                        $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
-                            ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
-                            ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
-                            ($rowEnd >= $start && $rowEnd <= $newReservationEnd) ||    // End of the first period is within the second period
-                            ($rowStart == $start) || // Starts of both periods are the same
-                            ($rowEnd == $newReservationEnd); // Ends of both periods are the same
+                        $overlap = $this->timesOverlaps($rowStart, $rowEnd, $start, $newReservationEnd);
                         if ($overlap) {
                             $isAvailable = false;
                             break;
@@ -420,13 +380,7 @@ class AvailableDates
                         $rowDuration = $row->ref("services", "service_id")->duration;
                         $rowStart = strtotime($row->start);
                         $rowEnd = strtotime($row->start . " + " . $rowDuration - 1 . " minutes");
-
-                        $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
-                            ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
-                            ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
-                            ($rowEnd >= $start && $rowEnd <= $newReservationEnd) ||    // End of the first period is within the second period
-                            ($rowStart == $start) || // Starts of both periods are the same
-                            ($rowEnd == $newReservationEnd); // Ends of both periods are the same
+                        $overlap = $this->timesOverlaps($rowStart, $rowEnd, $start, $newReservationEnd);
                         if ($overlap) {
                             $isAvailable = false;
                             break;
@@ -439,14 +393,7 @@ class AvailableDates
                         $rowDuration = $row->ref("services", "service_id")->duration;
                         $rowStart = strtotime($row->start);
                         $rowEnd = strtotime($row->start . " + " . $rowDuration - 1 . " minutes");
-
-                        //check if the reservation intersect row
-                        $overlap = ($start >= $rowStart && $start <= $rowEnd) || // Start of the second period is within the first period
-                            ($newReservationEnd >= $rowStart && $newReservationEnd <= $rowEnd) || // End of the second period is within the first period
-                            ($rowStart >= $start && $rowStart <= $newReservationEnd) || // Start of the first period is within the second period
-                            ($rowEnd >= $start && $rowEnd <= $newReservationEnd) ||    // End of the first period is within the second period
-                            ($rowStart == $start) || // Starts of both periods are the same
-                            ($rowEnd == $newReservationEnd); // Ends of both periods are the same
+                        $overlap = $this->timesOverlaps($rowStart, $rowEnd, $start, $newReservationEnd);
                         if ($overlap) {
                             $isAvailable = false;
                             break;
@@ -466,6 +413,16 @@ class AvailableDates
             }
         }
         return $result;
+    }
+
+    private function timesOverlaps($start1, $end1, $start2, $end2) {
+        $overlap = ($start2 >= $start1 && $start2 <= $end1) || // Start of the second period is within the first period
+                            ($end2 >= $start1 && $end2 <= $end1) || // End of the second period is within the first period
+                            ($start1 >= $start2 && $start1 <= $end2) || // Start of the first period is within the second period
+                            ($end1 >= $start2 && $end1 <= $end2) ||    // End of the first period is within the second period
+                            ($start1 == $start2) || // Starts of both periods are the same
+                            ($end1 == $end2); // Ends of both periods are the same
+        return $overlap;
     }
 
     private function getDay(string $date): string
