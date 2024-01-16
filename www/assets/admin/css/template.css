@@ -752,11 +752,17 @@ h1 {
   color: grey;
   text-decoration: none;
 }
+.list-page .list-page-item .numberOfReservations {
+  display: none;
+}
 .list-page .list-page-item.selected {
   color: var(--text-dark) !important;
   -webkit-text-decoration: 2px underline #eb6c51;
           text-decoration: 2px underline #eb6c51;
   text-underline-offset: 9px;
+}
+.list-page .list-page-item.selected .numberOfReservations {
+  display: inline;
 }
 
 .pagination {

@@ -949,12 +949,19 @@ h1 {
     font-weight: 500;
     color: grey;
     text-decoration: none;
+    .numberOfReservations {
+      display: none;
+    }
   }
 
   .list-page-item.selected {
     color: var(--text-dark) !important;
     text-decoration: 2px underline $primary-300;
     text-underline-offset: 9px;
+
+    .numberOfReservations {
+      display: inline;
+    }
   }
 }
 

@@ -108,10 +108,10 @@ final class ReservationsPresenter extends SecurePresenter
 
         }
         $numberOfReservations = $q->count();
-        $paginator = $this->createPagitator($numberOfReservations, $page, 5);
+        $paginator = $this->createPagitator($numberOfReservations, $page, 4);
         $reservations = $q->limit($paginator->getLength(), $paginator->getOffset())->fetchAll();
 
-
+        $this->template->numberOfReservations = $numberOfReservations;
         $this->template->reservations = $reservations;
         $this->template->paginator = $paginator;
     }

@@ -41,7 +41,7 @@ final class HomePresenter extends SecurePresenter
         ->where("start>=? AND start<? AND user_id=? AND status='VERIFIED' AND type=0", [date("Y-m-d"), date("Y-m-d") . " 23:59:59", $this->user->id])
         ->order("start ASC");
         $numberOfTodaysReservations = $q->count();
-        $paginator = $this->createPagitator($numberOfTodaysReservations, $page, 5);
+        $paginator = $this->createPagitator($numberOfTodaysReservations, $page, 4);
         $todayReservations = $q
             ->limit($paginator->getLength(), $paginator->getOffset())
             ->fetchAll();
