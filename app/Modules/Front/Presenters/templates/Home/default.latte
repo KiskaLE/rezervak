@@ -100,7 +100,8 @@
                                 <div class="time">
                                     {var $j = 0}
                                     {foreach $backupTimes as $time}
-                                        <p onclick="setTime({$j},'backup', {$time})"
+                                    {var $end = date("H:i", strtotime($time."+".$selectedService->duration." minutes"))}
+                                        <p onclick="setTime({$j},'backup', {$time}, {$end})"
                                            class="button button-backup">{$time}</p>
                                         {do $j++}
                                     {/foreach}

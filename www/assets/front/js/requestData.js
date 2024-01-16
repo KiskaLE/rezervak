@@ -2,7 +2,6 @@
 
 function selectDay() {
     let data = document.getElementById("date").value;
-    console.log(data)
 
     fetch("/reservation/create", {
         method: 'POST',

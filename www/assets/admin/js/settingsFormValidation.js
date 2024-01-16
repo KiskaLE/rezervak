@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
     const submitButton = document.getElementById("btn-submit");
-    console.log(submitButton)
     submitButton.addEventListener("click", function(event) {
         const form = document.getElementById("basicForm");
         let isValid = true;
@@ -49,7 +48,6 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("timeToPayError").style.display = 'none';
         }
 
-        console.log(isValid)
         // If any validation failed, prevent the form from submitting
         if (isValid) {
             form.submit();

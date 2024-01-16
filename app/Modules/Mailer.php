@@ -31,21 +31,6 @@ final class Mailer
             $this->url = "http://" . "localhost:8000";
         }
         
-
-        // $this->phpMailer->isSMTP();
-        // $this->phpMailer->Host = 'smtp.seznam.cz';
-        // $this->phpMailer->SMTPAuth = true;
-        // $this->phpMailer->Username = 'rezervkainfo@seznam.cz';
-        // $this->phpMailer->Password = '';
-        // $this->phpMailer->SMTPSecure = 'ssl';
-        // $this->phpMailer->Port = 465;
-
-        // $this->phpMailer->setFrom("rezervkainfo@seznam.cz");
-        // $this->phpMailer->CharSet = "UTF-8";
-
-        // $this->phpMailer->isHTML(true);
-        // $this->phpMailer->setLanguage("cs");
-
         $this->latte = new Engine;
 
 

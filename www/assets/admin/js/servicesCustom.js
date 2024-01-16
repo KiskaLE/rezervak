@@ -1,6 +1,5 @@
 
     function toggleFields() {
-        console.log("toggle")
         const checkbox = document.getElementById('servicesCustom');
         const inputFields = document.getElementById("servicesCustomFields");
         if (checkbox.checked) {

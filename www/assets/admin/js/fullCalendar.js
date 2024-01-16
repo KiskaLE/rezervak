@@ -122,7 +122,6 @@ function createFullCalendar(slotDuration ,calendarPeriod, serviceDuration, servi
 
 function getAndProcessCalendarEvents(input) {
     document.getElementById(input).value = getEventsAsJson();
-    console.log(getEventsAsJson())
 
     function getEventsAsJson() {
         const events = calendar.getEvents();

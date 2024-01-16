@@ -5,7 +5,8 @@
 </head>
 <body style="background-color: #ffffff;
             padding: 20px;
-            margin: 0;">
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;">
 <div style="display: flex; flex-direction: column; align-items: center">
     <div style="max-width: 600px; padding: 5px;">
         <h1 style="font-size: 24px;
@@ -24,8 +25,6 @@
             <b>Služba:</b> {$reservation->ref("services", "service_id")->name} <br>
             <b>Datum:</b> {$reservation->start|date:"d.m.Y"}<br>
             <b>Čas:</b> {$reservation->start|date:"H:i"}<br>
-            <b>Jméno:</b> {$reservation->firstname}<br>
-            <b>Příjmení:</b> {$reservation->lastname}<br>
             {var $price = $reservation->related("payments")->fetch()->price}
             <b>Cena:</b> {$price} Kč<br>
         </p>
@@ -37,7 +36,7 @@
 
         </p>
         <br>
-        <div style="padding: 5px 10px;
+        <div style="padding: 5px 5px;
             border: none !important;
             transition-duration: 300ms;
             cursor: pointer;
@@ -45,25 +44,22 @@
             background-color: #d0482b;
             width: fit-content;
             border-radius: 10px;
-            font-size: 20px;
-            padding: 10px 20px;
+            font-size: 16px;
+            padding: 5px 5px;
 ">
             <a href="{$url}" style="text-decoration: none; color: white; font-size: 16px;">Ověřit a zaplatit</a>
         </div>
         <br>
-        <p style="font-size: 16px;
-            line-height: 30px;">Tento krok je nezbytný pro finální potvrzení Vaší rezervace a zajištění bezproblémového
-            průběhu Vaší
-            rezervace.</p>
         <h3>Důležité Informace:</h3>
         <p style="font-size: 16px;
             line-height: 30px;">Prosím, dokončete ověření do <b>{$userSettings->verification_time} minut</b> od přijetí
             tohoto emailu. <br>
         </p>
-        <br>
         <p style="font-size: 16px;
             line-height: 30px;">S pozdravem, <br>
             <span n:if="$user->company">{$user->company}</span><br>
+            <span n:if="$user->ico">IČO: {$user->ico}</span> <br>
+            <span n:if="$user->dic">DIC: {$user->dic}</span> <br>
             <span n:if="$user->email">{$user->email}</span><br>
             <span n:if="$user->phone">{$user->phone}</span>
 

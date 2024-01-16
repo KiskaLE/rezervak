@@ -255,7 +255,6 @@ async function getTime(time_id) {
       },
     }
   );
-  console.log(res.time);
   return Promise.resolve(res.time);
 }
 
@@ -384,7 +383,6 @@ function timesLoading(isLoading) {
   const loading = $("#times-loading");
   const container = document.querySelector("#snippet--content");
   const timesList = document.querySelectorAll(".button-time");
-  console.log(container);
   if (isLoading) {
     loading.show();
     container.style.filter = "grayscale(100%)";

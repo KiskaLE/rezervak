@@ -46,7 +46,6 @@ function getDateRangeTimestamps(dateRange) {
 }
 
 function toggleDropdown() {
-    console.log("test")
     const dropdown = document.getElementById('user-dropdown');
     dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
 }
