@@ -40,6 +40,8 @@ async function showTab(n) {
   }
   //render calendar
   if (currentTab == 1) {
+    showMonth = new Date().getMonth();
+    showYear = new Date().getFullYear();
     await createCalendar(showMonth, showYear);
   }
 
@@ -319,15 +321,22 @@ function toggleCalendarTimes() {
   const calendar = document.querySelector(".calendar-date");
   const times = document.querySelector(".calendar-times");
   const back = document.querySelector("#times-back");
-  if (times.style.display == "none") {
+  if (times.style.display) {
+    if (times.style.display != "none") {
+      back.classList.add("hidden");
+      calendar.style.display = "block";
+      times.style.display = "none";
+    } else {
+      back.classList.remove("hidden");
+      calendar.style.display = "none";
+      times.style.display = "block";
+      removeDaySelected();
+    }
+  } else {
     back.classList.remove("hidden");
     calendar.style.display = "none";
     times.style.display = "block";
     removeDaySelected();
-  } else {
-    back.classList.add("hidden");
-    calendar.style.display = "block";
-    times.style.display = "none";
   }
 }
 
