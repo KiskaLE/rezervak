@@ -226,7 +226,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  background: $background;
+  //background: $background;
 }
 
 .back {
@@ -283,6 +283,8 @@ body {
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 
 .items-table {
@@ -1039,38 +1041,67 @@ input.valid {
     filter: brightness(1.05);
   }
 }
+//calendar end
 
 //payment start
 .payment-wrapper {
+  $padding: 20px;
   background-color: white;
   border: $border;
-  display: flex;
-  align-items: center;
-  box-shadow: $shadow;
   border-radius: $radius;
-  gap: 50px;
-  padding: 20px;
-  font-size: $text-3;
+  width: 400px;
+  box-shadow: $shadow;
 
-  h2 {
-    margin: 0;
-    font-size: 1.3rem;
-    margin-bottom: 10px;
+  @include w(sm) {
+    width: 90%;
   }
 
-  .payment-qr-code {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  .payment-reservation {
+    padding: $padding $padding 10px $padding;
+    border-bottom: 1px solid $gray-100;
+  }
 
-    img {
-      width: 100px;
-      height: 100px;
+  .payment-info {
+    display: flex;
+    gap: 20px;
+
+    .reservation-info-group {
+      display: flex;
+      flex-direction: column;
+
+      .group-title {
+        font-size: $text-1;
+      }
+
+      .group-value {
+        font-size: $text-2;
+        font-weight: 600;
+      }
     }
   }
-}
 
-//calendar end
+  .payment {
+    padding: 10px $padding $padding;
+    display: grid;
+    align-items: end;
+    grid-template-columns: 1fr 1fr;
+
+    .payment-qr-code {
+      display: flex;
+      justify-content: end;
+      img {
+        height: 112px;
+        width: 112px;
+      }
+    }
+  }
+
+  h2 {
+    margin: 0 0 6px;
+    font-weight: 700;
+  }
+}
+// Payment end
 
 //flash messages
 @keyframes slideFromTop {

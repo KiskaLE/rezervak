@@ -1,9 +1,71 @@
 {block title}Platba{/block}
 {block content}
-<div class="page-wrapper"></div>
-<h1>Platba</h1>
+<div class="page-wrapper">
 
-<div n:if="$payment->status == 0" class="payment-wrapper">
+<h1>Zaplaťe rezervaci</h1>
+
+    <div class="payment-wrapper">
+        <div class="payment-reservation">
+            <h2>Rezervace</h2>
+            <div class="payment-info">
+                <div class="reservation-info-group">
+                    <span class="group-title">Číslo</span>
+                    <span class="group-value">{$reservation->id}</span>
+                </div>
+            </div>
+            <div class="payment-info">
+                <div class="reservation-info-group">
+                    <span class="group-title">Služba</span>
+                    <span class="group-value">{$service->name}</span>
+                </div>
+            </div>
+            <div class="payment-info">
+                <div class="reservation-info-group">
+                    <span class="group-title">Datum</span>
+                    <span class="group-value">{$reservation->start|date:"d.m.Y"}</span>
+                </div>
+                <div class="reservation-info-group">
+                    <span class="group-title">Čas</span>
+                    <span class="group-value">{$reservation->start|date:"H:i"}</span>
+                </div>
+            </div>
+        </div>
+        <div class="payment">
+            <div>
+        <h2>Platba</h2>
+                <div class="payment-info">
+                    <div class="reservation-info-group">
+                        <span class="group-title">Číslo účtu</span>
+                        <span class="group-value">{$user->payment_info}</span>
+                    </div>
+                </div>
+                <div class="payment-info">
+                    <div class="reservation-info-group">
+                        <span class="group-title">Variabílní symbol</span>
+                        <span class="group-value">{$payment->id_transaction}</span>
+                    </div>
+                </div>
+                <div class="payment-info">
+                    <div class="reservation-info-group">
+                        <span class="group-title">Bez DPH</span>
+                        <span class="group-value">{$payment->price * (1-($payment->vat/100))} Kč</span>
+                    </div>
+                    <div class="reservation-info-group">
+                        <span class="group-title">S DPH</span>
+                        <span class="group-value">{$payment->price} Kč</span>
+                    </div>
+                </div>
+            </div>
+            <div class="payment-qr-code">
+                {$qrCode|noescape}
+            </div>
+        </div>
+        
+    </div>
+
+
+
+{* <div n:if="$payment->status == 0" class="payment-wrapper">
     <div class="payment-info">
         <h2>Údaje pro platbu</h2>
         <div><span><bold>Částka:</bold> </span><span>{$payment->price}</span><span> Kč</span></div>
@@ -13,5 +75,6 @@
     <div class="payment-qr-code">
         {$qrCode|noescape}
     </div>
-</div>
+</div> *}
 
+</div>

@@ -28,12 +28,14 @@ final class Payments
         $status = false;
         try {
             $user_id = $reservation->user_id;
+            $service = $reservation->ref("services", "service_id");
             $price = $this->createPrice($user_id, $reservation, $discountCode);
             $idTransaction = $reservation->id . date("s");
             $database->table("payments")->insert([
                 "price" => $price,
                 "reservation_id" => $reservation->id,
-                "id_transaction" => $idTransaction
+                "id_transaction" => $idTransaction,
+                "vat" => $service->vat
             ]);
             $status = true;
         } catch (\Throwable $th) {
