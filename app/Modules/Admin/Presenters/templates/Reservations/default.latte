@@ -57,7 +57,8 @@
         </div>
     </div>
     {var $i = 0}
-    <div n:foreach="$reservations as $reservation" class="list-item" id="list-item-{$i}">
+    <div class="list-items">
+        <div n:foreach="$reservations as $reservation" class="list-item" id="list-item-{$i}">
         {var $service = $reservation->ref("services", "service_id")}
         {var $payment = $reservation->related("payments")->fetch()}
         
@@ -107,10 +108,10 @@
                     <span class="list-item-label">Telefon</span>
                     <span>{$reservation->phone}</span>
                 </div>
-                <div class="list-item-info">
+                {* <div class="list-item-info">
                     <span class="list-item-label">Cena</span>
                     <span>{$payment->price|currency} Kč</span>
-                </div>
+                </div> *}
                 <div class="list-item-info">
                     <span class="list-item-label">Adresa</span>
                     <span>{$reservation->address}</span>
@@ -131,6 +132,7 @@
             </div>
         </div>
         {do $i++}
+    </div>
     </div>
     <!-- Paginator pages -->
         <ul n:if="$paginator->getPageCount() > 1" class="pagination">

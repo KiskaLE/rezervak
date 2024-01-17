@@ -115,5 +115,25 @@ final class HomePresenter extends SecurePresenter
 
     }
 
+    public function handleSetPaid($id) {
+        $isSuccess = true;
+        try {
+            $res = $this->database->table('payments')->where('reservation_id=?', $id)->update([
+                'status' => '1',
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+            if (!$res) {
+                $isSuccess = false;
+            }
+        } catch (\Throwable $th) {
+            $isSuccess = false;
+        }
+        if ($isSuccess) {
+            $this->flashMessage("Rezervace byla zaplacena", "success");
+            $this->redirect('this');
+        }
+        $this->flashMessage("Nepovedlo se zaplatit", "error");
+    }
+
 
 }

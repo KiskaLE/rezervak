@@ -66,6 +66,7 @@
     </div>
     {var $i = 0}
     {if $todayReservations}
+        <div class="list-items">
         <div n:foreach="$todayReservations as $reservation" class="list-item" id="list-item-{$i}">
             {var $service = $reservation->ref("services", "service_id")}
             {var $payment = $reservation->related("payments")->fetch()}
@@ -80,10 +81,14 @@
                 <div class="list-item-column">
                     <div class="list-item-info"><b>{$reservation->firstname. " ". $reservation->lastname}</b></div>
                     <div class="list-item-info"> Typ rezervace <b>{$service->name|lower}</b></div>
+                    <div class="list-item-info row">č.{$reservation->id}</div>
                 </div>
 
                 <div class="list-item-column">
                     <div class="list-item-info row"><span class="tag tag-blue">{$payment->price} Kč</span></div>
+                    <div n:if="!$payment->status && $reservation->status !='CANCELED'" class="list-item-info row"><span class="tag tag-yellow">čeká na zaplacení</span></div>
+                    <div n:if="$payment->status && $reservation->status !='CANCELED'" class="list-item-info row"><span class="tag tag-green">zaplaceno</span></div>
+                    <div n:if="$reservation->status =='CANCELED'" class="list-item-info row"><span class="tag tag-red">zrušeno</span></div>
                 </div>
 
                 <div class="list-item-column list-item-more">
@@ -98,6 +103,7 @@
             <div class="list-item-body" style="display: none">
                 <div class="list-item-column list-item-actions">
                 {* <a class="btn btn-tertiary" n:href="edit $reservation->uuid">Upravit</a> *}
+                <a n:if="$payment->status != 1 && $reservation->status == 'VERIFIED'" class="btn btn-tertiary" n:href="setPaid! $reservation->id">Označit zaplaceno</a>
                 <a class="btn btn-tertiary" n:href="cancel! $reservation->id" onclick="if(confirm('Opravdu chcete zrušit rezervaci?')) { handleDelete(this, {$reservation->id}); } else { event.preventDefault(); }">Zrušit</a>
 
                 </div>
@@ -110,10 +116,10 @@
                         <span class="list-item-label">Telefon</span>
                         <span>{$reservation->phone}</span>
                     </div>
-                    <div class="list-item-info">
+                    {* <div class="list-item-info">
                         <span class="list-item-label">Cena</span>
                         <span>{$payment->price|currency} Kč</span>
-                    </div>
+                    </div> *}
                     <div class="list-item-info">
                         <span class="list-item-label">Adresa</span>
                         <span>{$reservation->address}</span>
@@ -134,6 +140,7 @@
             </div>
             </div>
             {do $i++}
+        </div>
         </div>
     {else}
         <div class="list-no-data"><span>Na dneska nemáte naplánované žádné rezervace</span></div>
