@@ -3,12 +3,12 @@
     <meta charset="utf-8">
     <title>Zrušení rezervace</title>
 </head>
-<body style="background-color: #ffffff;
-            padding: 20px;
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;">
-<div style="display: flex; flex-direction: column; align-items: center">
-    <div style="max-width: 600px; padding: 5px;">
+<body style="background: #EEEEEE;;
+padding: 20px;
+margin: 0;
+font-family: Arial, Helvetica, sans-serif;">
+<div style="display: flex; flex-direction: column; align-items: center; padding: 20px 0;">
+    <div  style="max-width: 500px; padding: 30px; border-radius: 10px; background: white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);">
         <h1 style="font-size: 24px;
             font-weight: bolder;
             color: #d0482b;
@@ -17,29 +17,34 @@
             line-height: 30px;">Dobrý den,<br>
             je nám líto, ale musíme Vás informovat, že Vaše rezervace číslo <b>{$reservation->id}</b> u {$user->company} byla bohužel zrušena.
         </p>
-        <h3>Detaily zrušené rezervace:</h3>
+        <h2 style="font-size: 16px; margin: 0px;">Detaily zrušené rezervace:</h2>
         <p style="font-size: 16px;
-            line-height: 30px;">
-            <b>Služba:</b> {$reservation->ref("services", "service_id")->name} <br>
-            <b>Datum:</b> {$reservation->start|date:"d.m.Y"}<br>
-            <b>Čas:</b> {$reservation->start|date:"H:i"}<br>
-            {* {var $price = $reservation->related("payments")?->fetch()->price}
-            <b>Cena:</b> {$price} Kč<br> *}
+            line-height: 30px; margin-top: 2px;">
+             {$reservation->ref("services", "service_id")->name} <br>
+            {$reservation->start|date:"d.m.Y"}<br>
+             {$reservation->start|date:"H:i"}<br>
         </p>
-        <h3>Důvod Zrušení:</h3>
+        <h2 style="font-size: 16px; margin: 0px;">Důvod Zrušení:</h2>
         <p style="font-size: 16px;
+            margin-top: 2px;
             line-height: 30px;">
             {$reason}
         </p>
-        <p style="font-size: 16px;
-            line-height: 30px;">S pozdravem, <br>
-            <span n:if="$user->company">{$user->company}</span><br>
-            <span n:if="$user->ico">IČO: {$user->ico}</span> <br>
-            <span n:if="$user->dic">DIC: {$user->dic}</span> <br>
-            <span n:if="$user->email">{$user->email}</span> <br>
-            <span n:if="$user->phone">{$user->phone}</span>
-
-        </p>
+        <div style="display: flex; gap: 80px; justify-content:space-between;">
+            <p style="font-size: 16px;
+                line-height: 30px;">S pozdravem, <br>
+                <span n:if="$user->company">{$user->company}</span><br>
+                <span n:if="$user->ico">IČO: {$user->ico}</span> <br>
+                <span n:if="$user->dic">DIC: {$user->dic}</span> <br>
+                <span n:if="$user->email">{$user->email}</span><br>
+                <span n:if="$user->phone">{$user->phone}</span>
+            </p>
+            <!-- <img src="{$url}/assets/images/{$user->logo_url}" alt="Logo"> -->
+            <div style="display: flex; justify-content: center; align-items: center; margin-right: 20px">
+                <img style="height: 100px" src="http://localhost:8000/assets/images/pomajbik-logo.png" alt="Logo">
+                <!-- <img  style="height: 100px" src="{$url}/assets/images/{$user->logo_url}" alt="Logo"> -->
+            </div>
+        </div>
     </div>
 </div>
 

@@ -117,6 +117,20 @@ final class Mailer
         $this->sendMail($to, "Potvrzení platby", $this->latte->renderToString(__DIR__ . '/Mails/paymentConfirmation.latte', $params));
     }
 
+    public function sendNotifyMail(string $to, $reservation): void {
+
+        $user = $reservation->ref("users", "user_id");
+        $userSettings = $user->related("settings")->fetch();
+        $params = [
+            'user' => $user,
+            'userSettings' => $userSettings,
+            'reservation' => $reservation,
+            'url' => $this->url
+        ];
+
+        $this->sendMail($to, "Upozornení", $this->latte->renderToString(__DIR__ . '/Mails/notify.latte', $params));
+    }
+
     private function sendMail(string $to, string $subject, $message)
     {
         $from = $this->database->table("settings")->fetch()->info_email;

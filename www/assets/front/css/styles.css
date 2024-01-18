@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 * {
   min-width: 0;
 }
@@ -65,7 +65,7 @@ h1 {
 }
 
 body {
-  font-family: "PT Sans Narrow", sans-serif;
+  font-family: "Roboto", sans-serif;
   background-color: #f5f5f5;
   margin: 0;
 }
@@ -272,7 +272,7 @@ body {
 .button-backup {
   border: 1px solid #006b82 !important;
   color: #006b82 !important;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 18px;
   padding: 13px 10px !important;
 }
@@ -629,14 +629,14 @@ body {
 #recap #service {
   font-size: 20px;
   margin: 10px 0 5px;
-  font-weight: 600;
+  font-weight: 500;
 }
 #recap .event-info {
   font-size: 20px;
 }
 #recap #price {
   font-size: 24px;
-  font-weight: 600;
+  font-weight: 500;
   color: #27c03e;
 }
 #recap #currency {
@@ -864,7 +864,7 @@ input.valid {
 }
 .payment-wrapper .payment-info .reservation-info-group .group-value {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
 }
 .payment-wrapper .payment {
   padding: 10px 20px 20px;
@@ -937,6 +937,7 @@ footer {
   padding: 20px;
   display: flex;
   justify-content: center;
+  font-weight: 400;
 }
 
 #logo-footer img {
@@ -990,11 +991,11 @@ footer {
 .recap-service-card .recap-service-title {
   margin: 0;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 500;
 }
 .recap-service-card .service-price {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 500;
   color: #002f3b;
   padding: 5px 10px;
   background: #ade2f0;
@@ -1056,7 +1057,7 @@ footer {
 .service-availability {
   color: #ce4629;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .loading {

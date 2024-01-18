@@ -102,6 +102,8 @@ final class HomePresenter extends SecurePresenter
         }
         if ($isSuccess) {
             $this->flashMessage("Rezervace byla zrušena", "success");
+            $reservation = $this->database->table('reservations')->where('id=?', $reservationId)->fetch();
+            $this->mailer->sendCancelationMail($reservation->email, $reservation, "Zrušeno správcem");
             $this->redirect('Reservations:');
         }
         $this->flashMessage("Rezervaci se nepodařilo zrušit", "error");

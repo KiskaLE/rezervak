@@ -84,4 +84,25 @@ class ApiPresenter extends BasePresenter
         die("OK");
     }
 
+    public function actionNotify() {
+        $userSettings = $this->database->table("settings")->fetch();
+        if ($userSettings->notify_time > 0) {
+        $notifyTime = date("Y-m-d H:i:s", strtotime("+" . $userSettings->notify_time . " minutes"));
+        $reservationsToNotify = $this->database->table("reservations")
+        ->select("reservations.*")
+        ->where("reservations.status='VERIFIED' AND reservations.notified=0 AND reservations.type=0 AND :payments.status=1 AND reservations.start BETWEEN NOW() AND ?" , $notifyTime)
+        ->fetchAll();
+        if ($reservationsToNotify) {
+            foreach ($reservationsToNotify as $reservation) {
+                $this->mailer->sendNotifyMail($reservation->email, $reservation);
+                $reservation->update(["updated_at" => date("Y-m-d H:i:s"), "notified" => 1]);
+                dump("odeslano");
+            }
+        }
+        }
+
+
+        die("end");
+    }
+
 }

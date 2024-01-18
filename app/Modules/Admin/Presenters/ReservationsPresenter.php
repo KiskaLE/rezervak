@@ -9,7 +9,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use Nette\DI\Attributes\Inject;
 use App\Modules\Formater;
-
+use App\Modules\Mailer;
 
 final class ReservationsPresenter extends SecurePresenter
 {
@@ -23,7 +23,8 @@ final class ReservationsPresenter extends SecurePresenter
 
     public function __construct(
 
-        private Formater $formater
+        private Formater $formater,
+        private Mailer $mailer,
     
     )
     {
@@ -254,6 +255,8 @@ final class ReservationsPresenter extends SecurePresenter
         }
         if ($isSuccess) {
             $this->flashMessage("Rezervace byla zrušena", "success");
+            $reservation = $this->database->table('reservations')->where('id=?', $reservationId)->fetch();
+            $this->mailer->sendCancelationMail($reservation->email, $reservation, "Zrušeno správcem");
             $this->redirect('Reservations:');
         }
         $this->flashMessage("Rezervaci se nepodařilo zrušit", "error");

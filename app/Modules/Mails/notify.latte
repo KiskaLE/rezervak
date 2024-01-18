@@ -1,0 +1,43 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Upozornění</title>
+</head>
+<body style="background: #EEEEEE;
+            margin: 20px 0;
+            padding: 20px;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;">
+<div style="display: flex; flex-direction: column; align-items: center; padding: 20px 0;">
+    <div style="max-width: 500px; padding: 30px; border-radius: 10px; background: white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);">
+        <p style="font-size: 16px;
+            line-height: 30px;">Dobrý den,<br>
+            dovolte nám, abychom Vám připomněli Vaši nadcházející rezervaci s číslem <b>{$reservation->id}</b>  u {$user->company}.
+        </p>
+        <h2 style="font-size: 16px; margin: 0px;">Detaily vaší Rezervace:</h2>
+        <p style="font-size: 16px; margin-top: 2px;
+            line-height: 30px;">
+            {$reservation->ref("services", "service_id")->name} <br>
+            {$reservation->start|date:"d.m.Y"}<br>
+            {$reservation->start|date:"H:i"}<br>
+        </p>
+        <div style="display: flex; gap: 80px; justify-content:space-between;">
+            <p style="font-size: 16px;
+                line-height: 30px;">S pozdravem, <br>
+                <span n:if="$user->company">{$user->company}</span><br>
+                <span n:if="$user->ico">IČO: {$user->ico}</span> <br>
+                <span n:if="$user->dic">DIC: {$user->dic}</span> <br>
+                <span n:if="$user->email">{$user->email}</span><br>
+                <span n:if="$user->phone">{$user->phone}</span>
+            </p>
+            <!-- <img src="{$url}/assets/images/{$user->logo_url}" alt="Logo"> -->
+            <div style="display: flex; justify-content: center; align-items: center; margin-right: 20px">
+                {* <img style="height: 100px" src="http://localhost:8000/assets/images/pomajbik-logo.png" alt="Logo"> *}
+                <img  style="height: 100px" src="{$url}/assets/images/{$user->logo_url}" alt="Logo">
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
