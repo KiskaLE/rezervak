@@ -52,8 +52,22 @@ přepsat crony
 přidat na homapage záložku zítra pozítří
 přidat k rezervacím počty
 přidat k rezervacím název služby do hlavičky (předělat)
+upravit zobrazení čísla rezevace
 na front udělat grid na služby
 při vyplnování údajů zobrazovat info o službě
+opravit logo v emailu
+vylepšit zadávání volných termínů do služby
+
+
+----- když bude čas
+předělat design pracovní doby
+předělat zadávání pracovní doby jako v calendly
+předělat jak se ukádájí praconí doby. zrušit přestávky a ukládat jen pracovní dobu
+přidat možnost unikátního rozvrhu pro službu.
+
+Odstranit napojení tabulek na uživatele.
+
+Admin by měl mít možnost změnit dobu konání rezevace.
 
 
 
