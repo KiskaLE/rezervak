@@ -87,6 +87,30 @@ final class ReservationsPresenter extends SecurePresenter
             $q = $q->where('service_id = ?', $filterService);
         }
 
+        $this->template->futureCount = $this->database->table('reservations')
+        ->select('reservations.*',)
+        ->where('user_id=?', $this->user->id)
+        ->where("reservations.type=?", 0)->where('reservations.status=?', 'VERIFIED')->where('start >= ?', date('Y-m-d'))->where(':payments.status=?', 1)->order('start ASC')->count();
+        $this->template->pastCount = $this->database->table('reservations')
+        ->select('reservations.*',)
+        ->where('user_id=?', $this->user->id)
+        ->where("reservations.type=?", 0)->where('reservations.status=?', 'VERIFIED')->where('start < ?', date('Y-m-d'))->where(':payments.status=?', 1)->order('start ASC')->count();
+
+        $this->template->unpaidCount = $this->database->table('reservations')
+        ->select('reservations.*',)
+        ->where('user_id=?', $this->user->id)
+        ->where("reservations.type=?", 0)->where('reservations.status=?', 'VERIFIED')->where(':payments.status=?', 0)->order('start ASC')->count();
+
+        $this->template->allCount = $this->database->table('reservations')
+        ->select('reservations.*',)
+        ->where('user_id=?', $this->user->id)
+        ->where("reservations.type=?", 0)->where('reservations.status !=?', 'UNVERIFIED')->order('created_at DESC')->count();
+
+
+        $q = $this->database->table('reservations')
+        ->select('reservations.*',)
+        ->where('user_id=?', $this->user->id)
+        ->where("reservations.type=?", 0);
         switch ($tab) {
             case 0:
                 //nadcházející
@@ -108,13 +132,15 @@ final class ReservationsPresenter extends SecurePresenter
                 break;
 
         }
+
         $numberOfReservations = $q->count();
-        $paginator = $this->createPagitator($numberOfReservations, $page, 4);
+        $paginator = $this->createPagitator($numberOfReservations, $page, 10);
         $reservations = $q->limit($paginator->getLength(), $paginator->getOffset())->fetchAll();
 
         $this->template->numberOfReservations = $numberOfReservations;
         $this->template->reservations = $reservations;
         $this->template->paginator = $paginator;
+        
     }
 
     public function actionEdit($id, $backlink)

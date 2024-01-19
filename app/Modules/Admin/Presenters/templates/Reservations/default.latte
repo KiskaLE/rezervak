@@ -12,16 +12,16 @@
     <div class="list-page">
         <div class="list-tabs">
             <a n:href="setTab! 3" class="list-page-item" id="tab3">
-                Všechny <span class="numberOfReservations">{$numberOfReservations}</span>
+                Všechny <span class="numberOfReservations">{$allCount}</span>
             </a>
             <a n:href="setTab! 0" class="list-page-item" id="tab0">
-                Nadcházející <span class="numberOfReservations">{$numberOfReservations}</span>
+                Nadcházející <span class="numberOfReservations">{$futureCount}</span>
             </a>
             <a n:href="setTab! 1" class="list-page-item" id="tab1">
-                Proběhlé <span class="numberOfReservations">{$numberOfReservations}</span>
+                Proběhlé <span class="numberOfReservations">{$pastCount}</span>
             </a>
             <a n:href="setTab! 2" class="list-page-item" id="tab2">
-                Nezaplacené <span class="numberOfReservations">{$numberOfReservations}</span>
+                Nezaplacené <span class="numberOfReservations">{$unpaidCount}</span>
             </a>
         </div>
         <div id="list-filter">
@@ -96,7 +96,7 @@
             <div class="list-item-column list-item-actions">
             <a n:if="$payment->status != 1 && $reservation->status == 'VERIFIED'" class="btn btn-tertiary" n:href="setPaid! $reservation->id">Označit zaplaceno</a>
             {* <a class="btn btn-tertiary" n:href="edit $reservation->uuid">Upravit</a> *}
-            <a n:if="$reservation->status != 'CANCELED'" class="btn btn-tertiary" n:href="cancel! $reservation->id" onclick="if(confirm('Opravdu chcete zrušit rezervaci?')) { handleDelete(this, {$reservation->id}); } else { event.preventDefault(); }">Zrušit</a>
+            <a n:if="$reservation->status != 'CANCELED'" class="btn btn-tertiary" n:href="cancel! $reservation->id" onclick="if(confirm('Opravdu chcete zrušit rezervaci?')) { handleDelete(this, {$reservation->id}); } else { event.preventDefault(); }">Zrušit rezervaci</a>
 
              </div>
             <div class="list-item-column top">

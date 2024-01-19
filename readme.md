@@ -49,15 +49,12 @@ přepsat crony
 
 ## Admin
 
-Upravit design user row
+přidat na homapage záložku zítra pozítří
+přidat k rezervacím počty
+přidat k rezervacím název služby do hlavičky (předělat)
+na front udělat grid na služby
+při vyplnování údajů zobrazovat info o službě
 
-Create Dashboard
-
-
-Connect Fio API
-
-
-re-do crons 
 
 
 

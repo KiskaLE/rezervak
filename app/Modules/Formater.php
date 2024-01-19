@@ -30,7 +30,7 @@ class Formater
 
     public function currency($currency)
     {
-        return number_format($currency, 2, ",", " ");
+        return number_format($currency, 0, ",", " ");
     }
 
 public function getDataFromString($string): array

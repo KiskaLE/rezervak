@@ -105,4 +105,12 @@ class ApiPresenter extends BasePresenter
         die("end");
     }
 
+    public function actionPaymentsCheck() {
+        $payments = $this->database->table("payments")->where("status=0")->fetchAll();
+        
+        
+
+        die("check");
+    }
+
 }
