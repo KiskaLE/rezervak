@@ -10,6 +10,10 @@
             font-family: Arial, Helvetica, sans-serif;">
 <div style="display: flex; flex-direction: column; align-items: center; padding: 20px 0;">
     <div style="max-width: 500px; padding: 30px; border-radius: 10px; background: white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);">
+        <h1 style="font-size: 24px;
+        font-weight: bolder;
+        color: #d0482b;
+        margin: 0 0 20px;">Upozornění</h1>
         <p style="font-size: 16px;
             line-height: 30px;">Dobrý den,<br>
             dovolte nám, abychom Vám připomněli Vaši nadcházející rezervaci s číslem <b>{$reservation->id}</b>  u {$user->company}.
@@ -32,7 +36,6 @@
             </p>
             <!-- <img src="{$url}/assets/images/{$user->logo_url}" alt="Logo"> -->
             <div style="display: flex; justify-content: center; align-items: center; margin-right: 20px">
-                {* <img style="height: 100px" src="http://localhost:8000/assets/images/pomajbik-logo.png" alt="Logo"> *}
                 <img  style="height: 100px" src="{$url}/assets/images/{$user->logo_url}" alt="Logo">
             </div>
         </div>
