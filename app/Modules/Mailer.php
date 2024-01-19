@@ -56,7 +56,7 @@ final class Mailer
             'reservation' => $reservation
 
         ];
-        $this->sendMail($to, "Potvrzení Vaší rezervace - Vyžadováno Ověření", $this->latte->renderToString(__DIR__ . '/Mails/confirmation.latte', $params));
+        $this->sendMail($to, "Potvrzení rezervace - Vyžadováno Ověření", $this->latte->renderToString(__DIR__ . '/Mails/confirmation.latte', $params));
     }
 
     /**
@@ -78,7 +78,7 @@ final class Mailer
             'reservation' => $reservation
 
         ];
-        $this->sendMail($to, "Potvrzení Vaší záložní rezervace - Vyžadováno Ověření", $this->latte->renderToString(__DIR__ . '/Mails/backup.latte', $params));
+        $this->sendMail($to, "Potvrzení záložní rezervace - Vyžadováno Ověření", $this->latte->renderToString(__DIR__ . '/Mails/backup.latte', $params));
     }
 
     /**
@@ -101,7 +101,7 @@ final class Mailer
             'reason' => $reason
 
         ];
-        $this->sendMail($to, "Zrušení rezervace", $this->latte->renderToString(__DIR__ . '/Mails/cancel.latte', $params));
+        $this->sendMail($to, "Zrušení rezervace č.$reservation->id", $this->latte->renderToString(__DIR__ . '/Mails/cancel.latte', $params));
 
     }
 
@@ -114,7 +114,7 @@ final class Mailer
             'userSettings' => $userSettings,
             'reservation' => $reservation
         ];
-        $this->sendMail($to, "Potvrzení platby", $this->latte->renderToString(__DIR__ . '/Mails/paymentConfirmation.latte', $params));
+        $this->sendMail($to, "Potvrzení platby rezervace č.$reservation->id", $this->latte->renderToString(__DIR__ . '/Mails/paymentConfirmation.latte', $params));
     }
 
     public function sendNotifyMail(string $to, $reservation): void {
@@ -128,7 +128,7 @@ final class Mailer
             'url' => $this->url
         ];
 
-        $this->sendMail($to, "Upozornení", $this->latte->renderToString(__DIR__ . '/Mails/notify.latte', $params));
+        $this->sendMail($to, "Upozornení rezervace č.$reservation->id", $this->latte->renderToString(__DIR__ . '/Mails/notify.latte', $params));
     }
 
     private function sendMail(string $to, string $subject, $message)
@@ -141,14 +141,5 @@ final class Mailer
             ->setHtmlBody($message);
 
         $this->mailer->send($mail);
-
-        /*
-        $this->phpMailer->clearAddresses();
-        $this->phpMailer->addAddress($to);
-        $this->phpMailer->Subject = $subject;
-        $this->phpMailer->Body = $message;
-        $this->phpMailer->send();
-        $this->phpMailer->clearAddresses();
-        */
     }
 }
