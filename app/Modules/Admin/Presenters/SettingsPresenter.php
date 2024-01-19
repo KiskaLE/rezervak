@@ -65,6 +65,12 @@ class SettingsPresenter extends SecurePresenter
             ->setRequired("Zadejte čas na zaplacení")
             ->addRule($form::Min, "Čas na zaplacení nesmí být méně než 1", 1);
 
+        $form->addText("notifyTime", "Úpozornění rezervace")
+            ->setHtmlAttribute("type", "number")
+            ->setDefaultValue($this->settings->notify_time)
+            ->setRequired("Zadejte čas pro označení")
+            ->addRule($form::Max, "Čas pro označení nesmí být výce než 1000 minut", 1000);
+
         $form->addText("homepage")
         ->setDefaultValue($this->settings->homepage)
         ->addRule($form::URL, "Neplatný url formát");
@@ -91,6 +97,7 @@ class SettingsPresenter extends SecurePresenter
                 "homepage" => $data->homepage,
                 "info_email" => $data->email,
                 "updated_at" => date("Y-m-d H:i:s"),
+                "notify_time" => $data->notifyTime
             ]);
             $this->flashMessage("Změny byly uloženy.", "success");
         } catch (\Throwable $th) {
