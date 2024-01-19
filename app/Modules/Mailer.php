@@ -4,9 +4,7 @@ namespace App\Modules;
 
 use Nette;
 use Latte\Engine;
-use Nette\Mail\SmtpMailer;
 use PHPMailer\PHPMailer\PHPMailer;
-use Nette\Mail\SendmailMailer;
 
 final class Mailer
 {
@@ -15,12 +13,11 @@ final class Mailer
 
     public function __construct(
         private Nette\Database\Explorer $database,
-        private PHPMailer          $phpMailer,
-        private Nette\Mail\Mailer  $mailer,
-        private Nette\DI\Container $container
+        private PHPMailer               $phpMailer,
+        private Nette\Mail\Mailer       $mailer,
+        private Nette\DI\Container      $container
     )
     {
-        $mailerConfig = $this->container->getParameters();
         if (isset($_SERVER['SERVER_NAME'])) {
             if ($_SERVER['SERVER_NAME'] === "localhost") {
                 $this->url = "http://" . "localhost:8000";
@@ -32,41 +29,24 @@ final class Mailer
         }
         
         $this->latte = new Engine;
-
-
     }
 
-    /**
-     * Sends a confirmation email to the specified recipient.
-     *
-     * @param string $to The email address of the recipient.
-     * @param string $confirmUrl The URL to confirm the reservation.
-     * @return void
-     * @throws Some_Exception_Class A description of the exception that may be thrown.
-     */
     public function sendConfirmationMail(string $to, string $confirmUrl, $reservation): void
     {
-
         $user = $reservation->ref("users", "user_id");
         $userSettings = $user->related("settings")->fetch();
+        
         $params = [
             'url' => $this->url . $confirmUrl,
             'user' => $user,
             'userSettings' => $userSettings,
             'reservation' => $reservation
-
         ];
-        $this->sendMail($to, "Potvrzení rezervace - Vyžadováno Ověření", $this->latte->renderToString(__DIR__ . '/Mails/confirmation.latte', $params));
+        
+        $mailContent = $this->latte->renderToString(__DIR__ . '/Mails/confirmation.latte', $params);
+        $this->sendMail($to, "Potvrzení rezervace - Vyžadováno Ověření", $mailContent);
     }
 
-    /**
-     * Sends a backup confirmation email to the specified recipient.
-     *
-     * @param string $to The email address of the recipient.
-     * @param string $confirmUrl The URL for confirming the backup.
-     * @return void
-     * @throws Exception If there is an error sending the email.
-     */
     public function sendBackupConfiramationMail(string $to, string $confirmUrl, $reservation): void
     {
         $user = $reservation->ref("users", "user_id");
@@ -76,20 +56,12 @@ final class Mailer
             'user' => $user,
             'userSettings' => $userSettings,
             'reservation' => $reservation
-
         ];
-        $this->sendMail($to, "Potvrzení záložní rezervace - Vyžadováno Ověření", $this->latte->renderToString(__DIR__ . '/Mails/backup.latte', $params));
+        
+        $mailContents = $this->latte->renderToString(__DIR__ . '/Mails/backup.latte', $params);
+        $this->sendMail($to, "Potvrzení záložní rezervace - Vyžadováno Ověření", $mailContents);
     }
 
-    /**
-     * Sends a cancellation email.
-     *
-     * @param string $to The email address to send the cancellation email to.
-     * @param mixed $reservation The reservation object.
-     * @param string $reason The reason for the cancellation.
-     * @return void
-     * @throws Some_Exception_Class Description of the exception that may be thrown.
-     */
     public function sendCancelationMail(string $to, $reservation, string $reason): void
     {
         $user = $reservation->ref("users", "user_id");
@@ -99,9 +71,10 @@ final class Mailer
             'userSettings' => $userSettings,
             'reservation' => $reservation,
             'reason' => $reason
-
         ];
-        $this->sendMail($to, "Zrušení rezervace č.$reservation->id", $this->latte->renderToString(__DIR__ . '/Mails/cancel.latte', $params));
+
+        $mailContents = $this->latte->renderToString(__DIR__ . '/Mails/cancel.latte', $params);
+        $this->sendMail($to, "Zrušení rezervace č.$reservation->id", $mailContents);
 
     }
 
@@ -114,7 +87,9 @@ final class Mailer
             'userSettings' => $userSettings,
             'reservation' => $reservation
         ];
-        $this->sendMail($to, "Potvrzení platby rezervace č.$reservation->id", $this->latte->renderToString(__DIR__ . '/Mails/paymentConfirmation.latte', $params));
+
+        $mailContents = $this->latte->renderToString(__DIR__ . '/Mails/paymentConfirmation.latte', $params);
+        $this->sendMail($to, "Potvrzení platby rezervace č.$reservation->id", $mailContents);
     }
 
     public function sendNotifyMail(string $to, $reservation): void {
@@ -128,18 +103,23 @@ final class Mailer
             'url' => $this->url
         ];
 
-        $this->sendMail($to, "Upozornení rezervace č.$reservation->id", $this->latte->renderToString(__DIR__ . '/Mails/notify.latte', $params));
+        $mailContents = $this->latte->renderToString(__DIR__ . '/Mails/notify.latte', $params);
+        $this->sendMail($to, "Upozornení rezervace č.$reservation->id", $mailContents);
     }
 
-    private function sendMail(string $to, string $subject, $message)
-    {
-        $from = $this->database->table("settings")->fetch()->info_email;
-        $mail = new Nette\Mail\Message;
-        $mail->setFrom($from ?? "info@rezervak.cz")
-            ->addTo($to)
-            ->setSubject($subject)
-            ->setHtmlBody($message);
+private function sendMail(string $to, string $subject, $message)
+{
+    $from = $this->database
+        ->table("settings")
+        ->fetch()
+        ->info_email;
 
-        $this->mailer->send($mail);
-    }
+    $mail = (new Nette\Mail\Message)
+        ->setFrom($from ?? "info@rezervak.cz")
+        ->addTo($to)
+        ->setSubject($subject)
+        ->setHtmlBody($message);
+
+    $this->mailer->send($mail);
+}
 }

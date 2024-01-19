@@ -32,16 +32,18 @@ p {
   color: rgb(29, 27, 39);
 }
 
-.h2-center {
-  text-align: center;
-  font-weight: 500;
-  font-size: 20px;
+@media (max-width: 900px) {
+  .h2-center {
+    text-align: center;
+    font-weight: 500;
+  }
 }
 
 .card {
   width: 100%;
   padding: 20px;
   border-radius: 12px;
+  border: 1px solid rgba(26, 26, 26, 0.1);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
 }
@@ -68,11 +70,6 @@ body {
   font-family: "Roboto", sans-serif;
   background-color: #f5f5f5;
   margin: 0;
-}
-@media (max-width: 500px) {
-  body {
-    background: #ffffff;
-  }
 }
 
 .body-wrapper {
@@ -214,13 +211,11 @@ body {
 }
 #confirmation h1 {
   text-align: center;
-  font-size: 48px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   margin-top: 0;
-  color: #a62b0e;
 }
 #confirmation p {
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .btn-secondary {
@@ -1029,9 +1024,13 @@ footer {
 }
 #recap-customer-info .recap-customer-info-title {
   margin: 0;
+  margin-bottom: 5px;
   font-size: 18px;
 }
 #recap-customer-info .recap-custome-info-data {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
   color: #3f4344;
   font-size: 18px;
 }

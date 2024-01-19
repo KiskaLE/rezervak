@@ -1,5 +1,5 @@
 //@import url("https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
 @mixin w($size) {
   @if ($size == sm) {
@@ -36,7 +36,6 @@ $secondary-700: #187d28;
 $secondary-800: #186325;
 $secondary-900: #165120;
 $secondary-950: #062d0e;
-
 
 $gray-50: #f7f9f9;
 $gray-100: #d5d8d9;
@@ -142,15 +141,17 @@ p {
 }
 
 .h2-center {
-  text-align: center;
-  font-weight: 500;
-  font-size: $text-4;
+  @include w(md) {
+    text-align: center;
+    font-weight: 500;
+  }
 }
 
 .card {
   width: 100%;
   padding: 20px;
   border-radius: $radius;
+  border: $border;
   box-shadow: $shadow;
   background-color: $white;
 
@@ -178,10 +179,6 @@ body {
   font-family: "Roboto", sans-serif;
   background-color: $background;
   margin: 0;
-
-  @include w(sm) {
-    background: $white;
-  }
 }
 
 .body-wrapper {
@@ -328,14 +325,12 @@ body {
 
   h1 {
     text-align: center;
-    font-size: $text-8;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     margin-top: 0;
-    color: $primary-500;
   }
 
   p {
-    font-size: $text-4;
+    font-size: $text-2;
   }
 }
 
@@ -1212,9 +1207,13 @@ footer {
 
   .recap-customer-info-title {
     margin: 0;
+    margin-bottom: 5px;
     font-size: $text-3;
   }
   .recap-custome-info-data {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
     color: $gray-600;
     font-size: $text-3;
   }

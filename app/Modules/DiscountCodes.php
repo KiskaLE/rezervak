@@ -16,38 +16,35 @@ class DiscountCodes
     /**
      * Validates a discount code for a reservation.
      *
-     * @param mixed $reservation The reservation object.
+     * @param int $user_id The user ID.
+     * @param int $service_id The service ID.
      * @param string $discountCode The discount code to validate.
      * @return array The discount code row if valid, an empty array otherwise.
      */
     public function isCodeValid(int $user_id, int $service_id, string $discountCode)
     {
-        $discountCodeRow = $this->database->table("discount_codes")->where("user_id=? AND code LIKE ? AND active=1", [strval($user_id), $discountCode])->fetch();
-        if (strval($discountCodeRow?->code) != $discountCode) {
+        $discountCodeRow = $this->database
+            ->table("discount_codes")
+            ->where("user_id = ? AND code LIKE ? AND active = 1", [strval($user_id), $discountCode])
+            ->fetch();
+
+        if (!$discountCodeRow || strval($discountCodeRow->code) !== $discountCode) {
             return [];
         }
-        if ($discountCodeRow) {
-            $services2discountCode = $discountCodeRow->related("service2discount_code.discount_code_id")->fetchAll();
-            $selectedServices = [];
-           if ($services2discountCode) {
-            foreach ($services2discountCode as $row) {
-                $selectedServices[] = $row->ref("services", "service_id")?->id;
-            }
-           } 
-           in_array($service_id, $selectedServices) ?: $discountCodeRow = [];
-        }
-        return $discountCodeRow;
-    }
 
-    /**
-     * Retrieves a service from the database by its ID.
-     *
-     * @param int $service_id The ID of the service to retrieve.
-     * @return mixed The fetched service, or null if not found.
-     * @throws Some_Exception_Class If the service cannot be found.
-     */
-    public function getService(int $service_id)
-    {
-        return $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
+        $service2DiscountCodeRows = $discountCodeRow
+            ->related("service2discount_code.discount_code_id")
+            ->fetchAll();
+
+        $selectedServices = array_map(
+            fn ($row) => $row->ref("services", "service_id")?->id,
+            $service2DiscountCodeRows
+        );
+
+        if (!in_array($service_id, $selectedServices)) {
+            return [];
+        }
+
+        return $discountCodeRow;
     }
 }
