@@ -59,15 +59,21 @@
 
     <div class="list-page">
         <div class="list-tabs">
-            <span class="list-page-item selected">
-                Dnes
-            </span>
+            <a n:href="setTab! 0" id="tab0" class="list-page-item">
+                Dnes {$numberOfReservationsToday}
+            </a>
+            <a n:href="setTab! 1" id="tab1" class="list-page-item">
+                Zítra {$numberOfReservationsTomorow}
+            </a>
+            <a n:href="setTab! 2" id="tab2" class="list-page-item">
+                Pozítří {$numberOfReservationsAfterTomorow}
+            </a>
         </div>
     </div>
     {var $i = 0}
-    {if $todayReservations}
+    {if $reservations}
         <div class="list-items">
-        <div n:foreach="$todayReservations as $reservation" class="list-item" id="list-item-{$i}">
+        <div n:foreach="$reservations as $reservation" class="list-item" id="list-item-{$i}">
             {var $service = $reservation->ref("services", "service_id")}
             {var $payment = $reservation->related("payments")->fetch()}
             
@@ -165,3 +171,6 @@
 </div>
 {* list end *}
 
+<script>
+    setTab({$tab});
+</script>

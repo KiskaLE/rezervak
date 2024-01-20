@@ -50,7 +50,6 @@ přepsat crony
 ## Admin
 
 přidat na homapage záložku zítra pozítří
-přidat k rezervacím počty
 přidat k rezervacím název služby do hlavičky (předělat)
 upravit zobrazení čísla rezevace
 na front udělat grid na služby

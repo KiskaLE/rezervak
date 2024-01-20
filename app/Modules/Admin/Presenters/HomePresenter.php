@@ -30,22 +30,40 @@ final class HomePresenter extends SecurePresenter
 
     public function renderDefault(int $page = 1): void
     {
+        $session = $this->getSession("home");
+        $tab = $session->reservations_tab ?? 0;
+        $this->template->tab = $tab;
+        bdump($tab);
+        
+        //get number of reservations for each tabs
         $numberOfReservationsToday = $this->database->table("reservations")->where("start=? AND user_id=? AND status='VERIFIED' AND type=0", [date("Y-m-d"), $this->user->id])->count();
+        $numberOfReservationsTomorow = $this->database->table("reservations")->where("start=? AND user_id=? AND status='VERIFIED' AND type=0", [date("Y-m-d", strtotime(date("Y-m-d")."+1 day")), $this->user->id])->count();
+        $numberOfReservationsAfterTomorow = $this->database->table("reservations")->where("start=? AND user_id=? AND status='VERIFIED' AND type=0", [date("Y-m-d", strtotime(date("Y-m-d")."+2 day")), $this->user->id])->count();
         $this->template->numberOfReservationsToday = $numberOfReservationsToday;
+        $this->template->numberOfReservationsTomorow = $numberOfReservationsTomorow;
+        $this->template->numberOfReservationsAfterTomorow = $numberOfReservationsAfterTomorow;
+        
+        //get number of reservations for selected tab
+        $q = $this->database->table("reservations")->where("user_id=? AND status='VERIFIED' AND type=0" , $this->user->id);
+        switch ($tab) {
+            case 0:
+                $q = $q->where("start BETWEEN ? AND ?",[ date("Y-m-d") . " 00:00:00", date("Y-m-d") . " 23:59:59"]);
+                break;
+            case 1:
+                $q = $q->where("start BETWEEN ? AND ?", [date("Y-m-d", strtotime(date("Y-m-d")."+1 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d")."+1 day")) . " 23:59:59"]);
+                break;
+            case 2:
+                $q = $q->where("start BETWEEN ? AND ?", [date("Y-m-d", strtotime(date("Y-m-d")."+2 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d")."+2 day")) . " 23:59:59"]);
+                break;
 
-        $numberOfReservations = $this->database->table("reservations")->where("start>=? AND user_id=? AND status='VERIFIED' AND type=0", [date("Y-m-d"), $this->user->id])->count();
-        $this->template->numberOfReservations = $numberOfReservations;
-
-        //Table with today reservations
-        $q = $this->database->table("reservations")
-        ->where("start>=? AND start<? AND user_id=? AND status='VERIFIED' AND type=0", [date("Y-m-d"), date("Y-m-d") . " 23:59:59", $this->user->id])
-        ->order("start ASC");
+        }
         $numberOfTodaysReservations = $q->count();
-        $paginator = $this->createPagitator($numberOfTodaysReservations, $page, 4);
-        $todayReservations = $q
+        $paginator = $this->createPagitator($numberOfTodaysReservations, $page, 10);
+
+        $reservations = $q
             ->limit($paginator->getLength(), $paginator->getOffset())
             ->fetchAll();
-        $this->template->todayReservations = $todayReservations;
+        $this->template->reservations = $reservations;
         $this->template->paginator = $paginator;
 
         //info-cards
@@ -135,6 +153,14 @@ final class HomePresenter extends SecurePresenter
             $this->redirect('this');
         }
         $this->flashMessage("Nepovedlo se zaplatit", "error");
+    }
+
+    public function handleSetTab($tab) {
+       
+        $session = $this->getSession("home");
+    
+        $session->reservations_tab = $tab;
+        $this->redirect('default');
     }
 
 

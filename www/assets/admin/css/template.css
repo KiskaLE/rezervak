@@ -699,7 +699,7 @@ h1 {
 }
 .list-page .list-tabs {
   display: flex;
-  gap: 20px;
+  gap: 30px;
 }
 @media (max-width: 500px) {
   .list-page .list-tabs {
@@ -761,12 +761,14 @@ h1 {
   font-weight: 500;
   color: grey;
   text-decoration: none;
+  font-weight: 400;
 }
 .list-page .list-page-item.selected {
   color: var(--text-dark) !important;
   -webkit-text-decoration: 2px underline #eb6c51;
           text-decoration: 2px underline #eb6c51;
   text-underline-offset: 9px;
+  font-weight: 500;
 }
 
 .pagination {
