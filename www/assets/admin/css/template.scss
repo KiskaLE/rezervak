@@ -799,7 +799,7 @@ h1 {
     .list-item-column {
       display: flex;
       flex: 1;
-      gap: 5px;
+      gap: 10px;
       flex-direction: column;
       justify-content: center;
       align-items: start;
@@ -813,9 +813,10 @@ h1 {
 
       .list-item-info {
         display: flex;
+        gap: 5px;
         flex-direction: column;
         font-weight: 300;
-        font-size: 16px;
+        font-size: $text-2;
 
         &.row {
           flex-direction: row;
@@ -925,7 +926,7 @@ h1 {
         border-radius: 5px;
 
         &:hover {
-          background-color: #dbeafe;
+          background-color: $primary-100;
         }
       }
     }

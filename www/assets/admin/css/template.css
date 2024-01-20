@@ -625,7 +625,7 @@ h1 {
 .list-wrapper .list-item .list-item-column {
   display: flex;
   flex: 1;
-  gap: 5px;
+  gap: 10px;
   flex-direction: column;
   justify-content: center;
   align-items: start;
@@ -638,6 +638,7 @@ h1 {
 }
 .list-wrapper .list-item .list-item-column .list-item-info {
   display: flex;
+  gap: 5px;
   flex-direction: column;
   font-weight: 300;
   font-size: 16px;
@@ -736,7 +737,7 @@ h1 {
   border-radius: 5px;
 }
 .list-page #list-filter .filter-toggle svg:hover {
-  background-color: #dbeafe;
+  background-color: #ffc5b5;
 }
 .list-page #list-filter .filter-dropdown {
   z-index: 10;
