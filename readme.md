@@ -48,9 +48,8 @@ přepsat crony
 
 
 ## Admin
-
-přidat k rezervacím název služby do hlavičky (předělat)
-upravit zobrazení čísla rezevace
+?přidat k rezervacím název služby do hlavičky (předělat)
+?upravit zobrazení čísla rezevace
 na front udělat grid na služby
 při vyplnování údajů zobrazovat info o službě
 opravit logo v emailu
