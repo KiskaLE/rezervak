@@ -11,23 +11,27 @@
 <div class="working-hours-wrapper">
     <div class="weekday-group">
         <input class="weekday-checkbox" type="checkbox" name="" id="">
-        <div class="weekday-times">
-
-            <div class="weekday-time">
-                <input type="time"> 
-                -
-                <input type="time"> 
-                <a href="#" class="weekday-time-delete">X</a> 
+        {form workingHours}
+            <div class="weekday-times">
+                
+                    <div n:multiplier="multiplier" class="weekday-time">
+                        <input n:name="start"> 
+                        -
+                        <input n:name="end"> 
+                        {multiplier:remove} 
+                    </div>
+                    {multiplier:add multiplier }
+                    <div n:multiplier="multiplierTu" class="weekday-time">
+                        <input n:name="start"> 
+                        -
+                        <input n:name="end"> 
+                        {multiplierTu:remove} 
+                    </div>
+                    {multiplierTu:add multiplierTu }
+                    <input  n:name="submit">
+                
             </div>
-
-            <div class="weekday-time">
-                <input type="time"> 
-                -
-                <input type="time"> 
-                <a href="#" class="weekday-time-delete">X</a> 
-            </div>
-            
-        </div>
+        {/form}
     </div>
 </div>
 

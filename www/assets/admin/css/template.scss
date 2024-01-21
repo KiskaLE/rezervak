@@ -1209,6 +1209,15 @@ h1 {
     .weekday-time-delete {
       text-decoration: none;
       color: black;
+      background: none;
+      border: none !important;
+      padding: 0;
+    }
+
+    .weekday-time-add {
+      display: inline;
+      background: none;
+      border: none;
     }
   }
 }
