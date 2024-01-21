@@ -50,7 +50,6 @@ přepsat crony
 ## Admin
 ?přidat k rezervacím název služby do hlavičky (předělat)
 ?upravit zobrazení čísla rezevace
-při vyplnování údajů zobrazovat info o službě
 opravit logo v emailu
 vylepšit zadávání volných termínů do služby
 

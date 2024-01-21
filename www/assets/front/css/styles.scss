@@ -243,7 +243,7 @@ body {
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
-  margin-top: 50px;
+  margin-top: 20px;
   margin-bottom: 50px;
 }
 
@@ -443,10 +443,8 @@ body {
   border: $border;
   background: $white;
   display: flex;
-  flex-direction: column;
-  gap: 13px;
-  padding: 30px;
-  width: 370px;
+  //gap: 13px;
+  padding: 30px 0;
   box-shadow: $shadow;
   border-radius: $radius;
 
@@ -456,11 +454,19 @@ body {
     padding: 20px;
   }
 
-  div {
+  .form {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    width: 370px;
+    gap: 10px;
+    padding: 0 20px;
+    div {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
   }
+  
 }
 
 .backup {
@@ -572,7 +578,7 @@ body {
   display: flex;
   background: $white;
   box-shadow: $shadow;
-  padding: 20px;
+  padding: 20px 0;
   border-radius: $radius;
 
   @include w(md) {
@@ -605,6 +611,8 @@ body {
 
   &.open {
     width: 150px;
+    border-left: 1px solid $gray-100;
+    padding: 0 20px;
 
     @include w(md) {
       width: 100%;
@@ -1277,7 +1285,7 @@ footer {
 }
 
 .calendar-date {
-  padding-left: 20px;
+  padding: 0 20px;
   @include w(md) {
     padding-left: 0;
     min-height: 400px;
@@ -1287,23 +1295,38 @@ footer {
   }
 }
 
-#calendar-reservation-info {
+.reservation-info {
   //min-width: 200px;
-  padding-right: 50px;
-  margin-right: 10px;
   display: flex;
   flex-direction: column;
+  text-align: right;
+  padding:0 20px;
+  gap: 10px;
   border-right: 1px solid $gray-100;
   //max-width: 65px;
-  @media (min-width: 1050px) {
-    width: 200px;
-  }
+  width: fit-content;
   @include w(md) {
     display: none;
   }
   div {
     color: $gray-500;
     font-size: $text-3;
+  }
+}
+
+.reservation-info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  .info-group-title {
+    font-size: $text-2;
+    font-weight: 400;
+  }
+
+  .info-group-value {
+    font-size: $text-3;
+    font-weight: 500;
   }
 }
 

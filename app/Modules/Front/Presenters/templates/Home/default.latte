@@ -46,10 +46,16 @@
                         </div>
             </div>
                 <div class="calendar-box">
-                <div  id="calendar-reservation-info">
-                        <h2 id="calendar-reservation-service">Rezervace</h2>
-                        <div><span id="calendar-reservation-duration">50</span><span> minut</span></div>
-                        <div><span id="calendar-reservation-price">500</span><span> Kč</span></div>
+                    <div  class="reservation-info">
+                        <h2 class="calendar-reservation-service">Rezervace</h2>
+                        <div class="reservation-info-group">
+                            <span class="info-group-title">Doba trvání</span>
+                            <div class="info-group-value"><span class="calendar-reservation-duration"></span><span> minut</span></div>
+                        </div>
+                        <div class="reservation-info-group">
+                            <span class="info-group-title">Cena</span>
+                           <div class="info-group-value"><span class="calendar-reservation-price">500</span><span> Kč</span></div>
+                        </div>
                     </div>
                     
                     <div class="calendar-date">
@@ -120,54 +126,67 @@
                         </div>
             </div>
                 <div class="info-form">
-                    <div class="">
-                        <h2 class="h2-center">Zadejte osobní údaje</h2>
-                    </div>
-                    <div class="form-group-multiple">
-                        <div class="form-group">
-                            <label for="">Jméno:</label>
-                            <input autocomplete="off" autocorrect="off" autocapitalize="on" spellcheck="false" n:name="firstname" class="multiform data">
-                            <span class="form-error">Zadejte jméno</span>
+                    <div  class="reservation-info">
+                        <h2 class="calendar-reservation-service">Rezervace</h2>
+                        <div class="reservation-info-group">
+                            <span class="info-group-title">Doba trvání</span>
+                            <div class="info-group-value"><span class="calendar-reservation-duration"></span><span> minut</span></div>
                         </div>
-                        <div class="form-group">
-                            <label for="">Příjmení:</label>
-                            <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="lastname" class="multiform data">
-                            <span class="form-error">Zadejte příjmení</span>
+                        <div class="reservation-info-group">
+                            <span class="info-group-title">Cena</span>
+                           <div class="info-group-value"><span class="calendar-reservation-price">500</span><span> Kč</span></div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="">Tel.:</label>
-                        <input autocomplete="off" autocorrect="off" autocapitalize="off"
-                                                           spellcheck="false" n:name="phone" class="multiform data">
-                        <span class="form-error">Zadejte telefoní číslo ve tvaru 720123123123</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="">E-mail:</label>
-                        <input autocomplete="off" autocorrect="off" autocapitalize="off"
-                                                             spellcheck="false" n:name="email" class="multiform data">
-                        <span class="form-error">Zadejte email</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="">Adresa a č.p.</label>
-                        <input autocomplete="off" autocorrect="off"
-                                                                   autocapitalize="off"
-                                                                   spellcheck="false" n:name="address"
-                                                                   class="multiform data">
-                        <span class="form-error">Zadejte adresu</span>
-                    </div>
-                        
-                    <div class="form-group"><label for="">PSČ:</label><input autocomplete="off" autocorrect="off" autocapitalize="off"
-                                                          spellcheck="false" n:name="code" class="multiform data">
-                    <span class="form-error">Zadejte PSČ ve tvaru XXXXX</span>
-                    </div>
-                    <div class="form-group"><label for="">Město:</label><input autocomplete="off" autocorrect="off" autocapitalize="off"
-                                                            spellcheck="false" n:name="city" class="multiform data">
-                        <span class="form-error">Zadejte město</span>
-                    </div>
-                    <div class="nav-buttons">
-                        <button class="button xl" id="prevBtn" type="button" onclick="nextPrev(-1)">Zpět</button>
-                        <button class="button xl primary" id="nextBtn" type="button" onclick="nextPrev(1)">Další
-                        </button>
+                        <div class="form">
+                        <div class="">
+                            <h2 class="h2-center">Zadejte osobní údaje</h2>
+                        </div>
+                        <div class="form-group-multiple">
+                            <div class="form-group">
+                                <label for="">Jméno:</label>
+                                <input autocomplete="off" autocorrect="off" autocapitalize="on" spellcheck="false" n:name="firstname" class="multiform data">
+                                <span class="form-error">Zadejte jméno</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Příjmení:</label>
+                                <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="lastname" class="multiform data">
+                                <span class="form-error">Zadejte příjmení</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Tel.:</label>
+                            <input autocomplete="off" autocorrect="off" autocapitalize="off"
+                                                            spellcheck="false" n:name="phone" class="multiform data">
+                            <span class="form-error">Zadejte telefoní číslo ve tvaru 720123123123</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="">E-mail:</label>
+                            <input autocomplete="off" autocorrect="off" autocapitalize="off"
+                                                                spellcheck="false" n:name="email" class="multiform data">
+                            <span class="form-error">Zadejte email</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Adresa a č.p.</label>
+                            <input autocomplete="off" autocorrect="off"
+                                                                    autocapitalize="off"
+                                                                    spellcheck="false" n:name="address"
+                                                                    class="multiform data">
+                            <span class="form-error">Zadejte adresu</span>
+                        </div>
+                            
+                        <div class="form-group"><label for="">PSČ:</label><input autocomplete="off" autocorrect="off" autocapitalize="off"
+                                                            spellcheck="false" n:name="code" class="multiform data">
+                        <span class="form-error">Zadejte PSČ ve tvaru XXXXX</span>
+                        </div>
+                        <div class="form-group"><label for="">Město:</label><input autocomplete="off" autocorrect="off" autocapitalize="off"
+                                                                spellcheck="false" n:name="city" class="multiform data">
+                            <span class="form-error">Zadejte město</span>
+                        </div>
+                        <div class="nav-buttons">
+                            <button class="button xl" id="prevBtn" type="button" onclick="nextPrev(-1)">Zpět</button>
+                            <button class="button xl primary" id="nextBtn" type="button" onclick="nextPrev(1)">Další
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

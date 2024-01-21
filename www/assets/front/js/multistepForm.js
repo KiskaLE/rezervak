@@ -348,9 +348,15 @@ function setService(id, name, price, duration) {
     box.classList.remove("open");
 
     recap.innerHTML = name;
-    document.querySelector('#calendar-reservation-service').innerHTML = name;
-    document.querySelector('#calendar-reservation-price').innerHTML = price;
-    document.querySelector('#calendar-reservation-duration').innerHTML = duration;
+    document.querySelectorAll('.calendar-reservation-service').forEach((item) => {
+      item.innerHTML = name;
+    })
+    document.querySelectorAll('.calendar-reservation-price').forEach((item) => {
+      item.innerHTML = price;
+    })
+    document.querySelectorAll('.calendar-reservation-duration').forEach((item) => {
+      item.innerHTML = duration;
+    });
     
     document.querySelector("#price").innerHTML = price;
     nextPrev(1);
