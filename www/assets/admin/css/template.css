@@ -938,4 +938,43 @@ h1 {
 .tag.tag-purple {
   background-color: #e8caff;
   color: #1c032a;
+}
+
+.working-hours-wrapper {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(26, 26, 26, 0.1);
+  border-radius: var(--border-radius);
+}
+
+.weekday-group {
+  display: flex;
+  gap: 15px;
+}
+.weekday-group .weekday-checkbox {
+  margin-top: 11px;
+  width: 15px;
+  height: 15px;
+}
+.weekday-group .weekday-times {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.weekday-group .weekday-times .weekday-time {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.weekday-group .weekday-times .weekday-time input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #94999a;
+}
+.weekday-group .weekday-times .weekday-time-delete {
+  text-decoration: none;
+  color: black;
 }/*# sourceMappingURL=template.css.map */

@@ -1167,3 +1167,50 @@ h1 {
 }
 
 //tags end
+
+// working hours start  
+
+.working-hours-wrapper {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 20px;
+  box-shadow: $shadow;
+  border: $border;
+  border-radius: var(--border-radius);
+}
+
+.weekday-group {
+  display: flex;
+  gap: 15px;
+
+  .weekday-checkbox {
+    margin-top: 11px;
+    width: 15px;
+    height: 15px;
+  }
+  .weekday-times {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .weekday-time {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+
+      input {
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid $gray-300;
+      }
+    }
+
+    .weekday-time-delete {
+      text-decoration: none;
+      color: black;
+    }
+  }
+}
+
+//working hours end
