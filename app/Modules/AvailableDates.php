@@ -244,9 +244,6 @@ public function getNumberOfAvailableTimes(string $u, int $numberOfDays, $service
         $unverifiedReservations = $this->database->table("reservations")->where("user_id=? AND start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? AND type=0 ", [$admin->id, $start, $end, $verificationTime])->fetchAll();
         $exceptions = $this->database->table("workinghours_exceptions")->where("user_id=?", $admin->id)->fetchAll();
 
-        $breaks = $workingHour->related("breaks")->fetchAll();
-        $date = $this->moment->getDate($start);
-
         $start = strtotime($start);
         $end = strtotime($end);
 
