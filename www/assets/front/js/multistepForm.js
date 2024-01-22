@@ -352,13 +352,13 @@ function setService(id, name, price, duration) {
       item.innerHTML = name;
     })
     document.querySelectorAll('.calendar-reservation-price').forEach((item) => {
-      item.innerHTML = price;
+      item.innerHTML = price.toLocaleString('cs-CZ').replace(/,/g, ' ');
     })
     document.querySelectorAll('.calendar-reservation-duration').forEach((item) => {
       item.innerHTML = duration;
     });
     
-    document.querySelector("#price").innerHTML = price;
+    document.querySelector("#price").innerHTML = price.toLocaleString('cs-CZ').replace(/,/g, ' ');;
     nextPrev(1);
   }
 }

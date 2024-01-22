@@ -34,33 +34,33 @@ public function getReservationsConflictsIds(int $id): array
 
 }
 
-    public function getConflictedReservations($uuid): array
-    {
-        $exception = $this->database->table("workinghours_exceptions")->where("uuid=?", $uuid)->fetch();
-        $user_settings = $this->database->table("settings")->where("user_id=?", $exception->user_id)->fetch();
-        $exceptionStartUTC = strtotime($this->moment->getUTCTime($exception->start . "", $user_settings->time_zone));
-        $exceptionEndUTC = strtotime($this->moment->getUTCTime($exception->end . "", $user_settings->time_zone));
-        $reservationsUTC = $this->database->table("reservations")->where("user_id=?", $exception->user_id)->fetchAll();
-        $conflicts = [];
-        foreach ($reservationsUTC as $reservationUTC) {
-            $start = strtotime($reservationUTC->start);
-            if ($exceptionStartUTC <= $start && $exceptionEndUTC >= $start) {
-                $conflicts[] = $reservationUTC;
-            }
+public function getConflictedReservations($uuid): array
+{
+    $exception = $this->database->table("workinghours_exceptions")->where("uuid=?", $uuid)->fetch();
+    $user_settings = $this->database->table("settings")->where("user_id=?", $exception->user_id)->fetch();
+    $exceptionStartUTC = strtotime($this->moment->getUTCTime($exception->start . "", $user_settings->time_zone));
+    $exceptionEndUTC = strtotime($this->moment->getUTCTime($exception->end . "", $user_settings->time_zone));
+    $reservationsUTC = $this->database->table("reservations")->where("user_id=?", $exception->user_id)->fetchAll();
+    $conflicts = [];
+    foreach ($reservationsUTC as $reservationUTC) {
+        $start = strtotime($reservationUTC->start);
+        if ($exceptionStartUTC <= $start && $exceptionEndUTC >= $start) {
+            $conflicts[] = $reservationUTC;
         }
-        return $conflicts;
-
     }
+    return $conflicts;
 
-    public function isTimeToPay(string $start, $userSettings): bool
-    {
-        $now = $this->moment->getNowPrague();
-        $lastTimeToPay = date("Y-m-d H:i:s", strtotime($start . ' -' . $userSettings->time_to_pay . ' hours'));
-        if ($now >= $lastTimeToPay) {
-            return false;
-        }
-        return true;
+}
+
+public function isTimeToPay(string $start, $userSettings): bool
+{
+    $now = $this->moment->getNowPrague();
+    $lastTimeToPay = date("Y-m-d H:i:s", strtotime($start . ' -' . $userSettings->time_to_pay . ' hours'));
+    if ($now >= $lastTimeToPay) {
+        return false;
     }
+    return true;
+}
 
 public function getAvailableStartingHours(string $u, string $date, $service)
 {
@@ -76,12 +76,19 @@ public function getAvailableStartingHours(string $u, string $date, $service)
             $available = array_merge($available, $results);
         }
     } else if ($service->type == 0) {
-        $workingHours = $this->database->table("workinghours")->where("user_id=? AND weekday=?", [$user->id, $this->getDay($date)])->fetch();
-        $start = $date . " " . $workingHours->start;
-        $end = $date . " " . $workingHours->stop;
-        $available = $this->checkAvailability($user->id, $userSettings, $start, $end, $service, $workingHours);
+        $workingHours = $this->database->table("workinghours")->where("user_id=? AND weekday=?", [$user->id, $this->getDay($date)])->fetchAll();
+        $available = [];
+        foreach ($workingHours as $row) {
+            $start = $date . " " . $row->start;
+            $end = $date . " " . $row->stop;
+            $result = $this->checkAvailability($user, $userSettings, $start, $end, $service, $row);
+            foreach ($result as $res) {
+                $available[] = $res;
+            }
+        }
     }
-    return $available;
+
+    return array_unique($available);
 }
 
 public function getBackupHours(string $u, string $date, $service): array
@@ -257,19 +264,6 @@ public function getNumberOfAvailableTimes(string $u, int $numberOfDays, $service
                 foreach ($exceptions as $row) {
                     $rowStart = strtotime($row->start . " + 1 minute");
                     $rowEnd = strtotime($row->end . " - 1 minute");
-                    $overlap = $this->timesOverlaps($start, $newReservationEnd, $rowStart, $rowEnd);
-                    if ($overlap) {
-                        $isAvailable = false;
-                        break;
-                    }
-                }
-            }
-
-            if ($isAvailable) {
-                //breaks
-                foreach ($breaks as $break) {
-                    $rowStart = strtotime($date . " " . $break->start);
-                    $rowEnd = strtotime($date . " " . $break->end . "- 1 minute");
                     $overlap = $this->timesOverlaps($start, $newReservationEnd, $rowStart, $rowEnd);
                     if ($overlap) {
                         $isAvailable = false;

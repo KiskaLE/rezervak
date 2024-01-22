@@ -498,14 +498,15 @@ h1 {
   height: 18px;
   margin: 0;
 }
-.form-body .form-actions {
+
+.form-actions {
   display: flex;
   gap: 10px;
 }
-.form-body .form-actions .submit:hover {
+.form-actions .submit:hover {
   filter: brightness(90%);
 }
-.form-body .form-actions .submit input {
+.form-actions .submit input {
   cursor: pointer;
   background-color: #ce4629;
   border-radius: calc(var(--border-radius) / 2);
@@ -514,10 +515,10 @@ h1 {
   color: #ffffff;
   font-size: 16px;
 }
-.form-body .form-actions .reset:hover {
+.form-actions .reset:hover {
   filter: brightness(90%);
 }
-.form-body .form-actions .reset a {
+.form-actions .reset a {
   font-size: 16px;
   display: flex;
   align-items: center;
@@ -942,6 +943,7 @@ h1 {
 
 .working-hours-wrapper {
   display: flex;
+  gap: 20px;
   flex-direction: column;
   background-color: white;
   padding: 20px;
@@ -949,25 +951,42 @@ h1 {
   border: 1px solid rgba(26, 26, 26, 0.1);
   border-radius: var(--border-radius);
 }
+.working-hours-wrapper form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
 .weekday-group {
   display: flex;
-  gap: 15px;
+  min-height: 75px;
+  width: 320px;
 }
 .weekday-group .weekday-checkbox {
-  margin-top: 11px;
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+  box-sizing: border-box;
+  gap: 5px;
+  width: 70px;
+  height: -moz-fit-content;
+  height: fit-content;
+}
+.weekday-group .weekday-checkbox input {
   width: 15px;
   height: 15px;
 }
 .weekday-group .weekday-times {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: none;
 }
 .weekday-group .weekday-times .weekday-time {
   display: flex;
   gap: 10px;
   align-items: center;
+  margin-bottom: 10px;
+}
+.weekday-group .weekday-times .weekday-time:last-child {
+  margin-bottom: 0;
 }
 .weekday-group .weekday-times .weekday-time input {
   padding: 10px;
@@ -985,4 +1004,7 @@ h1 {
   display: inline;
   background: none;
   border: none;
+  text-align: left;
+  padding: 0;
+  font-size: 20px;
 }/*# sourceMappingURL=template.css.map */

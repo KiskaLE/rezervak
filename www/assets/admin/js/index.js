@@ -142,3 +142,24 @@ function setTab(tabId) {
     
 }
 
+//workhours
+$(function() {
+    $(".weekday-group").each(function() {
+        const checkbox = $(this).find(".weekday-checkbox input");
+
+        if (checkbox.is(":checked")) {
+            $(this).find(".weekday-times").show();
+        } else {
+            $(this).find(".weekday-times").hide();
+        }
+
+        checkbox.on("change", function() {
+            if ($(this).is(":checked")) {
+                $(this).parents(".weekday-group").find(".weekday-times").show();
+            } else {
+                $(this).parents(".weekday-group").find(".weekday-times").hide();
+            }
+        })
+    })
+});
+
