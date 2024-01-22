@@ -39,7 +39,6 @@ class ProfilePresenter extends SecurePresenter
     protected function createComponentEditUserForm(): Form
     {
         $form = new Form;
-        $userSettings = $this->database->table("settings")->where("user_id=?" , $this->user->id)->fetch();
 
         $form->addText("firstname")
             ->setDefaultValue($this->userRow->firstname)

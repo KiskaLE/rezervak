@@ -30,7 +30,7 @@ class SettingsPresenter extends SecurePresenter
 
     public function actionDefault()
     {
-        $settings = $this->database->table('settings')->where("user_id=?", $this->user->id)->fetch();
+        $settings = $this->database->table('settings')->fetch();
         $this->settings = $settings;
         $this->template->settings = $settings;
         $user_uuid = $this->database->table('users')->where("id=?", $this->user->id)->fetch()->uuid;
@@ -89,7 +89,7 @@ class SettingsPresenter extends SecurePresenter
     {
 
         try {
-            $this->database->table("settings")->where("user_id=?", $this->user->id)->update([
+            $this->database->table("settings")->update([
                 "sample_rate" => $data->sampleRate,
                 "verification_time" => $data->verificationTime,
                 "number_of_days" => $data->numberOfDays,

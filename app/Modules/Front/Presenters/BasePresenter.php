@@ -28,7 +28,7 @@ class BasePresenter extends Presenter
         parent::beforeRender();
         $user = $this->database->table("users")->fetch();
         $this->template->user = $user;
-        $this->template->userSettings = $user->related("settings")->fetch();
+        $this->template->userSettings = $this->database->table("settings")->fetch();
 
         $user = $this->database->table("users")->fetch();
         $this->template->logoUrl = $user->logo_url;

@@ -37,10 +37,10 @@ public function getReservationsConflictsIds(int $id): array
 public function getConflictedReservations($uuid): array
 {
     $exception = $this->database->table("workinghours_exceptions")->where("uuid=?", $uuid)->fetch();
-    $user_settings = $this->database->table("settings")->where("user_id=?", $exception->user_id)->fetch();
+    $user_settings = $this->database->table("settings")->fetch();
     $exceptionStartUTC = strtotime($this->moment->getUTCTime($exception->start . "", $user_settings->time_zone));
     $exceptionEndUTC = strtotime($this->moment->getUTCTime($exception->end . "", $user_settings->time_zone));
-    $reservationsUTC = $this->database->table("reservations")->where("user_id=?", $exception->user_id)->fetchAll();
+    $reservationsUTC = $this->database->table("reservations")->fetchAll();
     $conflicts = [];
     foreach ($reservationsUTC as $reservationUTC) {
         $start = strtotime($reservationUTC->start);
@@ -62,11 +62,11 @@ public function isTimeToPay(string $start, $userSettings): bool
     return true;
 }
 
-public function getAvailableStartingHours(string $u, string $date, $service)
+public function getAvailableStartingHours(string $date, $service)
 {
     $available = [];
-    $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
-    $userSettings = $user->related("settings")->fetch();
+    $user = $this->database->table("users")->fetch();
+    $userSettings = $this->database->table("settings")->fetch();
     $service = $this->database->table("services")->get($service->id);
 
     if ($service->type == 1) {
@@ -76,7 +76,7 @@ public function getAvailableStartingHours(string $u, string $date, $service)
             $available = array_merge($available, $results);
         }
     } else if ($service->type == 0) {
-        $workingHours = $this->database->table("workinghours")->where("user_id=? AND weekday=?", [$user->id, $this->getDay($date)])->fetchAll();
+        $workingHours = $this->database->table("workinghours")->where("weekday=?", $this->getDay($date))->fetchAll();
         $available = [];
         foreach ($workingHours as $row) {
             $start = $date . " " . $row->start;
@@ -91,21 +91,20 @@ public function getAvailableStartingHours(string $u, string $date, $service)
     return array_unique($available);
 }
 
-public function getBackupHours(string $u, string $date, $service): array
+public function getBackupHours( string $date, $service): array
 {
     $results = [];
     $user = $this->database->table("users")
-        ->where("uuid=?", $u)
         ->fetch();
 
-    $userSettings = $user->related("settings")
+    $userSettings = $this->database->table("settings")
         ->fetch();
 
     $dayStart = $date . " 00:00:00";
     $dayEnd = $date . " 23:59:59";
 
     $reservations = $this->database->table("reservations")
-        ->where("user_id=? AND start BETWEEN ? AND ? AND type=0 AND reservations.status='VERIFIED' AND service_id=?", [$user->id, $dayStart, $dayEnd, $service->id])
+        ->where("start BETWEEN ? AND ? AND type=0 AND reservations.status='VERIFIED' AND service_id=?", [$dayStart, $dayEnd, $service->id])
         ->where(":payments.status=0")
         ->fetchAll();
 
@@ -117,7 +116,7 @@ public function getBackupHours(string $u, string $date, $service): array
 
     $verificationTime = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i") . ' -' . $userSettings->verification_time . ' minutes'));
     $unverifiedReservations = $this->database->table("reservations")
-        ->where("user_id=? AND start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? AND service_id=?", [$user->id, $dayStart, $dayEnd, $verificationTime, $service->id])
+        ->where("start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? AND service_id=?", [$dayStart, $dayEnd, $verificationTime, $service->id])
         ->fetchAll();
 
     foreach ($unverifiedReservations as $row) {
@@ -131,12 +130,12 @@ public function getBackupHours(string $u, string $date, $service): array
     return $results;
 }
 
-    public function getAvailableDates(string $u, int $numberOfDays, $service): array
+    public function getAvailableDates(int $numberOfDays, $service): array
     {
         $date = date("Y-m-d");
         $available = [];
         for ($i = 0; $i < $numberOfDays; $i++) {
-            if ($this->getAvailableStartingHours($u, $date, $service) || $this->getBackupHours($u, $date, $service)) {
+            if ($this->getAvailableStartingHours($date, $service) || $this->getBackupHours($date, $service)) {
                 $available[] = $date;
             }
             //add one day to curDay
@@ -146,12 +145,12 @@ public function getBackupHours(string $u, string $date, $service): array
 
     }
 
-public function getNumberOfAvailableTimes(string $u, int $numberOfDays, $service): int {
+public function getNumberOfAvailableTimes(int $numberOfDays, $service): int {
     $date = date("Y-m-d");
     $available = 0;
     
     for ($i = 0; $i < $numberOfDays && $available <= 10; $i++) {
-        $count = count($this->getAvailableStartingHours($u, $date, $service));
+        $count = count($this->getAvailableStartingHours($date, $service));
         $available += $count;
 
         // add one day to curDay
@@ -162,11 +161,11 @@ public function getNumberOfAvailableTimes(string $u, int $numberOfDays, $service
 }
 
 
-    public function isTimeAvailable(string $u, $reservation, $service): bool
+    public function isTimeAvailable($reservation, $service): bool
     {
         $date = date("Y-m-d", strtotime($reservation->start));
         $time = date("H:i", strtotime($reservation->start));
-        $times = $this->getAvailableStartingHours($u, $date, $service);
+        $times = $this->getAvailableStartingHours($date, $service);
         //if you find start in times array return true
         if (in_array($time, $times)) {
             return true;
@@ -194,7 +193,7 @@ public function getNumberOfAvailableTimes(string $u, int $numberOfDays, $service
         $conflicts = [];
 
         $days = $customSchedule->related("service_custom_schedule_days")->fetchAll();
-        $userSettings = $this->database->table("settings")->where("user_id=?", $this->user->id)->fetch();
+        $userSettings = $this->database->table("settings")->fetch();
         $timeToVerify = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i") . ' -' . $userSettings->verification_time . ' minutes'));
         //get reservation in customSchedule range
         $reservations = $this->database->table("reservations")->where("start BETWEEN ? AND ? AND service_id=? AND (status='VERIFIED' OR (created_at > ? AND status='UNVERIFIED'))", [$customSchedule->start, $customSchedule->end, $service->id, $timeToVerify])->fetchAll();
@@ -226,11 +225,11 @@ public function getNumberOfAvailableTimes(string $u, int $numberOfDays, $service
     private function getNumberOfBackupReservations($user, $userSettings, string $timestamp): int
     {
         $backupReservationsCount = $this->database->table("reservations")
-            ->where("user_id=? AND start=? AND type=1 AND status='VERIFIED'", [$user->id, $timestamp])
+            ->where("start=? AND type=1 AND status='VERIFIED'", $timestamp)
             ->count();
         $timeToVerify = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i") . ' -' . $userSettings->verification_time . ' minutes'));
         $unverifiedReservationsCount = $this->database->table("reservations")
-            ->where("user_id=? AND start=? AND created_at > ? AND type=1 AND status='UNVERIFIED'", [$user->id, $timestamp, $timeToVerify])
+            ->where("start=? AND created_at > ? AND type=1 AND status='UNVERIFIED'", [$timestamp, $timeToVerify])
             ->count();
         return $backupReservationsCount + $unverifiedReservationsCount;
 
@@ -239,10 +238,10 @@ public function getNumberOfAvailableTimes(string $u, int $numberOfDays, $service
     private function checkAvailability($admin ,$userSettings, $start, $end, $service, $workingHour)
     {
         $availableTimes = array();
-        $verifiedReservations = $this->database->table("reservations")->where("user_id=? AND start BETWEEN ? AND ? AND status='VERIFIED' AND type=0", [$admin->id, $start, $end])->fetchAll();
+        $verifiedReservations = $this->database->table("reservations")->where("start BETWEEN ? AND ? AND status='VERIFIED' AND type=0", [$start, $end])->fetchAll();
         $verificationTime = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i") . ' -' . $userSettings->verification_time . ' minutes'));
-        $unverifiedReservations = $this->database->table("reservations")->where("user_id=? AND start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? AND type=0 ", [$admin->id, $start, $end, $verificationTime])->fetchAll();
-        $exceptions = $this->database->table("workinghours_exceptions")->where("user_id=?", $admin->id)->fetchAll();
+        $unverifiedReservations = $this->database->table("reservations")->where("start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? AND type=0 ", [$start, $end, $verificationTime])->fetchAll();
+        $exceptions = $this->database->table("workinghours_exceptions")->fetchAll();
 
         $start = strtotime($start);
         $end = strtotime($end);
@@ -320,12 +319,12 @@ public function getNumberOfAvailableTimes(string $u, int $numberOfDays, $service
         $dayEnd = $date . " 23:59";
 
         $verifiedReservations = $this->database->table("reservations")
-            ->where("user_id=? AND start BETWEEN ? AND ?", [$user->id, $dayStart, $dayEnd])
+            ->where("start BETWEEN ? AND ?", [$dayStart, $dayEnd])
             ->where("status=? AND type=0 AND service_id = ?", ["VERIFIED", $service->id])
             ->fetchAll();
         $verificationTime = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i") . ' -' . $userSettings->verification_time . ' minutes'));
-        $unverifiedReservations = $this->database->table("reservations")->where("user_id=? AND start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? ", [$user->id, $dayStart, $dayEnd, $verificationTime])->fetchAll();
-        $exceptions = $this->database->table("workinghours_exceptions")->where("user_id=?", $user->id)->fetchAll();
+        $unverifiedReservations = $this->database->table("reservations")->where("start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? ", [$dayStart, $dayEnd, $verificationTime])->fetchAll();
+        $exceptions = $this->database->table("workinghours_exceptions")->fetchAll();
 
         $days = $schedule->related("service_custom_schedule_days")->where("start BETWEEN ? AND ?", [$dayStart, $dayEnd])->fetchAll();
         foreach ($days as $day) {
@@ -414,7 +413,7 @@ public function getNumberOfAvailableTimes(string $u, int $numberOfDays, $service
     {
         $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
         $now = date("Y-m-d H:i:s");
-        $exceptions = $this->database->table("workinghours_exceptions")->where("user_id=?  AND end >=?", [$user->id, $now])->fetchAll();
+        $exceptions = $this->database->table("workinghours_exceptions")->where("end >=?",  $now)->fetchAll();
         return $exceptions;
     }
 }

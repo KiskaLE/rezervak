@@ -33,12 +33,11 @@ final class Mailer
 
     public function sendConfirmationMail(string $to, string $confirmUrl, $reservation): void
     {
-        $user = $reservation->ref("users", "user_id");
-        $userSettings = $user->related("settings")->fetch();
-        
+        $userSettings = $this->database->table("settings")->fetch();
+        $user = $this->database->table("users")->fetch();
         $params = [
             'url' => $this->url . $confirmUrl,
-            'user' => $user,
+            "user" => $user,
             'userSettings' => $userSettings,
             'reservation' => $reservation
         ];
@@ -49,8 +48,8 @@ final class Mailer
 
     public function sendBackupConfiramationMail(string $to, string $confirmUrl, $reservation): void
     {
-        $user = $reservation->ref("users", "user_id");
-        $userSettings = $user->related("settings")->fetch();
+        $user = $this->database->table("users")->fetch();
+        $userSettings = $this->database->table("settings")->fetch();
         $params = [
             'url' => $this->url . $confirmUrl,
             'user' => $user,
@@ -64,10 +63,11 @@ final class Mailer
 
     public function sendCancelationMail(string $to, $reservation, string $reason): void
     {
-        $user = $reservation->ref("users", "user_id");
-        $userSettings = $user->related("settings")->fetch();
+        $user = $this->database->table("users")->fetch();
+        $userSettings = $this->database->table("settings")->fetch();
         $params = [
             'user' => $user,
+            "url" => $this->url,
             'userSettings' => $userSettings,
             'reservation' => $reservation,
             'reason' => $reason
@@ -80,8 +80,8 @@ final class Mailer
 
     public function sendPaymentConfirmationMail(string $to, $reservation): void
     {
-        $user = $reservation->ref("users", "user_id");
-        $userSettings = $user->related("settings")->fetch();
+        $user = $this->database->table("users")->fetch();
+        $userSettings = $this->database->table("settings")->fetch();
         $params = [
             'user' => $user,
             'userSettings' => $userSettings,
@@ -94,8 +94,8 @@ final class Mailer
 
     public function sendNotifyMail(string $to, $reservation): void {
 
-        $user = $reservation->ref("users", "user_id");
-        $userSettings = $user->related("settings")->fetch();
+        $user = $this->database->table("users")->fetch();
+        $userSettings = $this->database->table("settings")->fetch();
         $params = [
             'user' => $user,
             'userSettings' => $userSettings,

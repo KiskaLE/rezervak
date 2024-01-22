@@ -41,7 +41,7 @@ final class ServicesPresenter extends SecurePresenter
 
     public function actionDefault(int $page = 1)
     {
-        $q = $this->database->table("services")->where("user_id", $this->user->id)->where("hidden<?", 2);
+        $q = $this->database->table("services")->where("hidden<?", 2);
         $numberOfServices = $q->count();
         $paginator = new Nette\Utils\Paginator;
         $paginator->setItemCount($numberOfServices);
@@ -104,7 +104,7 @@ final class ServicesPresenter extends SecurePresenter
         $this->days = $days;
         $this->template->days = $days;
         
-        $userSettings = $this->database->table("settings")->where("user_id=?" , $this->user->id)->fetch();
+        $userSettings = $this->database->table("settings")->fetch();
         $this->template->userSettings = $userSettings;
         
 
@@ -128,7 +128,7 @@ final class ServicesPresenter extends SecurePresenter
         $this->template->days = $days;
         
         $daysDefaults = array();
-        $userSettings = $this->database->table("settings")->where("user_id=?" , $this->user->id)->fetch();
+        $userSettings = $this->database->table("settings")->fetch();
         $this->template->userSettings = $userSettings;
         
 
@@ -405,7 +405,6 @@ final class ServicesPresenter extends SecurePresenter
                     "name" => $data->name,
                     "price" => $data->price,
                     "duration" => $data->duration,
-                    "user_id" => $this->user->id,
                     "vat" => $data->vat,
                     // for custom schedules only
                     "type" => 1

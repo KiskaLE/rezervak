@@ -65,17 +65,15 @@ final class Authenticator implements Nette\Security\Authenticator
                     "uuid" => $uuid,
                     "role" => "ADMIN",
                 ]);
-                $user_id = $userRow->id;
                 //create user settings
                 $settingsRow = $database->table("settings")->insert([
-                    "user_id" => $user_id
+                    
                 ]);
                 $settings_id = $settingsRow->id;
                 //create workinghours
                 for ($i = 0; $i < 7; $i++) {
                     $database->table("workinghours")->insert([
-                        "weekday" => $i,
-                        "user_id" => $user_id
+                        "weekday" => $i
                     ]);
                 }
             });

@@ -29,9 +29,8 @@ final class Payments
         $status = true;
 
         try {
-            $userId = $reservation->user_id;
             $service = $reservation->ref("services", "service_id");
-            $price = $this->createPrice($userId, $reservation, $discountCode);
+            $price = $this->createPrice($reservation, $discountCode);
             $idTransaction = $reservation->id . date("s");
 
             $database->table("payments")->insert([
@@ -100,11 +99,11 @@ final class Payments
         return $payments;
     }
 
-    private function createPrice(int $user_id, $reservation, string $discountCode): int
+    private function createPrice($reservation, string $discountCode): int
     {
         $price = $reservation->ref("services", "service_id")->price;
 
-        $discountCodeRow = $this->discountCodes->isCodeValid($user_id, $reservation->service_id, $discountCode);
+        $discountCodeRow = $this->discountCodes->isCodeValid($reservation->service_id, $discountCode);
 
         if ($discountCodeRow) {
             $discountType = $discountCodeRow["type"];

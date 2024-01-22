@@ -37,19 +37,14 @@ class ApiPresenter extends BasePresenter
 
     public function actionClean()
     {
-
-        $database = $this->database;
-        $admins = $database->table("users")
-        ->where("role=?", "ADMIN")
-        ->fetchAll();
-        foreach ($admins as $admin) {
-            $settings = $admin->related("settings")->fetch();
-            $database->transaction(function ($database) use ($admin, $settings) {
+        $database = $this->database;        
+            $settings = $database->table("settings")->fetch();
+            $database->transaction(function ($database) use ($settings) {
                 $yesterday = date("Y-m-d H:i:s", strtotime("-" . $settings->time_to_pay . " hours"));
                 //$yesterday = date("Y-m-d H:i:s", strtotime("-2" . " minutes"));
                 $database->query("DELETE FROM reservations_canceled WHERE 1;");
-                $database->query("INSERT INTO reservations_canceled SELECT reservations.* FROM reservations LEFT JOIN payments ON reservations.id=payments.reservation_id WHERE payments.status=0 AND reservations.updated_at < '$yesterday' AND reservations.user_id = '$admin->id' AND reservations.status = 'VERIFIED';");
-                $database->query("UPDATE reservations JOIN payments ON reservations.id=payments.reservation_id SET reservations.status = 'CANCELED' WHERE payments.status=0 AND reservations.updated_at < '$yesterday' AND reservations.user_id = '$admin->id' AND reservations.status = 'VERIFIED';");
+                $database->query("INSERT INTO reservations_canceled SELECT reservations.* FROM reservations LEFT JOIN payments ON reservations.id=payments.reservation_id WHERE payments.status=0 AND reservations.updated_at < '$yesterday'  AND reservations.status = 'VERIFIED';");
+                $database->query("UPDATE reservations JOIN payments ON reservations.id=payments.reservation_id SET reservations.status = 'CANCELED' WHERE payments.status=0 AND reservations.updated_at < '$yesterday' AND reservations.status = 'VERIFIED';");
                 //get all canceled reservations
                 $canceledReservations = $database->table("reservations_canceled")->fetchAll();
                 foreach ($canceledReservations as $reservation) {
@@ -61,12 +56,12 @@ class ApiPresenter extends BasePresenter
             // check if any backup reservation can be booked
             $backups = $database
                 ->table("reservations")
-                ->where("type=? AND status=? AND user_id =?", [1, "VERIFIED", $admin->id])
+                ->where("type=? AND status=?", [1, "VERIFIED"])
                 ->order("created_at ASC")
                 ->fetchAll();
             foreach ($backups as $backup) {
                 $service = $backup->ref("services", "service_id");
-                if ($this->availableDates->isTimeAvailable($admin->uuid, $backup, $service) && $this->availableDates->isTimeToPay($backup->start, $settings->time_to_pay)) {
+                if ($this->availableDates->isTimeAvailable($backup, $service) && $this->availableDates->isTimeToPay($backup->start, $settings->time_to_pay)) {
                     $database->transaction(function ($database) use ($backup) {
                         $database->table("reservations")->where("id=?", $backup->id)->update(["type" => 0]);
                         //update reservation
@@ -78,7 +73,6 @@ class ApiPresenter extends BasePresenter
 
                 }
             }
-        }
 
 
         die("OK");

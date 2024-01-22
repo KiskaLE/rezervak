@@ -36,7 +36,6 @@ final class DiscountCodesPresenter extends SecurePresenter
     public function actionDefault(int $page = 1)
     {
         $discountCodesCount = $this->database->table("discount_codes")
-            ->where("user_id=?", $this->user->id)
             ->count();
 
         $paginator = new Nette\Utils\Paginator;
@@ -45,7 +44,6 @@ final class DiscountCodesPresenter extends SecurePresenter
         $paginator->setPage($page);
 
         $discountCodes = $this->database->table("discount_codes")
-            ->where("user_id=?", $this->user->id)
             ->limit($paginator->getLength(), $paginator->getOffset())
             ->fetchAll();
         $this->template->discountCodes = $discountCodes;
@@ -58,7 +56,7 @@ final class DiscountCodesPresenter extends SecurePresenter
     {
         $this->id = $id;
 
-        $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
+        $services = $this->database->table("services")->fetchAll();
         $this->template->services = $services;
 
         $discountCode = $this->database->table("discount_codes")->where("id=?", $id)->fetch();
@@ -75,7 +73,7 @@ final class DiscountCodesPresenter extends SecurePresenter
 
     public function actionCreate()
     {
-        $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
+        $services = $this->database->table("services")->fetchAll();
         $this->template->services = $services;
     }
 
@@ -107,7 +105,7 @@ final class DiscountCodesPresenter extends SecurePresenter
     protected function createComponentForm(): Form
     {
         $types = [0 => "Částka", 1 => "Procento"];
-        $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
+        $services = $this->database->table("services")->fetchAll();
         $form = new Form;
         $form->addCheckbox("active", "Aktivní");
         $form->addText("code", "Code")
@@ -135,7 +133,7 @@ final class DiscountCodesPresenter extends SecurePresenter
     public function formSucceeded(Form $form, $values)
     {
         $uuid = Uuid::uuid4();
-        $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
+        $services = $this->database->table("services")->fetchAll();
         $enabled = [];
         $i = 1;
         foreach ($services as $service) {
@@ -150,7 +148,6 @@ final class DiscountCodesPresenter extends SecurePresenter
             try {
                 $discountCode = $this->database->table("discount_codes")->insert([
                     "uuid" => $uuid,
-                    "user_id" => $this->user->id,
                     "code" => $values->code,
                     "value" => $values->value,
                     "type" => $values->type,
@@ -178,7 +175,7 @@ final class DiscountCodesPresenter extends SecurePresenter
     protected function createComponentEditForm(): Form
     {
         $types = [0 => "Částka", 1 => "Procento"];
-        $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
+        $services = $this->database->table("services")->fetchAll();
         $type = $this->discountCode->type;
         $form = new Form;
         $form->addText("code", "Code")
@@ -205,7 +202,7 @@ final class DiscountCodesPresenter extends SecurePresenter
 
     public function editFormSucceeded(Form $form, $values)
     {
-        $services = $this->database->table("services")->where("user_id=?", $this->user->id)->fetchAll();
+        $services = $this->database->table("services")->fetchAll();
         $status = false;
         $enabled = [];
         $i = 1;

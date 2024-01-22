@@ -89,27 +89,22 @@ final class ReservationsPresenter extends SecurePresenter
 
         $this->template->futureCount = $this->database->table('reservations')
         ->select('reservations.*',)
-        ->where('user_id=?', $this->user->id)
         ->where("reservations.type=?", 0)->where('reservations.status=?', 'VERIFIED')->where('start >= ?', date('Y-m-d'))->where(':payments.status=?', 1)->order('start ASC')->count();
         $this->template->pastCount = $this->database->table('reservations')
         ->select('reservations.*',)
-        ->where('user_id=?', $this->user->id)
         ->where("reservations.type=?", 0)->where('reservations.status=?', 'VERIFIED')->where('start < ?', date('Y-m-d'))->where(':payments.status=?', 1)->order('start ASC')->count();
 
         $this->template->unpaidCount = $this->database->table('reservations')
         ->select('reservations.*',)
-        ->where('user_id=?', $this->user->id)
         ->where("reservations.type=?", 0)->where('reservations.status=?', 'VERIFIED')->where(':payments.status=?', 0)->order('start ASC')->count();
 
         $this->template->allCount = $this->database->table('reservations')
         ->select('reservations.*',)
-        ->where('user_id=?', $this->user->id)
         ->where("reservations.type=?", 0)->where('reservations.status !=?', 'UNVERIFIED')->order('created_at DESC')->count();
 
 
         $q = $this->database->table('reservations')
         ->select('reservations.*',)
-        ->where('user_id=?', $this->user->id)
         ->where("reservations.type=?", 0);
         switch ($tab) {
             case 0:
@@ -228,7 +223,6 @@ final class ReservationsPresenter extends SecurePresenter
     protected function createComponentSetFilterForm(): Form
     {
         $this->filterServices = $this->database->table("services")
-            ->where("user_id=?", $this->user->id)
             ->where("hidden<?", 2)
             ->fetchAll();
 

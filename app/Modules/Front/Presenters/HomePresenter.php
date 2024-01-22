@@ -45,8 +45,7 @@ final class HomePresenter extends BasePresenter
     {
         $this->user = $this->database->table("users")->fetch();
         $this->user_uuid = $this->user->uuid;
-        $u = $this->user->uuid;
-        $user_settings = $this->user->related("settings")->fetch();
+        $user_settings = $this->database->table("settings")->fetch();
 
 
         if ($this->isAjax()) {
@@ -56,11 +55,11 @@ final class HomePresenter extends BasePresenter
                 $this->template->selectedService = $service;
                 $this->payload->postGet = true;
                 $this->payload->url = $this->link("default");
-                $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates($u, $user_settings->number_of_days, $service)]);
+                $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates($user_settings->number_of_days, $service)]);
             } else if ($run == "setDate") {
-                $this->setDate($u, intval($service_id), $day);
+                $this->setDate(intval($service_id), $day);
             } else if ($run == "verifyCode") {
-                $this->verifyDiscountCode($this->user->id, intval($service_id), $discountCode);
+                $this->verifyDiscountCode(intval($service_id), $discountCode);
             } else if ($run == "getServiceName") {
                 $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
                 $this->sendJson(["serviceName" => $service->name]);
@@ -69,11 +68,11 @@ final class HomePresenter extends BasePresenter
             $this->payload->url = $this->link("default");
         }
 
-        $services = $this->database->table("services")->where("user_id=? AND hidden=?", [$this->user->id, 0])
+        $services = $this->database->table("services")->where("hidden=0")
             ->fetchAll();
         $servicesAvailableTimesCount = [];
         foreach ($services as $service) {
-            $servicesAvailableTimesCount[$service->id] = $this->availableDates->getNumberOfAvailableTimes($u, $user_settings->number_of_days, $service);
+            $servicesAvailableTimesCount[$service->id] = $this->availableDates->getNumberOfAvailableTimes($user_settings->number_of_days, $service);
         }
         $this->template->servicesAvailableTimesCount = $servicesAvailableTimesCount;
         $this->template->services = $services;
@@ -87,6 +86,7 @@ final class HomePresenter extends BasePresenter
         $this->template->uuid = $id;
         $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
         $this->template->reservation = $reservation;
+        $this->template->settings = $this->database->table("settings")->fetch();
     }
 
     public
@@ -145,7 +145,7 @@ final class HomePresenter extends BasePresenter
         if ($data->dateType == "default") {
             $times = $session->availableTimes;
             $time = $times[$data->time];
-            if (!$this->checkAvailability($this->user_uuid, $data->date, $data->service, $time)) {
+            if (!$this->checkAvailability($data->date, $data->service, $time)) {
                 $this->flashMessage("Nepovedlo se vytvořit rezervaci. Termín je již obsazen", "error");
                 $this->redirect("default", $this->user_uuid);
             }
@@ -159,7 +159,7 @@ final class HomePresenter extends BasePresenter
         } else if ($data->dateType == "backup") {
             $times = $session->availableBackupTimes;
             $time = $times[$data->time];
-            if (!$this->checkAvailability($this->user_uuid, $data->date, $data->service, $time, "backup")) {
+            if (!$this->checkAvailability( $data->date, $data->service, $time, "backup")) {
                 $this->flashMessage("Nepovedlo se vytvořit rezervaci. Termín je již obsazen", "error");
                 $this->redirect("default", $this->user_uuid);
             }
@@ -175,15 +175,15 @@ final class HomePresenter extends BasePresenter
     }
 
 
-    private function checkAvailability(string $u, $date, $service_id, $time, $type = "default"): bool
+    private function checkAvailability($date, $service_id, $time, $type = "default"): bool
     {
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
         switch ($type) {
             case "backup":
-                $available = $this->availableDates->getBackupHours($u, $date, $service);
+                $available = $this->availableDates->getBackupHours($date, $service);
                 break;
             default:
-                $available = $this->availableDates->getAvailableStartingHours($u, $date, $service);
+                $available = $this->availableDates->getAvailableStartingHours($date, $service);
                 break;
         }
         if (in_array($time, $available)) {
@@ -220,7 +220,6 @@ final class HomePresenter extends BasePresenter
                     "code" => $data->code,
                     "city" => $data->city,
                     "created_at" => date("Y-m-d H:i:s"),
-                    "user_id" => $this->user->id,
                     "type" => $type == "backup" ? 1 : 0,
                 ]);
                 if (!$this->payments->createPayment($database, $reservation, $data->dicountCode)) {
@@ -246,11 +245,11 @@ final class HomePresenter extends BasePresenter
      * @throws Exception If the service cannot be fetched from the database.
      */
     private
-    function setDate(string $u, int $service_id, string $day): void
+    function setDate(int $service_id, string $day): void
     {
         $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
-        $availableTimes = $this->availableDates->getAvailableStartingHours($u, $day, $service);
-        $availableBackup = $this->availableDates->getBackupHours($u, $day, $service);
+        $availableTimes = $this->availableDates->getAvailableStartingHours($day, $service);
+        $availableBackup = $this->availableDates->getBackupHours($day, $service);
 
         //store data in session
         $session = $this->getSession('Reservation');
@@ -272,9 +271,9 @@ final class HomePresenter extends BasePresenter
      * @throws None
      */
     private
-    function verifyDiscountCode(int $user_id, int $service_id, string $discountCode): void
+    function verifyDiscountCode(int $service_id, string $discountCode): void
     {
-        $discount = $this->discountCodes->isCodeValid($user_id, $service_id, $discountCode);
+        $discount = $this->discountCodes->isCodeValid($service_id, $discountCode);
         $service = $this->discountCodes->getService($service_id);
         $price = $service->price;
         if ($discount) {

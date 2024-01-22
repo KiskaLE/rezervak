@@ -36,15 +36,15 @@ final class HomePresenter extends SecurePresenter
         bdump($tab);
         
         //get number of reservations for each tabs
-        $numberOfReservationsToday = $this->database->table("reservations")->where("start=? AND user_id=? AND status='VERIFIED' AND type=0", [date("Y-m-d"), $this->user->id])->count();
-        $numberOfReservationsTomorow = $this->database->table("reservations")->where("start=? AND user_id=? AND status='VERIFIED' AND type=0", [date("Y-m-d", strtotime(date("Y-m-d")."+1 day")), $this->user->id])->count();
-        $numberOfReservationsAfterTomorow = $this->database->table("reservations")->where("start=? AND user_id=? AND status='VERIFIED' AND type=0", [date("Y-m-d", strtotime(date("Y-m-d")."+2 day")), $this->user->id])->count();
+        $numberOfReservationsToday = $this->database->table("reservations")->where("start=? AND status='VERIFIED' AND type=0", date("Y-m-d"))->count();
+        $numberOfReservationsTomorow = $this->database->table("reservations")->where("start=? AND status='VERIFIED' AND type=0", date("Y-m-d", strtotime(date("Y-m-d")."+1 day")))->count();
+        $numberOfReservationsAfterTomorow = $this->database->table("reservations")->where("start=? AND status='VERIFIED' AND type=0", date("Y-m-d", strtotime(date("Y-m-d")."+2 day")))->count();
         $this->template->numberOfReservationsToday = $numberOfReservationsToday;
         $this->template->numberOfReservationsTomorow = $numberOfReservationsTomorow;
         $this->template->numberOfReservationsAfterTomorow = $numberOfReservationsAfterTomorow;
         
         //get number of reservations for selected tab
-        $q = $this->database->table("reservations")->where("user_id=? AND status='VERIFIED' AND type=0" , $this->user->id);
+        $q = $this->database->table("reservations")->where("status='VERIFIED' AND type=0");
         switch ($tab) {
             case 0:
                 $q = $q->where("start BETWEEN ? AND ?",[ date("Y-m-d") . " 00:00:00", date("Y-m-d") . " 23:59:59"]);
@@ -67,13 +67,13 @@ final class HomePresenter extends SecurePresenter
         $this->template->paginator = $paginator;
 
         //info-cards
-        $futureReservations = $this->database->table("reservations")->where("start>? AND user_id=? AND reservations.status='VERIFIED' AND :payments.status=1 AND reservations.type=0", [date("Y-m-d"), $this->user->id])->count();
+        $futureReservations = $this->database->table("reservations")->where("start>? AND reservations.status='VERIFIED' AND :payments.status=1 AND reservations.type=0", date("Y-m-d"))->count();
         $this->template->futureReservations = $futureReservations;
-        $doneReservations = $this->database->table("reservations")->where("start<? AND user_id=? AND reservations.status='VERIFIED' AND :payments.status=1 AND reservations.type=0", [date("Y-m-d H:i:s") ,$this->user->id])->count();
+        $doneReservations = $this->database->table("reservations")->where("start<? AND reservations.status='VERIFIED' AND :payments.status=1 AND reservations.type=0", date("Y-m-d H:i:s"))->count();
         $this->template->doneReservations = $doneReservations;
         $sales = $this->database->table("payments")->where("status=1")->sum("price");
         $this->template->sales = $sales;
-        $unpaidReservations = $this->database->table("reservations")->where("user_id=? AND reservations.status='VERIFIED' AND :payments.status=0 AND reservations.type=0", $this->user->id)->count();
+        $unpaidReservations = $this->database->table("reservations")->where("reservations.status='VERIFIED' AND :payments.status=0 AND reservations.type=0")->count();
         $this->template->unpaidReservations = $unpaidReservations;
     }
 

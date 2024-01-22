@@ -21,11 +21,11 @@ class DiscountCodes
      * @param string $discountCode The discount code to validate.
      * @return array The discount code row if valid, an empty array otherwise.
      */
-    public function isCodeValid(int $user_id, int $service_id, string $discountCode)
+    public function isCodeValid(int $service_id, string $discountCode)
     {
         $discountCodeRow = $this->database
             ->table("discount_codes")
-            ->where("user_id = ? AND code LIKE ? AND active = 1", [strval($user_id), $discountCode])
+            ->where("code LIKE ? AND active = 1", $discountCode)
             ->fetch();
 
         if (!$discountCodeRow || strval($discountCodeRow->code) !== $discountCode) {
@@ -46,5 +46,9 @@ class DiscountCodes
         }
 
         return $discountCodeRow;
+    }
+
+    public function getService($id) {
+        return $this->database->table("services")->get($id);
     }
 }
