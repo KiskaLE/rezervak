@@ -48,15 +48,11 @@ přepsat crony
 
 
 ## Admin
-?přidat k rezervacím název služby do hlavičky (předělat)
-?upravit zobrazení čísla rezevace
 opravit logo v emailu
 vylepšit zadávání volných termínů do služby
 
 
 ----- když bude čas
-předělat design pracovní doby
-předělat zadávání pracovní doby jako v calendly
 předělat jak se ukádájí praconí doby. zrušit přestávky a ukládat jen pracovní dobu
 přidat možnost unikátního rozvrhu pro službu.
 
