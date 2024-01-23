@@ -30,7 +30,7 @@ function createFullCalendar(slotDuration ,calendarPeriod, serviceDuration, servi
                 right: "today prevYear,prev,next,nextYear"
             },
             firstDay: 1,
-            timeZone: 'UTC',
+            timeZone: 'utc',
             views: {
                 timeGridSevenDay: {
                     type: 'timeGrid',
