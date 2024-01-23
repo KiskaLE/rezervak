@@ -37,6 +37,7 @@ final class Mailer
         $user = $this->database->table("users")->fetch();
         $params = [
             'url' => $this->url . $confirmUrl,
+            'serverUrl' => $this->url,
             "user" => $user,
             'userSettings' => $userSettings,
             'reservation' => $reservation
@@ -52,6 +53,7 @@ final class Mailer
         $userSettings = $this->database->table("settings")->fetch();
         $params = [
             'url' => $this->url . $confirmUrl,
+            'serverUrl' => $this->url,
             'user' => $user,
             'userSettings' => $userSettings,
             'reservation' => $reservation
@@ -68,6 +70,7 @@ final class Mailer
         $params = [
             'user' => $user,
             "url" => $this->url,
+            'serverUrl' => $this->url,
             'userSettings' => $userSettings,
             'reservation' => $reservation,
             'reason' => $reason
@@ -84,6 +87,7 @@ final class Mailer
         $userSettings = $this->database->table("settings")->fetch();
         $params = [
             'user' => $user,
+            'serverUrl' => $this->url,
             'userSettings' => $userSettings,
             'reservation' => $reservation
         ];
@@ -98,6 +102,7 @@ final class Mailer
         $userSettings = $this->database->table("settings")->fetch();
         $params = [
             'user' => $user,
+            'serverUrl' => $this->url,
             'userSettings' => $userSettings,
             'reservation' => $reservation,
             'url' => $this->url

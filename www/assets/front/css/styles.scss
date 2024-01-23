@@ -1339,6 +1339,12 @@ footer {
   .info-group-value {
     font-size: $text-3;
     font-weight: 500;
+
+    &.group-column {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
   }
 }
 

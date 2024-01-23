@@ -53,10 +53,6 @@ vylepšit zadávání volných termínů do služby
 
 
 ----- když bude čas
-předělat jak se ukádájí praconí doby. zrušit přestávky a ukládat jen pracovní dobu
-přidat možnost unikátního rozvrhu pro službu.
-
-Odstranit napojení tabulek na uživatele.
 
 Admin by měl mít možnost změnit dobu konání rezevace.
 

@@ -1155,6 +1155,11 @@ footer {
   font-size: 18px;
   font-weight: 500;
 }
+.reservation-info-group .info-group-value.group-column {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 
 @keyframes rotate {
   0% {

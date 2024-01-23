@@ -314,6 +314,9 @@ async function changeDay() {
   }
   calendarLoading(false);
   timesLoading(false);
+  document.querySelectorAll(".calendar-reservation-date").forEach((item) => {
+    item.innerHTML = time[2] + "." + time[1] + "." + time[0];
+  })
 }
 
 function toggleCalendarTimes() {
@@ -370,6 +373,10 @@ function setTime(id, type, timeStart, timeEnd) {
   timeStartEl.innerHTML = timeStart;
   const timeEndEl = document.querySelector("#time-end");
   timeEndEl.innerHTML = timeEnd;
+  
+  document.querySelectorAll(".calendar-reservation-time").forEach((item) => {
+    item.innerHTML = timeStart;
+  })
   nextPrev(1);
 }
 
