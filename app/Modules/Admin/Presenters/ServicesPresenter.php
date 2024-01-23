@@ -380,6 +380,7 @@ final class ServicesPresenter extends SecurePresenter
     public function workingHoursSubmit(Form $form ,$data)
     {
         $isSuccess = false;
+        bdump($data);
         $this->database->transaction(function ($database) use ($data, &$isSuccess) {
             try {
                 //monday
@@ -437,7 +438,7 @@ final class ServicesPresenter extends SecurePresenter
             //friday
             $database->table("workinghours")->where("weekday=4")->where("service_id=?", $this->service->id)->delete();
             if ($data->fr) {
-                foreach ($data->multiplierTh as $key => $value) {
+                foreach ($data->multiplierFr as $key => $value) {
                     $database->table("workinghours")->insert([
                         "weekday" => 4,
                         "start" => $value["start"],
@@ -480,7 +481,7 @@ final class ServicesPresenter extends SecurePresenter
         });
         if ($isSuccess) {
             $this->flashMessage("Uloženo", "success");
-            $this->redirect("this");
+            $this->redirect("default");
         } else {
             $this->flashMessage("Nastala chyba", "error");
         }
@@ -648,7 +649,7 @@ final class ServicesPresenter extends SecurePresenter
             ->addRule($form::Min, "DPH musí být větě než 0", 0)
             ->addRule($form::Max, "DPH musí být měně než 100", 99);
 
-        $form->addSelect("type", "Type", [0 => "Týdenní", 2 => "Vlatní týdenní", 1 => "Definovaný"]);
+        $form->addSelect("type", "Type", [0 => "Týdenní", 2 => "Vlastní týdenní", 1 => "Definovaný"]);
         
         // $form->addCheckbox("customSchedule", "Custom Schedule")
         //     ->addCondition($form::Equal, true)

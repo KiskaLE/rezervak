@@ -299,7 +299,7 @@ final class WorkhoursPresenter extends SecurePresenter
             //friday
             $database->table("workinghours")->where("weekday=4")->where("service_id=0")->delete();
             if ($data->fr) {
-                foreach ($data->multiplierTh as $key => $value) {
+                foreach ($data->multiplierFr as $key => $value) {
                     $database->table("workinghours")->insert([
                         "weekday" => 4,
                         "start" => $value["start"],

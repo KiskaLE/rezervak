@@ -1,6 +1,6 @@
-{block title}Služby{/block}
+{block title}Rozrvh{/block}
 {block content}
-<div class="row page-header"><h1>Služby</h1></div>
+<div class="row page-header"><h1>Rozvrh</h1></div>
 {* navigation start *}
 <a class="back" n:href="default">
     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
@@ -12,7 +12,7 @@
     <form n:name="editCustomScheduleForm">
 
         <div class="form-head">
-            <h2>Rozrvh služby {$service->name}</h2>
+            <h2>{$service->name}</h2>
         </div>
 
         <div class="form-body">
@@ -25,7 +25,7 @@
 
             <div class="form-actions">
                 <div class="submit"><input n:name="submit" onclick="getAndProcessCalendarEvents('events')"></div>
-                <div class="reset"><a n:href="this">Zrušit</a></div>
+                <div class="reset"><a n:href="this">Zrušit změny</a></div>
             </div>
 
         </div>
