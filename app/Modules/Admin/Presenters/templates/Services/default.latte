@@ -16,6 +16,7 @@
                 {* <th class="text-left">Popis</th> *}
                 <th class="text-right">Cena s DPH</th>
                 <th class="text-right">DPH</th>
+                <th class="text-left">Rozvrh</th>
                 <th class="text-right">Doba trvání</th>
                 <th class="text-left"></th>
             </tr>
@@ -28,10 +29,16 @@
                     {* <th class="text-left">{$service->description|truncate:20}</th> *}
                     <th class="text-right">{$service->price|currency} Kč</th>
                     <th class="text-right">{$service->vat}%</th>
+                    <th class="text-left">
+                        <span n:if="$service->type == 0" class="tag tag-yellow">týdenní</span>
+                        <span n:if="$service->type == 1" class="tag tag-purple">definovaný</span>
+                        <span n:if="$service->type == 2" class="tag tag-green">vlatní týdenní</span>
+                    </th>
                     <th class="text-right">{$service->duration} min</th>
                     <th class="text-left">
                         {var $schedule = $service->related("services_custom_schedules")->fetch()}
-                        <a class="btn btn-primary" n:href="editCustomSchedule $schedule?->uuid">rozvrh</a>
+                        <a n:if="$service->type == 1" class="btn btn-primary" n:href="editCustomSchedule $schedule?->uuid">rozvrh</a>
+                        <a n:if="$service->type == 2" class="btn btn-primary" n:href="editSchedule $service?->id">rozvrh</a>
                         <a class="btn btn-secondary btn-green" n:href="edit $service->id">upravit</a>
                         <a n:if="$service->hidden" class="btn btn-secondary btn-default" n:href="deleteService! $service->id">
                             <svg xmlns="http://www.w3.org/2000/svg" width="800px" height="800px" viewBox="0 0 24 24" fill="none">

@@ -10,7 +10,7 @@
 <div class="page-wrapper">
     <div class="working-hours-box">
         <div class="working-hours-wrapper">
-            <h2>Týdenní pracovní hodiny</h2>
+            <h2>Týdenní pracovní doba</h2>
             {form workingHoursForm}
                 <div class="weekday-group">
                     <div class="weekday-checkbox">
@@ -147,10 +147,11 @@
             {/form}
         </div>
         <div class="holidays-wrapper">
-            <h2>Volno</h2>
+            <h2>Pracovní volno</h2>
             <div  class="holidays">
                 <div n:foreach="$holidays as $holiday" class="holiday-group">
-                    <span>{$holiday->start|date:"d.m.Y H:i"} - {$holiday->end|date:"d.m.Y H:i"}</span><a n:href="deleteHoliday! $holiday->id" class="holiday-remove">X</a>
+                    <h3 class="holiday-name">{$holiday->name}</h3>
+                    <div><span>{$holiday->start|date:"d.m.Y H:i"} - {$holiday->end|date:"d.m.Y H:i"}</span><a n:href="deleteHoliday! $holiday->id" class="holiday-remove">X</a></div>
                 </div>
 
                 <div class="holiday-add">

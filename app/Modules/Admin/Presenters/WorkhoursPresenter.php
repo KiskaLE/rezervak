@@ -34,6 +34,7 @@ final class WorkhoursPresenter extends SecurePresenter
     protected function beforeRender()
     {
         parent::beforeRender();
+        $this->template->selectedPage = "workhours";
         $this->backlink = $this->storeRequest();
         $this->template->backlink = $this->backlink;
     }
@@ -48,7 +49,7 @@ final class WorkhoursPresenter extends SecurePresenter
     }
 
     private function getWorkingHours(int $day) {
-        $workingHours = $this->database->table("workinghours")->where("weekday=?", $day)->fetchAll();
+        $workingHours = $this->database->table("workinghours")->where("weekday=? AND service_id=0", $day)->fetchAll();
         $return = [];
         if ($workingHours) {
             foreach ($workingHours as $key => $value) {
@@ -248,7 +249,7 @@ final class WorkhoursPresenter extends SecurePresenter
         $this->database->transaction(function ($database) use ($data, &$isSuccess) {
             try {
                 //monday
-            $database->table('workinghours')->where("weekday=0")->delete();
+            $database->table('workinghours')->where("weekday=0")->where("service_id=0")->delete();
             if ($data->mo) {
                 foreach ($data->multiplier as $key => $value) {
                     $database->table("workinghours")->insert([
@@ -260,7 +261,7 @@ final class WorkhoursPresenter extends SecurePresenter
                 }
             }
             //tuesday
-            $database->table("workinghours")->where("weekday=1")->delete();
+            $database->table("workinghours")->where("weekday=1")->where("service_id=0")->delete();
             if ($data->tu) {
                 foreach ($data->multiplierTu as $key => $value) {
                     $database->table("workinghours")->insert([
@@ -272,7 +273,7 @@ final class WorkhoursPresenter extends SecurePresenter
                 }
             }
             //wednesday
-            $database->table("workinghours")->where("weekday=2")->delete();
+            $database->table("workinghours")->where("weekday=2")->where("service_id=0")->delete();
             if ($data->we) {
                 foreach ($data->multiplierWe as $key => $value) {
                     $database->table("workinghours")->insert([
@@ -284,7 +285,7 @@ final class WorkhoursPresenter extends SecurePresenter
                 }
             }
             //thursday
-            $database->table("workinghours")->where("weekday=3")->delete();
+            $database->table("workinghours")->where("weekday=3")->where("service_id=0")->delete();
             if ($data->th) {
                 foreach ($data->multiplierTh as $key => $value) {
                     $database->table("workinghours")->insert([
@@ -296,7 +297,7 @@ final class WorkhoursPresenter extends SecurePresenter
                 }
             }
             //friday
-            $database->table("workinghours")->where("weekday=4")->delete();
+            $database->table("workinghours")->where("weekday=4")->where("service_id=0")->delete();
             if ($data->fr) {
                 foreach ($data->multiplierTh as $key => $value) {
                     $database->table("workinghours")->insert([
@@ -308,7 +309,7 @@ final class WorkhoursPresenter extends SecurePresenter
                 }
             }
             //saturday
-            $database->table("workinghours")->where("weekday=5")->delete();
+            $database->table("workinghours")->where("weekday=5")->where("service_id=0")->delete();
             if ($data->sa) {
                 foreach ($data->multiplierSa as $key => $value) {
                     $database->table("workinghours")->insert([
@@ -320,7 +321,7 @@ final class WorkhoursPresenter extends SecurePresenter
                 }
             }
             //sunday
-            $database->table("workinghours")->where("weekday=6")->delete();
+            $database->table("workinghours")->where("weekday=6")->where("service_id=0")->delete();
             if ($data->su) {
                 foreach ($data->multiplierSu as $key => $value) {
                     $database->table("workinghours")->insert([

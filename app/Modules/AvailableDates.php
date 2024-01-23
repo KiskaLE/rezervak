@@ -75,8 +75,12 @@ public function getAvailableStartingHours(string $date, $service)
             $results = $this->getCustomScheduleAvailability($user, $userSettings, $schedule, $service, $date);
             $available = array_merge($available, $results);
         }
-    } else if ($service->type == 0) {
-        $workingHours = $this->database->table("workinghours")->where("weekday=?", $this->getDay($date))->fetchAll();
+    } else if ($service->type == 0 || $service->type == 2) {
+        if ($service->type == 2) {
+            $workingHours = $this->database->table("workinghours")->where("weekday=? AND service_id=?", [$this->getDay($date), $service->id])->fetchAll();
+        } else {
+            $workingHours = $this->database->table("workinghours")->where("weekday=? AND service_id=0", $this->getDay($date))->fetchAll();
+        }
         $available = [];
         foreach ($workingHours as $row) {
             $start = $date . " " . $row->start;

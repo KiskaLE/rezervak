@@ -971,14 +971,22 @@ h1 {
 }
 .holidays-wrapper .holidays {
   overflow-y: auto;
+  max-height: 1200px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 .holidays-wrapper .holidays .holiday-group {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  font-size: 16px;
+}
+.holidays-wrapper .holidays .holiday-group .holiday-name {
+  font-weight: 500;
+  font-size: 16px;
+  margin: 0;
 }
 
 #holiday-add-modal {
