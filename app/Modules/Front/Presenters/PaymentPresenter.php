@@ -52,7 +52,7 @@ final class PaymentPresenter extends BasePresenter
     public function actionBackup($id)
     {
         $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
-        $this->user = $reservation->ref("users", "user_id");
+        $this->user = $this->database->table("users")->fetch();
         $this->verify($reservation, $id, "reservations");
         if ($reservation->status != "VERIFIED") {
             $this->redirect("Payment:notFound");
@@ -73,7 +73,7 @@ final class PaymentPresenter extends BasePresenter
 
     private function verify($reservation, $uuid, $table)
     {
-        $user_settings = $this->user->related("settings")->fetch();
+        $user_settings = $this->database->table("settings")->fetch();
         $time = $user_settings->verification_time;
         $isLate = strtotime(strval($reservation->created_at)) < strtotime(date("Y-m-d H:i:s") . ' -' . $time . ' minutes');
         //confirm reservation

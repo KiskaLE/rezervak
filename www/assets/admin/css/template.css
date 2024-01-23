@@ -357,6 +357,17 @@ h1 {
   width: -moz-fit-content;
   width: fit-content;
   transition-duration: 100ms;
+  text-align: center;
+}
+.btn svg {
+  width: 18px;
+  height: 18px;
+  position: relative;
+  top: 3.5px;
+  left: 2px;
+  text-align: center;
+  margin: 0;
+  text-align: center;
 }
 
 .btn-c-primary {
@@ -941,15 +952,80 @@ h1 {
   color: #1c032a;
 }
 
-.working-hours-wrapper {
+.working-hours-box {
+  display: flex;
+  background-color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  border: 1px solid rgba(26, 26, 26, 0.1);
+  border-radius: var(--border-radius);
+}
+
+.holidays-wrapper {
+  width: 100%;
   display: flex;
   gap: 20px;
   flex-direction: column;
-  background-color: white;
-  padding: 20px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(26, 26, 26, 0.1);
-  border-radius: var(--border-radius);
+  flex: 1;
+  padding: 30px;
+}
+.holidays-wrapper .holidays {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.holidays-wrapper .holidays .holiday-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#holiday-add-modal {
+  z-index: 202 !important;
+  width: 300px;
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.holiday-remove {
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+  padding: 3px 7px;
+}
+.holiday-remove:hover {
+  background: #ffc5b5;
+  border-radius: 5px;
+}
+
+#holiday-add {
+  font-size: 18px;
+  border: none;
+  background: none;
+  transition: 150ms;
+  cursor: pointer;
+}
+#holiday-add:hover {
+  background: #ffc5b5;
+  border-radius: 5px;
+}
+
+.blocker {
+  z-index: 201 !important;
+}
+
+.working-hours-wrapper {
+  display: flex;
+  flex: 1;
+  gap: 20px;
+  width: 100%;
+  flex-direction: column;
+  padding: 30px;
+  border-right: 1px solid #d5d8d9;
 }
 .working-hours-wrapper form {
   display: flex;
@@ -959,7 +1035,6 @@ h1 {
 
 .weekday-group {
   display: flex;
-  min-height: 75px;
   width: 320px;
 }
 .weekday-group .weekday-checkbox {
@@ -999,12 +1074,21 @@ h1 {
   background: none;
   border: none !important;
   padding: 0;
+  transition: 150px;
+}
+.weekday-group .weekday-times .weekday-time-delete:hover {
+  background: #ffc5b5;
+  border-radius: 5px;
 }
 .weekday-group .weekday-times .weekday-time-add {
   display: inline;
   background: none;
   border: none;
   text-align: left;
-  padding: 0;
   font-size: 20px;
+  transition: 150px;
+}
+.weekday-group .weekday-times .weekday-time-add:hover {
+  background: #ffc5b5;
+  border-radius: 5px;
 }/*# sourceMappingURL=template.css.map */

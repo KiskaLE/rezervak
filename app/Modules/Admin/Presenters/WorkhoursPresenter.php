@@ -9,6 +9,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use Ramsey\Uuid\Uuid;
 use App\Modules\AvailableDates;
+use App\Modules\Formater;
 use Nette\DI\Attributes\Inject;
 
 final class WorkhoursPresenter extends SecurePresenter
@@ -23,7 +24,8 @@ final class WorkhoursPresenter extends SecurePresenter
 
     public function __construct(
         private Nette\Security\User     $user,
-        private AvailableDates          $availableDates
+        private AvailableDates          $availableDates,
+        private Formater                $formater
     )
     {
 
@@ -40,6 +42,9 @@ final class WorkhoursPresenter extends SecurePresenter
         $this->template->selectedPage = "workhours";
 
         $this["workingHoursForm"]->setDefaults($this->getDefaultWorkingHours());
+
+        //holidays
+        $this->template->holidays = $this->database->table("workinghours_exceptions")->where("end > NOW()")->fetchAll();
     }
 
     private function getWorkingHours(int $day) {
@@ -339,5 +344,60 @@ final class WorkhoursPresenter extends SecurePresenter
         }
         
         
+    }
+
+    protected function createComponentCreateHolidayForm(): Form {
+        $form = new Form;
+
+        $form->addText("range", "Rozsah")
+            ->setRequired("Zadejte rozsah");
+        
+        $form->addText("name", "Název")
+            ->setRequired("Zadejte název");
+
+        $form->addSubmit("submit", "Vytvořit");
+
+        $form->onSuccess[] = [$this, "createHolidayFormSucceeded"];
+
+        return $form;
+    }
+
+    public function createHolidayFormSucceeded(Form $form, array $values) {
+        $rangeData = $this->formater->getDataFromString($values["range"]);
+        $isSuccess = false;
+        try {
+            $this->database->table("workinghours_exceptions")->insert([
+                "start" => $rangeData["start"],
+                "end" => $rangeData["end"],
+                "name" => $values["name"],
+            ]);
+
+            $isSuccess = true;
+        } catch (\Throwable $th) {
+        }
+
+        if ($isSuccess) {
+            $this->flashMessage("Uloženo", "success");
+            $this->redirect("this");
+        } else {
+            $this->flashMessage("Nastala chyba", "error");
+            $this->redirect("this");
+        }
+    }
+
+    public function handleDeleteHoliday($id) {
+        $isSuccess = false;
+        try {
+            $this->database->table("workinghours_exceptions")->where("id", $id)->delete();
+            $isSuccess = true;
+        } catch (\Throwable $th) {
+        }
+        if ($isSuccess) {
+            $this->flashMessage("Volno smazáno", "success");
+            $this->redirect("this");
+        } else {
+            $this->flashMessage("Nastala chyba", "error");
+            $this->redirect("this");
+        }
     }
 }

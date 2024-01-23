@@ -7,140 +7,192 @@
 </div>
 <!-- page title end -->
 
-<div class="working-hours-wrapper">
-    <h2>Týdenní pracovní hodiny</h2>
-    {form workingHoursForm}
-        <div class="weekday-group">
-            <div class="weekday-checkbox">
-                <input n:name="mo">
-                <label for="">Po</label>
-            </div>
-            
-        
-                <div class="weekday-times">
+<div class="page-wrapper">
+    <div class="working-hours-box">
+        <div class="working-hours-wrapper">
+            <h2>Týdenní pracovní hodiny</h2>
+            {form workingHoursForm}
+                <div class="weekday-group">
+                    <div class="weekday-checkbox">
+                        <input n:name="mo">
+                        <label for="">Po</label>
+                    </div>
                     
-                        <div n:multiplier="multiplier" class="weekday-time">
-                            <input n:name="start"> 
-                            -
-                            <input n:name="end"> 
-                            {multiplier:remove} 
+                
+                        <div class="weekday-times">
+                            
+                                <div n:multiplier="multiplier" class="weekday-time">
+                                    <input n:name="start"> 
+                                    -
+                                    <input n:name="end"> 
+                                    {multiplier:remove} 
+                                </div>
+                                {multiplier:add multiplier }
+                                
                         </div>
-                        {multiplier:add multiplier }
-                        
                 </div>
-        </div>
-        <div class="weekday-group">
-            <div class="weekday-checkbox">
-                <input n:name="tu">
-                <label for="">Út</label>
-            </div>
-        
-                <div class="weekday-times">
+                <div class="weekday-group">
+                    <div class="weekday-checkbox">
+                        <input n:name="tu">
+                        <label for="">Út</label>
+                    </div>
+                
+                        <div class="weekday-times">
 
-                        <div n:multiplier="multiplierTu" class="weekday-time">
-                            <input n:name="start"> 
-                            -
-                            <input n:name="end"> 
-                            {multiplier:remove} 
+                                <div n:multiplier="multiplierTu" class="weekday-time">
+                                    <input n:name="start"> 
+                                    -
+                                    <input n:name="end"> 
+                                    {multiplier:remove} 
+                                </div>
+                                {multiplier:add multiplierTu }
+
                         </div>
-                        {multiplier:add multiplierTu }
-
                 </div>
-        </div>
-        <div class="weekday-group">
-            <div class="weekday-checkbox">
-                <input n:name="we">
-                <label for="">St</label>
-            </div>
-        
-                <div class="weekday-times">
+                <div class="weekday-group">
+                    <div class="weekday-checkbox">
+                        <input n:name="we">
+                        <label for="">St</label>
+                    </div>
+                
+                        <div class="weekday-times">
 
-                        <div n:multiplier="multiplierWe" class="weekday-time">
-                            <input n:name="start"> 
-                            -
-                            <input n:name="end"> 
-                            {multiplier:remove} 
+                                <div n:multiplier="multiplierWe" class="weekday-time">
+                                    <input n:name="start"> 
+                                    -
+                                    <input n:name="end"> 
+                                    {multiplier:remove} 
+                                </div>
+                                {multiplier:add multiplierWe }
+
                         </div>
-                        {multiplier:add multiplierWe }
-
                 </div>
-        </div>
-        <div class="weekday-group">
-            <div class="weekday-checkbox">
-                <input n:name="th">
-                <label for="">Čt</label>
-            </div>
-        
-                <div class="weekday-times">
+                <div class="weekday-group">
+                    <div class="weekday-checkbox">
+                        <input n:name="th">
+                        <label for="">Čt</label>
+                    </div>
+                
+                        <div class="weekday-times">
 
-                        <div n:multiplier="multiplierTh" class="weekday-time">
-                            <input n:name="start"> 
-                            -
-                            <input n:name="end"> 
-                            {multiplier:remove} 
+                                <div n:multiplier="multiplierTh" class="weekday-time">
+                                    <input n:name="start"> 
+                                    -
+                                    <input n:name="end"> 
+                                    {multiplier:remove} 
+                                </div>
+                                {multiplier:add multiplierTh }
+
                         </div>
-                        {multiplier:add multiplierTh }
-
                 </div>
-        </div>
-        <div class="weekday-group">
-            <div class="weekday-checkbox">
-                <input n:name="fr">
-                <label for="">Pa</label>
-            </div>
-        
-                <div class="weekday-times">
+                <div class="weekday-group">
+                    <div class="weekday-checkbox">
+                        <input n:name="fr">
+                        <label for="">Pa</label>
+                    </div>
+                
+                        <div class="weekday-times">
 
-                        <div n:multiplier="multiplierFr" class="weekday-time">
-                            <input n:name="start"> 
-                            -
-                            <input n:name="end"> 
-                            {multiplier:remove} 
+                                <div n:multiplier="multiplierFr" class="weekday-time">
+                                    <input n:name="start"> 
+                                    -
+                                    <input n:name="end"> 
+                                    {multiplier:remove} 
+                                </div>
+                                {multiplier:add multiplierFr }
+
                         </div>
-                        {multiplier:add multiplierFr }
-
                 </div>
-        </div>
-        <div class="weekday-group">
-            <div class="weekday-checkbox">
-                <input n:name="sa">
-                <label for="">So</label>
-            </div>
-        
-                <div class="weekday-times">
+                <div class="weekday-group">
+                    <div class="weekday-checkbox">
+                        <input n:name="sa">
+                        <label for="">So</label>
+                    </div>
+                
+                        <div class="weekday-times">
 
-                        <div n:multiplier="multiplierSa" class="weekday-time">
-                            <input n:name="start"> 
-                            -
-                            <input n:name="end"> 
-                            {multiplier:remove} 
+                                <div n:multiplier="multiplierSa" class="weekday-time">
+                                    <input n:name="start"> 
+                                    -
+                                    <input n:name="end"> 
+                                    {multiplier:remove} 
+                                </div>
+                                {multiplier:add multiplierSa }
+
                         </div>
-                        {multiplier:add multiplierSa }
-
                 </div>
-        </div>
-        <div class="weekday-group">
-            <div class="weekday-checkbox">
-                <input n:name="su">
-                <label for="">Ne</label>
-            </div>
-        
-                <div class="weekday-times">
+                <div class="weekday-group">
+                    <div class="weekday-checkbox">
+                        <input n:name="su">
+                        <label for="">Ne</label>
+                    </div>
+                
+                        <div class="weekday-times">
 
-                        <div n:multiplier="multiplierSu" class="weekday-time">
-                            <input n:name="start"> 
-                            -
-                            <input n:name="end"> 
-                            {multiplier:remove} 
+                                <div n:multiplier="multiplierSu" class="weekday-time">
+                                    <input n:name="start"> 
+                                    -
+                                    <input n:name="end"> 
+                                    {multiplier:remove} 
+                                </div>
+                                {multiplier:add multiplierSu }
+
                         </div>
-                        {multiplier:add multiplierSu }
+                </div>
+                <div class="form-actions">
+                    <div class="submit">
+                        <input n:name="submit">
+                    </div>
+                </div>
+            {/form}
+        </div>
+        <div class="holidays-wrapper">
+            <h2>Volno</h2>
+            <div  class="holidays">
+                <div n:foreach="$holidays as $holiday" class="holiday-group">
+                    <span>{$holiday->start|date:"d.m.Y H:i"} - {$holiday->end|date:"d.m.Y H:i"}</span><a n:href="deleteHoliday! $holiday->id" class="holiday-remove">X</a>
+                </div>
+
+                <div class="holiday-add">
+                    <button href="#" id="holiday-add">+</button>
+                    <div id="holiday-add-modal">
+                        <div class="form-wrapper">
+                        <form n:name="createHolidayForm">
+
+                        <div class="form-head">
+                            <h2>Vytvořit volno</h2>
+                        </div>
+
+                        <div class="form-body">
+
+                            <div class="form-group">
+                                <label for="">Název</label>
+                                <input n:name="name">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="">Rozsah</label>
+                                <input n:name="range" id="date-start">
+                                {* <span class="form-info">Dodatečné informace</span> *}
+                            </div>
+
+                            <div class="form-actions">
+                                <div class="submit"><input type="submit" n:name="submit"></div>
+                                {* <div class="reset"><a n:href="this">Zrušit</a></div> *}
+                            </div>
 
                 </div>
-        </div>
-        <div class="form-actions">
-            <div class="submit">
-                <input n:name="submit">
-            </div>
-        </div>
-    {/form}
+
+
+
+    </form>
 </div>
+<!-- form end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{$basePath}/assets/admin/js/datePicker.js"></script>

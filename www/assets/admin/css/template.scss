@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
 @mixin w($size) {
   @if ($size == sm) {
@@ -492,6 +492,18 @@ h1 {
   font-weight: 400;
   width: fit-content;
   transition-duration: 100ms;
+  text-align: center;
+  svg {
+    width: 18px;
+    height: 18px;
+    position: relative;
+    //cant use flex because it breaks the layout
+    top: 3.5px;
+    left: 2px;
+    text-align: center;
+    margin: 0;
+    text-align: center;
+  }
 }
 
 .btn-c-primary {
@@ -1168,17 +1180,86 @@ h1 {
 
 //tags end
 
-// working hours start  
+// working hours start
 
-.working-hours-wrapper {
+.working-hours-box {
+  display: flex;
+  background-color: white;
+  box-shadow: $shadow;
+  width: 100%;
+  border: $border;
+  border-radius: var(--border-radius);
+}
+
+.holidays-wrapper {
+  width: 100%;
   display: flex;
   gap: 20px;
   flex-direction: column;
-  background-color: white;
-  padding: 20px;
-  box-shadow: $shadow;
-  border: $border;
-  border-radius: var(--border-radius);
+  flex: 1;
+  padding: 30px;
+
+  .holidays {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .holiday-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+  }
+}
+
+#holiday-add-modal {
+  z-index: 202 !important;
+  width: 300px;
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.holiday-remove {
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+  padding: 3px 7px;
+
+  &:hover {
+    background: $primary-100;
+    border-radius: 5px;
+  }
+}
+
+#holiday-add {
+  font-size: $text-3;
+  border: none;
+  background: none;
+  transition: 150ms;
+  cursor: pointer;
+
+  &:hover {
+    background: $primary-100;
+    border-radius: 5px;
+  }
+}
+
+.blocker {
+  z-index: 201 !important;
+}
+
+.working-hours-wrapper {
+  display: flex;
+  flex: 1;
+  gap: 20px;
+  width: 100%;
+  flex-direction: column;
+  padding: 30px;
+  border-right: 1px solid $gray-100;
 
   form {
     display: flex;
@@ -1189,7 +1270,7 @@ h1 {
 
 .weekday-group {
   display: flex;
-  min-height: 75px;
+  //min-height: 75px;
   width: 320px;
 
   .weekday-checkbox {
@@ -1232,6 +1313,12 @@ h1 {
       background: none;
       border: none !important;
       padding: 0;
+      transition: 150px;
+
+      &:hover {
+        background: $primary-100;
+        border-radius: 5px;
+      }
     }
 
     .weekday-time-add {
@@ -1239,8 +1326,14 @@ h1 {
       background: none;
       border: none;
       text-align: left;
-      padding: 0;
+      //padding: 0;
       font-size: $text-4;
+      transition: 150px;
+
+      &:hover {
+        background: $primary-100;
+        border-radius: 5px;
+      }
     }
   }
 }

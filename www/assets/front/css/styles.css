@@ -571,6 +571,7 @@ body {
   margin: 5px;
   text-align: center;
   font-size: 16px;
+  border: 1px solid rgba(26, 26, 26, 0.05);
 }
 @media (max-width: 768px) {
   #calendar .day {
@@ -587,7 +588,8 @@ body {
   text-align: center;
 }
 #calendar .different-month {
-  background-color: rgba(128, 128, 128, 0.32) !important;
+  background-color: #e2e5e6 !important;
+  color: #94999a !important;
 }
 #calendar .weekend {
   color: #ffffff;
@@ -993,12 +995,19 @@ footer {
     width: 80%;
   }
 }
+.recap-service-card div {
+  display: flex;
+  flex-direction: column;
+}
 .recap-service-card .recap-service-title {
   margin: 0;
   font-size: 18px;
   font-weight: 500;
 }
 .recap-service-card .service-price {
+  display: flex;
+  flex-direction: row;
+  gap: 0;
   font-size: 18px;
   font-weight: 500;
   color: #002f3b;
@@ -1007,7 +1016,7 @@ footer {
   border-radius: 5px;
 }
 .recap-service-card .service-text {
-  font-size: 18px;
+  font-size: 16px;
   color: #595f60;
 }
 
@@ -1042,7 +1051,7 @@ footer {
   flex-direction: column;
   gap: 5px;
   color: #3f4344;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .recap-button {

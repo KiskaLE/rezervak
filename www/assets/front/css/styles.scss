@@ -38,6 +38,7 @@ $secondary-900: #165120;
 $secondary-950: #062d0e;
 
 $gray-50: #f7f9f9;
+$gray-75: #e2e5e6;
 $gray-100: #d5d8d9;
 $gray-200: #b4b8b9;
 $gray-300: #94999a;
@@ -699,6 +700,7 @@ body {
     margin: 5px;
     text-align: center;
     font-size: $text-2;
+    border: 1px solid rgba(26, 26, 26, 0.05);
 
     @media (max-width: 768px) {
       padding: 3vw; /* Reduce padding for smaller screens */
@@ -715,7 +717,8 @@ body {
   }
 
   .different-month {
-    background-color: rgba(128, 128, 128, 0.32) !important;
+    background-color: $gray-75 !important;
+    color: $gray-300 !important;
   }
 
   .weekend {
@@ -1176,6 +1179,12 @@ footer {
   @include w(sm) {
     width: 80%;
   }
+
+  div {
+    display: flex;
+    flex-direction: column;
+  }
+
   .recap-service-title {
     margin: 0;
     font-size: $text-3;
@@ -1183,6 +1192,9 @@ footer {
   }
 
   .service-price {
+    display: flex;
+    flex-direction: row;
+    gap: 0;
     font-size: $text-3;
     font-weight: 500;
     color: $accent-700;
@@ -1192,7 +1204,7 @@ footer {
   }
 
   .service-text {
-    font-size: $text-3;
+    font-size: $text-2;
     color: $gray-500;
   }
 }
@@ -1227,7 +1239,7 @@ footer {
     flex-direction: column;
     gap: 5px;
     color: $gray-600;
-    font-size: $text-3;
+    font-size: $text-2;
   }
 }
 
