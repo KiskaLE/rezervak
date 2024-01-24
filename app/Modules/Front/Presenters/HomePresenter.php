@@ -43,7 +43,7 @@ final class HomePresenter extends BasePresenter
 
     public function actionDefault($run, $day, $service_id, $discountCode = "")
     {
-        $this->user = $this->database->table("users")->fetch();
+        $this->user = $this->database->table("users")->order("created_at ASC")->fetch();
         $this->user_uuid = $this->user->uuid;
         $user_settings = $this->database->table("settings")->fetch();
 

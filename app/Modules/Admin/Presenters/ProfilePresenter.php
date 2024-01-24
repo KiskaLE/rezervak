@@ -104,7 +104,7 @@ class ProfilePresenter extends SecurePresenter
                 }
             }
             $values->logo->move($filePath);
-            $this->database->table("users")->where("id=?" , $this->user->id)->update([
+            $this->database->table("users")->order("created_at ASC")->where("id=?" , $this->user->id)->update([
                 "logo_url" => $logoName
             ]);
             

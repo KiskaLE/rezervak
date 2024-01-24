@@ -48,8 +48,9 @@ přepsat crony
 
 
 ## Admin
-opravit logo v emailu
 vylepšit zadávání volných termínů do služby
+
+admin by měl dostávát email o každé vytvořené a zaplacené rezervaci.
 
 
 ----- když bude čas

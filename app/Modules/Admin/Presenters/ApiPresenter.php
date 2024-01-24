@@ -6,6 +6,7 @@ use Nette;
 use App\Modules\Mailer;
 use App\Modules\AvailableDates;
 use App\Modules\Payments;
+use App\Modules\Constants;
 use GuzzleHttp\Client;
 use Nette\DI\Attributes\Inject;
 
@@ -14,6 +15,8 @@ class ApiPresenter extends BasePresenter
 
     private $client;
     #[Inject] public Nette\Database\Explorer $database;
+
+    #[Inject] public Constants $constants;
 
     public function __construct(
         private Mailer         $mailer,
@@ -95,15 +98,61 @@ class ApiPresenter extends BasePresenter
         }
         }
 
+        $this->database->table("crons")->where("name LIKE ?", "notify")->update(["run_at" => date("Y-m-d H:i:s")]);
+
 
         die("end");
     }
 
     public function actionPaymentsCheck() {
-        $payments = $this->database->table("payments")->where("status=0")->fetchAll();
         
-        
+        function getValueByName($transaction, $name) {
+            foreach ($transaction as $column) {
+                $attributes = $column->attributes();
+                if ((string)$attributes['name'] === $name) {
+                    return (string)$column;
+                }
+            }
+            return "";
+        }
+        function getElementByName($transactions, $name, $value) {
+            foreach ($transactions as $column) {
+                foreach ($column as $item) {
+                    $attributes = $item->attributes();
+                    if ((string)$attributes['name'] === $name && (string)$item == $value) {
+                        return $column;
+                    }
+                }
+            }
+            return [];
+        }
 
+         $token = $this->constants->constants["FIO_TOKEN"];
+         $cron = $this->database->table("crons")->where("name LIKE ?", "payments_check")->fetch();
+         $from = date("Y-m-d", strtotime($cron->run_at));
+         $now = date("Y-m-d");
+         $url = "https://www.fio.cz/ib_api/rest/periods/{token}/".$from."/".$now."/transactions.xml";
+         //TODO mockup
+         $filePath = "./../temp/test.xml";
+         $xml = simplexml_load_file($filePath) or die("Error: Cannot create object");
+         $transactions = $xml->TransactionList->Transaction;
+ 
+         $payments = $this->database->table("payments")->where("status=0")->fetchAll();
+         foreach ($payments as $payment) {
+            $paymentVs = $payment->id_transaction;
+            if ($transaction = getElementByName($transactions, "VS", $paymentVs)) {
+                $transactionValue = getValueByName($transaction, "Objem");
+                $transactionCurrency = getValueByName($transaction, "Měna");
+                if ($transactionCurrency != "CZK") {
+                    continue;
+                }
+                if ($transactionValue >= $payment->price) {
+                    $this->database->table("payments")->where("id=?", $payment->id)->update(["status" => 1, "updated_at" => date("Y-m-d H:i:s")]);
+                }
+            }
+         }
+        
+        $cron->update(["run_at" => date("Y-m-d H:i:s")]);
         die("check");
     }
 

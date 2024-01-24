@@ -18,7 +18,7 @@ class AvailableDates
 
 public function getReservationsConflictsIds(int $id): array
 {
-    $user = $this->database->table("users")->where("id=?", $id)->fetch();
+    $user = $this->database->table("users")->order("created_at ASC")->where("id=?", $id)->fetch();
     $reservations = $user->related("reservations")->where("start>=?", date("Y-m-d H:i:s"))->fetchAll();
     $exceptions = $user->related("workinghours_exceptions")->where("end>=?", date("Y-m-d H:i:s"))->fetchAll();
     $conflicts = [];
@@ -65,7 +65,7 @@ public function isTimeToPay(string $start, $userSettings): bool
 public function getAvailableStartingHours(string $date, $service)
 {
     $available = [];
-    $user = $this->database->table("users")->fetch();
+    $user = $this->database->table("users")->order("created_at ASC")->fetch();
     $userSettings = $this->database->table("settings")->fetch();
     $service = $this->database->table("services")->get($service->id);
 
@@ -98,7 +98,7 @@ public function getAvailableStartingHours(string $date, $service)
 public function getBackupHours( string $date, $service): array
 {
     $results = [];
-    $user = $this->database->table("users")
+    $user = $this->database->table("users")->order("created_at ASC")
         ->fetch();
 
     $userSettings = $this->database->table("settings")
@@ -415,7 +415,7 @@ public function getNumberOfAvailableTimes(int $numberOfDays, $service): int {
 
     private function getExceptions(string $u): array
     {
-        $user = $this->database->table("users")->where("uuid=?", $u)->fetch();
+        $user = $this->database->table("users")->order("created_at ASC")->where("uuid=?", $u)->fetch();
         $now = date("Y-m-d H:i:s");
         $exceptions = $this->database->table("workinghours_exceptions")->where("end >=?",  $now)->fetchAll();
         return $exceptions;

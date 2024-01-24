@@ -28,7 +28,7 @@ class BasePresenter extends Presenter
     protected function beforeRender()
     {
         parent::beforeRender();
-        $user = $this->database->table("users")->fetch();
+        $user = $this->database->table("users")->order("created_at ASC")->fetch();
         $this->template->logoUrl = $user->logo_url;
 
     }

@@ -28,7 +28,7 @@ final class PaymentPresenter extends BasePresenter
         $this->template->reservation = $reservation;
         $service = $reservation->ref("services", "service_id");
         $this->template->service = $service;
-        $this->user = $reservation->ref("users", "user_id");
+        $this->user = $this->database->table("users")->order("created_at ASC")->order("created_at ASC")->fetch();
         $this->template->user = $this->user;
         if ($reservation) {
             $this->verify($reservation, $id, "reservations");
@@ -39,8 +39,7 @@ final class PaymentPresenter extends BasePresenter
             $this->template->reservation = $reservation;
             $this->template->payment = $payment;
             $qrCode = $this->payments->generatePaymentCode($payment, $this->user->id);
-            $user = $reservation->ref("users", "user_id");
-            $this->template->userSettings = $user->related("settings")->fetch();
+            $this->template->userSettings = $this->database->table("settings")->fetch();
             $this->template->qrCode = $qrCode;
 
         } else {
@@ -52,7 +51,7 @@ final class PaymentPresenter extends BasePresenter
     public function actionBackup($id)
     {
         $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
-        $this->user = $this->database->table("users")->fetch();
+        $this->user = $this->database->table("users")->order("created_at ASC")->fetch();
         $this->verify($reservation, $id, "reservations");
         if ($reservation->status != "VERIFIED") {
             $this->redirect("Payment:notFound");

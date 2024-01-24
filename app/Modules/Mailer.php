@@ -5,6 +5,7 @@ namespace App\Modules;
 use Nette;
 use Latte\Engine;
 use PHPMailer\PHPMailer\PHPMailer;
+use App\Modules\Constants;
 
 final class Mailer
 {
@@ -12,6 +13,7 @@ final class Mailer
     private $latte;
 
     public function __construct(
+        private Constants $constants,
         private Nette\Database\Explorer $database,
         private PHPMailer               $phpMailer,
         private Nette\Mail\Mailer       $mailer,
@@ -27,6 +29,8 @@ final class Mailer
         } else {
             $this->url = "http://" . "localhost:8000";
         }
+
+        $this->url = $this->constants->constants["SERVER_URL"];
         
         $this->latte = new Engine;
     }
@@ -34,7 +38,7 @@ final class Mailer
     public function sendConfirmationMail(string $to, string $confirmUrl, $reservation): void
     {
         $userSettings = $this->database->table("settings")->fetch();
-        $user = $this->database->table("users")->fetch();
+        $user = $this->database->table("users")->order("created_at ASC")->fetch();
         $params = [
             'url' => $this->url . $confirmUrl,
             'serverUrl' => $this->url,
@@ -49,7 +53,7 @@ final class Mailer
 
     public function sendBackupConfiramationMail(string $to, string $confirmUrl, $reservation): void
     {
-        $user = $this->database->table("users")->fetch();
+        $user = $this->database->table("users")->order("created_at ASC")->fetch();
         $userSettings = $this->database->table("settings")->fetch();
         $params = [
             'url' => $this->url . $confirmUrl,
@@ -65,7 +69,7 @@ final class Mailer
 
     public function sendCancelationMail(string $to, $reservation, string $reason): void
     {
-        $user = $this->database->table("users")->fetch();
+        $user = $this->database->table("users")->order("created_at ASC")->fetch();
         $userSettings = $this->database->table("settings")->fetch();
         $params = [
             'user' => $user,
@@ -83,7 +87,7 @@ final class Mailer
 
     public function sendPaymentConfirmationMail(string $to, $reservation): void
     {
-        $user = $this->database->table("users")->fetch();
+        $user = $this->database->table("users")->order("created_at ASC")->fetch();
         $userSettings = $this->database->table("settings")->fetch();
         $params = [
             'user' => $user,
@@ -98,7 +102,7 @@ final class Mailer
 
     public function sendNotifyMail(string $to, $reservation): void {
 
-        $user = $this->database->table("users")->fetch();
+        $user = $this->database->table("users")->order("created_at ASC")->fetch();
         $userSettings = $this->database->table("settings")->fetch();
         $params = [
             'user' => $user,
