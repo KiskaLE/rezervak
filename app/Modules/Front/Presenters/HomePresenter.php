@@ -47,6 +47,8 @@ final class HomePresenter extends BasePresenter
         $this->user_uuid = $this->user->uuid;
         $user_settings = $this->database->table("settings")->fetch();
 
+        $this->template->gdprUrl = $user_settings->gdpr_url;
+
 
         if ($this->isAjax()) {
             if ($run == "fetch") {
@@ -128,6 +130,7 @@ final class HomePresenter extends BasePresenter
             ->addRule($form::PATTERN, 'Neplatný formát PSČ', '^\d{5}$');
         $form->addText("city", "Město:")
             ->setRequired();
+        $form->addCheckbox("gdpr", "gdpr")->setRequired();
 
         $form->addText("dicountCode", "Kód slevy:");
         $form->addSubmit("submit");
@@ -141,6 +144,11 @@ final class HomePresenter extends BasePresenter
         $session = $this->getSession('Reservation');
         $uuid = strval(Uuid::uuid4());
         $email = $data->email;
+
+        if(!$data->gdpr) {
+            $this->flashMessage("Prosím, vyplníte souhlas s GDPR.", "error");
+            $this->redirect("default");
+        }
 
         if ($data->dateType == "default") {
             $times = $session->availableTimes;

@@ -104,6 +104,7 @@ function validateForm() {
     // If a field is empty...
     let name = y[i].name;
     let value = y[i].value;
+    console.log(name, value);
     y[i].className = "multiform";
     const parentEl = y[i].parentNode;
     parentEl.classList.remove("invalid");
@@ -155,6 +156,12 @@ function validateForm() {
       }
     } else if (name == "discountCode") {
       //TODO validate discount code
+    } else if (name == "gdpr") {
+      if (!y[i].checked) {
+        y[i].className += " invalid";
+        parentEl.classList.add("invalid");
+        valid = false;
+      }
     }
   }
   // If the valid status is true, mark the step as finished and valid:

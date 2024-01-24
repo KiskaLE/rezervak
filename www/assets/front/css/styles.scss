@@ -865,6 +865,13 @@ input {
   box-shadow: $shadow-inner;
 }
 
+input[type="checkbox"] {
+  box-shadow: none;
+  width: 17px;
+  height: 17px;
+
+}
+
 input:focus {
   outline: $primary-600;
   border: 1px solid $primary-600 !important;
@@ -880,10 +887,24 @@ input.valid {
   background-color: $green-50;
 }
 
+.form-group {
+
+  &.checkbox {
+    display: flex;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 5px;
+  }
+}
+
 .form-group.invalid {
+  &.checkbox {
+    color: red;
+  }
   .form-error {
     display: block !important;
   }
+  
 }
 
 .form-error {
@@ -1020,6 +1041,10 @@ input.valid {
   .payment-reservation {
     padding: $padding $padding 10px $padding;
     border-bottom: 1px solid $gray-100;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
   }
 
   .payment-info {
@@ -1047,12 +1072,36 @@ input.valid {
     align-items: end;
     grid-template-columns: 1fr 1fr;
 
+    .payment-info-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
     .payment-qr-code {
       display: flex;
-      justify-content: end;
+      flex-direction: column;
+      align-items: end;
+      div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        span {
+          position: relative;
+          top: 9px;
+          text-align: center;
+          font-weight: 500;
+          background-color: white;
+          padding: 0 5px;
+          
+        }
+      }
       img {
         height: 112px;
         width: 112px;
+        border: 1px solid $gray-300;
+        padding: 10px;
+        border-radius: 5px;
       }
     }
   }
@@ -1206,6 +1255,7 @@ footer {
   .service-text {
     font-size: $text-2;
     color: $gray-500;
+    font-weight: 300;
   }
 }
 
@@ -1233,6 +1283,10 @@ footer {
     margin: 0;
     margin-bottom: 5px;
     font-size: $text-3;
+
+    &.customer-code {
+      font-size: $text-2 !important;
+    }
   }
   .recap-custome-info-data {
     display: flex;
@@ -1240,6 +1294,7 @@ footer {
     gap: 5px;
     color: $gray-600;
     font-size: $text-2;
+    font-weight: 300;
   }
 }
 

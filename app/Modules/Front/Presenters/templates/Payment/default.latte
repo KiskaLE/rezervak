@@ -2,7 +2,7 @@
 {block content}
 <div class="page-wrapper">
 
-<h1>Zaplaťe rezervaci</h1>
+<h1>Zaplaťte rezervaci</h1>
 
     <div class="payment-wrapper">
         <div class="payment-reservation">
@@ -31,7 +31,7 @@
             </div>
         </div>
         <div class="payment">
-            <div>
+            <div class="payment-info-group">
         <h2>Platba</h2>
                 <div class="payment-info">
                     <div class="reservation-info-group">
@@ -57,7 +57,10 @@
                 </div>
             </div>
             <div class="payment-qr-code">
-                {$qrCode|noescape}
+                <div>
+                    <span class="text-center">QR platba</span>
+                    {$qrCode|noescape}
+                </div>
             </div>
         </div>
         

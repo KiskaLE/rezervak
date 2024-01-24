@@ -717,6 +717,12 @@ input {
   box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
 }
 
+input[type=checkbox] {
+  box-shadow: none;
+  width: 17px;
+  height: 17px;
+}
+
 input:focus {
   outline: #781d08;
   border: 1px solid #781d08 !important;
@@ -732,6 +738,16 @@ input.valid {
   background-color: #e9ffe4;
 }
 
+.form-group.checkbox {
+  display: flex;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 5px;
+}
+
+.form-group.invalid.checkbox {
+  color: red;
+}
 .form-group.invalid .form-error {
   display: block !important;
 }
@@ -857,6 +873,9 @@ input.valid {
 .payment-wrapper .payment-reservation {
   padding: 20px 20px 10px 20px;
   border-bottom: 1px solid #d5d8d9;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 .payment-wrapper .payment-info {
   display: flex;
@@ -879,13 +898,35 @@ input.valid {
   align-items: end;
   grid-template-columns: 1fr 1fr;
 }
+.payment-wrapper .payment .payment-info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 .payment-wrapper .payment .payment-qr-code {
   display: flex;
-  justify-content: end;
+  flex-direction: column;
+  align-items: end;
+}
+.payment-wrapper .payment .payment-qr-code div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.payment-wrapper .payment .payment-qr-code div span {
+  position: relative;
+  top: 9px;
+  text-align: center;
+  font-weight: 500;
+  background-color: white;
+  padding: 0 5px;
 }
 .payment-wrapper .payment .payment-qr-code img {
   height: 112px;
   width: 112px;
+  border: 1px solid #94999a;
+  padding: 10px;
+  border-radius: 5px;
 }
 .payment-wrapper h2 {
   margin: 0 0 6px;
@@ -1018,6 +1059,7 @@ footer {
 .recap-service-card .service-text {
   font-size: 16px;
   color: #595f60;
+  font-weight: 300;
 }
 
 .service-card-button:hover {
@@ -1046,12 +1088,16 @@ footer {
   margin-bottom: 5px;
   font-size: 18px;
 }
+#recap-customer-info .recap-customer-info-title.customer-code {
+  font-size: 16px !important;
+}
 #recap-customer-info .recap-custome-info-data {
   display: flex;
   flex-direction: column;
   gap: 5px;
   color: #3f4344;
   font-size: 16px;
+  font-weight: 300;
 }
 
 .recap-button {

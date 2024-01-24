@@ -71,6 +71,11 @@ class SettingsPresenter extends SecurePresenter
             ->setRequired("Zadejte čas pro označení")
             ->addRule($form::Max, "Čas pro označení nesmí být výce než 1000 minut", 1000);
 
+        $form->addText("gdprUrl")
+            ->setDefaultValue($this->settings->gdpr_url)
+            ->setRequired("Zadejte URL GDPR")
+            ->addRule($form::URL, "Neplatný url formát");
+
         $form->addText("homepage")
         ->setDefaultValue($this->settings->homepage)
         ->addRule($form::URL, "Neplatný url formát");
