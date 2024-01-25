@@ -1,9 +1,10 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Potvrzení platby</title>
+    <title>Nová rezervace</title>
 </head>
 <body style="background: #EEEEEE;
+            margin: 20px 0;
             padding: 20px;
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;">
@@ -12,16 +13,25 @@
         <h1 style="font-size: 24px;
         font-weight: bolder;
         color: #d0482b;
-        margin: 0 0 20px;">Potvzení platby</h1>
-        <p style="font-size: 16px; line-height: 30px;">Dobrý den, <br> Vaše platba rezervace <b>č.{$reservation->id}</b> v hodnotě <b>{$payment->price} Kč</b> byla <b>úspěšně přijata</b>.</p>
-        <h2 style="font-size: 16px; margin: 0px;">Detaily vaší Rezervace:</h2>
+        margin: 0 0 20px;">Nová rezervace</h1>
+        <h2 style="font-size: 16px; margin: 0px;">Rezervace č.{$reservation->id}:</h2>
         <p style="font-size: 16px; margin-top: 2px;
-        line-height: 30px;">
+            line-height: 30px;">
             {$reservation->ref("services", "service_id")->name} <br>
             {$reservation->start|date:"d.m.Y"}<br>
             {$reservation->start|date:"H:i"}<br>
-            {var $price = $reservation->related("payments")->fetch()->price}
-            {$price} Kč
+            {$payment->price} Kč
+        </p>
+        <h2 style="font-size: 16px; margin: 0px;">Zákazník:</h2>
+        <p style="font-size: 16px; margin-top: 2px;
+            line-height: 30px;">
+            {$reservation->firstname} {$reservation->lastname} <br>
+            {$reservation->email} <br>
+            {$reservation->phone} <br>
+            {$reservation->address} <br>
+            {$reservation->city} <br>
+            {$reservation->code}
+            
         </p>
         <div style="display: flex; gap: 80px; justify-content:space-between;">
             <p style="font-size: 16px;

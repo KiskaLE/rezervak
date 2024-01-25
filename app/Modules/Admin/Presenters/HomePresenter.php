@@ -36,9 +36,9 @@ final class HomePresenter extends SecurePresenter
         $this->template->tab = $tab;
         
         //get number of reservations for each tabs
-        $numberOfReservationsToday = $this->database->table("reservations")->where("start=? AND status='VERIFIED' AND type=0", date("Y-m-d"))->count();
-        $numberOfReservationsTomorow = $this->database->table("reservations")->where("start=? AND status='VERIFIED' AND type=0", date("Y-m-d", strtotime(date("Y-m-d")."+1 day")))->count();
-        $numberOfReservationsAfterTomorow = $this->database->table("reservations")->where("start=? AND status='VERIFIED' AND type=0", date("Y-m-d", strtotime(date("Y-m-d")."+2 day")))->count();
+        $numberOfReservationsToday = $this->database->table("reservations")->where("start BETWEEN ? AND ? AND status='VERIFIED' AND type=0", [ date("Y-m-d") . " 00:00:00", date("Y-m-d") . " 23:59:59"])->count();
+        $numberOfReservationsTomorow = $this->database->table("reservations")->where("start BETWEEN ? AND ? AND status='VERIFIED' AND type=0", [date("Y-m-d", strtotime(date("Y-m-d")."+1 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d")."+1 day")) . " 23:59:59"])->count();
+        $numberOfReservationsAfterTomorow = $this->database->table("reservations")->where("start BETWEEN ? AND ? AND status='VERIFIED' AND type=0", [date("Y-m-d", strtotime(date("Y-m-d")."+2 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d")."+2 day")) . " 23:59:59"])->count();
         $this->template->numberOfReservationsToday = $numberOfReservationsToday;
         $this->template->numberOfReservationsTomorow = $numberOfReservationsTomorow;
         $this->template->numberOfReservationsAfterTomorow = $numberOfReservationsAfterTomorow;
@@ -108,8 +108,9 @@ final class HomePresenter extends SecurePresenter
 
     public function handleCancel($reservationId) {
         $isSuccess = true;
+        $reservation = $this->database->table('reservations')->where('id=?', $reservationId)->fetch();
         try {
-            $res = $this->database->table('reservations')->where('id=?', $reservationId)->update([
+            $res = $reservation->update([
                 'status' => 'CANCELED',
             ]);
             if (!$res) {
@@ -119,26 +120,22 @@ final class HomePresenter extends SecurePresenter
             $isSuccess = false;
         }
         if ($isSuccess) {
+            $this->mailer->sendCancelationMail($reservation->email, $reservation, "Zrušeno správcem");
             $this->flashMessage("Rezervace byla zrušena", "success");
             $reservation = $this->database->table('reservations')->where('id=?', $reservationId)->fetch();
             $this->mailer->sendCancelationMail($reservation->email, $reservation, "Zrušeno správcem");
-            $this->redirect('Reservations:');
+            $this->redirect('this');
         }
         $this->flashMessage("Rezervaci se nepodařilo zrušit", "error");
 
     }
 
-    public function handleUpcommingReservations($tab) {
-        $session = $this->getSession("reservations");
-        $session->reservations_tab = $tab;
-        $this->redirect('Reservations:default');
-
-    }
-
     public function handleSetPaid($id) {
         $isSuccess = true;
+        $payment = $this->database->table('payments')->where('reservation_id=?', $id)->fetch();
+        $reservation = $payment->ref('reservations', "reservation_id");
         try {
-            $res = $this->database->table('payments')->where('reservation_id=?', $id)->update([
+            $res = $payment->update([
                 'status' => '1',
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
@@ -149,10 +146,18 @@ final class HomePresenter extends SecurePresenter
             $isSuccess = false;
         }
         if ($isSuccess) {
+            $this->mailer->sendPaymentConfirmationMail($reservation->email, $reservation, $payment);
             $this->flashMessage("Rezervace byla zaplacena", "success");
-            $this->redirect('this');
+            $this->redirect('Reservations:');
         }
         $this->flashMessage("Nepovedlo se zaplatit", "error");
+    }
+
+    public function handleUpcommingReservations($tab) {
+        $session = $this->getSession("reservations");
+        $session->reservations_tab = $tab;
+        $this->redirect('Reservations:default');
+
     }
 
     public function handleSetTab($tab) {

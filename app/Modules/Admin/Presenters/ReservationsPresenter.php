@@ -263,8 +263,9 @@ final class ReservationsPresenter extends SecurePresenter
 
     public function handleCancel($reservationId) {
         $isSuccess = true;
+        $reservation = $this->database->table('reservations')->where('id=?', $reservationId)->fetch();
         try {
-            $res = $this->database->table('reservations')->where('id=?', $reservationId)->update([
+            $res = $reservation->update([
                 'status' => 'CANCELED',
             ]);
             if (!$res) {
@@ -274,10 +275,11 @@ final class ReservationsPresenter extends SecurePresenter
             $isSuccess = false;
         }
         if ($isSuccess) {
+            $this->mailer->sendCancelationMail($reservation->email, $reservation, "Zrušeno správcem");
             $this->flashMessage("Rezervace byla zrušena", "success");
             $reservation = $this->database->table('reservations')->where('id=?', $reservationId)->fetch();
             $this->mailer->sendCancelationMail($reservation->email, $reservation, "Zrušeno správcem");
-            $this->redirect('Reservations:');
+            $this->redirect('this');
         }
         $this->flashMessage("Rezervaci se nepodařilo zrušit", "error");
 
@@ -300,8 +302,10 @@ final class ReservationsPresenter extends SecurePresenter
 
     public function handleSetPaid($id) {
         $isSuccess = true;
+        $payment = $this->database->table('payments')->where('reservation_id=?', $id)->fetch();
+        $reservation = $payment->ref('reservations', "reservation_id");
         try {
-            $res = $this->database->table('payments')->where('reservation_id=?', $id)->update([
+            $res = $payment->update([
                 'status' => '1',
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
@@ -312,6 +316,7 @@ final class ReservationsPresenter extends SecurePresenter
             $isSuccess = false;
         }
         if ($isSuccess) {
+            $this->mailer->sendPaymentConfirmationMail($reservation->email, $reservation, $payment);
             $this->flashMessage("Rezervace byla zaplacena", "success");
             $this->redirect('Reservations:');
         }

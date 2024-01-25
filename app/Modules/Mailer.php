@@ -85,19 +85,39 @@ final class Mailer
 
     }
 
-    public function sendPaymentConfirmationMail(string $to, $reservation): void
+    public function sendPaymentConfirmationMail(string $to, $reservation, $payment): void
     {
         $user = $this->database->table("users")->order("created_at ASC")->fetch();
         $userSettings = $this->database->table("settings")->fetch();
         $params = [
             'user' => $user,
             'serverUrl' => $this->url,
+            'url' => $this->url,
             'userSettings' => $userSettings,
-            'reservation' => $reservation
+            'reservation' => $reservation,
+            'payment' => $payment
         ];
 
         $mailContents = $this->latte->renderToString(__DIR__ . '/Mails/paymentConfirmation.latte', $params);
         $this->sendMail($to, "Potvrzení platby rezervace č.$reservation->id", $mailContents);
+    }
+
+    public function sendNewReservationMail(string $to, $reservation): void {
+
+        $user = $this->database->table("users")->order("created_at ASC")->fetch();
+        $userSettings = $this->database->table("settings")->fetch();
+        $payment = $reservation->related('payments')->fetch();
+        $params = [
+            'user' => $user,
+            'serverUrl' => $this->url,
+            'url' => $this->url,
+            'userSettings' => $userSettings,
+            'reservation' => $reservation,
+            'payment' => $payment
+        ];
+
+        $mailContents = $this->latte->renderToString(__DIR__ . '/Mails/newReservation.latte', $params);
+        $this->sendMail($to, "Nová rezervace", $mailContents);
     }
 
     public function sendNotifyMail(string $to, $reservation): void {

@@ -6,6 +6,7 @@ namespace App\Modules\Front\Presenters;
 
 use Nette;
 use App\Modules\Payments;
+use App\Modules\Mailer;
 use Nette\DI\Attributes\Inject;
 
 
@@ -17,7 +18,8 @@ final class PaymentPresenter extends BasePresenter
 
     private $user;
     public function __construct(
-        private Payments $payments
+        private Payments $payments,
+        private Mailer $mailer
     )
     {
     }
@@ -62,12 +64,16 @@ final class PaymentPresenter extends BasePresenter
 
     private function confirm($uuid, $table): void
     {
+        $reservation = $this->database->table($table)->where("uuid=?", $uuid)->fetch();
+        $user = $this->database->table("users")->order("created_at ASC")->fetch();
         try {
-            $this->database->table($table)->where("uuid=?", $uuid)->update([
+            $reservation->update([
                 "status" => "VERIFIED"
             ]);
+
         } catch (\Throwable $e) {
         }
+        $this->mailer->sendNewReservationMail($user->email, $reservation);
     }
 
     private function verify($reservation, $uuid, $table)
