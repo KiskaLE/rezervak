@@ -238,7 +238,7 @@ final class HomePresenter extends BasePresenter
                 $success = false;
             }
              if ($success) {
-                 return $reservation;
+                 return $reservation ?? [];
              }
         });
         return $result;

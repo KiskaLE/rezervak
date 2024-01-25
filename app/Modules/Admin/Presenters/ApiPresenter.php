@@ -156,4 +156,18 @@ class ApiPresenter extends BasePresenter
         die("check");
     }
 
+    public function actionDayRecap() {
+        $reservations = $this->database->table("reservations")
+            ->where("reservations.status='VERIFIED' AND reservations.type=0 AND start BETWEEN ? AND ?", [date("Y-m-d H:i:s"), date("Y-m-d")." 23:59:59"])
+            ->order("start ASC")
+            ->fetchAll();
+        if ($reservations) {
+            $user = $this->database->table("users")->order("created_at ASC")->fetch();
+            $this->mailer->sendDayRecapMail( $user->email, $reservations);
+            echo "send";
+        }
+
+        die("OK");
+    }
+
 }

@@ -7,7 +7,7 @@ namespace App\Modules\admin\Presenters;
 
 use Nette;
 use App\Modules\Moment;
-use App\Modules\Payments;
+use App\Modules\Mailer;
 use Nette\DI\Attributes\Inject;
 
 final class HomePresenter extends SecurePresenter
@@ -17,6 +17,7 @@ final class HomePresenter extends SecurePresenter
     #[Inject] public Nette\Database\Explorer $database;
     public function __construct(
         private Moment $moment,
+        private Mailer $mailer
     )
     {
     }
@@ -33,7 +34,6 @@ final class HomePresenter extends SecurePresenter
         $session = $this->getSession("home");
         $tab = $session->reservations_tab ?? 0;
         $this->template->tab = $tab;
-        bdump($tab);
         
         //get number of reservations for each tabs
         $numberOfReservationsToday = $this->database->table("reservations")->where("start=? AND status='VERIFIED' AND type=0", date("Y-m-d"))->count();

@@ -116,19 +116,30 @@ final class Mailer
         $this->sendMail($to, "Upozornení rezervace č.$reservation->id", $mailContents);
     }
 
-private function sendMail(string $to, string $subject, $message)
-{
-    $from = $this->database
-        ->table("settings")
-        ->fetch()
-        ->info_email;
+    public function sendDayRecapMail(string $to, $reservations): void {
+        $params = [
+            'user' => $this->database->table("users")->order("created_at ASC")->fetch(),
+            'serverUrl' => $this->url,
+            'reservations' => $reservations
+        ];
 
-    $mail = (new Nette\Mail\Message)
-        ->setFrom($from ?? "info@rezervak.cz")
-        ->addTo($to)
-        ->setSubject($subject)
-        ->setHtmlBody($message);
+        $mailContents = $this->latte->renderToString(__DIR__ . '/Mails/dayRecap.latte', $params);
+        $this->sendMail($to, "Přehled dne ".date("d.m.Y"), $mailContents);
+    }
 
-    $this->mailer->send($mail);
-}
+    private function sendMail(string $to, string $subject, $message)
+    {
+        $from = $this->database
+            ->table("settings")
+            ->fetch()
+            ->info_email;
+
+        $mail = (new Nette\Mail\Message)
+            ->setFrom($from ?? "info@rezervak.cz")
+            ->addTo($to)
+            ->setSubject($subject)
+            ->setHtmlBody($message);
+
+        $this->mailer->send($mail);
+    }
 }
