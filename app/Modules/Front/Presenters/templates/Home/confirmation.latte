@@ -5,19 +5,20 @@
 
         <div>
             <p class="text-center">Na váš emailový účet
-            <b>{$reservation->email}</b>
-            byl odeslán email pro potvzení rezervace.
-        </p>
+                <b>{$reservation->email}</b>
+                byl odeslán email pro potvzení rezervace.
+            </p>
 
-        <p class="text-center">
-            <bold>Máte {$settings->verification_time} minut na
-                potvzení vaší rezervace.
-            </bold>
-        </p>
+            <p class="text-center">
+                <bold>Máte {$settings->verification_time} minut na
+                    potvzení vaší rezervace.
+                </bold>
+            </p>
         </div>
 
         <div class="center">
-            <a n:if="$userSettings->homepage" href="{$userSettings->homepage}" class="button btn-secondary">Zpět na domovskou stánku</a>
+            <a n:if="$userSettings->homepage" href="{$userSettings->homepage}" class="button btn-secondary">Zpět na
+                domovskou stánku</a>
         </div>
 
     </div>

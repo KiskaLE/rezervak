@@ -25,11 +25,11 @@ final class HomePresenter extends BasePresenter
 
 
     public function __construct(
-        private AvailableDates          $availableDates,
-        private Mailer                  $mailer,
-        private Payments                $payments,
-        private DiscountCodes           $discountCodes,
-        private Moment                  $moment
+        private AvailableDates $availableDates,
+        private Mailer         $mailer,
+        private Payments       $payments,
+        private DiscountCodes  $discountCodes,
+        private Moment         $moment
     )
     {
     }
@@ -145,7 +145,7 @@ final class HomePresenter extends BasePresenter
         $uuid = strval(Uuid::uuid4());
         $email = $data->email;
 
-        if(!$data->gdpr) {
+        if (!$data->gdpr) {
             $this->flashMessage("Prosím, vyplníte souhlas s GDPR.", "error");
             $this->redirect("default");
         }
@@ -167,7 +167,7 @@ final class HomePresenter extends BasePresenter
         } else if ($data->dateType == "backup") {
             $times = $session->availableBackupTimes;
             $time = $times[$data->time];
-            if (!$this->checkAvailability( $data->date, $data->service, $time, "backup")) {
+            if (!$this->checkAvailability($data->date, $data->service, $time, "backup")) {
                 $this->flashMessage("Nepovedlo se vytvořit rezervaci. Termín je již obsazen", "error");
                 $this->redirect("default", $this->user_uuid);
             }
@@ -211,10 +211,10 @@ final class HomePresenter extends BasePresenter
      */
     private function insertReservation(string $uuid, $data, string $type, $time)
     {
-         $result = $this->database->transaction(function ($database) use ($uuid, $data, $type, $time) {
+        $result = $this->database->transaction(function ($database) use ($uuid, $data, $type, $time) {
             $start = $data->date . " " . $time;
             $service_id = $data->service;
-             $success = true;
+            $success = true;
             try {
                 $reservation = $this->database->table("reservations")->insert([
                     "uuid" => $uuid,
@@ -237,9 +237,9 @@ final class HomePresenter extends BasePresenter
             } catch (\Throwable $e) {
                 $success = false;
             }
-             if ($success) {
-                 return $reservation ?? [];
-             }
+            if ($success) {
+                return $reservation ?? [];
+            }
         });
         return $result;
     }

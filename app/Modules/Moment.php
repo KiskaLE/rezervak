@@ -6,8 +6,9 @@ use Nette;
 
 class Moment
 {
-    public function __construct() 
-    {}
+    public function __construct()
+    {
+    }
 
 
     public function getNowPrague()
@@ -22,8 +23,8 @@ class Moment
      *
      * @param string $time The time to convert.
      * @param string $timezone The timezone of the given time.
-     * @throws \Moment\Exception\ExceptionInterface If an error occurs during the conversion.
      * @return string The converted time in UTC format.
+     * @throws \Moment\Exception\ExceptionInterface If an error occurs during the conversion.
      */
     public function getUTCTime($time, $timezone)
     {
@@ -37,8 +38,8 @@ class Moment
      *
      * @param string $time The UTC time to convert.
      * @param string $timezone The timezone to convert the time to.
-     * @throws \Exception If an error occurs during the conversion.
      * @return string The converted time in the specified timezone.
+     * @throws \Exception If an error occurs during the conversion.
      */
     public function getTimezoneTimeFromUTCTime($time, $timezone)
     {

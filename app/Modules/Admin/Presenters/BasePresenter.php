@@ -14,8 +14,7 @@ class BasePresenter extends Presenter
     #[Inject] public Explorer $database;
 
 
-    public function __construct(
-    )
+    public function __construct()
     {
         parent::__construct();
     }

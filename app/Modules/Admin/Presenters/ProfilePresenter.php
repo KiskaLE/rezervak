@@ -4,8 +4,9 @@ namespace App\Modules\admin\Presenters;
 
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\ComponentModel\IComponent;
 use Nette\DI\Attributes\Inject;
+use App\Modules\Authenticator;
+use Nette\DI\Autowiring;
 
 class ProfilePresenter extends SecurePresenter
 {
@@ -15,6 +16,7 @@ class ProfilePresenter extends SecurePresenter
     #[Inject] public Nette\Database\Explorer $database;
 
     public function __construct(
+        private Authenticator $authenticator
     )
     {
     }
@@ -92,27 +94,28 @@ class ProfilePresenter extends SecurePresenter
         return $form;
     }
 
-    public function editUserFormSubmitted(Form $form, $values) {
+    public function editUserFormSubmitted(Form $form, $values)
+    {
         //save logo
         if ($values->logo && $values->logo->hasFile()) {
-                $logoName = $values->logo->getSanitizedName();
-                $filePath = __DIR__ . "/../../../../www/assets/images/" . $logoName;
-                if (file_exists($filePath)) {
+            $logoName = $values->logo->getSanitizedName();
+            $filePath = __DIR__ . "/../../../../www/assets/images/" . $logoName;
+            if (file_exists($filePath)) {
                 if (is_writable($filePath)) {
                     // Delete the file
                     unlink($filePath);
                 }
             }
             $values->logo->move($filePath);
-            $this->database->table("users")->order("created_at ASC")->where("id=?" , $this->user->id)->update([
+            $this->database->table("users")->order("created_at ASC")->where("id=?", $this->user->id)->update([
                 "logo_url" => $logoName
             ]);
-            
-            
+
+
         }
         $this->database->transaction(function ($database) use ($values) {
             //user table
-            $database->table("users")->where("id=?" , $this->user->id)->update([
+            $database->table("users")->where("id=?", $this->user->id)->update([
                 "firstname" => $values->firstname,
                 "lastname" => $values->lastname,
                 "payment_info" => $values->paymentInfo,
@@ -127,14 +130,41 @@ class ProfilePresenter extends SecurePresenter
             ]);
         });
 
-        
+
         $this->flashMessage("Profil byl aktualizován", "success");
         $this->redirect("this");
     }
 
+    protected function createComponentChangePasswordForm(): Form
+    {
+        $form = new Form;
 
+        $form->addPassword("password")->setRequired("Zadejte prosím heslo");
+        $form->addPassword("newPassword")->setRequired("Zadejte prosím nové heslo");
+        $form->addPassword("newPassword2")->setRequired("Zadejte prosím nové heslo znovu")
+            ->addConditionOn($form["newPassword"], Form::FILLED)
+            ->addRule($form::EQUAL, "Hesla se neshoduji", $form["newPassword"]);
+        $form->addSubmit("submit", "Změnit heslo");
+        $form->onSuccess[] = [$this, 'changePasswordFormSubmitted'];
 
+        return $form;
+    }
 
-    
+    public function changePasswordFormSubmitted(Form $form, $values): void
+    {
+        if ($values->newPassword !== $values->newPassword2) {
+            $this->flashMessage("Hesla se neshoduji", "danger");
+            $this->redirect("this");
+        }
+        if ($this->authenticator->changePassword($this->user->id, $values->password, $values->newPassword)) {
+            $this->flashMessage("Heslo bylo aktualizován", "success");
+            $this->redirect("this");
+        } else {
+            $this->flashMessage("Nesprávné heslo", "danger");
+            $this->redirect("this");
+            # code...
+        }
+    }
+
 
 }

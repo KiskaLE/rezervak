@@ -2,7 +2,7 @@
 {block content}
 <div class="page-wrapper">
 
-<h1>Zaplaťte rezervaci</h1>
+    <h1>Zaplaťte rezervaci</h1>
 
     <div class="payment-wrapper">
         <div class="payment-reservation">
@@ -32,7 +32,7 @@
         </div>
         <div class="payment">
             <div class="payment-info-group">
-        <h2>Platba</h2>
+                <h2>Platba</h2>
                 <div class="payment-info">
                     <div class="reservation-info-group">
                         <span class="group-title">Číslo účtu</span>
@@ -48,7 +48,7 @@
                 <div class="payment-info">
                     <div class="reservation-info-group">
                         <span class="group-title">Bez DPH</span>
-                        <span class="group-value">{$payment->price * (1-($payment->vat/100))} Kč</span>
+                        <span class="group-value">{$payment->price * (1-($payment->vat / 100))} Kč</span>
                     </div>
                     <div class="reservation-info-group">
                         <span class="group-title">S DPH</span>
@@ -63,21 +63,20 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
 
 
-
-{* <div n:if="$payment->status == 0" class="payment-wrapper">
-    <div class="payment-info">
-        <h2>Údaje pro platbu</h2>
-        <div><span><bold>Částka:</bold> </span><span>{$payment->price}</span><span> Kč</span></div>
-        <div><span><bold>Číslo účtu:</bold> </span><span>{$user->payment_info}</span></div>
-        <div><span><bold>Variabilní symbol:</bold> </span><span>{$payment->id_transaction}</span></div>
-    </div>
-    <div class="payment-qr-code">
-        {$qrCode|noescape}
-    </div>
-</div> *}
+    {* <div n:if="$payment->status == 0" class="payment-wrapper">
+        <div class="payment-info">
+            <h2>Údaje pro platbu</h2>
+            <div><span><bold>Částka:</bold> </span><span>{$payment->price}</span><span> Kč</span></div>
+            <div><span><bold>Číslo účtu:</bold> </span><span>{$user->payment_info}</span></div>
+            <div><span><bold>Variabilní symbol:</bold> </span><span>{$payment->id_transaction}</span></div>
+        </div>
+        <div class="payment-qr-code">
+            {$qrCode|noescape}
+        </div>
+    </div> *}
 
 </div>

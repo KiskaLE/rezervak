@@ -11,8 +11,8 @@ class BasePresenter extends Presenter
 {
 
     #[Inject] public Explorer $database;
-    public function __construct(
-    )
+
+    public function __construct()
     {
         parent::__construct();
     }
@@ -32,6 +32,6 @@ class BasePresenter extends Presenter
 
         $user = $this->database->table("users")->order("created_at ASC")->fetch();
         $this->template->logoUrl = $user->logo_url;
-        
+
     }
 }

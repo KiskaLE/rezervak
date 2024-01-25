@@ -30,7 +30,9 @@
                     <label for="field-1" class="col-sm-3 control-label">Čas rozdělení kalendáře</label>
 
                     <div class="">
-                        <input n:name="date" data-start="{$exception->start|date:'d/m/Y H:i'}" data-end="{$exception->end|date:'d.m.Y H:i'}" id="date-start" class="form-control">
+                        <input n:name="date" data-start="{$exception->start|date:'d/m/Y H:i'}"
+                                             data-end="{$exception->end|date:'d.m.Y H:i'}" id="date-start"
+                                             class="form-control">
                         <span class="description">Zde zadejte v jakém intervalu se bude váš kalendář rozdělovat.</span>
                     </div>
                 </div>

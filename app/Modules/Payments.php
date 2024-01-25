@@ -76,10 +76,10 @@ final class Payments
     {
         $now = date("Y-m-d H:i:s");
         $this->database->table("payments")
-                    ->where("reservation_id=?", $reservationId)
-                    ->update([
-                            "updated_at" => $now
-                    ]);
+            ->where("reservation_id=?", $reservationId)
+            ->update([
+                "updated_at" => $now
+            ]);
     }
 
     /**
@@ -95,7 +95,7 @@ final class Payments
             ->table("payments")
             ->where("reservation_id=?", $reservation->id)
             ->fetchAll();
-        
+
         return $payments;
     }
 

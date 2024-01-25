@@ -21,8 +21,7 @@ final class DiscountCodesPresenter extends SecurePresenter
 
     #[Inject] public Nette\Database\Explorer $database;
 
-    public function __construct(
-    )
+    public function __construct()
     {
     }
 
@@ -64,7 +63,10 @@ final class DiscountCodesPresenter extends SecurePresenter
         $services2discountCode = $discountCode->related("service2discount_code.discount_code_id")->fetchAll();
         $selectedServices = [];
         foreach ($services2discountCode as $row) {
-            $selectedServices[] = $row->ref("services", "service_id")->id;
+            $id = $row?->ref("services", "service_id")?->id;
+            if ($id) {
+                $selectedServices[] = $id;
+            }
         }
         $this->selectedServices = $selectedServices;
         $this->template->selectedServices = $selectedServices;
@@ -236,6 +238,7 @@ final class DiscountCodesPresenter extends SecurePresenter
                     }
                 }
             } catch (\Throwable $th) {
+                bdump($th);
                 $isSuccess = false;
             }
             return $isSuccess;

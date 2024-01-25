@@ -12,8 +12,7 @@ class SettingsPresenter extends SecurePresenter
     private $settings;
     #[Inject] public Nette\Database\Explorer $database;
 
-    public function __construct(
-    )
+    public function __construct()
     {
     }
 
@@ -77,8 +76,8 @@ class SettingsPresenter extends SecurePresenter
             ->addRule($form::URL, "Neplatný url formát");
 
         $form->addText("homepage")
-        ->setDefaultValue($this->settings->homepage)
-        ->addRule($form::URL, "Neplatný url formát");
+            ->setDefaultValue($this->settings->homepage)
+            ->addRule($form::URL, "Neplatný url formát");
 
         $form->addText("email")
             ->setDefaultValue($this->settings->info_email)->addRule($form::EMAIL, "Neplatný mailový formát");

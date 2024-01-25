@@ -15,6 +15,7 @@ final class HomePresenter extends SecurePresenter
     //inject database
 
     #[Inject] public Nette\Database\Explorer $database;
+
     public function __construct(
         private Moment $moment,
         private Mailer $mailer
@@ -34,26 +35,26 @@ final class HomePresenter extends SecurePresenter
         $session = $this->getSession("home");
         $tab = $session->reservations_tab ?? 0;
         $this->template->tab = $tab;
-        
+
         //get number of reservations for each tabs
-        $numberOfReservationsToday = $this->database->table("reservations")->where("start BETWEEN ? AND ? AND status='VERIFIED' AND type=0", [ date("Y-m-d") . " 00:00:00", date("Y-m-d") . " 23:59:59"])->count();
-        $numberOfReservationsTomorow = $this->database->table("reservations")->where("start BETWEEN ? AND ? AND status='VERIFIED' AND type=0", [date("Y-m-d", strtotime(date("Y-m-d")."+1 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d")."+1 day")) . " 23:59:59"])->count();
-        $numberOfReservationsAfterTomorow = $this->database->table("reservations")->where("start BETWEEN ? AND ? AND status='VERIFIED' AND type=0", [date("Y-m-d", strtotime(date("Y-m-d")."+2 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d")."+2 day")) . " 23:59:59"])->count();
+        $numberOfReservationsToday = $this->database->table("reservations")->where("start BETWEEN ? AND ? AND status='VERIFIED' AND type=0", [date("Y-m-d") . " 00:00:00", date("Y-m-d") . " 23:59:59"])->count();
+        $numberOfReservationsTomorow = $this->database->table("reservations")->where("start BETWEEN ? AND ? AND status='VERIFIED' AND type=0", [date("Y-m-d", strtotime(date("Y-m-d") . "+1 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d") . "+1 day")) . " 23:59:59"])->count();
+        $numberOfReservationsAfterTomorow = $this->database->table("reservations")->where("start BETWEEN ? AND ? AND status='VERIFIED' AND type=0", [date("Y-m-d", strtotime(date("Y-m-d") . "+2 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d") . "+2 day")) . " 23:59:59"])->count();
         $this->template->numberOfReservationsToday = $numberOfReservationsToday;
         $this->template->numberOfReservationsTomorow = $numberOfReservationsTomorow;
         $this->template->numberOfReservationsAfterTomorow = $numberOfReservationsAfterTomorow;
-        
+
         //get number of reservations for selected tab
         $q = $this->database->table("reservations")->where("status='VERIFIED' AND type=0");
         switch ($tab) {
             case 0:
-                $q = $q->where("start BETWEEN ? AND ?",[ date("Y-m-d") . " 00:00:00", date("Y-m-d") . " 23:59:59"]);
+                $q = $q->where("start BETWEEN ? AND ?", [date("Y-m-d") . " 00:00:00", date("Y-m-d") . " 23:59:59"]);
                 break;
             case 1:
-                $q = $q->where("start BETWEEN ? AND ?", [date("Y-m-d", strtotime(date("Y-m-d")."+1 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d")."+1 day")) . " 23:59:59"]);
+                $q = $q->where("start BETWEEN ? AND ?", [date("Y-m-d", strtotime(date("Y-m-d") . "+1 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d") . "+1 day")) . " 23:59:59"]);
                 break;
             case 2:
-                $q = $q->where("start BETWEEN ? AND ?", [date("Y-m-d", strtotime(date("Y-m-d")."+2 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d")."+2 day")) . " 23:59:59"]);
+                $q = $q->where("start BETWEEN ? AND ?", [date("Y-m-d", strtotime(date("Y-m-d") . "+2 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d") . "+2 day")) . " 23:59:59"]);
                 break;
 
         }
@@ -106,7 +107,8 @@ final class HomePresenter extends SecurePresenter
     }
 
 
-    public function handleCancel($reservationId) {
+    public function handleCancel($reservationId)
+    {
         $isSuccess = true;
         $reservation = $this->database->table('reservations')->where('id=?', $reservationId)->fetch();
         try {
@@ -130,7 +132,8 @@ final class HomePresenter extends SecurePresenter
 
     }
 
-    public function handleSetPaid($id) {
+    public function handleSetPaid($id)
+    {
         $isSuccess = true;
         $payment = $this->database->table('payments')->where('reservation_id=?', $id)->fetch();
         $reservation = $payment->ref('reservations', "reservation_id");
@@ -153,17 +156,19 @@ final class HomePresenter extends SecurePresenter
         $this->flashMessage("Nepovedlo se zaplatit", "error");
     }
 
-    public function handleUpcommingReservations($tab) {
+    public function handleUpcommingReservations($tab)
+    {
         $session = $this->getSession("reservations");
         $session->reservations_tab = $tab;
         $this->redirect('Reservations:default');
 
     }
 
-    public function handleSetTab($tab) {
-       
+    public function handleSetTab($tab)
+    {
+
         $session = $this->getSession("home");
-    
+
         $session->reservations_tab = $tab;
         $this->redirect('default');
     }

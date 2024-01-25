@@ -13,7 +13,7 @@ final class Mailer
     private $latte;
 
     public function __construct(
-        private Constants $constants,
+        private Constants               $constants,
         private Nette\Database\Explorer $database,
         private PHPMailer               $phpMailer,
         private Nette\Mail\Mailer       $mailer,
@@ -24,14 +24,14 @@ final class Mailer
             if ($_SERVER['SERVER_NAME'] === "localhost") {
                 $this->url = "http://" . "localhost:8000";
             } else {
-                $this->url = "http://".$_SERVER['SERVER_NAME'];
+                $this->url = "http://" . $_SERVER['SERVER_NAME'];
             }
         } else {
             $this->url = "http://" . "localhost:8000";
         }
 
         $this->url = $this->constants->constants["SERVER_URL"];
-        
+
         $this->latte = new Engine;
     }
 
@@ -46,7 +46,7 @@ final class Mailer
             'userSettings' => $userSettings,
             'reservation' => $reservation
         ];
-        
+
         $mailContent = $this->latte->renderToString(__DIR__ . '/Mails/confirmation.latte', $params);
         $this->sendMail($to, "Potvrzení rezervace - Vyžadováno Ověření", $mailContent);
     }
@@ -62,7 +62,7 @@ final class Mailer
             'userSettings' => $userSettings,
             'reservation' => $reservation
         ];
-        
+
         $mailContents = $this->latte->renderToString(__DIR__ . '/Mails/backup.latte', $params);
         $this->sendMail($to, "Potvrzení záložní rezervace - Vyžadováno Ověření", $mailContents);
     }
@@ -102,7 +102,8 @@ final class Mailer
         $this->sendMail($to, "Potvrzení platby rezervace č.$reservation->id", $mailContents);
     }
 
-    public function sendNewReservationMail(string $to, $reservation): void {
+    public function sendNewReservationMail(string $to, $reservation): void
+    {
 
         $user = $this->database->table("users")->order("created_at ASC")->fetch();
         $userSettings = $this->database->table("settings")->fetch();
@@ -120,7 +121,8 @@ final class Mailer
         $this->sendMail($to, "Nová rezervace", $mailContents);
     }
 
-    public function sendNotifyMail(string $to, $reservation): void {
+    public function sendNotifyMail(string $to, $reservation): void
+    {
 
         $user = $this->database->table("users")->order("created_at ASC")->fetch();
         $userSettings = $this->database->table("settings")->fetch();
@@ -136,7 +138,8 @@ final class Mailer
         $this->sendMail($to, "Upozornení rezervace č.$reservation->id", $mailContents);
     }
 
-    public function sendDayRecapMail(string $to, $reservations): void {
+    public function sendDayRecapMail(string $to, $reservations): void
+    {
         $params = [
             'user' => $this->database->table("users")->order("created_at ASC")->fetch(),
             'serverUrl' => $this->url,
@@ -144,7 +147,7 @@ final class Mailer
         ];
 
         $mailContents = $this->latte->renderToString(__DIR__ . '/Mails/dayRecap.latte', $params);
-        $this->sendMail($to, "Přehled dne ".date("d.m.Y"), $mailContents);
+        $this->sendMail($to, "Přehled dne " . date("d.m.Y"), $mailContents);
     }
 
     private function sendMail(string $to, string $subject, $message)

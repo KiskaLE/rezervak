@@ -23,9 +23,9 @@ final class WorkhoursPresenter extends SecurePresenter
     #[Inject] public Nette\Database\Explorer $database;
 
     public function __construct(
-        private Nette\Security\User     $user,
-        private AvailableDates          $availableDates,
-        private Formater                $formater
+        private Nette\Security\User $user,
+        private AvailableDates      $availableDates,
+        private Formater            $formater
     )
     {
 
@@ -39,7 +39,8 @@ final class WorkhoursPresenter extends SecurePresenter
         $this->template->backlink = $this->backlink;
     }
 
-    public function actionDefault() {
+    public function actionDefault()
+    {
         $this->template->selectedPage = "workhours";
 
         $this["workingHoursForm"]->setDefaults($this->getDefaultWorkingHours());
@@ -48,7 +49,8 @@ final class WorkhoursPresenter extends SecurePresenter
         $this->template->holidays = $this->database->table("workinghours_exceptions")->where("end > NOW()")->fetchAll();
     }
 
-    private function getWorkingHours(int $day) {
+    private function getWorkingHours(int $day)
+    {
         $workingHours = $this->database->table("workinghours")->where("weekday=? AND service_id=0", $day)->fetchAll();
         $return = [];
         if ($workingHours) {
@@ -60,7 +62,8 @@ final class WorkhoursPresenter extends SecurePresenter
         return $return ? $return : null;
     }
 
-    protected function getDefaultWorkingHours() {
+    protected function getDefaultWorkingHours()
+    {
         $multiplier = $this->getWorkingHours(0);
         $multiplierTu = $this->getWorkingHours(1);
         $multiplierWe = $this->getWorkingHours(2);
@@ -85,11 +88,11 @@ final class WorkhoursPresenter extends SecurePresenter
             "multiplierSa" => $multiplierSa,
             "multiplierSu" => $multiplierSu,
         ];
-    
+
         return $defaultWorkingHours;
     }
 
-    protected function createComponentWorkingHoursForm(): Form 
+    protected function createComponentWorkingHoursForm(): Form
     {
         $timeComparison = function ($endTimeField, $startTimeField) {
             $startTime = $startTimeField;
@@ -101,22 +104,22 @@ final class WorkhoursPresenter extends SecurePresenter
         $form->addSubmit("submit", "Uložit změny");
         $copies = 1;
         $maxCopies = 10;
-        
+
         $defaultWorkingHours = $this->getDefaultWorkingHours();
-        
+
         $form->addCheckbox("mo", "po");
         $mo = $form->addMultiplier("multiplier", function (Nette\Forms\Container $container, Form $form) use ($timeComparison) {
             $container->addText("start", "zacatek")
                 ->setHtmlAttribute("type", "time")
                 ->addConditionOn($form['mo'], Form::FILLED)
-                    ->setRequired("Zacatek je povinny");
+                ->setRequired("Zacatek je povinny");
             $container->addText("end", "konec")
                 ->setHtmlAttribute("type", "time")
                 ->addConditionOn($form['mo'], Form::FILLED)
-                    ->setRequired("Konec je povinny")
-                    ->addConditionOn($container["start"], Form::FILLED)
-                        ->addRule($timeComparison, "Konec musí byt ve časovém rozsahu", $container["start"]);
-        },$copies, $maxCopies);
+                ->setRequired("Konec je povinny")
+                ->addConditionOn($container["start"], Form::FILLED)
+                ->addRule($timeComparison, "Konec musí byt ve časovém rozsahu", $container["start"]);
+        }, $copies, $maxCopies);
 
         $mo->addRemoveButton("X")
             ->addClass("weekday-time-delete");
@@ -124,18 +127,18 @@ final class WorkhoursPresenter extends SecurePresenter
             ->addClass("weekday-time-add");
 
         $form->addCheckbox("tu", "ut");
-        $tu = $form->addMultiplier("multiplierTu", function (Nette\Forms\Container $container, Form $form)  use ($timeComparison) {
+        $tu = $form->addMultiplier("multiplierTu", function (Nette\Forms\Container $container, Form $form) use ($timeComparison) {
             $container->addText("start", "zacatek")
                 ->setHtmlAttribute("type", "time")
                 ->addConditionOn($form['tu'], Form::FILLED)
-                    ->setRequired("Zacatek je povinny");
+                ->setRequired("Zacatek je povinny");
             $container->addText("end", "konec")
                 ->setHtmlAttribute("type", "time")
                 ->addConditionOn($form['tu'], Form::FILLED)
-                    ->setRequired("Konec je povinny")
-                    ->addConditionOn($container["start"], Form::FILLED)
-                        ->addRule($timeComparison, "Konec musí byt ve časovém rozsahu", $container["start"]);
-        },$copies, $maxCopies);
+                ->setRequired("Konec je povinny")
+                ->addConditionOn($container["start"], Form::FILLED)
+                ->addRule($timeComparison, "Konec musí byt ve časovém rozsahu", $container["start"]);
+        }, $copies, $maxCopies);
 
         $tu->addRemoveButton("X")
             ->addClass("weekday-time-delete");
@@ -143,18 +146,18 @@ final class WorkhoursPresenter extends SecurePresenter
             ->addClass("weekday-time-add");
 
         $form->addCheckbox("we", "we");
-        $we = $form->addMultiplier("multiplierWe", function (Nette\Forms\Container $container, Form $form)  use ($timeComparison) {
+        $we = $form->addMultiplier("multiplierWe", function (Nette\Forms\Container $container, Form $form) use ($timeComparison) {
             $container->addText("start", "zacatek")
                 ->setHtmlAttribute("type", "time")
                 ->addConditionOn($form['we'], Form::FILLED)
-                    ->setRequired("Zacatek je povinny");
+                ->setRequired("Zacatek je povinny");
             $container->addText("end", "konec")
                 ->setHtmlAttribute("type", "time")
                 ->addConditionOn($form['we'], Form::FILLED)
-                    ->setRequired("Konec je povinny")
-                    ->addConditionOn($container["start"], Form::FILLED)
-                        ->addRule($timeComparison, "Konec musí byt ve časovém rozsahu", $container["start"]);
-        },$copies, $maxCopies);
+                ->setRequired("Konec je povinny")
+                ->addConditionOn($container["start"], Form::FILLED)
+                ->addRule($timeComparison, "Konec musí byt ve časovém rozsahu", $container["start"]);
+        }, $copies, $maxCopies);
 
         $we->addRemoveButton("X")
             ->addClass("weekday-time-delete");
@@ -162,18 +165,18 @@ final class WorkhoursPresenter extends SecurePresenter
             ->addClass("weekday-time-add");
 
         $form->addCheckbox("th", "th");
-        $th = $form->addMultiplier("multiplierTh", function (Nette\Forms\Container $container, Form $form)  use ($timeComparison) {
+        $th = $form->addMultiplier("multiplierTh", function (Nette\Forms\Container $container, Form $form) use ($timeComparison) {
             $container->addText("start", "zacatek")
                 ->setHtmlAttribute("type", "time")
                 ->addConditionOn($form['th'], Form::FILLED)
-                    ->setRequired("Zacatek je povinny");
+                ->setRequired("Zacatek je povinny");
             $container->addText("end", "konec")
                 ->setHtmlAttribute("type", "time")
                 ->addConditionOn($form['th'], Form::FILLED)
-                    ->setRequired("Konec je povinny")
-                    ->addConditionOn($container["start"], Form::FILLED)
-                        ->addRule($timeComparison, "Konec musí byt ve časovém rozsahu", $container["start"]);
-        },$copies, $maxCopies);
+                ->setRequired("Konec je povinny")
+                ->addConditionOn($container["start"], Form::FILLED)
+                ->addRule($timeComparison, "Konec musí byt ve časovém rozsahu", $container["start"]);
+        }, $copies, $maxCopies);
 
         $th->addRemoveButton("X")
             ->addClass("weekday-time-delete");
@@ -181,18 +184,18 @@ final class WorkhoursPresenter extends SecurePresenter
             ->addClass("weekday-time-add");
 
         $form->addCheckbox("fr", "fr");
-        $fr = $form->addMultiplier("multiplierFr", function (Nette\Forms\Container $container, Form $form)  use ($timeComparison) {
+        $fr = $form->addMultiplier("multiplierFr", function (Nette\Forms\Container $container, Form $form) use ($timeComparison) {
             $container->addText("start", "zacatek")
                 ->setHtmlAttribute("type", "time")
                 ->addConditionOn($form['fr'], Form::FILLED)
-                    ->setRequired("Zacatek je povinny");
+                ->setRequired("Zacatek je povinny");
             $container->addText("end", "konec")
                 ->setHtmlAttribute("type", "time")
                 ->addConditionOn($form['fr'], Form::FILLED)
-                    ->setRequired("Konec je povinny")
-                    ->addConditionOn($container["start"], Form::FILLED)
-                        ->addRule($timeComparison, "Konec musí byt ve časovém rozsahu", $container["start"]);
-        },$copies, $maxCopies);
+                ->setRequired("Konec je povinny")
+                ->addConditionOn($container["start"], Form::FILLED)
+                ->addRule($timeComparison, "Konec musí byt ve časovém rozsahu", $container["start"]);
+        }, $copies, $maxCopies);
 
         $fr->addRemoveButton("X")
             ->addClass("weekday-time-delete");
@@ -200,18 +203,18 @@ final class WorkhoursPresenter extends SecurePresenter
             ->addClass("weekday-time-add");
 
         $form->addCheckbox("sa", "sa");
-        $sa = $form->addMultiplier("multiplierSa", function (Nette\Forms\Container $container, Form $form)  use ($timeComparison) {
+        $sa = $form->addMultiplier("multiplierSa", function (Nette\Forms\Container $container, Form $form) use ($timeComparison) {
             $container->addText("start", "zacatek")
                 ->setHtmlAttribute("type", "time")
                 ->addConditionOn($form['sa'], Form::FILLED)
-                    ->setRequired("Zacatek je povinny");
+                ->setRequired("Zacatek je povinny");
             $container->addText("end", "konec")
                 ->setHtmlAttribute("type", "time")
                 ->addConditionOn($form['sa'], Form::FILLED)
-                    ->setRequired("Konec je povinny")
-                    ->addConditionOn($container["start"], Form::FILLED)
-                        ->addRule($timeComparison, "Konec musí byt ve časovém rozsahu", $container["start"]);
-        },$copies, $maxCopies);
+                ->setRequired("Konec je povinny")
+                ->addConditionOn($container["start"], Form::FILLED)
+                ->addRule($timeComparison, "Konec musí byt ve časovém rozsahu", $container["start"]);
+        }, $copies, $maxCopies);
 
         $sa->addRemoveButton("X")
             ->addClass("weekday-time-delete");
@@ -219,18 +222,18 @@ final class WorkhoursPresenter extends SecurePresenter
             ->addClass("weekday-time-add");
 
         $form->addCheckbox("su", "su");
-        $su = $form->addMultiplier("multiplierSu", function (Nette\Forms\Container $container, Form $form)  use ($timeComparison) {
+        $su = $form->addMultiplier("multiplierSu", function (Nette\Forms\Container $container, Form $form) use ($timeComparison) {
             $container->addText("start", "zacatek")
                 ->setHtmlAttribute("type", "time")
                 ->addConditionOn($form['su'], Form::FILLED)
-                    ->setRequired("Zacatek je povinny");
+                ->setRequired("Zacatek je povinny");
             $container->addText("end", "konec")
                 ->setHtmlAttribute("type", "time")
                 ->addConditionOn($form['su'], Form::FILLED)
-                    ->setRequired("Konec je povinny")
-                    ->addConditionOn($container["start"], Form::FILLED)
-                        ->addRule($timeComparison, "Konec musí byt ve časovém rozsahu", $container["start"]);
-        },$copies, $maxCopies);
+                ->setRequired("Konec je povinny")
+                ->addConditionOn($container["start"], Form::FILLED)
+                ->addRule($timeComparison, "Konec musí byt ve časovém rozsahu", $container["start"]);
+        }, $copies, $maxCopies);
 
         $su->addRemoveButton("X")
             ->addClass("weekday-time-delete");
@@ -240,100 +243,100 @@ final class WorkhoursPresenter extends SecurePresenter
         $form->onSuccess[] = [$this, "workingHoursSubmit"];
 
         return $form;
-    
+
     }
 
-    public function workingHoursSubmit(Form $form ,$data)
+    public function workingHoursSubmit(Form $form, $data)
     {
         $isSuccess = false;
         $this->database->transaction(function ($database) use ($data, &$isSuccess) {
             try {
                 //monday
-            $database->table('workinghours')->where("weekday=0")->where("service_id=0")->delete();
-            if ($data->mo) {
-                foreach ($data->multiplier as $key => $value) {
-                    $database->table("workinghours")->insert([
-                        "weekday" => 0,
-                        "start" => $value["start"],
-                        "stop" => $value["end"],
-                        "user_id" => $this->user->id
-                    ]);
+                $database->table('workinghours')->where("weekday=0")->where("service_id=0")->delete();
+                if ($data->mo) {
+                    foreach ($data->multiplier as $key => $value) {
+                        $database->table("workinghours")->insert([
+                            "weekday" => 0,
+                            "start" => $value["start"],
+                            "stop" => $value["end"],
+                            "user_id" => $this->user->id
+                        ]);
+                    }
                 }
-            }
-            //tuesday
-            $database->table("workinghours")->where("weekday=1")->where("service_id=0")->delete();
-            if ($data->tu) {
-                foreach ($data->multiplierTu as $key => $value) {
-                    $database->table("workinghours")->insert([
-                        "weekday" => 1,
-                        "start" => $value["start"],
-                        "stop" => $value["end"],
-                        "user_id" => $this->user->id
-                    ]);
+                //tuesday
+                $database->table("workinghours")->where("weekday=1")->where("service_id=0")->delete();
+                if ($data->tu) {
+                    foreach ($data->multiplierTu as $key => $value) {
+                        $database->table("workinghours")->insert([
+                            "weekday" => 1,
+                            "start" => $value["start"],
+                            "stop" => $value["end"],
+                            "user_id" => $this->user->id
+                        ]);
+                    }
                 }
-            }
-            //wednesday
-            $database->table("workinghours")->where("weekday=2")->where("service_id=0")->delete();
-            if ($data->we) {
-                foreach ($data->multiplierWe as $key => $value) {
-                    $database->table("workinghours")->insert([
-                        "weekday" => 2,
-                        "start" => $value["start"],
-                        "stop" => $value["end"],
-                        "user_id" => $this->user->id
-                    ]);
+                //wednesday
+                $database->table("workinghours")->where("weekday=2")->where("service_id=0")->delete();
+                if ($data->we) {
+                    foreach ($data->multiplierWe as $key => $value) {
+                        $database->table("workinghours")->insert([
+                            "weekday" => 2,
+                            "start" => $value["start"],
+                            "stop" => $value["end"],
+                            "user_id" => $this->user->id
+                        ]);
+                    }
                 }
-            }
-            //thursday
-            $database->table("workinghours")->where("weekday=3")->where("service_id=0")->delete();
-            if ($data->th) {
-                foreach ($data->multiplierTh as $key => $value) {
-                    $database->table("workinghours")->insert([
-                        "weekday" => 3,
-                        "start" => $value["start"],
-                        "stop" => $value["end"],
-                        "user_id" => $this->user->id
-                    ]);
+                //thursday
+                $database->table("workinghours")->where("weekday=3")->where("service_id=0")->delete();
+                if ($data->th) {
+                    foreach ($data->multiplierTh as $key => $value) {
+                        $database->table("workinghours")->insert([
+                            "weekday" => 3,
+                            "start" => $value["start"],
+                            "stop" => $value["end"],
+                            "user_id" => $this->user->id
+                        ]);
+                    }
                 }
-            }
-            //friday
-            $database->table("workinghours")->where("weekday=4")->where("service_id=0")->delete();
-            if ($data->fr) {
-                foreach ($data->multiplierFr as $key => $value) {
-                    $database->table("workinghours")->insert([
-                        "weekday" => 4,
-                        "start" => $value["start"],
-                        "stop" => $value["end"],
-                        "user_id" => $this->user->id
-                    ]);
+                //friday
+                $database->table("workinghours")->where("weekday=4")->where("service_id=0")->delete();
+                if ($data->fr) {
+                    foreach ($data->multiplierFr as $key => $value) {
+                        $database->table("workinghours")->insert([
+                            "weekday" => 4,
+                            "start" => $value["start"],
+                            "stop" => $value["end"],
+                            "user_id" => $this->user->id
+                        ]);
+                    }
                 }
-            }
-            //saturday
-            $database->table("workinghours")->where("weekday=5")->where("service_id=0")->delete();
-            if ($data->sa) {
-                foreach ($data->multiplierSa as $key => $value) {
-                    $database->table("workinghours")->insert([
-                        "weekday" => 5,
-                        "start" => $value["start"],
-                        "stop" => $value["end"],
-                        "user_id" => $this->user->id
-                    ]);
+                //saturday
+                $database->table("workinghours")->where("weekday=5")->where("service_id=0")->delete();
+                if ($data->sa) {
+                    foreach ($data->multiplierSa as $key => $value) {
+                        $database->table("workinghours")->insert([
+                            "weekday" => 5,
+                            "start" => $value["start"],
+                            "stop" => $value["end"],
+                            "user_id" => $this->user->id
+                        ]);
+                    }
                 }
-            }
-            //sunday
-            $database->table("workinghours")->where("weekday=6")->where("service_id=0")->delete();
-            if ($data->su) {
-                foreach ($data->multiplierSu as $key => $value) {
-                    $database->table("workinghours")->insert([
-                        "weekday" => 6,
-                        "start" => $value["start"],
-                        "stop" => $value["end"],
-                        "user_id" => $this->user->id
-                    ]);
+                //sunday
+                $database->table("workinghours")->where("weekday=6")->where("service_id=0")->delete();
+                if ($data->su) {
+                    foreach ($data->multiplierSu as $key => $value) {
+                        $database->table("workinghours")->insert([
+                            "weekday" => 6,
+                            "start" => $value["start"],
+                            "stop" => $value["end"],
+                            "user_id" => $this->user->id
+                        ]);
+                    }
                 }
-            }
 
-            $isSuccess = true;
+                $isSuccess = true;
             } catch (\Throwable $th) {
             }
         });
@@ -343,16 +346,17 @@ final class WorkhoursPresenter extends SecurePresenter
         } else {
             $this->flashMessage("Nastala chyba", "error");
         }
-        
-        
+
+
     }
 
-    protected function createComponentCreateHolidayForm(): Form {
+    protected function createComponentCreateHolidayForm(): Form
+    {
         $form = new Form;
 
         $form->addText("range", "Rozsah")
             ->setRequired("Zadejte rozsah");
-        
+
         $form->addText("name", "Název")
             ->setRequired("Zadejte název");
 
@@ -363,7 +367,8 @@ final class WorkhoursPresenter extends SecurePresenter
         return $form;
     }
 
-    public function createHolidayFormSucceeded(Form $form, array $values) {
+    public function createHolidayFormSucceeded(Form $form, array $values)
+    {
         $rangeData = $this->formater->getDataFromString($values["range"]);
         $isSuccess = false;
         try {
@@ -386,7 +391,8 @@ final class WorkhoursPresenter extends SecurePresenter
         }
     }
 
-    public function handleDeleteHoliday($id) {
+    public function handleDeleteHoliday($id)
+    {
         $isSuccess = false;
         try {
             $this->database->table("workinghours_exceptions")->where("id", $id)->delete();

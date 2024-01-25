@@ -88,20 +88,20 @@
         <!--/akce tabulky-->
         <!--head-->
         <thead>
-            <tr>
-                <th>Začátek</th>
-                <th>Konec</th>
-                <th>Akce</th>
-            </tr>
+        <tr>
+            <th>Začátek</th>
+            <th>Konec</th>
+            <th>Akce</th>
+        </tr>
         </thead>
         <!--/head-->
         <!--body-->
         <tbody>
-            <tr>
-                <th>4.00</th>
-                <th>5.00</th>
-                <th>smazat</th>
-            </tr>
+        <tr>
+            <th>4.00</th>
+            <th>5.00</th>
+            <th>smazat</th>
+        </tr>
         </tbody>
         <!--/body-->
         <!-- Paginator pages -->
@@ -112,7 +112,8 @@
             </li>
 
 
-            <li n:for="$i = max($paginator->getPage() - 2, 0); $i < min($paginator->getPageCount(), $paginator->getPage() + 2); $i++" class="{($i+1) == $paginator->getPage() ? 'active' : ''}">
+            <li n:for="$i = max($paginator->getPage() - 2, 0); $i < min($paginator->getPageCount(), $paginator->getPage() + 2); $i++"
+                    class="{($i+1) == $paginator->getPage() ? 'active' : ''}">
                 <a n:href="show $i+1">{$i+1}</a>
             </li>
 

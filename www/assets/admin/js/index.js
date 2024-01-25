@@ -171,3 +171,13 @@ $(function () {
     modal.modal("show");
   });
 });
+
+//modals
+$(function () {
+  $("#change-password").on("click", function() {
+    console.log("open modal");
+    //open modal with form
+    const modal = $("#change-password-modal");
+    modal.modal("show");
+  })
+});

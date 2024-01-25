@@ -74,4 +74,56 @@ body {
 .login-info {
   color: grey;
   text-decoration: none;
+}
+
+#flash-messages {
+  animation: slideFromTop 1.5s ease-in-out;
+  --width: 300px;
+  text-align: center;
+  width: var(--width);
+  z-index: 100;
+  top: 30px;
+  right: calc(50vw - var(--width) / 2);
+  padding: 15px;
+  margin-bottom: 17px;
+  border-radius: var(--border-radius);
+}
+
+#snippet--flashMessages {
+  position: fixed;
+  width: 100vw;
+  top: 20px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  z-index: -100;
+}
+
+.success {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.error {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+@keyframes slideFromTop {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }/*# sourceMappingURL=login.css.map */

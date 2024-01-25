@@ -37,7 +37,7 @@ class DiscountCodes
             ->fetchAll();
 
         $selectedServices = array_map(
-            fn ($row) => $row->ref("services", "service_id")?->id,
+            fn($row) => $row->ref("services", "service_id")?->id,
             $service2DiscountCodeRows
         );
 
@@ -48,7 +48,8 @@ class DiscountCodes
         return $discountCodeRow;
     }
 
-    public function getService($id) {
+    public function getService($id)
+    {
         return $this->database->table("services")->get($id);
     }
 }

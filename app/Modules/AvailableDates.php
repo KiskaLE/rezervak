@@ -10,129 +10,129 @@ class AvailableDates
 
     public function __construct(
         private Nette\Database\Explorer $database,
-        private Moment              $moment,
-        private Nette\Security\User $user,
+        private Moment                  $moment,
+        private Nette\Security\User     $user,
     )
     {
     }
 
-public function getReservationsConflictsIds(int $id): array
-{
-    $user = $this->database->table("users")->order("created_at ASC")->where("id=?", $id)->fetch();
-    $reservations = $user->related("reservations")->where("start>=?", date("Y-m-d H:i:s"))->fetchAll();
-    $exceptions = $user->related("workinghours_exceptions")->where("end>=?", date("Y-m-d H:i:s"))->fetchAll();
-    $conflicts = [];
-    foreach ($reservations as $row) {
-        $start = strtotime($row->start);
-        foreach ($exceptions as $exception) {
-            if (strtotime($exception->start) <= $start && strtotime($exception->end) >= $start) {
-                $conflicts[] = $exception->id;
+    public function getReservationsConflictsIds(int $id): array
+    {
+        $user = $this->database->table("users")->order("created_at ASC")->where("id=?", $id)->fetch();
+        $reservations = $user->related("reservations")->where("start>=?", date("Y-m-d H:i:s"))->fetchAll();
+        $exceptions = $user->related("workinghours_exceptions")->where("end>=?", date("Y-m-d H:i:s"))->fetchAll();
+        $conflicts = [];
+        foreach ($reservations as $row) {
+            $start = strtotime($row->start);
+            foreach ($exceptions as $exception) {
+                if (strtotime($exception->start) <= $start && strtotime($exception->end) >= $start) {
+                    $conflicts[] = $exception->id;
+                }
             }
         }
+        return $conflicts;
+
     }
-    return $conflicts;
 
-}
-
-public function getConflictedReservations($uuid): array
-{
-    $exception = $this->database->table("workinghours_exceptions")->where("uuid=?", $uuid)->fetch();
-    $user_settings = $this->database->table("settings")->fetch();
-    $exceptionStartUTC = strtotime($this->moment->getUTCTime($exception->start . "", $user_settings->time_zone));
-    $exceptionEndUTC = strtotime($this->moment->getUTCTime($exception->end . "", $user_settings->time_zone));
-    $reservationsUTC = $this->database->table("reservations")->fetchAll();
-    $conflicts = [];
-    foreach ($reservationsUTC as $reservationUTC) {
-        $start = strtotime($reservationUTC->start);
-        if ($exceptionStartUTC <= $start && $exceptionEndUTC >= $start) {
-            $conflicts[] = $reservationUTC;
+    public function getConflictedReservations($uuid): array
+    {
+        $exception = $this->database->table("workinghours_exceptions")->where("uuid=?", $uuid)->fetch();
+        $user_settings = $this->database->table("settings")->fetch();
+        $exceptionStartUTC = strtotime($this->moment->getUTCTime($exception->start . "", $user_settings->time_zone));
+        $exceptionEndUTC = strtotime($this->moment->getUTCTime($exception->end . "", $user_settings->time_zone));
+        $reservationsUTC = $this->database->table("reservations")->fetchAll();
+        $conflicts = [];
+        foreach ($reservationsUTC as $reservationUTC) {
+            $start = strtotime($reservationUTC->start);
+            if ($exceptionStartUTC <= $start && $exceptionEndUTC >= $start) {
+                $conflicts[] = $reservationUTC;
+            }
         }
+        return $conflicts;
+
     }
-    return $conflicts;
 
-}
-
-public function isTimeToPay(string $start, $userSettings): bool
-{
-    $now = $this->moment->getNowPrague();
-    $lastTimeToPay = date("Y-m-d H:i:s", strtotime($start . ' -' . $userSettings->time_to_pay . ' hours'));
-    if ($now >= $lastTimeToPay) {
-        return false;
+    public function isTimeToPay(string $start, $userSettings): bool
+    {
+        $now = $this->moment->getNowPrague();
+        $lastTimeToPay = date("Y-m-d H:i:s", strtotime($start . ' -' . $userSettings->time_to_pay . ' hours'));
+        if ($now >= $lastTimeToPay) {
+            return false;
+        }
+        return true;
     }
-    return true;
-}
 
-public function getAvailableStartingHours(string $date, $service)
-{
-    $available = [];
-    $user = $this->database->table("users")->order("created_at ASC")->fetch();
-    $userSettings = $this->database->table("settings")->fetch();
-    $service = $this->database->table("services")->get($service->id);
-
-    if ($service->type == 1) {
-        $serviceCustomSchedules = $service->related("services_custom_schedules")->fetchAll();
-        foreach ($serviceCustomSchedules as $schedule) {
-            $results = $this->getCustomScheduleAvailability($user, $userSettings, $schedule, $service, $date);
-            $available = array_merge($available, $results);
-        }
-    } else if ($service->type == 0 || $service->type == 2) {
-        if ($service->type == 2) {
-            $workingHours = $this->database->table("workinghours")->where("weekday=? AND service_id=?", [$this->getDay($date), $service->id])->fetchAll();
-        } else {
-            $workingHours = $this->database->table("workinghours")->where("weekday=? AND service_id=0", $this->getDay($date))->fetchAll();
-        }
+    public function getAvailableStartingHours(string $date, $service)
+    {
         $available = [];
-        foreach ($workingHours as $row) {
-            $start = $date . " " . $row->start;
-            $end = $date . " " . $row->stop;
-            $result = $this->checkAvailability($user, $userSettings, $start, $end, $service, $row);
-            foreach ($result as $res) {
-                $available[] = $res;
+        $user = $this->database->table("users")->order("created_at ASC")->fetch();
+        $userSettings = $this->database->table("settings")->fetch();
+        $service = $this->database->table("services")->get($service->id);
+
+        if ($service->type == 1) {
+            $serviceCustomSchedules = $service->related("services_custom_schedules")->fetchAll();
+            foreach ($serviceCustomSchedules as $schedule) {
+                $results = $this->getCustomScheduleAvailability($user, $userSettings, $schedule, $service, $date);
+                $available = array_merge($available, $results);
+            }
+        } else if ($service->type == 0 || $service->type == 2) {
+            if ($service->type == 2) {
+                $workingHours = $this->database->table("workinghours")->where("weekday=? AND service_id=?", [$this->getDay($date), $service->id])->fetchAll();
+            } else {
+                $workingHours = $this->database->table("workinghours")->where("weekday=? AND service_id=0", $this->getDay($date))->fetchAll();
+            }
+            $available = [];
+            foreach ($workingHours as $row) {
+                $start = $date . " " . $row->start;
+                $end = $date . " " . $row->stop;
+                $result = $this->checkAvailability($user, $userSettings, $start, $end, $service, $row);
+                foreach ($result as $res) {
+                    $available[] = $res;
+                }
             }
         }
+
+        return array_unique($available);
     }
 
-    return array_unique($available);
-}
+    public function getBackupHours(string $date, $service): array
+    {
+        $results = [];
+        $user = $this->database->table("users")->order("created_at ASC")
+            ->fetch();
 
-public function getBackupHours( string $date, $service): array
-{
-    $results = [];
-    $user = $this->database->table("users")->order("created_at ASC")
-        ->fetch();
+        $userSettings = $this->database->table("settings")
+            ->fetch();
 
-    $userSettings = $this->database->table("settings")
-        ->fetch();
+        $dayStart = $date . " 00:00:00";
+        $dayEnd = $date . " 23:59:59";
 
-    $dayStart = $date . " 00:00:00";
-    $dayEnd = $date . " 23:59:59";
+        $reservations = $this->database->table("reservations")
+            ->where("start BETWEEN ? AND ? AND type=0 AND reservations.status='VERIFIED' AND service_id=?", [$dayStart, $dayEnd, $service->id])
+            ->where(":payments.status=0")
+            ->fetchAll();
 
-    $reservations = $this->database->table("reservations")
-        ->where("start BETWEEN ? AND ? AND type=0 AND reservations.status='VERIFIED' AND service_id=?", [$dayStart, $dayEnd, $service->id])
-        ->where(":payments.status=0")
-        ->fetchAll();
-
-    foreach ($reservations as $row) {
-        if ($this->checkIfPaymentIsPossibleToBePaid($row->start, $userSettings, $user)) {
-            $results[] = date("H:i", strtotime($row->start));
+        foreach ($reservations as $row) {
+            if ($this->checkIfPaymentIsPossibleToBePaid($row->start, $userSettings, $user)) {
+                $results[] = date("H:i", strtotime($row->start));
+            }
         }
-    }
 
-    $verificationTime = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i") . ' -' . $userSettings->verification_time . ' minutes'));
-    $unverifiedReservations = $this->database->table("reservations")
-        ->where("start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? AND service_id=?", [$dayStart, $dayEnd, $verificationTime, $service->id])
-        ->fetchAll();
+        $verificationTime = date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i") . ' -' . $userSettings->verification_time . ' minutes'));
+        $unverifiedReservations = $this->database->table("reservations")
+            ->where("start BETWEEN ? AND ? AND status='UNVERIFIED' AND created_at > ? AND service_id=?", [$dayStart, $dayEnd, $verificationTime, $service->id])
+            ->fetchAll();
 
-    foreach ($unverifiedReservations as $row) {
-        if ($this->checkIfPaymentIsPossibleToBePaid($row->start, $userSettings, $user)) {
-            $results[] = date("H:i", strtotime($row->start));
+        foreach ($unverifiedReservations as $row) {
+            if ($this->checkIfPaymentIsPossibleToBePaid($row->start, $userSettings, $user)) {
+                $results[] = date("H:i", strtotime($row->start));
+            }
         }
+
+        $results = array_unique($results);
+
+        return $results;
     }
-
-    $results = array_unique($results);
-
-    return $results;
-}
 
     public function getAvailableDates(int $numberOfDays, $service): array
     {
@@ -149,20 +149,21 @@ public function getBackupHours( string $date, $service): array
 
     }
 
-public function getNumberOfAvailableTimes(int $numberOfDays, $service): int {
-    $date = date("Y-m-d");
-    $available = 0;
-    
-    for ($i = 0; $i < $numberOfDays && $available <= 10; $i++) {
-        $count = count($this->getAvailableStartingHours($date, $service));
-        $available += $count;
+    public function getNumberOfAvailableTimes(int $numberOfDays, $service): int
+    {
+        $date = date("Y-m-d");
+        $available = 0;
 
-        // add one day to curDay
-        $date = date('Y-m-d', strtotime($date . ' +1 days'));
+        for ($i = 0; $i < $numberOfDays && $available <= 10; $i++) {
+            $count = count($this->getAvailableStartingHours($date, $service));
+            $available += $count;
+
+            // add one day to curDay
+            $date = date('Y-m-d', strtotime($date . ' +1 days'));
+        }
+
+        return $available;
     }
-    
-    return $available;
-}
 
 
     public function isTimeAvailable($reservation, $service): bool
@@ -239,7 +240,7 @@ public function getNumberOfAvailableTimes(int $numberOfDays, $service): int {
 
     }
 
-    private function checkAvailability($admin ,$userSettings, $start, $end, $service, $workingHour)
+    private function checkAvailability($admin, $userSettings, $start, $end, $service, $workingHour)
     {
         $availableTimes = array();
         $verifiedReservations = $this->database->table("reservations")->where("start BETWEEN ? AND ? AND status='VERIFIED' AND type=0", [$start, $end])->fetchAll();
@@ -315,7 +316,7 @@ public function getNumberOfAvailableTimes(int $numberOfDays, $service): int {
         return $availableTimes;
     }
 
-    private function getCustomScheduleAvailability($user ,$userSettings, $schedule, $service, $date)
+    private function getCustomScheduleAvailability($user, $userSettings, $schedule, $service, $date)
     {
         $result = array();
 
@@ -398,13 +399,14 @@ public function getNumberOfAvailableTimes(int $numberOfDays, $service): int {
         return $result;
     }
 
-    private function timesOverlaps($start1, $end1, $start2, $end2) {
+    private function timesOverlaps($start1, $end1, $start2, $end2)
+    {
         $overlap = ($start2 >= $start1 && $start2 <= $end1) || // Start of the second period is within the first period
-                            ($end2 >= $start1 && $end2 <= $end1) || // End of the second period is within the first period
-                            ($start1 >= $start2 && $start1 <= $end2) || // Start of the first period is within the second period
-                            ($end1 >= $start2 && $end1 <= $end2) ||    // End of the first period is within the second period
-                            ($start1 == $start2) || // Starts of both periods are the same
-                            ($end1 == $end2); // Ends of both periods are the same
+            ($end2 >= $start1 && $end2 <= $end1) || // End of the second period is within the first period
+            ($start1 >= $start2 && $start1 <= $end2) || // Start of the first period is within the second period
+            ($end1 >= $start2 && $end1 <= $end2) ||    // End of the first period is within the second period
+            ($start1 == $start2) || // Starts of both periods are the same
+            ($end1 == $end2); // Ends of both periods are the same
         return $overlap;
     }
 
@@ -417,7 +419,7 @@ public function getNumberOfAvailableTimes(int $numberOfDays, $service): int {
     {
         $user = $this->database->table("users")->order("created_at ASC")->where("uuid=?", $u)->fetch();
         $now = date("Y-m-d H:i:s");
-        $exceptions = $this->database->table("workinghours_exceptions")->where("end >=?",  $now)->fetchAll();
+        $exceptions = $this->database->table("workinghours_exceptions")->where("end >=?", $now)->fetchAll();
         return $exceptions;
     }
 }

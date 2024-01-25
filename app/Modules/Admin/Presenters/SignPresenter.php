@@ -13,7 +13,7 @@ final class SignPresenter extends BasePresenter
     public $session;
 
     public function __construct(
-        private Passwords $passwords,
+        private Passwords     $passwords,
         private Authenticator $authenticator,
     )
     {

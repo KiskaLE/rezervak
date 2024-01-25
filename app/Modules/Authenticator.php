@@ -9,7 +9,7 @@ use Ramsey\Uuid\Uuid;
 final class Authenticator implements Nette\Security\Authenticator
 {
     public function __construct(
-        private Nette\Database\Explorer $database,
+        private Nette\Database\Explorer  $database,
         private Nette\Security\Passwords $passwords,
     )
     {
@@ -43,6 +43,20 @@ final class Authenticator implements Nette\Security\Authenticator
         );
     }
 
+    public function changePassword($id, $password, $newPassword): bool
+    {
+        $userRow = $this->database->table("users")->get($id);
+        if ($this->passwords->verify($password, $userRow->password)) {
+            $res = $this->database->table("users")->where("id=?", $id)->update([
+                "password" => $this->passwords->hash($newPassword),
+            ]);
+            if ($res) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Creates a new user with the given username and password.
      *
@@ -67,7 +81,7 @@ final class Authenticator implements Nette\Security\Authenticator
                 ]);
                 //create user settings
                 $settingsRow = $database->table("settings")->insert([
-                    
+
                 ]);
                 $settings_id = $settingsRow->id;
                 //create workinghours

@@ -3,7 +3,11 @@
 <div class="page-title"><h1>Služby</h1></div>
 {* navigation start *}
 <a class="back" n:href="default">
-    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000000"
+         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
+        <line x1="19" y1="12" x2="5" y2="12"/>
+        <polyline points="12 19 5 12 12 5"/>
+    </svg>
 </a>
 {* navigation end *}
 
@@ -17,7 +21,7 @@
 
         <div class="form-body">
 
-             <div class="form-group" style="width: 300px;">
+            <div class="form-group" style="width: 300px;">
                 <label for="">Název*</label>
                 <input n:name="name">
                 {* <span class="form-info">Dodatečné informace</span> *}
@@ -41,23 +45,19 @@
                 <span class="form-info">Zadejte v CZK</span>
             </div>
 
-            
 
             <div class="form-actions">
-                <div class="submit"><input onclick="getAndProcessCalendarEvents('events')" type="submit" n:name="submit"></div>
+                <div class="submit"><input onclick="getAndProcessCalendarEvents('events')"
+                                           type="submit" n:name="submit"></div>
                 {* <div class="reset"><a n:href="this">Zrušit</a></div> *}
             </div>
 
         </div>
 
 
-
     </form>
 </div>
 <!-- form end -->
-
-
-
 
 
 <script src="{$basePath}/assets/admin/js/datePicker.js"></script>

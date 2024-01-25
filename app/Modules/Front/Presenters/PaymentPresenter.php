@@ -10,16 +10,16 @@ use App\Modules\Mailer;
 use Nette\DI\Attributes\Inject;
 
 
-
 final class PaymentPresenter extends BasePresenter
 {
 
     #[Inject] public Nette\Database\Explorer $database;
 
     private $user;
+
     public function __construct(
         private Payments $payments,
-        private Mailer $mailer
+        private Mailer   $mailer
     )
     {
     }

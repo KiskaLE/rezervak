@@ -19,12 +19,13 @@ class Formater
     public function convertToAdminTimezone($time)
     {
         $timezone = "Europe/Prague";
-        $m = new \Moment\Moment($time."");
+        $m = new \Moment\Moment($time . "");
         $m->setTimezone($timezone);
         return $m->format("Y-m-d H:i");
     }
-    
-    public function json(array $array) {
+
+    public function json(array $array)
+    {
         return json_encode($array);
     }
 
@@ -36,18 +37,19 @@ class Formater
         return 0;
     }
 
-public function getDataFromString($string): array
-{
-    [$dateStart, $timeStart] = explode(" ", trim(explode("-", trim($string))[0]));
-    [$dateEnd, $timeEnd] = explode(" ", trim(explode("-", trim($string))[1]));
+    public function getDataFromString($string): array
+    {
+        [$dateStart, $timeStart] = explode(" ", trim(explode("-", trim($string))[0]));
+        [$dateEnd, $timeEnd] = explode(" ", trim(explode("-", trim($string))[1]));
 
-    $start = implode("-", array_reverse(explode("/", $dateStart))) . " " . $timeStart;
-    $end = implode("-", array_reverse(explode("/", $dateEnd))) . " " . $timeEnd;
+        $start = implode("-", array_reverse(explode("/", $dateStart))) . " " . $timeStart;
+        $end = implode("-", array_reverse(explode("/", $dateEnd))) . " " . $timeEnd;
 
-    return ["start" => $start, "end" => $end, "timeStart" => $timeStart, "timeEnd" => $timeEnd];
-}
+        return ["start" => $start, "end" => $end, "timeStart" => $timeStart, "timeEnd" => $timeEnd];
+    }
 
-    public function getDataFromRange($string) {
+    public function getDataFromRange($string)
+    {
         [$start, $end] = array_map('trim', explode("-", $string));
 
         [$startYear, $startMonth, $startDay] = explode("/", $start);
@@ -59,15 +61,16 @@ public function getDataFromString($string): array
         return ["start" => $start, "end" => $end];
     }
 
-public function getDataFromRangeInFormatDMY($string) {
-    list($start, $end) = array_map('trim', explode("-", $string));
-    list($start, $end) = array_map(function ($date) {
-        list($day, $month, $year) = explode("/", $date);
-        return "$year-$month-$day";
-    }, [$start, $end]);
+    public function getDataFromRangeInFormatDMY($string)
+    {
+        list($start, $end) = array_map('trim', explode("-", $string));
+        list($start, $end) = array_map(function ($date) {
+            list($day, $month, $year) = explode("/", $date);
+            return "$year-$month-$day";
+        }, [$start, $end]);
 
-    return ["start" => $start, "end" => $end];
-}
+        return ["start" => $start, "end" => $end];
+    }
 
     public function getDateFromTimeStamp($timestamp)
     {
