@@ -138,31 +138,6 @@ final class ReservationsPresenter extends SecurePresenter
         
     }
 
-    public function actionEdit($id, $backlink)
-    {
-        $this->backlink = $backlink;
-        $this->uuid = $id;
-        $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
-        $this->reservation = $reservation;
-        $this->template->reservation = $reservation;
-    }
-
-    public function actionDetail($id, $backlink)
-    {
-        $this->backlink = $backlink;
-        $this->uuid = $id;
-        $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
-        $this->template->reservation = $reservation;
-    }
-
-    public function actionDelete($id)
-    {
-        $this->uuid = $id;
-        $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
-        $this->template->reservation = $reservation;
-
-    }
-
     protected function createComponentEditForm(): Form
     {
         $form = new Form;
