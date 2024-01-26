@@ -29,7 +29,6 @@ final class DiscountCodesPresenter extends SecurePresenter
     {
         parent::beforeRender();
         $this->template->selectedPage = "discountCodes";
-
     }
 
     public function actionDefault(int $page = 1)
@@ -47,8 +46,6 @@ final class DiscountCodesPresenter extends SecurePresenter
             ->fetchAll();
         $this->template->discountCodes = $discountCodes;
         $this->template->paginator = $paginator;
-
-
     }
 
     public function actionEdit(int $id)
@@ -251,8 +248,5 @@ final class DiscountCodesPresenter extends SecurePresenter
             $this->flashMessage("Nepodarilo se uložit", "error");
             $this->redirect("this");
         }
-
     }
-
-
 }

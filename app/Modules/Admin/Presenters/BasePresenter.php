@@ -29,7 +29,6 @@ class BasePresenter extends Presenter
         parent::beforeRender();
         $user = $this->database->table("users")->order("created_at ASC")->fetch();
         $this->template->logoUrl = $user->logo_url;
-
     }
 
     /**
@@ -69,5 +68,4 @@ class BasePresenter extends Presenter
         $paginator->setPage($page);
         return $paginator;
     }
-
 }

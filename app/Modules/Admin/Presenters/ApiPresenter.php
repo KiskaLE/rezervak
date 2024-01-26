@@ -23,8 +23,7 @@ class ApiPresenter extends BasePresenter
         private AvailableDates $availableDates,
         private Payments       $payments
 
-    )
-    {
+    ) {
         $this->client = new Client();
     }
 
@@ -53,7 +52,6 @@ class ApiPresenter extends BasePresenter
             foreach ($canceledReservations as $reservation) {
                 $this->mailer->sendCancelationMail($reservation->email, $reservation, "Nezaplacení rezervace v určeném čase.");
                 dump("zrušeno");
-
             }
         });
         // check if any backup reservation can be booked
@@ -73,7 +71,6 @@ class ApiPresenter extends BasePresenter
                     $this->mailer->sendConfirmationMail($backup->email, "/payment/?uuid=" . $backup->uuid, $backup);
                     dump("odeslano");
                 });
-
             }
         }
 
@@ -175,5 +172,4 @@ class ApiPresenter extends BasePresenter
 
         die("OK");
     }
-
 }

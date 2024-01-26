@@ -19,15 +19,13 @@ final class HomePresenter extends SecurePresenter
     public function __construct(
         private Moment $moment,
         private Mailer $mailer
-    )
-    {
+    ) {
     }
 
     public function beforeRender(): void
     {
         parent::beforeRender();
         $this->template->selectedPage = "dashboard";
-
     }
 
     public function renderDefault(int $page = 1): void
@@ -56,7 +54,6 @@ final class HomePresenter extends SecurePresenter
             case 2:
                 $q = $q->where("start BETWEEN ? AND ?", [date("Y-m-d", strtotime(date("Y-m-d") . "+2 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d") . "+2 day")) . " 23:59:59"]);
                 break;
-
         }
         $numberOfTodaysReservations = $q->count();
         $paginator = $this->createPagitator($numberOfTodaysReservations, $page, 10);
@@ -82,7 +79,6 @@ final class HomePresenter extends SecurePresenter
     {
         if ($this->isAjax()) {
             $this->getChartData();
-
         }
         $this->payload->postGet = true;
         $this->payload->url = $this->link("Home:default");
@@ -102,8 +98,6 @@ final class HomePresenter extends SecurePresenter
             $data[] = ["date" => $date, "value" => count($key)];
         }
         $this->sendJson($data);
-
-
     }
 
 
@@ -129,7 +123,6 @@ final class HomePresenter extends SecurePresenter
             $this->redirect('this');
         }
         $this->flashMessage("Rezervaci se nepodařilo zrušit", "error");
-
     }
 
     public function handleSetPaid($id)
@@ -161,7 +154,6 @@ final class HomePresenter extends SecurePresenter
         $session = $this->getSession("reservations");
         $session->reservations_tab = $tab;
         $this->redirect('Reservations:default');
-
     }
 
     public function handleSetTab($tab)
@@ -172,6 +164,4 @@ final class HomePresenter extends SecurePresenter
         $session->reservations_tab = $tab;
         $this->redirect('default');
     }
-
-
 }
