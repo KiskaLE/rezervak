@@ -28,7 +28,7 @@
                                         class="tag tag-green">zaplaceno</span></div>
                             <div n:if="$reservation->status == 'CANCELED'" class="list-item-info row"><span class="tag tag-red">zrušeno</span>
                             </div>
-                            <div class="list-item-info row"><span class="tag tag-blue">{$payment->price} Kč</span></div>
+                            <div class="list-item-info row"><span class="tag tag-blue">{$payment->price|currency} Kč</span></div>
                         </div>
 
                         <div class="list-item-column list-item-more">

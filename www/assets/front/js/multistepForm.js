@@ -106,7 +106,7 @@ function validateForm() {
     let value = y[i].value;
     console.log(name, value);
     y[i].className = "multiform";
-    const parentEl = y[i].parentNode;
+    const parentEl = y[i].parentNode.parentNode;
     parentEl.classList.remove("invalid");
     if (name == "service" || name == "time") {
       if (!value.match(/\d+/)) {
@@ -323,7 +323,7 @@ async function changeDay() {
   timesLoading(false);
   document.querySelectorAll(".calendar-reservation-date").forEach((item) => {
     item.innerHTML = time[2] + "." + time[1] + "." + time[0];
-  })
+  });
 }
 
 function toggleCalendarTimes() {
@@ -358,17 +358,23 @@ function setService(id, name, price, duration) {
     box.classList.remove("open");
 
     recap.innerHTML = name;
-    document.querySelectorAll('.calendar-reservation-service').forEach((item) => {
-      item.innerHTML = name;
-    })
-    document.querySelectorAll('.calendar-reservation-price').forEach((item) => {
-      item.innerHTML = price.toLocaleString('cs-CZ').replace(/,/g, ' ');
-    })
-    document.querySelectorAll('.calendar-reservation-duration').forEach((item) => {
-      item.innerHTML = duration;
+    document
+      .querySelectorAll(".calendar-reservation-service")
+      .forEach((item) => {
+        item.innerHTML = name;
+      });
+    document.querySelectorAll(".calendar-reservation-price").forEach((item) => {
+      item.innerHTML = price.toLocaleString("cs-CZ").replace(/,/g, " ");
     });
-    
-    document.querySelector("#price").innerHTML = price.toLocaleString('cs-CZ').replace(/,/g, ' ');;
+    document
+      .querySelectorAll(".calendar-reservation-duration")
+      .forEach((item) => {
+        item.innerHTML = duration;
+      });
+
+    document.querySelector("#price").innerHTML = price
+      .toLocaleString("cs-CZ")
+      .replace(/,/g, " ");
     nextPrev(1);
   }
 }
@@ -380,10 +386,10 @@ function setTime(id, type, timeStart, timeEnd) {
   timeStartEl.innerHTML = timeStart;
   const timeEndEl = document.querySelector("#time-end");
   timeEndEl.innerHTML = timeEnd;
-  
+
   document.querySelectorAll(".calendar-reservation-time").forEach((item) => {
     item.innerHTML = timeStart;
-  })
+  });
   nextPrev(1);
 }
 

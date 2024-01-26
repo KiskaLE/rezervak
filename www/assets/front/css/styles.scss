@@ -839,6 +839,31 @@ body {
   }
 }
 
+.recap-customer-info-discount-code {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+
+  @include w(sm) {
+    flex-direction: column;
+  }
+
+  h2 {
+    text-wrap: nowrap;
+    width: fit-content !important;
+    min-width: auto !important;
+    &::after {
+      content: ":";
+
+      @include w(sm) {
+        content: "";
+      }
+    }
+
+
+  }
+}
+
 .btn-secondary {
   border: 2px solid $primary-400 !important;
 
@@ -889,6 +914,9 @@ input.valid {
 
 .form-group {
 
+  display: flex;
+  flex-direction: column;
+
   &.checkbox {
     display: flex;
     flex-direction: row !important;
@@ -911,6 +939,18 @@ input.valid {
   color: red;
   font-size: $text-1;
   display: none;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+
+  &.checkbox {
+    display: flex;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 5px;
+  }
 }
 
 /* Hide all steps by default: */

@@ -691,6 +691,31 @@ body {
   text-align: center;
 }
 
+.recap-customer-info-discount-code {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+@media (max-width: 500px) {
+  .recap-customer-info-discount-code {
+    flex-direction: column;
+  }
+}
+.recap-customer-info-discount-code h2 {
+  text-wrap: nowrap;
+  width: -moz-fit-content !important;
+  width: fit-content !important;
+  min-width: auto !important;
+}
+.recap-customer-info-discount-code h2::after {
+  content: ":";
+}
+@media (max-width: 500px) {
+  .recap-customer-info-discount-code h2::after {
+    content: "";
+  }
+}
+
 .btn-secondary {
   border: 2px solid #ce4629 !important;
 }
@@ -738,6 +763,10 @@ input.valid {
   background-color: #e9ffe4;
 }
 
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
 .form-group.checkbox {
   display: flex;
   flex-direction: row !important;
@@ -756,6 +785,17 @@ input.valid {
   color: red;
   font-size: 14px;
   display: none;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+}
+.input.checkbox {
+  display: flex;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 5px;
 }
 
 /* Hide all steps by default: */

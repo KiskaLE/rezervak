@@ -155,57 +155,63 @@
                         </div>
                         <div class="form-group-multiple">
                             <div class="form-group">
-                                <label for="">Jméno:</label>
-                                <input autocomplete="off" autocorrect="off" autocapitalize="on"
-                                       spellcheck="false" n:name="firstname" class="multiform data">
+                                <div class="input">
+                                    <label for="">Jméno:</label>
+                                    <input autocomplete="off" autocorrect="off" autocapitalize="on" spellcheck="false" n:name="firstname" class="multiform data">
+                                </div>
                                 <span class="form-error">Zadejte jméno</span>
                             </div>
                             <div class="form-group">
-                                <label for="">Příjmení:</label>
-                                <input autocomplete="off" autocorrect="off" autocapitalize="off"
-                                       spellcheck="false" n:name="lastname" class="multiform data">
+                                <div class="input">
+                                    <label for="">Příjmení:</label>
+                                    <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="lastname" class="multiform data">
+                                </div>
                                 <span class="form-error">Zadejte příjmení</span>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="">Tel.:</label>
-                            <input autocomplete="off" autocorrect="off" autocapitalize="off"
-                                   spellcheck="false" n:name="phone" class="multiform data">
+                            <div class="input">
+                                <label for="">Tel.:</label>
+                                <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="phone" class="multiform data">  
+                            </div>
                             <span class="form-error">Zadejte telefoní číslo ve tvaru 720123123123</span>
                         </div>
                         <div class="form-group">
-                            <label for="">E-mail:</label>
-                            <input autocomplete="off" autocorrect="off" autocapitalize="off"
-                                   spellcheck="false" n:name="email" class="multiform data">
+                            <div class="input">
+                                <label for="">E-mail:</label>
+                                <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="email" class="multiform data">
+                            </div>
                             <span class="form-error">Zadejte email</span>
                         </div>
                         <div class="form-group">
-                            <label for="">Adresa a č.p.</label>
-                            <input autocomplete="off" autocorrect="off"
-                                   autocapitalize="off"
-                                   spellcheck="false" n:name="address"
-                                   class="multiform data">
+                            <div class="input">
+                                <label for="">Adresa a č.p.</label>
+                                <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="address" class="multiform data">
+                            </div>
                             <span class="form-error">Zadejte adresu</span>
                         </div>
 
-                        <div class="form-group"><label for="">PSČ:</label><input autocomplete="off" autocorrect="off"
-                                                                                 autocapitalize="off"
-                                                                                 spellcheck="false" n:name="code"
-                                                                                 class="multiform data">
+                        <div class="form-group">
+                            <div class="input">
+                                <label for="">PSČ:</label>
+                                <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="code" class="multiform data">
+                            </div>
                             <span class="form-error">Zadejte PSČ ve tvaru XXXXX</span>
                         </div>
-                        <div class="form-group"><label for="">Město:</label><input autocomplete="off" autocorrect="off"
-                                                                                   autocapitalize="off"
-                                                                                   spellcheck="false" n:name="city"
-                                                                                   class="multiform data">
+                        <div class="form-group">
+                            <div class="input">
+                                <label for="">Město:</label>
+                                <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="city" class="multiform data">
+                            </div>
                             <span class="form-error">Zadejte město</span>
                         </div>
 
-                        <div class="form-group checkbox">
-                            <input n:name="gdpr" class="multiform data">
-                            <label for="">Souhlasím se <a href="{$gdprUrl}" target="_blank">zpracováním osobních
-                                    údajů</a></label>
-                            {* <span class="form-error">Souhlas je povinný</span> *}
+                        <div class="form-group">
+                            <div class="input checkbox">
+                                <input n:name="gdpr" class="multiform data">
+                                <label for="">Souhlasím se <a href="{$gdprUrl}" target="_blank">zpracováním osobních údajů</a></label>
+                            </div>
+                            <span class="form-error">Souhlas je povinný</span>
                         </div>
 
                         <div class="nav-buttons">
@@ -251,7 +257,7 @@
                     <span id="code"></span>
                     </span>
                     </div>
-                    <div>
+                    <div class="recap-customer-info-discount-code">
                         <h2 class="recap-customer-info-title customer-code">Kód zákazníka</h2>
                         <input id="verify-code" name="dicountCode" type="text" oninput="debouncedVerify()">
                     </div>
