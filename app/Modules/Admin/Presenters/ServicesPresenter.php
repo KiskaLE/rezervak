@@ -531,11 +531,6 @@ final class ServicesPresenter extends SecurePresenter
             ->setRequired("Cena je povinná")
             ->addRule($form::Min, "Cena nesmí být meně než 0", 0);
 
-        $form->addInteger("vat", "DPH")
-            ->setRequired("DPH je povinna")
-            ->addRule($form::Min, "DPH musí být větě než 0", 0)
-            ->addRule($form::Max, "DPH musí být měně než 100", 99);
-
         $form->addSelect("type", "Type", [0 => "Týdenní", 2 => "Vlastní týdenní", 1 => "Definovaný"]);
 
         // $form->addCheckbox("customSchedule", "Custom Schedule")
@@ -597,7 +592,6 @@ final class ServicesPresenter extends SecurePresenter
                     "name" => $data->name,
                     "price" => $data->price,
                     "duration" => $data->duration,
-                    "vat" => $data->vat,
                     // for custom schedules only
                     "type" => $data->type
                 ]);
@@ -647,12 +641,6 @@ final class ServicesPresenter extends SecurePresenter
             ->setRequired("Cena je povinna")
             ->addRule($form::Min, "Cena musí být větší než 0", 0);
 
-        $form->addInteger("vat", "DPH")
-            ->setRequired("DPH je povinna")
-            ->addRule($form::Min, "DPH musí být větě než 0", 0)
-            ->addRule($form::Max, "DPH musí být měně než 100", 99)
-            ->setDefaultValue($this->service->vat);
-
         $form->addSubmit("submit", "Uložit změny");
 
         $form->onSuccess[] = [$this, "editFormSuccess"];
@@ -667,7 +655,6 @@ final class ServicesPresenter extends SecurePresenter
             $this->database->table("services")->where("id=?", $this->id)->update([
                 "name" => $data->name,
                 "price" => $data->price,
-                "vat" => $data->vat
             ]);
         } catch (\Throwable $th) {
             $isSuccess = false;

@@ -15,7 +15,6 @@
             <th class="text-left">Název</th>
             {* <th class="text-left">Popis</th> *}
             <th class="text-right">Cena s DPH</th>
-            <th class="text-right">DPH</th>
             <th class="text-left">Rozvrh</th>
             <th class="text-right">Doba trvání</th>
             <th class="text-left"></th>
@@ -28,7 +27,6 @@
                 <th class="text-left">{$service->name}</th>
                 {* <th class="text-left">{$service->description|truncate:20}</th> *}
                 <th class="text-right">{$service->price|currency} Kč</th>
-                <th class="text-right">{$service->vat}%</th>
                 <th class="text-left">
                     <span n:if="$service->type == 0" class="tag tag-yellow">týdenní</span>
                     <span n:if="$service->type == 1" class="tag tag-purple">definovaný</span>

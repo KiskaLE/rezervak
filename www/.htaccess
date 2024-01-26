@@ -12,6 +12,10 @@ Require all granted
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 
+	RewriteCond %{HTTP_HOST} rezervace.pomajbik.com
+	RewriteCond %{HTTPS} off
+	RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
 	# Uncomment the next line if you want to set the base URL for rewrites
  RewriteBase /
 

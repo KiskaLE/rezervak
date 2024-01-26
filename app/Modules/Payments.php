@@ -12,8 +12,7 @@ final class Payments
     public function __construct(
         private Nette\Database\Explorer $database,
         private DiscountCodes           $discountCodes,
-    )
-    {
+    ) {
     }
 
     /**
@@ -37,7 +36,6 @@ final class Payments
                 "price" => $price,
                 "reservation_id" => $reservation->id,
                 "id_transaction" => $idTransaction,
-                "vat" => $service->vat
             ]);
         } catch (\Throwable $th) {
             $status = false;

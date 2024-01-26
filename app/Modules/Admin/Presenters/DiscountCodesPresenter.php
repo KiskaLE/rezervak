@@ -159,6 +159,7 @@ final class DiscountCodesPresenter extends SecurePresenter
                     ]);
                 }
             } catch (\Throwable $th) {
+                bdump($th->getMessage());
                 $this->flashMessage("Nepodarilo se vytvořit, kód nesmí být duplicitní", "error");
                 $isSuccess = false;
             }
