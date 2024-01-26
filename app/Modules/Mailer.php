@@ -18,8 +18,7 @@ final class Mailer
         private PHPMailer               $phpMailer,
         private Nette\Mail\Mailer       $mailer,
         private Nette\DI\Container      $container
-    )
-    {
+    ) {
         if (isset($_SERVER['SERVER_NAME'])) {
             if ($_SERVER['SERVER_NAME'] === "localhost") {
                 $this->url = "http://" . "localhost:8000";
@@ -39,11 +38,13 @@ final class Mailer
     {
         $userSettings = $this->database->table("settings")->fetch();
         $user = $this->database->table("users")->order("created_at ASC")->fetch();
+        $payment = $reservation->related('payments')->fetch();
         $params = [
             'url' => $this->url . $confirmUrl,
             'serverUrl' => $this->url,
             "user" => $user,
             'userSettings' => $userSettings,
+            'payment' => $payment,
             'reservation' => $reservation
         ];
 
@@ -55,11 +56,13 @@ final class Mailer
     {
         $user = $this->database->table("users")->order("created_at ASC")->fetch();
         $userSettings = $this->database->table("settings")->fetch();
+        $payment = $reservation->related('payments')->fetch();
         $params = [
             'url' => $this->url . $confirmUrl,
             'serverUrl' => $this->url,
             'user' => $user,
             'userSettings' => $userSettings,
+            'payment' => $payment,
             'reservation' => $reservation
         ];
 
@@ -71,29 +74,32 @@ final class Mailer
     {
         $user = $this->database->table("users")->order("created_at ASC")->fetch();
         $userSettings = $this->database->table("settings")->fetch();
+        $payment = $reservation->related('payments')->fetch();
         $params = [
             'user' => $user,
             "url" => $this->url,
             'serverUrl' => $this->url,
             'userSettings' => $userSettings,
+            'payment' => $payment,
             'reservation' => $reservation,
             'reason' => $reason
         ];
 
         $mailContents = $this->latte->renderToString(__DIR__ . '/Mails/cancel.latte', $params);
-        $this->sendMail($to, "Zrušení rezervace č.$reservation->id", $mailContents);
-
+        $this->sendMail($to, "Zrušení rezervace č.$payment->id_transaction", $mailContents);
     }
 
     public function sendPaymentConfirmationMail(string $to, $reservation, $payment): void
     {
         $user = $this->database->table("users")->order("created_at ASC")->fetch();
         $userSettings = $this->database->table("settings")->fetch();
+        $payment = $reservation->related('payments')->fetch();
         $params = [
             'user' => $user,
             'serverUrl' => $this->url,
             'url' => $this->url,
             'userSettings' => $userSettings,
+            'payment' => $payment,
             'reservation' => $reservation,
             'payment' => $payment
         ];
@@ -108,17 +114,18 @@ final class Mailer
         $user = $this->database->table("users")->order("created_at ASC")->fetch();
         $userSettings = $this->database->table("settings")->fetch();
         $payment = $reservation->related('payments')->fetch();
+        $service = $reservation->ref('services', "service_id");
         $params = [
             'user' => $user,
             'serverUrl' => $this->url,
             'url' => $this->url,
             'userSettings' => $userSettings,
-            'reservation' => $reservation,
-            'payment' => $payment
+            'payment' => $payment,
+            'reservation' => $reservation
         ];
 
         $mailContents = $this->latte->renderToString(__DIR__ . '/Mails/newReservation.latte', $params);
-        $this->sendMail($to, "Nová rezervace", $mailContents);
+        $this->sendMail($to, "pomajbik.com : Nová rezervace (" . $service->name . ")", $mailContents);
     }
 
     public function sendNotifyMail(string $to, $reservation): void
@@ -126,10 +133,12 @@ final class Mailer
 
         $user = $this->database->table("users")->order("created_at ASC")->fetch();
         $userSettings = $this->database->table("settings")->fetch();
+        $payment = $reservation->related('payments')->fetch();
         $params = [
             'user' => $user,
             'serverUrl' => $this->url,
             'userSettings' => $userSettings,
+            'payment' => $payment,
             'reservation' => $reservation,
             'url' => $this->url
         ];

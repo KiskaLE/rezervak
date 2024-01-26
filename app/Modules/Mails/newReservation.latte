@@ -1,54 +1,72 @@
 <html>
-<head>
-    <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8" />
     <title>Nová rezervace</title>
-</head>
-<body style="background: #EEEEEE;
-            margin: 20px 0;
-            padding: 20px;
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;">
-<div style="display: flex; flex-direction: column; align-items: center; padding: 20px 0;">
-    <div style="max-width: 500px; padding: 30px; border-radius: 10px; background: white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);">
-        <h1 style="font-size: 24px;
-        font-weight: bolder;
-        color: #d0482b;
-        margin: 0 0 20px;">Nová rezervace</h1>
-        <h2 style="font-size: 16px; margin: 0px;">Rezervace č.{$reservation->id}:</h2>
-        <p style="font-size: 16px; margin-top: 2px;
-            line-height: 30px;">
-            {$reservation->ref("services", "service_id")->name} <br>
-            {$reservation->start|date:"d.m.Y"}<br>
-            {$reservation->start|date:"H:i"}<br>
-            {$payment->price} Kč
+  </head>
+  <body
+    style="
+      background: #eeeeee;
+      margin: 20px 0;
+      padding: 20px;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    "
+  >
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0;
+      "
+    >
+      <div
+        style="
+          max-width: 500px;
+          padding: 30px;
+          border-radius: 10px;
+          background: white;
+          box-shadow:
+            0 4px 6px -1px rgb(0 0 0 / 0.1),
+            0 2px 4px -2px rgb(0 0 0 / 0.1);
+        "
+      >
+        <h1
+          style="
+            font-size: 24px;
+            font-weight: bolder;
+            color: #d0482b;
+            margin: 0 0 20px;
+          "
+          >Nová rezervace </h1>
+        <h2 style="font-size: 16px; margin: 0px"
+          >Rezervace:
+            <path
+              d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+            />
+            <path
+              d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+            /></svg
+        ></h2>
+        <p style="font-size: 16px; margin-top: 2px; line-height: 30px">
+          {$reservation->ref("services", "service_id")->name} <br />
+          {$reservation->start|date:"d.m.Y"}<br />
+          {$reservation->start|date:"H:i"}<br />
+          {$payment->id_transaction} <br />
+          {$payment->price} Kč
         </p>
-        <h2 style="font-size: 16px; margin: 0px;">Zákazník:</h2>
-        <p style="font-size: 16px; margin-top: 2px;
-            line-height: 30px;">
-            {$reservation->firstname} {$reservation->lastname} <br>
-            {$reservation->email} <br>
-            {$reservation->phone} <br>
-            {$reservation->address} <br>
-            {$reservation->city} <br>
-            {$reservation->code}
-            
+        <h2 style="font-size: 16px; margin: 0px">Zákazník:</h2>
+        <p style="font-size: 16px; margin-top: 2px; line-height: 30px">
+          {$reservation->firstname} {$reservation->lastname} <br />
+          {$reservation->email} <br />
+          {$reservation->phone} <br />
+          {$reservation->address} <br />
+          {$reservation->city} <br />
+          {$reservation->code}
         </p>
-        <div style="display: flex; gap: 80px; justify-content:space-between;">
-            <p style="font-size: 16px;
-                line-height: 30px;">S pozdravem, <br>
-                <span n:if="$user->company">{$user->company}</span><br>
-                <span n:if="$user->ico">IČO: {$user->ico}</span> <br>
-                <span n:if="$user->dic">DIC: {$user->dic}</span> <br>
-                <span n:if="$user->email">{$user->email}</span><br>
-                <span n:if="$user->phone">{$user->phone}</span>
-            </p>
-            <!-- <img src="{$url}/assets/images/{$user->logo_url}" alt="Logo"> -->
-            <div style="display: flex; justify-content: center; align-items: center; margin-right: 20px">
-                <img  style="height: 100px" src="{$serverUrl}/assets/images/{$user->logo_url}" alt="Logo">
-            </div>
-        </div>
+        <a href="https://rezervace.pomajbik.com/admin/services" style="display: flex; align-items: center; gap: 10px; text-decoration: none"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        Rezervační systém</a>
+      </div>
     </div>
-</div>
-
-</body>
+  </body>
 </html>

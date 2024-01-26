@@ -1,53 +1,60 @@
 <html>
-<head>
-    <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8" />
     <title>Denní souhrn</title>
-</head>
-<body style="background: #EEEEEE;;
-            padding: 20px;
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;">
-<div style="display: flex; flex-direction: column; align-items: center; padding: 20px 0;">
-    <div style="max-width: 500px; padding: 30px; border-radius: 10px; background: white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);">
-        <h1 style="font-size: 24px;
+  </head>
+  <body
+    style="
+      background: #eeeeee;
+      padding: 20px;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    "
+  >
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0;
+      "
+    >
+      <div
+        style="
+          max-width: 500px;
+          padding: 30px;
+          border-radius: 10px;
+          background: white;
+          box-shadow:
+            0 4px 6px -1px rgb(0 0 0 / 0.1),
+            0 2px 4px -2px rgb(0 0 0 / 0.1);
+        "
+      >
+        <h1
+          style="
+            font-size: 24px;
             font-weight: bolder;
             color: #d0482b;
-            margin: 0 0 20px;">Denní souhrn</h1>
-        <p style="font-size: 16px;
-            line-height: 30px;">Dobrý den,<br>
-            Na dnes, {date("d.m.Y")}, máte naplánovány tyto rezervace:
+            margin: 0 0 20px;
+          "
+          >Denní souhrn {{date("d.m.Y")}}</h1
+        >
+        {foreach $reservations as $reservation} {var $service =
+        $reservation->ref("services", "service_id")} {var $payment =
+        $reservation->related("payments")->fetch()} {var $end = date("H:i",
+        strtotime($reservation->start."+".$service->duration." minutes"))}
+        <h2 style="font-size: 16px; margin: 0px"
+          >{$reservation->start|date:"H:i"} - {$end|date:"H:i"}</h2
+        >
+        <p style="font-size: 16px; margin-top: 2px; line-height: 30px">
+          {$reservation->ref("services", "service_id")->name} <br />
+          {$reservation->firstname} {$reservation->lastname} <br />
+          {var $price = $payment->price} {$price} Kč <br />
+          {$payment->status == 1 ? "zaplaceno" : "čeká na zaplacení"}
         </p>
-        {foreach $reservations as $reservation}
-        {var $service = $reservation->ref("services", "service_id")}
-        {var $payment = $reservation->related("payments")->fetch()}
-        {var $end = date("H:i", strtotime($reservation->start."+".$service->duration." minutes"))}
-        <h2 style="font-size: 16px; margin: 0px;">{$reservation->start|date:"H:i"} - {$end|date:"H:i"}</h2>
-        <p style="font-size: 16px; margin-top: 2px;
-            line-height: 30px;">
-            {$reservation->ref("services", "service_id")->name} <br>
-            {$reservation->firstname} {$reservation->lastname} <br>
-            {var $price = $payment->price}
-            {$price} Kč <br>
-            {$payment->status == 1 ? "zaplaceno" : "čeká na zaplacení"}
-        </p>
-        <br>
+        <br />
         {/foreach}
-
-        <div style="display: flex; gap: 80px; justify-content:space-between;">
-            <p style="font-size: 16px;
-                line-height: 30px;">S pozdravem, <br>
-                <span n:if="$user->company">{$user->company}</span><br>
-                <span n:if="$user->ico">IČO: {$user->ico}</span> <br>
-                <span n:if="$user->dic">DIC: {$user->dic}</span> <br>
-                <span n:if="$user->email">{$user->email}</span><br>
-                <span n:if="$user->phone">{$user->phone}</span>
-            </p>
-            <div style="display: flex; justify-content: center; align-items: center; margin-right: 20px">
-                <img  style="height: 100px" src="{$serverUrl}/assets/images/{$user->logo_url}" alt="Logo">
-            </div>
-        </div>
+      </div>
     </div>
-</div>
-
-</body>
+  </body>
 </html>

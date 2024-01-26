@@ -1,73 +1,114 @@
 <html>
-<head>
-    <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8" />
     <title>Potvrzení rezervace</title>
-</head>
-<body style="background: #EEEEEE;;
-padding: 20px;
-margin: 0;
-font-family: Arial, Helvetica, sans-serif;">
-<div style="display: flex; flex-direction: column; align-items: center; padding: 20px 0;">
-    <div style="max-width: 500px; padding: 30px; border-radius: 10px; background: white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);">
-        <h1 style="font-size: 24px;
+  </head>
+  <body
+    style="
+      background: #eeeeee;
+      padding: 20px;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    "
+  >
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0;
+      "
+    >
+      <div
+        style="
+          max-width: 500px;
+          padding: 30px;
+          border-radius: 10px;
+          background: white;
+          box-shadow:
+            0 4px 6px -1px rgb(0 0 0 / 0.1),
+            0 2px 4px -2px rgb(0 0 0 / 0.1);
+        "
+      >
+        <h1
+          style="
+            font-size: 24px;
             font-weight: bolder;
             color: #d0482b;
-            margin: 0 0 20px;">Vaše záložní rezervace je skoro hotová!</h1>
-        <p style="font-size: 16px;
-            line-height: 30px;">Dobrý den,<br>
-
-            děkujeme Vám za Vaši rezervaci. Rádi bychom Vás informovali, že <b>Vaše rezervace byla úspěšně přijata pod
-                číslem {$reservation->id}</b>. <br> Pokud se teto termín uvolní budeme vás informovat v následujícím e-mailu.
-        </p>
-        <h2 style="font-size: 16px; margin: 0px;">Detaily vaší rezervace:</h2>
-        <p style="font-size: 16px;
-            line-height: 30px;
-            margin-top: 2px;">
-            {$reservation->ref("services", "service_id")->name} <br>
-            {$reservation->start|date:"d.m.Y"} {$reservation->start|date:"H:i"}<br>
-            {var $price = $reservation->related("payments")->fetch()->price}
-            {$price} Kč<br>
-        </p>
-        <p style="font-size: 16px;
-            line-height: 30px;">Pro potvrzení rezervace je nutné kliknout na tlačítko níže. Tento krok je nezbytný pro finální potvrzení Vaší rezervace.
-
-        </p>
-        <div style="
-        min-width: 100px;
-        border: none !important;
-        transition-duration: 300ms;
-        cursor: pointer;
-        margin: 0;
-        background-color: #d0482b;
-        width: fit-content;
-        border-radius: 10px;
-        font-size: 16px;
-        padding: 7px 10px;
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        text-align: center;
-">
-            <a href="{$url}" style="width: 100%; text-decoration: none; color: white; font-size: 16px;">Potvrdit</a>
+            margin: 0 0 20px;
+          "
+          >Vaše záložní rezervace je skoro hotová!</h1
+        >
+        <p style="font-size: 16px; line-height: 30px"
+          >Pro povrzení rezervace čislo {$payment->id_transaction} klikněte na
+          tlačítko níže {$userSettings->verification_time} minut od prijetí
+          tohoto e-mailu.</p
+        >
+        <div>
+          <a
+            href="{$url}"
+            style="
+              width: 100%;
+              text-decoration: none;
+              color: white;
+              font-size: 16px;
+              border: none !important;
+              transition-duration: 300ms;
+              cursor: pointer;
+              margin: 0;
+              background-color: #d0482b;
+              width: fit-content;
+              border-radius: 10px;
+              font-size: 16px;
+              padding: 7px 10px;
+              box-shadow:
+                0 4px 6px -1px rgb(0 0 0 / 0.1),
+                0 2px 4px -2px rgb(0 0 0 / 0.1);
+              text-decoration: none;
+              color: white;
+              font-size: 16px;
+            "
+            >Potvrdit rezervaci</a
+          >
         </div>
-        <p style="font-size: 16px;
-            line-height: 30px;">Prosím, dokončete ověření do <b>{$userSettings->verification_time} minut</b> od přijetí
-            tohoto emailu. <br>
+        <br />
+        <p style="font-size: 16px; line-height: 30px">
+          Pokud se teto termín uvolní budeme vás informovat v následujícím
+          e-mailu.
         </p>
-        <div style="display: flex; gap: 80px; justify-content:space-between;">
-            <p style="font-size: 16px;
-                line-height: 30px;">S pozdravem, <br>
-                <span n:if="$user->company">{$user->company}</span><br>
-                <span n:if="$user->ico">IČO: {$user->ico}</span> <br>
-                <span n:if="$user->dic">DIC: {$user->dic}</span> <br>
-                <span n:if="$user->email">{$user->email}</span><br>
-                <span n:if="$user->phone">{$user->phone}</span>
-            </p>
-            <!-- <img src="{$url}/assets/images/{$user->logo_url}" alt="Logo"> -->
-            <div style="display: flex; justify-content: center; align-items: center; margin-right: 20px">
-                <img  style="height: 100px" src="{$serverUrl}/assets/images/{$user->logo_url}" alt="Logo">
-            </div>
+        <h2 style="font-size: 16px; margin: 0px">Detaily vaší rezervace:</h2>
+        <p style="font-size: 16px; line-height: 30px; margin-top: 2px">
+          {$reservation->ref("services", "service_id")->name} <br />
+          {$reservation->start|date:"d.m.Y"} {$reservation->start|date:"H:i"}<br />
+          {var $price = $reservation->related("payments")->fetch()->price}
+          {$price} Kč<br />
+        </p>
+        <div style="display: flex; gap: 80px; justify-content: space-between">
+          <p style="font-size: 16px; line-height: 30px"
+            >S pozdravem, <br />
+            <span n:if="$user->company">{$user->company}</span><br />
+            <span n:if="$user->ico">IČO: {$user->ico}</span> <br />
+            <span n:if="$user->dic">DIC: {$user->dic}</span> <br />
+            <span n:if="$user->email">{$user->email}</span><br />
+            <span n:if="$user->phone">{$user->phone}</span>
+          </p>
+          <!-- <img src="{$url}/assets/images/{$user->logo_url}" alt="Logo"> -->
+          <div
+            style="
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-right: 20px;
+            "
+          >
+            <img
+              style="height: 100px"
+              src="{$serverUrl}/assets/images/{$user->logo_url}"
+              alt="Logo"
+            />
+          </div>
         </div>
+      </div>
     </div>
-</div>
-
-</body>
+  </body>
 </html>

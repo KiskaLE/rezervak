@@ -632,7 +632,7 @@ h1 {
   width: 100%;
   height: 100px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(5, 1fr);
   transition-duration: 100ms;
 }
 .list-wrapper .list-item .list-item-head:hover {
@@ -696,7 +696,7 @@ h1 {
   box-sizing: border-box;
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 2fr;
   transition: all 0.3s ease;
   height: 0;
   opacity: 0;

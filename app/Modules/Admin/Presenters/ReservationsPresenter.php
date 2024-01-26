@@ -25,16 +25,14 @@ final class ReservationsPresenter extends SecurePresenter
 
         private Formater $formater,
         private Mailer $mailer,
-    
-    )
-    {
+
+    ) {
     }
 
     protected function beforeRender()
     {
         parent::beforeRender();
         $this->template->selectedPage = "reservations";
-
     }
 
     public function actionDefault(int $page = 1)
@@ -61,7 +59,7 @@ final class ReservationsPresenter extends SecurePresenter
         } else {
             $this->template->filterService = null;
         }
-        
+
 
         // $numberOfReservations = $this->database->table('reservations')
         //     ->select('reservations.*',)
@@ -72,9 +70,9 @@ final class ReservationsPresenter extends SecurePresenter
 
 
         $q = $this->database->table('reservations')
-        ->select('reservations.*',)
-        ->where('user_id=?', $this->user->id)
-        ->where("reservations.type=?", 0);
+            ->select('reservations.*',)
+            ->where('user_id=?', $this->user->id)
+            ->where("reservations.type=?", 0);
 
         if ($start) {
             $q = $q->where('start >= ?', $start);
@@ -88,24 +86,24 @@ final class ReservationsPresenter extends SecurePresenter
         }
 
         $this->template->futureCount = $this->database->table('reservations')
-        ->select('reservations.*',)
-        ->where("reservations.type=?", 0)->where('reservations.status=?', 'VERIFIED')->where('start >= ?', date('Y-m-d'))->where(':payments.status=?', 1)->order('start ASC')->count();
+            ->select('reservations.*',)
+            ->where("reservations.type=?", 0)->where('reservations.status=?', 'VERIFIED')->where('start >= ?', date('Y-m-d'))->where(':payments.status=?', 1)->order('start ASC')->count();
         $this->template->pastCount = $this->database->table('reservations')
-        ->select('reservations.*',)
-        ->where("reservations.type=?", 0)->where('reservations.status=?', 'VERIFIED')->where('start < ?', date('Y-m-d'))->where(':payments.status=?', 1)->order('start ASC')->count();
+            ->select('reservations.*',)
+            ->where("reservations.type=?", 0)->where('reservations.status=?', 'VERIFIED')->where('start < ?', date('Y-m-d'))->where(':payments.status=?', 1)->order('start ASC')->count();
 
         $this->template->unpaidCount = $this->database->table('reservations')
-        ->select('reservations.*',)
-        ->where("reservations.type=?", 0)->where('reservations.status=?', 'VERIFIED')->where(':payments.status=?', 0)->order('start ASC')->count();
+            ->select('reservations.*',)
+            ->where("reservations.type=?", 0)->where('reservations.status=?', 'VERIFIED')->where(':payments.status=?', 0)->order('start ASC')->count();
 
         $this->template->allCount = $this->database->table('reservations')
-        ->select('reservations.*',)
-        ->where("reservations.type=?", 0)->where('reservations.status !=?', 'UNVERIFIED')->order('created_at DESC')->count();
+            ->select('reservations.*',)
+            ->where("reservations.type=?", 0)->where('reservations.status !=?', 'UNVERIFIED')->order('created_at DESC')->count();
 
 
         $q = $this->database->table('reservations')
-        ->select('reservations.*',)
-        ->where("reservations.type=?", 0);
+            ->select('reservations.*',)
+            ->where("reservations.type=?", 0);
         switch ($tab) {
             case 0:
                 //nadcházející
@@ -113,7 +111,7 @@ final class ReservationsPresenter extends SecurePresenter
                     ->where('start >= ?', date('Y-m-d'))
                     ->where(':payments.status=?', 1)->order('start ASC');
                 break;
-            
+
             case 1:
                 //proběhlé
                 $q = $q->where('reservations.status=?', 'VERIFIED')->where('start < ?', date('Y-m-d'))->where(':payments.status=?', 1)->order('start ASC');
@@ -125,7 +123,6 @@ final class ReservationsPresenter extends SecurePresenter
             case 3:
                 $q = $q->where('reservations.status !=?', 'UNVERIFIED')->order('created_at DESC');
                 break;
-
         }
 
         $numberOfReservations = $q->count();
@@ -135,7 +132,6 @@ final class ReservationsPresenter extends SecurePresenter
         $this->template->numberOfReservations = $numberOfReservations;
         $this->template->reservations = $reservations;
         $this->template->paginator = $paginator;
-        
     }
 
     protected function createComponentEditForm(): Form
@@ -219,7 +215,7 @@ final class ReservationsPresenter extends SecurePresenter
         if ($data->range) {
             $range = $this->formater->getDataFromRangeInFormatDMY($data->range);
             $session->filterStart = $range['start'];
-            $session->filterEnd = $range['end']. " 23:59:59";
+            $session->filterEnd = $range['end'] . " 23:59:59";
         }
         if ($data->service) {
             $session->filterService = $data->service;
@@ -228,15 +224,17 @@ final class ReservationsPresenter extends SecurePresenter
     }
 
 
-    public function handleSetTab($tab) {
-       
+    public function handleSetTab($tab)
+    {
+
         $session = $this->getSession("reservations");
-    
+
         $session->reservations_tab = $tab;
         $this->redirect('default');
     }
 
-    public function handleCancel($reservationId) {
+    public function handleCancel($reservationId)
+    {
         $isSuccess = true;
         $reservation = $this->database->table('reservations')->where('id=?', $reservationId)->fetch();
         try {
@@ -250,19 +248,18 @@ final class ReservationsPresenter extends SecurePresenter
             $isSuccess = false;
         }
         if ($isSuccess) {
-            $this->mailer->sendCancelationMail($reservation->email, $reservation, "Zrušeno správcem");
             $this->flashMessage("Rezervace byla zrušena", "success");
             $reservation = $this->database->table('reservations')->where('id=?', $reservationId)->fetch();
             $this->mailer->sendCancelationMail($reservation->email, $reservation, "Zrušeno správcem");
             $this->redirect('this');
         }
         $this->flashMessage("Rezervaci se nepodařilo zrušit", "error");
-
     }
 
-    public function handleDeleteFilter($filter) {
+    public function handleDeleteFilter($filter)
+    {
         $session = $this->getSession("reservations");
-        switch($filter) {
+        switch ($filter) {
             case "range":
                 $session->filterStart = null;
                 $session->filterEnd = null;
@@ -275,7 +272,8 @@ final class ReservationsPresenter extends SecurePresenter
         $this->redirect('default');
     }
 
-    public function handleSetPaid($id) {
+    public function handleSetPaid($id)
+    {
         $isSuccess = true;
         $payment = $this->database->table('payments')->where('reservation_id=?', $id)->fetch();
         $reservation = $payment->ref('reservations', "reservation_id");
@@ -297,5 +295,4 @@ final class ReservationsPresenter extends SecurePresenter
         }
         $this->flashMessage("Nepovedlo se zaplatit", "error");
     }
-
 }

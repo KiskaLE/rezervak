@@ -28,14 +28,14 @@ final class Payments
         $status = true;
 
         try {
-            $service = $reservation->ref("services", "service_id");
             $price = $this->createPrice($reservation, $discountCode);
-            $idTransaction = $reservation->id . date("s");
+            $idTransaction = date("Y") . "09" . str_pad($reservation->id, 4, "0", STR_PAD_LEFT);
 
             $database->table("payments")->insert([
                 "price" => $price,
                 "reservation_id" => $reservation->id,
                 "id_transaction" => $idTransaction,
+                "discount_code" => $this->discountCodes->isCodeValid($reservation->service_id, $discountCode) ? $discountCode : "",
             ]);
         } catch (\Throwable $th) {
             $status = false;
@@ -100,12 +100,10 @@ final class Payments
     private function createPrice($reservation, string $discountCode): int
     {
         $price = $reservation->ref("services", "service_id")->price;
-
         $discountCodeRow = $this->discountCodes->isCodeValid($reservation->service_id, $discountCode);
-
         if ($discountCodeRow) {
             $discountType = $discountCodeRow["type"];
-            $discountValue = $discountCodeRow["type"];
+            $discountValue = $discountCodeRow["value"];
 
             if ($discountType == 0 && $discountValue >= $price) {
                 $price = 0;

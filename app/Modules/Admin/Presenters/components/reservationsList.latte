@@ -21,6 +21,13 @@
                         </div>
 
                         <div class="list-item-column">
+                            <div class="list-item-info">
+                                <span class="list-item-label">VS platby</span>
+                                <span>{$payment->id_transaction}</span>
+                            </div>
+                        </div>
+
+                        <div class="list-item-column">
                             {* <div class="list-item-info row">Vytvořeno {$reservation->created_at|convertToAdminTimezone|date:'d.m.Y H:i'}</div> *}
                             <div n:if="!$payment->status && $reservation->status != 'CANCELED'" class="list-item-info row"><span
                                         class="tag tag-yellow">čeká na zaplacení</span></div>
@@ -57,16 +64,6 @@
                         <div class="list-item-column top">
 
                             <div class="list-item-info">
-                                <span class="list-item-label">Číslo rezervace</span>
-                                <span>{$reservation->id}</span>
-                            </div>
-
-                            <div class="list-item-info">
-                                <span class="list-item-label">VS platby</span>
-                                <span>{$payment->id_transaction}</span>
-                            </div>
-
-                            <div class="list-item-info">
                                 <span class="list-item-label">E-mail</span>
                                 <span>{$reservation->email}</span>
                             </div>
@@ -81,6 +78,15 @@
                                 <span>{$reservation->address}</span>
                                 <span>{$reservation->code}</span>
                                 <span>{$reservation->city}</span>
+                            </div>
+
+                        </div>
+
+                        <div class="list-item-column top">
+
+                            <div n:if="$payment->discount_code ?? ''" class="list-item-info">
+                                <span class="list-item-label">Kód zákazníka</span>
+                                <span>{$payment->discount_code}</span>
                             </div>
 
                         </div>
