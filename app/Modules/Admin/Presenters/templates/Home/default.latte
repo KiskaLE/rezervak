@@ -71,7 +71,7 @@
             </a>
         </div>
     </div>
-    {include reservationList from './../../Components/reservationsList.latte', reservations: $reservations}
+    {include reservationList from './../../components/reservationsList.latte', reservations: $reservations}
     <!-- Paginator pages -->
     <ul n:if="$paginator->getPageCount() > 1" class="pagination">
 

@@ -28,9 +28,7 @@ final class ServicesPresenter extends SecurePresenter
         private Nette\Security\User $user,
         private Formater            $formater,
         private AvailableDates      $availableDates
-    )
-    {
-
+    ) {
     }
 
     protected function beforeRender()
@@ -52,29 +50,6 @@ final class ServicesPresenter extends SecurePresenter
 
         $services = $q->limit($paginator->getLength(), $paginator->getOffset())->fetchAll();
         $this->template->services = $services;
-
-    }
-
-
-    public function actionShowCustomSchedulesConflicts($id, $backlink, $page = 1)
-    {
-        $this->backlink = $backlink;
-        $customSchedule = $this->database->table("services_custom_schedules")->where("uuid=?", $id)->fetch();
-        $service = $customSchedule->ref("services", "service_id");
-
-        $reservations = $this->availableDates->getCustomSchedulesConflicts($service, $customSchedule);
-        $numberOfReservations = count($reservations);
-
-        $paginator = $this->createPagitator($numberOfReservations, $page, 10);
-
-        $this->template->reservations = array_slice($reservations, $paginator->getOffset(), $paginator->getLength());
-
-        $this->template->paginator = $paginator;
-        $this->template->backlink = $this->backlink;
-        $this->template->curBacklink = $this->storeRequest();
-        $this->template->id = $id;
-
-
     }
 
     public function actionEdit($id)
@@ -87,9 +62,6 @@ final class ServicesPresenter extends SecurePresenter
         $customSchedules = $service->related("services_custom_schedules")->fetchAll();
         $this->template->customSchedules = $customSchedules;
 
-        $this->backlink = $this->storeRequest();
-        $this->template->backlink = $this->backlink;
-
         //custom schedule conflicts
         $this->template->customScheduleConflicts = $this->availableDates->getCustomSchedulesConflictsIds($service);
 
@@ -100,7 +72,6 @@ final class ServicesPresenter extends SecurePresenter
 
         $calendarPeriod = gmdate("H:i:s", $userSettings->sample_rate * 60);
         $this->template->calendarPeriod = $calendarPeriod;
-
     }
 
     public function actionEditSchedule($id)
@@ -109,13 +80,10 @@ final class ServicesPresenter extends SecurePresenter
         $this->template->service = $service;
         $this->service = $service;
         $this["workingHoursForm"]->setDefaults($this->getDefaultWorkingHours());
-
     }
 
-    public function actionEditCustomSchedule($id, $backlink)
+    public function actionEditCustomSchedule($id)
     {
-        $this->backlink = $backlink;
-
         $schedule = $this->database->table("services_custom_schedules")->where("uuid=?", $id)->fetch();
         $this->schedule = $schedule;
 
@@ -145,21 +113,6 @@ final class ServicesPresenter extends SecurePresenter
         }
     }
 
-    public function actionCreateCustomSchedule($id, $backlink)
-    {
-        $this->backlink = $backlink;
-
-        $service = $this->database->table("services")->get($id);
-        $this->service = $service;
-        $this->template->service = $service;
-
-        $userSettings = $this->database->table("settings")->where("user_id=?", $this->user->id)->fetch();
-        $this->template->userSettings = $userSettings;
-
-        $calendarPeriod = gmdate("H:i:s", $userSettings->sample_rate * 60);
-        $this->template->calendarPeriod = $calendarPeriod;
-    }
-
     public function handleDeleteService($id)
     {
         $hidden = $this->database->table("services")->get($id)->hidden;
@@ -176,13 +129,6 @@ final class ServicesPresenter extends SecurePresenter
         }
 
         $this->redirect("Services:");
-    }
-
-    public function handleDeleteCustomSchedule($cutomScheduleId)
-    {
-        $this->database->table("services_custom_schedules")->where("uuid=?", $cutomScheduleId)->delete();
-        $this->flashMessage("Smazano", "success");
-        $this->redirect("edit", $this->id);
     }
 
     private function getWorkingHours(int $day)
@@ -377,13 +323,11 @@ final class ServicesPresenter extends SecurePresenter
         $form->onSuccess[] = [$this, "workingHoursSubmit"];
 
         return $form;
-
     }
 
     public function workingHoursSubmit(Form $form, $data)
     {
         $isSuccess = false;
-        bdump($data);
         $this->database->transaction(function ($database) use ($data, &$isSuccess) {
             try {
                 //monday
@@ -488,8 +432,6 @@ final class ServicesPresenter extends SecurePresenter
         } else {
             $this->flashMessage("Nastala chyba", "error");
         }
-
-
     }
 
     protected function createComponentEditCustomScheduleForm(): Form
@@ -519,7 +461,6 @@ final class ServicesPresenter extends SecurePresenter
                     // "end" => $range["end"],
                     "updated_at" => date("Y-m-d H:i:s")
                 ]);
-
             } catch (\Exception $e) {
                 $success = false;
             }
@@ -555,7 +496,6 @@ final class ServicesPresenter extends SecurePresenter
             }
 
             return $success;
-
         });
 
         if ($res) {
@@ -568,62 +508,6 @@ final class ServicesPresenter extends SecurePresenter
         }
     }
 
-    protected function createComponentCreateCustomScheduleForm(): Form
-    {
-        $form = new Form;
-
-        $form->addText("scheduleName")->setRequired("Název je povinný");
-        $form->addText("range")->setRequired("Rozsah je povinný");
-        $form->addHidden("events")->setRequired("Vyberte časové okna");
-
-
-        $form->addSubmit("submit", "Uložit");
-        $form->onSuccess[] = [$this, "createCustomScheduleFormSuccess"];
-
-        return $form;
-    }
-
-    public function createCustomScheduleFormSuccess(Form $form, $data)
-    {
-        $res = $this->database->transaction(function ($database) use ($data) {
-            $success = true;
-            try {
-                $range = $this->formater->getDataFromString($data->range);
-                $uuid = Uuid::uuid4();
-                $events = Nette\Utils\Json::decode($data->events);
-                $serviceSchedule = $this->database->table("services_custom_schedules")->insert([
-                    "service_id" => $this->service->id,
-                    "name" => $data->scheduleName,
-                    "uuid" => $uuid,
-                    "start" => $range["start"],
-                    "end" => $range["end"],
-                    "type" => 0
-                ]);
-                foreach ($events as $day) {
-                    $uuid = Uuid::uuid4();
-                    $start = date("Y-m-d H:i:s", strtotime($day->start));
-                    $end = date("Y-m-d H:i:s", strtotime($day->end));
-                    $this->database->table("service_custom_schedule_days")->insert([
-                        "uuid" => $uuid,
-                        "service_custom_schedule_id" => $serviceSchedule->id,
-                        "start" => $start,
-                        "end" => $end,
-                        "type" => 0
-                    ]);
-                }
-            } catch (\Exception $e) {
-                $success = false;
-            }
-            return $success;
-        });
-
-        if ($res) {
-            $this->flashMessage("Vytvořeno", "success");
-            $this->restoreRequest($this->backlink);
-        } else {
-            $this->flashMessage("Nepodarilo se vytvořit službu", "error");
-        }
-    }
 
     protected function createComponentCreateForm(): Form
     {
@@ -743,8 +627,6 @@ final class ServicesPresenter extends SecurePresenter
             $this->flashMessage("Nepodarilo se vytvořit službu", "error");
             $this->redirect("this");
         }
-
-
     }
 
     protected function createComponentEditForm(): Form
@@ -827,5 +709,4 @@ final class ServicesPresenter extends SecurePresenter
         });
         $this->redirect("this");
     }
-
 }

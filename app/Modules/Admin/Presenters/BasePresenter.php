@@ -10,7 +10,6 @@ use Nette\DI\Attributes\Inject;
 class BasePresenter extends Presenter
 {
 
-    public $backlink;
     #[Inject] public Explorer $database;
 
 
@@ -38,19 +37,6 @@ class BasePresenter extends Presenter
      * @return void
      * @throws InvalidLinkException If the backlink is invalid.
      */
-    public function handleBack($defaultRoute)
-    {
-        if ($this->backlink) {
-            try {
-                $this->restoreRequest($this->backlink);
-            } catch (\Throwable $e) {
-                // Handle invalid backlink, log error or redirect to a default route
-                $this->redirect($defaultRoute);
-            }
-        } else {
-            $this->redirect($defaultRoute);
-        }
-    }
 
     /**
      * Creates a paginator object for pagination.

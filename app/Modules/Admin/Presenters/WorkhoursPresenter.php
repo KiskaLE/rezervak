@@ -26,22 +26,17 @@ final class WorkhoursPresenter extends SecurePresenter
         private Nette\Security\User $user,
         private AvailableDates      $availableDates,
         private Formater            $formater
-    )
-    {
-
+    ) {
     }
 
     protected function beforeRender()
     {
         parent::beforeRender();
         $this->template->selectedPage = "workhours";
-        $this->backlink = $this->storeRequest();
-        $this->template->backlink = $this->backlink;
     }
 
     public function actionDefault()
     {
-        $this->template->selectedPage = "workhours";
 
         $this["workingHoursForm"]->setDefaults($this->getDefaultWorkingHours());
 
@@ -243,7 +238,6 @@ final class WorkhoursPresenter extends SecurePresenter
         $form->onSuccess[] = [$this, "workingHoursSubmit"];
 
         return $form;
-
     }
 
     public function workingHoursSubmit(Form $form, $data)
@@ -346,8 +340,6 @@ final class WorkhoursPresenter extends SecurePresenter
         } else {
             $this->flashMessage("Nastala chyba", "error");
         }
-
-
     }
 
     protected function createComponentCreateHolidayForm(): Form
