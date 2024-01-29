@@ -12,6 +12,10 @@ class SecurePresenter extends BasePresenter
     public $timezones;
     #[Inject] public Explorer $database;
 
+    public $filterName;
+    public $filterVs;
+    public $tab;
+
     public function __construct()
     {
     }
@@ -49,8 +53,8 @@ class SecurePresenter extends BasePresenter
         $session = $this->getSession("reservationsFilter");
         $form = new Form;
 
-        $form->addText("name")->setDefaultValue($session->filterName);
-        $form->addText("vs")->setDefaultValue($session->filterVs)
+        $form->addText("name");
+        $form->addText("vs")
             ->addFilter(function ($value) {
                 //remove everything that is not a number from string
                 return preg_replace("/[^0-9]/", "", $value);
@@ -65,8 +69,9 @@ class SecurePresenter extends BasePresenter
     public function reservationsListFilterFormSuccesses(Form $form, \stdClass $data)
     {
         $session = $this->getSession("reservationsFilter");
-        $session->filterName = $data->name;
-        $session->filterVs = $data->vs;
-        $this->redirect('this');
+        $this->filterName = $data->name;
+        $this->filterVs = $data->vs;
+        $tab = $this->tab ?? 0;
+        $this->redirect('this', ['tab' => $tab, 'filterName' => $data->name, 'filterVs' => $data->vs]);
     }
 }

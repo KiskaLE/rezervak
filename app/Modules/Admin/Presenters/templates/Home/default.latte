@@ -5,7 +5,7 @@
 </div>
 <div class="info-cards-grid">
     {* info-card *}
-        <a n:href="upcommingReservations! 1" class="info-card hover">
+        <a n:href="Reservations:default 1, 1" class="info-card hover">
             <div class="info-card-img">
                 <img src="{$basePath}/assets/admin/icons/book.svg" alt="ikona">
             </div>
@@ -16,7 +16,7 @@
         </a>
         {* info-card-end *}
         {* info-card *}
-        <a n:href="upcommingReservations! 0" class="info-card hover">
+        <a n:href="Reservations:default 1, 3" class="info-card hover">
             <div class="info-card-img">
                 <div style="position: relative; left: 1.5px">
                     <img src="{$basePath}/assets/admin/icons/future-events.svg" alt="ikona">
@@ -29,7 +29,7 @@
         </a>
         {* info-card-end *}
         {* info-card *}
-        <a n:href="upcommingReservations! 2" class="info-card hover">
+        <a n:href="Reservations:default 1, 2" class="info-card hover">
             <div class="info-card-img">
                 <img src="{$basePath}/assets/admin/icons/credit-card-unpaid.svg" alt="ikona">
             </div>
@@ -60,13 +60,13 @@
 
     <div class="list-page">
         <div class="list-tabs">
-            <a n:href="setTab! 0" id="tab0" class="list-page-item">
+            <a n:href="default 1, 0, $filterName, $filterVs" id="tab0" class="list-page-item">
                 Dnes {$numberOfReservationsToday}
             </a>
-            <a n:href="setTab! 1" id="tab1" class="list-page-item">
+            <a n:href="default 1, 1, $filterName, $filterVs" id="tab1" class="list-page-item">
                 Zítra {$numberOfReservationsTomorow}
             </a>
-            <a n:href="setTab! 2" id="tab2" class="list-page-item">
+            <a n:href="default 1, 2, $filterName, $filterVs" id="tab2" class="list-page-item">
                 Pozítří {$numberOfReservationsAfterTomorow}
             </a>
         </div>

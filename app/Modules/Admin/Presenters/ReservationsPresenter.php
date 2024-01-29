@@ -35,7 +35,7 @@ final class ReservationsPresenter extends SecurePresenter
         $this->template->selectedPage = "reservations";
     }
 
-    public function actionDefault(int $page = 1)
+    public function actionDefault(int $page = 1, int $tab = 0, string $filterName = "", string $filterVs = "")
     {
         $this->page = $page;
 
@@ -44,7 +44,7 @@ final class ReservationsPresenter extends SecurePresenter
         // $session->filterStart = null;
         // $session->filterEnd = null;
         //tab
-        $tab = $session->reservations_tab ?? 0;
+        $this->tab = $tab;
         $this->template->tab = $tab;
 
         //filter
@@ -53,8 +53,8 @@ final class ReservationsPresenter extends SecurePresenter
         $this->template->start = $start;
         $this->template->end = $end;
 
-        $filterName = $sessionFilter->filterName ?? "";
-        $filterVs = $sessionFilter->filterVs ?? "";
+        $this->template->filterName = $filterName;
+        $this->template->filterVs = $filterVs;
 
         $filterService = $session->filterService ?? null;
         if ($filterService) {
@@ -92,12 +92,8 @@ final class ReservationsPresenter extends SecurePresenter
 
         switch ($tab) {
             case 0:
-                //nadcházející
-                $q = (clone $originalQ)->where('reservations.status=?', 'VERIFIED')
-                    ->where('start >= ?', date('Y-m-d'))
-                    ->where(':payments.status=?', 1)->order('start ASC');
+                $q = (clone $originalQ)->where('reservations.status !=?', 'UNVERIFIED')->order('created_at DESC');
                 break;
-
             case 1:
                 //proběhlé
                 $q = (clone $originalQ)->where('reservations.status=?', 'VERIFIED')->where('start < ?', date('Y-m-d'))->where(':payments.status=?', 1)->order('start ASC');
@@ -107,7 +103,10 @@ final class ReservationsPresenter extends SecurePresenter
                 $q = (clone $originalQ)->where('reservations.status=?', 'VERIFIED')->where(':payments.status=?', 0)->order('start ASC');
                 break;
             case 3:
-                $q = (clone $originalQ)->where('reservations.status !=?', 'UNVERIFIED')->order('created_at DESC');
+                //nadcházející
+                $q = (clone $originalQ)->where('reservations.status=?', 'VERIFIED')
+                    ->where('start >= ?', date('Y-m-d'))
+                    ->where(':payments.status=?', 1)->order('start ASC');
                 break;
         }
 

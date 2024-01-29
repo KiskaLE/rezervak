@@ -11,16 +11,16 @@
 
     <div class="list-page">
         <div class="list-tabs">
-            <a n:href="setTab! 3" class="list-page-item" id="tab3">
+            <a n:href="default 1, 0, $filterName, $filterVs" class="list-page-item" id="tab0">
                 Všechny <span class="numberOfReservations">{$allCount}</span>
             </a>
-            <a n:href="setTab! 0" class="list-page-item" id="tab0">
+            <a n:href="default 1, 3, $filterName, $filterVs" class="list-page-item" id="tab3">
                 Nadcházející <span class="numberOfReservations">{$futureCount}</span>
             </a>
-            <a n:href="setTab! 1" class="list-page-item" id="tab1">
+            <a n:href="default 1, 1, $filterName, $filterVs" class="list-page-item" id="tab1">
                 Proběhlé <span class="numberOfReservations">{$pastCount}</span>
             </a>
-            <a n:href="setTab! 2" class="list-page-item" id="tab2">
+            <a n:href="default 1, 2, $filterName, $filterVs" class="list-page-item" id="tab2">
                 Nezaplacené <span class="numberOfReservations">{$unpaidCount}</span>
             </a>
         </div>
@@ -52,7 +52,7 @@
                                 x1="6" y1="6" x2="18" y2="18"/></svg></a>
                 <span>{$filterService}</span>
             </span>
-            <div class="filter-toggle">
+            {* <div class="filter-toggle">
                 <svg onclick="listFilterToggle()" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                      stroke-linejoin="round" class="feather feather-filter">
@@ -77,7 +77,7 @@
                         </div>
                     </form>
                 </div>
-            </div>
+            </div> *}
         </div>
     </div>
     {include reservationList from './../../components/reservationsList.latte', reservations: $reservations}

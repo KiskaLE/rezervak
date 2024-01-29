@@ -28,15 +28,13 @@ final class HomePresenter extends SecurePresenter
         $this->template->selectedPage = "dashboard";
     }
 
-    public function renderDefault(int $page = 1): void
+    public function actionDefault(int $page = 1, int $tab = 0, string $filterName = "", string $filterVs = ""): void
     {
-        $session = $this->getSession("home");
-        $sessionFilter = $this->getSession("reservationsFilter");
-        $tab = $session->reservations_tab ?? 0;
+        $this->template->filterName = $filterName;
+        $this->template->filterVs = $filterVs;
+        $this->tab = $tab;
         $this->template->tab = $tab;
 
-        $filterName = $sessionFilter->filterName ?? "";
-        $filterVs = $sessionFilter->filterVs ?? "";
 
         $originalQ = $this->database->table("reservations")
             ->where("reservations.status='VERIFIED' AND reservations.type=0")
@@ -83,15 +81,11 @@ final class HomePresenter extends SecurePresenter
         $this->template->sales = $sales;
         $unpaidReservations = $this->database->table("reservations")->where("reservations.status='VERIFIED' AND :payments.status=0 AND reservations.type=0")->count();
         $this->template->unpaidReservations = $unpaidReservations;
-    }
-
-    public function actionDefault(): void
-    {
         if ($this->isAjax()) {
             $this->getChartData();
+            $this->payload->postGet = true;
+            $this->payload->url = $this->link("Home:default");
         }
-        $this->payload->postGet = true;
-        $this->payload->url = $this->link("Home:default");
     }
 
     private function getChartData()
