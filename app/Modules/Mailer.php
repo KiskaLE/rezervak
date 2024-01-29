@@ -75,7 +75,7 @@ final class Mailer
     {
         $user = $this->database->table("users")->order("created_at ASC")->fetch();
         $userSettings = $this->database->table("settings")->fetch();
-        $payment = $reservation->related('payments')->fetch();
+        $payment = $this->database->table("payments")->where("reservation_id=?", $reservation->id)->fetch();
         $params = [
             'user' => $user,
             "url" => $this->url,

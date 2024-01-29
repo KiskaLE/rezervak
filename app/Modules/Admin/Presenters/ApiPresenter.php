@@ -40,6 +40,7 @@ class ApiPresenter extends BasePresenter
     public function actionClean()
     {
         $database = $this->database;
+        $user = $this->database->table("users")->order("created_at ASC")->fetch();
         $settings = $database->table("settings")->fetch();
         $database->transaction(function ($database) use ($settings) {
             $yesterday = date("Y-m-d H:i:s", strtotime("-" . $settings->time_to_pay . " hours"));
@@ -63,12 +64,13 @@ class ApiPresenter extends BasePresenter
         foreach ($backups as $backup) {
             $service = $backup->ref("services", "service_id");
             if ($this->availableDates->isTimeAvailable($backup, $service) && $this->availableDates->isTimeToPay($backup->start, $settings->time_to_pay)) {
-                $database->transaction(function ($database) use ($backup) {
+                $database->transaction(function ($database) use ($backup, $user) {
                     $database->table("reservations")->where("id=?", $backup->id)->update(["type" => 0]);
                     //update reservation
                     $database->table("reservations")->where("id=?", $backup->id)->update(["updated_at" => date("Y-m-d H:i:s")]);
                     $this->payments->updateTime($backup->id);
                     $this->mailer->sendConfirmationMail($backup->email, "/payment/?uuid=" . $backup->uuid, $backup);
+                    $this->mailer->sendNewReservationMail($user->email, $backup);
                     dump("odeslano");
                 });
             }

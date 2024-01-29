@@ -68,7 +68,9 @@ final class PaymentPresenter extends BasePresenter
             ]);
         } catch (\Throwable $e) {
         }
-        $this->mailer->sendNewReservationMail($user->email, $reservation);
+        if ($reservation->type == 0) {
+            $this->mailer->sendNewReservationMail($user->email, $reservation);
+        }
     }
 
     private function verify($reservation, $uuid, $table)
