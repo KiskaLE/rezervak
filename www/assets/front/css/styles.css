@@ -694,7 +694,7 @@ body {
 .recap-customer-info-discount-code {
   display: flex;
   gap: 10px;
-  align-items: baseline;
+  align-items: center;
 }
 @media (max-width: 500px) {
   .recap-customer-info-discount-code {
@@ -702,10 +702,11 @@ body {
   }
 }
 .recap-customer-info-discount-code h2 {
-  text-wrap: nowrap;
+  white-space: nowrap;
   width: -moz-fit-content !important;
   width: fit-content !important;
   min-width: auto !important;
+  margin: 0 !important;
 }
 .recap-customer-info-discount-code h2::after {
   content: ":";
@@ -1079,6 +1080,7 @@ footer {
 .recap-service-card div {
   display: flex;
   flex-direction: column;
+  gap: 3px;
 }
 .recap-service-card .recap-service-title {
   margin: 0;

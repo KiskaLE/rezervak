@@ -842,16 +842,18 @@ body {
 .recap-customer-info-discount-code {
   display: flex;
   gap: 10px;
-  align-items: baseline;
+  align-items: center;
 
   @include w(sm) {
     flex-direction: column;
   }
 
   h2 {
-    text-wrap: nowrap;
+    //text-wrap: nowrap;
+    white-space: nowrap;
     width: fit-content !important;
     min-width: auto !important;
+    margin: 0 !important;
     &::after {
       content: ":";
 
@@ -1272,6 +1274,7 @@ footer {
   div {
     display: flex;
     flex-direction: column;
+    gap: 3px;
   }
 
   .recap-service-title {

@@ -20,19 +20,18 @@ final class PaymentPresenter extends BasePresenter
     public function __construct(
         private Payments $payments,
         private Mailer   $mailer
-    )
-    {
+    ) {
     }
 
     public function actionDefault($id)
     {
         $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
         $this->template->reservation = $reservation;
-        $service = $reservation->ref("services", "service_id");
-        $this->template->service = $service;
         $this->user = $this->database->table("users")->order("created_at ASC")->order("created_at ASC")->fetch();
         $this->template->user = $this->user;
         if ($reservation) {
+            $service = $reservation->ref("services", "service_id");
+            $this->template->service = $service;
             $this->verify($reservation, $id, "reservations");
             if ($reservation->status != "VERIFIED") {
                 $this->redirect("Payment:notFound");
@@ -43,11 +42,9 @@ final class PaymentPresenter extends BasePresenter
             $qrCode = $this->payments->generatePaymentCode($payment, $this->user->id);
             $this->template->userSettings = $this->database->table("settings")->fetch();
             $this->template->qrCode = $qrCode;
-
         } else {
             $this->redirect("Payment:notFound");
         }
-
     }
 
     public function actionBackup($id)
@@ -59,7 +56,6 @@ final class PaymentPresenter extends BasePresenter
             $this->redirect("Payment:notFound");
         }
         $this->template->service = $reservation;
-
     }
 
     private function confirm($uuid, $table): void
@@ -70,7 +66,6 @@ final class PaymentPresenter extends BasePresenter
             $reservation->update([
                 "status" => "VERIFIED"
             ]);
-
         } catch (\Throwable $e) {
         }
         $this->mailer->sendNewReservationMail($user->email, $reservation);
@@ -87,5 +82,4 @@ final class PaymentPresenter extends BasePresenter
             $this->redirect("this");
         }
     }
-
 }

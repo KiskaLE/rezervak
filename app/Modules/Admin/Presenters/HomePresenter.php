@@ -31,34 +31,44 @@ final class HomePresenter extends SecurePresenter
     public function renderDefault(int $page = 1): void
     {
         $session = $this->getSession("home");
+        $sessionFilter = $this->getSession("reservationsFilter");
         $tab = $session->reservations_tab ?? 0;
         $this->template->tab = $tab;
 
+        $filterName = $sessionFilter->filterName ?? "";
+        $filterVs = $sessionFilter->filterVs ?? "";
+
+        $originalQ = $this->database->table("reservations")
+            ->where("reservations.status='VERIFIED' AND reservations.type=0")
+            ->where("reservations.firstname LIKE ? AND :payments.id_transaction LIKE ?", ["{$filterName}%", "{$filterVs}%"]);
+
         //get number of reservations for each tabs
-        $numberOfReservationsToday = $this->database->table("reservations")->where("start BETWEEN ? AND ? AND status='VERIFIED' AND type=0", [date("Y-m-d") . " 00:00:00", date("Y-m-d") . " 23:59:59"])->count();
-        $numberOfReservationsTomorow = $this->database->table("reservations")->where("start BETWEEN ? AND ? AND status='VERIFIED' AND type=0", [date("Y-m-d", strtotime(date("Y-m-d") . "+1 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d") . "+1 day")) . " 23:59:59"])->count();
-        $numberOfReservationsAfterTomorow = $this->database->table("reservations")->where("start BETWEEN ? AND ? AND status='VERIFIED' AND type=0", [date("Y-m-d", strtotime(date("Y-m-d") . "+2 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d") . "+2 day")) . " 23:59:59"])->count();
+        $numberOfReservationsToday = (clone $originalQ)
+            ->where("start BETWEEN ? AND ?", [date("Y-m-d") . " 00:00:00", date("Y-m-d") . " 23:59:59"])->count();
+        $numberOfReservationsTomorow = (clone $originalQ)
+            ->where("start BETWEEN ? AND ?", [date("Y-m-d", strtotime(date("Y-m-d") . "+1 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d") . "+1 day")) . " 23:59:59"])->count();
+        $numberOfReservationsAfterTomorow = (clone $originalQ)
+            ->where("start BETWEEN ? AND ?", [date("Y-m-d", strtotime(date("Y-m-d") . "+2 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d") . "+2 day")) . " 23:59:59"])->count();
         $this->template->numberOfReservationsToday = $numberOfReservationsToday;
         $this->template->numberOfReservationsTomorow = $numberOfReservationsTomorow;
         $this->template->numberOfReservationsAfterTomorow = $numberOfReservationsAfterTomorow;
 
         //get number of reservations for selected tab
-        $q = $this->database->table("reservations")->where("status='VERIFIED' AND type=0");
         switch ($tab) {
             case 0:
-                $q = $q->where("start BETWEEN ? AND ?", [date("Y-m-d") . " 00:00:00", date("Y-m-d") . " 23:59:59"]);
+                $q = (clone $originalQ)->where("start BETWEEN ? AND ?", [date("Y-m-d") . " 00:00:00", date("Y-m-d") . " 23:59:59"]);
                 break;
             case 1:
-                $q = $q->where("start BETWEEN ? AND ?", [date("Y-m-d", strtotime(date("Y-m-d") . "+1 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d") . "+1 day")) . " 23:59:59"]);
+                $q = (clone $originalQ)->where("start BETWEEN ? AND ?", [date("Y-m-d", strtotime(date("Y-m-d") . "+1 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d") . "+1 day")) . " 23:59:59"]);
                 break;
             case 2:
-                $q = $q->where("start BETWEEN ? AND ?", [date("Y-m-d", strtotime(date("Y-m-d") . "+2 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d") . "+2 day")) . " 23:59:59"]);
+                $q = (clone $originalQ)->where("start BETWEEN ? AND ?", [date("Y-m-d", strtotime(date("Y-m-d") . "+2 day")) . " 00:00:00", date("Y-m-d", strtotime(date("Y-m-d") . "+2 day")) . " 23:59:59"]);
                 break;
         }
-        $numberOfTodaysReservations = $q->count();
+        $numberOfTodaysReservations = (clone $q)->count();
         $paginator = $this->createPagitator($numberOfTodaysReservations, $page, 10);
 
-        $reservations = $q
+        $reservations = (clone $q)
             ->limit($paginator->getLength(), $paginator->getOffset())
             ->fetchAll();
         $this->template->reservations = $reservations;

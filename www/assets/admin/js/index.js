@@ -174,10 +174,26 @@ $(function () {
 
 //modals
 $(function () {
-  $("#change-password").on("click", function() {
+  $("#change-password").on("click", function () {
     console.log("open modal");
     //open modal with form
     const modal = $("#change-password-modal");
     modal.modal("show");
-  })
+  });
+
+  //form submit
 });
+
+function debounce(func, delay) {
+  let debounceTimer;
+  return function () {
+    const context = this;
+    const args = arguments;
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => func.apply(context, args), delay);
+  };
+}
+
+const handleFilterFormInput = debounce(() => {
+  $("#filter-form").trigger("submit");
+}, 1500);

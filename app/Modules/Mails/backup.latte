@@ -81,7 +81,7 @@
           {$reservation->ref("services", "service_id")->name} <br />
           {$reservation->start|date:"d.m.Y"} {$reservation->start|date:"H:i"}<br />
           {var $price = $reservation->related("payments")->fetch()->price}
-          {$price} Kč<br />
+          {$price|currency} Kč<br />
         </p>
         <div style="display: flex; gap: 80px; justify-content: space-between">
           <p style="font-size: 16px; line-height: 30px"

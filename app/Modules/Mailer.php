@@ -17,7 +17,8 @@ final class Mailer
         private Nette\Database\Explorer $database,
         private PHPMailer               $phpMailer,
         private Nette\Mail\Mailer       $mailer,
-        private Nette\DI\Container      $container
+        private Nette\DI\Container      $container,
+        private Nette\Bridges\ApplicationLatte\TemplateFactory $templateFactory
     ) {
         if (isset($_SERVER['SERVER_NAME'])) {
             if ($_SERVER['SERVER_NAME'] === "localhost") {
@@ -31,7 +32,7 @@ final class Mailer
 
         $this->url = $this->constants->constants["SERVER_URL"];
 
-        $this->latte = new Engine;
+        $this->latte = $this->templateFactory->createTemplate();
     }
 
     public function sendConfirmationMail(string $to, string $confirmUrl, $reservation): void

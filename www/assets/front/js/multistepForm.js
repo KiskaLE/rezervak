@@ -647,14 +647,19 @@ async function verify() {
         },
       }
     );
-    if (res.status == false) {
+    console.log(res);
+    if (res.status == false && code != "") {
       document.querySelector("[name='dicountCode']").className = "invalid";
+    } else if (code == "") {
+      document.querySelector("[name='dicountCode']").className = "";
     } else {
       document.querySelector("[name='dicountCode']").className = "valid";
     }
 
     if (res.price != undefined) {
-      document.querySelector("#price").innerHTML = res.price;
+      document.querySelector("#price").innerHTML = res.price
+        .toLocaleString("cs-CZ")
+        .replace(/,/g, " ");
     }
     //show code success
   }

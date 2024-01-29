@@ -23,9 +23,9 @@
 
                         <div class="recap-service-card service-card-button"
                              onclick="setService({$service->id}, {$service->name}, {$service->price}, {$service->duration})">
-                            <div>
+                            <div class="">
                                 <h2 class="recap-service-title">{$service->name}</h2>
-                                <span class="service-availability" n:if="$servicesAvailableTimesCount">{$servicesAvailableTimesCount[$service->id] > 10 ? "termínů > 10" : "termínů " . $servicesAvailableTimesCount[$service->id]}<br></span>
+                                <span class="service-availability" n:if="$servicesAvailableTimesCount">{$servicesAvailableTimesCount[$service->id] > 10 ? "Počet termínů > 10" : "Počet termínů: " . $servicesAvailableTimesCount[$service->id]}<br></span>
                                 <span>{$service->duration} minut <br></span>
                                 {* <span>{$service->description}</span> *}
                             </div>
@@ -263,7 +263,7 @@
                     </div>
                 </div>
                 <div class="recap-button">
-                    <button class="button xl primary">Zaregistrovat službu</button>
+                    <button class="button xl primary">Rezervovat</button>
                 </div>
             </div>
 

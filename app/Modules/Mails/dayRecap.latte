@@ -49,7 +49,7 @@
         <p style="font-size: 16px; margin-top: 2px; line-height: 30px">
           {$reservation->ref("services", "service_id")->name} <br />
           {$reservation->firstname} {$reservation->lastname} <br />
-          {var $price = $payment->price} {$price} Kč <br />
+          {$payment->price|currency} Kč <br />
           {$payment->status == 1 ? "zaplaceno" : "čeká na zaplacení"}
         </p>
         <br />

@@ -3,6 +3,11 @@
   min-width: 0;
 }
 
+input[type=submit] {
+  cursor: pointer;
+  background-color: #d5d8d9;
+}
+
 :root {
   --main-padding: 20px;
   --left-nav-with: 250px;
@@ -439,10 +444,28 @@ h1 {
   gap: 15px;
 }
 
+.form-row {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 5px;
+}
+.form-group.row {
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+.form-group.row input {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.form-group.row label::after {
+  content: ":";
 }
 @media (max-width: 500px) {
   .form-group {
@@ -453,6 +476,7 @@ h1 {
 .form-group label {
   font-weight: 500;
   font-size: 14px;
+  min-width: auto;
 }
 .form-group input {
   box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
@@ -593,6 +617,16 @@ h1 {
 
 .fc-view-harness {
   background: white;
+}
+
+.list-items-filter {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 30px;
+  min-height: 30px;
+  border-top: 1px solid #d5d8d9;
 }
 
 .list-no-data {

@@ -1,7 +1,24 @@
 {define reservationList, $reservations}
-    {if $reservations}
+    
         {var $i = 0}
+
             <div class="list-items">
+                <div class="list-items-filter">
+                    <form n:name="reservationsListFilterForm" id="filter-form" class="form-row">
+                        <div class="form-group row" style="width: 200px;">
+                            <label for="">Jméno</label>
+                            <input n:name="name">
+                        </div>
+                        <div class="form-group row" style="width: 200px;">
+                            <label for="">VS</label>
+                            <input n:name="vs">
+                        </div>
+                        <div class="form-group row" style="width: 200px;">
+                            <input n:name="submit" >
+                        </div>
+                    </form>
+                </div>
+                {if $reservations}
                 <div n:foreach="$reservations as $reservation" class="list-item" id="list-item-{$i}">
                     {var $service = $reservation->ref("services", "service_id")}
                     {var $payment = $reservation->related("payments")->fetch()}
@@ -104,8 +121,8 @@
                     </div>
                     {do $i++}
                 </div>
+                {else}
+                    <div class="list-no-data"><span>Nemáte naplánované žádné rezervace</span></div>
+                {/if}
             </div>
-    {else}
-        <div class="list-no-data"><span>Nemáte naplánované žádné rezervace</span></div>
-    {/if}
 {/define}

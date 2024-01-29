@@ -40,6 +40,7 @@ final class ReservationsPresenter extends SecurePresenter
         $this->page = $page;
 
         $session = $this->getSession("reservations");
+        $sessionFilter = $this->getSession("reservationsFilter");
         // $session->filterStart = null;
         // $session->filterEnd = null;
         //tab
@@ -47,10 +48,13 @@ final class ReservationsPresenter extends SecurePresenter
         $this->template->tab = $tab;
 
         //filter
-        $start = $session->filterStart ?? null;
-        $end = $session->filterEnd ?? null;
+        $start = $sessionFilter->filterStart ?? null;
+        $end = $sessionFilter->filterEnd ?? null;
         $this->template->start = $start;
         $this->template->end = $end;
+
+        $filterName = $sessionFilter->filterName ?? "";
+        $filterVs = $sessionFilter->filterVs ?? "";
 
         $filterService = $session->filterService ?? null;
         if ($filterService) {
@@ -59,75 +63,57 @@ final class ReservationsPresenter extends SecurePresenter
         } else {
             $this->template->filterService = null;
         }
-
-
-        // $numberOfReservations = $this->database->table('reservations')
-        //     ->select('reservations.*',)
-        //     ->where('reservations.status=?', 'VERIFIED')
-        //     ->where("reservations.type=?", 0)
-        //     ->where('user_id=?', $this->user->id)
-        //     ->where(':payments.status=?', 1)->count();
-
-
-        $q = $this->database->table('reservations')
+        $originalQ = $this->database->table('reservations')
             ->select('reservations.*',)
-            ->where('user_id=?', $this->user->id)
-            ->where("reservations.type=?", 0);
+            ->where("reservations.type=?", 0)
+            ->where("reservations.firstname LIKE ? AND :payments.id_transaction LIKE ?", ["{$filterName}%", "{$filterVs}%"]);
 
         if ($start) {
-            $q = $q->where('start >= ?', $start);
+            $originalQ = $originalQ->where('start >= ?', $start);
         }
         if ($end) {
-            $q = $q->where('start <= ?', $end);
+            $originalQ = $originalQ->where('start <= ?', $end);
         }
 
         if ($filterService) {
-            $q = $q->where('service_id = ?', $filterService);
+            $originalQ = $originalQ->where('service_id = ?', $filterService);
         }
 
-        $this->template->futureCount = $this->database->table('reservations')
-            ->select('reservations.*',)
+        $this->template->futureCount = (clone $originalQ)
             ->where("reservations.type=?", 0)->where('reservations.status=?', 'VERIFIED')->where('start >= ?', date('Y-m-d'))->where(':payments.status=?', 1)->order('start ASC')->count();
-        $this->template->pastCount = $this->database->table('reservations')
-            ->select('reservations.*',)
+        $this->template->pastCount = (clone $originalQ)
             ->where("reservations.type=?", 0)->where('reservations.status=?', 'VERIFIED')->where('start < ?', date('Y-m-d'))->where(':payments.status=?', 1)->order('start ASC')->count();
 
-        $this->template->unpaidCount = $this->database->table('reservations')
-            ->select('reservations.*',)
+        $this->template->unpaidCount = (clone $originalQ)
             ->where("reservations.type=?", 0)->where('reservations.status=?', 'VERIFIED')->where(':payments.status=?', 0)->order('start ASC')->count();
 
-        $this->template->allCount = $this->database->table('reservations')
-            ->select('reservations.*',)
+        $this->template->allCount = (clone $originalQ)
             ->where("reservations.type=?", 0)->where('reservations.status !=?', 'UNVERIFIED')->order('created_at DESC')->count();
 
-
-        $q = $this->database->table('reservations')
-            ->select('reservations.*',)
-            ->where("reservations.type=?", 0);
         switch ($tab) {
             case 0:
                 //nadcházející
-                $q = $q->where('reservations.status=?', 'VERIFIED')
+                $q = (clone $originalQ)->where('reservations.status=?', 'VERIFIED')
                     ->where('start >= ?', date('Y-m-d'))
                     ->where(':payments.status=?', 1)->order('start ASC');
                 break;
 
             case 1:
                 //proběhlé
-                $q = $q->where('reservations.status=?', 'VERIFIED')->where('start < ?', date('Y-m-d'))->where(':payments.status=?', 1)->order('start ASC');
+                $q = (clone $originalQ)->where('reservations.status=?', 'VERIFIED')->where('start < ?', date('Y-m-d'))->where(':payments.status=?', 1)->order('start ASC');
                 break;
             case 2:
                 //nezaplacené
-                $q = $q->where('reservations.status=?', 'VERIFIED')->where(':payments.status=?', 0)->order('start ASC');
+                $q = (clone $originalQ)->where('reservations.status=?', 'VERIFIED')->where(':payments.status=?', 0)->order('start ASC');
                 break;
             case 3:
-                $q = $q->where('reservations.status !=?', 'UNVERIFIED')->order('created_at DESC');
+                $q = (clone $originalQ)->where('reservations.status !=?', 'UNVERIFIED')->order('created_at DESC');
                 break;
         }
 
-        $numberOfReservations = $q->count();
+        $numberOfReservations = (clone $q)->count();
         $paginator = $this->createPagitator($numberOfReservations, $page, 10);
-        $reservations = $q->limit($paginator->getLength(), $paginator->getOffset())->fetchAll();
+        $reservations = (clone $q)->limit($paginator->getLength(), $paginator->getOffset())->fetchAll();
 
         $this->template->numberOfReservations = $numberOfReservations;
         $this->template->reservations = $reservations;
