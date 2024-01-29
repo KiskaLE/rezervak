@@ -30,8 +30,7 @@ final class HomePresenter extends BasePresenter
         private Payments       $payments,
         private DiscountCodes  $discountCodes,
         private Moment         $moment
-    )
-    {
+    ) {
     }
 
     protected function startup()
@@ -79,7 +78,6 @@ final class HomePresenter extends BasePresenter
         $this->template->servicesAvailableTimesCount = $servicesAvailableTimesCount;
         $this->template->services = $services;
         $this->redrawControl("content");
-
     }
 
     public
@@ -123,13 +121,10 @@ final class HomePresenter extends BasePresenter
         $form->addText("email", "E-mail:")
             ->setRequired()
             ->addRule($form::EMAIL, 'Neplatný formát e-mailu');
-        $form->addText("address", "Adresa a čp:")
-            ->setRequired();
+        $form->addText("address", "Adresa a čp:");
         $form->addText("code", "PSČ:")
-            ->setRequired()
             ->addRule($form::PATTERN, 'Neplatný formát PSČ', '^\d{5}$');
-        $form->addText("city", "Město:")
-            ->setRequired();
+        $form->addText("city", "Město:");
         $form->addCheckbox("gdpr", "gdpr")->setRequired();
 
         $form->addText("dicountCode", "Kód slevy:");
@@ -233,7 +228,6 @@ final class HomePresenter extends BasePresenter
                 if (!$this->payments->createPayment($database, $reservation, $data->dicountCode)) {
                     $success = false;
                 }
-
             } catch (\Throwable $e) {
                 $success = false;
             }
@@ -304,5 +298,4 @@ final class HomePresenter extends BasePresenter
             $this->sendJson(["status" => false, "price" => $price]);
         }
     }
-
 }

@@ -1161,9 +1161,12 @@ footer {
 }
 
 .service-availability {
-  color: #ce4629;
+  color: #3a9027;
   font-size: 16px;
   font-weight: 500;
+}
+.service-availability.unavailable {
+  color: #ce4629;
 }
 
 .loading {

@@ -520,7 +520,7 @@ h1 {
 
 .btn-secondary {
   background: none !important;
-  border: 2px solid $gray-500;
+  border: 1px solid $gray-500;
 }
 
 .btn-tertiary {
@@ -790,6 +790,7 @@ h1 {
 //list start
 
 .list-items-filter {
+  min-width: 500px;
   display: flex;
   gap: 20px;
   align-items: center;
@@ -826,7 +827,7 @@ h1 {
   }
 
   .list-item {
-    min-width: 900px;
+    min-width: 1100px;
     border-top: var(--border);
     border-bottom: var(--border);
 

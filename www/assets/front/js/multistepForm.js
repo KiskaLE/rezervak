@@ -40,9 +40,16 @@ async function showTab(n) {
   }
   //render calendar
   if (currentTab == 1) {
-    showMonth = new Date().getMonth();
-    showYear = new Date().getFullYear();
-    await createCalendar(showMonth, showYear);
+    calendarLoading(true);
+    const availableDays = await getAvailableDays();
+    if (availableDays.length > 0) {
+      showMonth = Number(availableDays[0].split("-")[1]) - 1;
+      showYear = availableDays[0].split("-")[0];
+    } else {
+      showMonth = new Date().getMonth();
+      showYear = new Date().getFullYear();
+    }
+    await createCalendar(showMonth, showYear, availableDays);
   }
 
   // ... and run a function that displays the correct step indicator:
@@ -118,8 +125,14 @@ function validateForm() {
         y[i].className += " invalid";
         valid = false;
       }
-    } else if (name == "firstname" || name == "lastname" || name == "city") {
+    } else if (name == "firstname" || name == "lastname") {
       if (value.match(/\d+/) || value.length == 0) {
+        y[i].className += " invalid";
+        parentEl.classList.add("invalid");
+        valid = false;
+      }
+    } else if (name == "city") {
+      if (value != "" && value.match(/\d+/)) {
         y[i].className += " invalid";
         parentEl.classList.add("invalid");
         valid = false;
@@ -137,13 +150,8 @@ function validateForm() {
         valid = false;
       }
     } else if (name == "address") {
-      if (value == "") {
-        y[i].className += " invalid";
-        parentEl.classList.add("invalid");
-        valid = false;
-      }
     } else if (name == "code") {
-      if (!value.match(/^\d{5}$/)) {
+      if (value != "" && !value.match(/^\d{5}$/)) {
         y[i].className += " invalid";
         parentEl.classList.add("invalid");
         valid = false;
@@ -155,7 +163,6 @@ function validateForm() {
         valid = false;
       }
     } else if (name == "discountCode") {
-      //TODO validate discount code
     } else if (name == "gdpr") {
       if (!y[i].checked) {
         y[i].className += " invalid";
@@ -447,7 +454,7 @@ function calendarLoading(isLoading) {
   }
 }
 
-async function createCalendar(month, year) {
+async function createCalendar(month, year, availableDays = []) {
   const container = document.querySelector("#calendar");
   calendarLoading(true);
 
@@ -456,7 +463,9 @@ async function createCalendar(month, year) {
   const curMonth = curDate.getMonth();
   const firstDateOfMonth = new Date(year, month, 1);
   const lastDayOfMonth = new Date(year, month + 1, 0);
-  const availableDays = await getAvailableDays();
+  if (availableDays.length == 0) {
+    availableDays = await getAvailableDays();
+  }
   container.style.filter = "grayscale(0%)";
   container.innerHTML = "";
   let curMonthName = "";
@@ -581,26 +590,26 @@ async function createCalendar(month, year) {
   function getDayIndexMondaySunday(date) {
     return date.getDay() === 0 ? 6 : date.getDay() - 1;
   }
+}
 
-  async function getAvailableDays() {
-    let naja = window.Naja;
-    const service_id = document.querySelector("[name='service']").value;
-    const res = await naja.makeRequest(
-      "POST",
-      `/`,
-      {
-        u: searchParams.get("u"),
-        run: "fetch",
-        service_id: service_id,
+async function getAvailableDays() {
+  let naja = window.Naja;
+  const service_id = document.querySelector("[name='service']").value;
+  const res = await naja.makeRequest(
+    "POST",
+    `/`,
+    {
+      u: searchParams.get("u"),
+      run: "fetch",
+      service_id: service_id,
+    },
+    {
+      fetch: {
+        credentials: "include",
       },
-      {
-        fetch: {
-          credentials: "include",
-        },
-      }
-    );
-    return Promise.resolve(res.availableDates);
-  }
+    }
+  );
+  return Promise.resolve(res.availableDates);
 }
 
 function removeDaySelected() {

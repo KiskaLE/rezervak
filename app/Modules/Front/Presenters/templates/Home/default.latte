@@ -25,7 +25,7 @@
                              onclick="setService({$service->id}, {$service->name}, {$service->price}, {$service->duration})">
                             <div class="">
                                 <h2 class="recap-service-title">{$service->name}</h2>
-                                <span class="service-availability" n:if="$servicesAvailableTimesCount">{$servicesAvailableTimesCount[$service->id] > 10 ? "Počet termínů > 10" : "Počet termínů: " . $servicesAvailableTimesCount[$service->id]}<br></span>
+                                <span class="service-availability {$servicesAvailableTimesCount[$service->id] == 0 ? 'unavailable': '' }" n:if="$servicesAvailableTimesCount">{$servicesAvailableTimesCount[$service->id] > 10 ? "Volné termíny > 10" : "Volné termíny: " . $servicesAvailableTimesCount[$service->id]}<br></span>
                                 <span>{$service->duration} minut <br></span>
                                 {* <span>{$service->description}</span> *}
                             </div>
@@ -144,7 +144,7 @@
                                         class="calendar-reservation-price">500</span><span> Kč</span></div>
                         </div>
                         <div class="reservation-info-group">
-                            <span class="info-group-title">Termin zahájení</span>
+                            <span class="info-group-title">Termín a čas</span>
                             <div class="info-group-value"><span class="calendar-reservation-date"></span>&#160;<span
                                         class="calendar-reservation-time"></span></div>
                         </div>
@@ -156,14 +156,14 @@
                         <div class="form-group-multiple">
                             <div class="form-group">
                                 <div class="input">
-                                    <label for="">Jméno:</label>
+                                    <label for="">Jméno*:</label>
                                     <input autocomplete="off" autocorrect="off" autocapitalize="on" spellcheck="false" n:name="firstname" class="multiform data">
                                 </div>
                                 <span class="form-error">Zadejte jméno</span>
                             </div>
                             <div class="form-group">
                                 <div class="input">
-                                    <label for="">Příjmení:</label>
+                                    <label for="">Příjmení*:</label>
                                     <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="lastname" class="multiform data">
                                 </div>
                                 <span class="form-error">Zadejte příjmení</span>
@@ -171,14 +171,14 @@
                         </div>
                         <div class="form-group">
                             <div class="input">
-                                <label for="">Tel.:</label>
+                                <label for="">Tel.*:</label>
                                 <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="phone" class="multiform data">  
                             </div>
                             <span class="form-error">Zadejte telefoní číslo ve tvaru 720123123123</span>
                         </div>
                         <div class="form-group">
                             <div class="input">
-                                <label for="">E-mail:</label>
+                                <label for="">E-mail*:</label>
                                 <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="email" class="multiform data">
                             </div>
                             <span class="form-error">Zadejte email</span>

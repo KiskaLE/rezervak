@@ -849,7 +849,6 @@ body {
   }
 
   h2 {
-    //text-wrap: nowrap;
     white-space: nowrap;
     width: fit-content !important;
     min-width: auto !important;
@@ -1357,9 +1356,13 @@ footer {
 }
 
 .service-availability {
-  color: $primary-400;
+  color: $green-400;
   font-size: $text-2;
   font-weight: 500;
+
+  &.unavailable {
+    color: $primary-400;
+  }
 }
 
 .loading {
