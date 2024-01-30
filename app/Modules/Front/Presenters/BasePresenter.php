@@ -27,11 +27,12 @@ class BasePresenter extends Presenter
     {
         parent::beforeRender();
         $user = $this->database->table("users")->order("created_at ASC")->fetch();
+        $settings = $this->database->table("settings")->fetch();
         $this->template->user = $user;
-        $this->template->userSettings = $this->database->table("settings")->fetch();
+        $this->template->userSettings = $settings;
 
         $user = $this->database->table("users")->order("created_at ASC")->fetch();
         $this->template->logoUrl = $user->logo_url;
-
+        $this->template->footer = $settings->footer;
     }
 }

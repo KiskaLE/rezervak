@@ -16,7 +16,10 @@
     "webpack-dev-server": "^4.15.1"
   },
   "dependencies": {
+    "@editorjs/editorjs": "^2.29.0",
     "chart.js": "^4.4.0",
+    "froala-editor": "^4.1.4",
+    "live-form-validation": "^1.10.0",
     "moment": "^2.29.4",
     "naja": "^2.5.0",
     "nette-forms": "^3.3.5",

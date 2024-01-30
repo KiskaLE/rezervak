@@ -119,6 +119,8 @@ h2 {
 
 :root {
   font-size: 16px;
+  font-family: "Roboto", sans-serif;
+
 }
 
 .hidden {
@@ -244,8 +246,14 @@ body {
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
-  margin-top: 20px;
+  margin-top: 60px;
   margin-bottom: 50px;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
 }
 
 .items-table {
@@ -299,10 +307,14 @@ body {
   @include w(sm) {
     margin-top: 0;
   }
+}
 
-  h1 {
-    text-align: center;
-  }
+h1 {
+  text-align: center;
+}
+
+#snippet--newReservationForm {
+  width: 100%;
 }
 
 .center {
@@ -362,6 +374,7 @@ body {
   text-decoration: none;
   color: black;
   transition: 100ms;
+  text-align: center;
 }
 
 .button:hover {
@@ -839,20 +852,25 @@ body {
   }
 }
 
+#verify-code {
+  font-weight: 300;
+}
+
 .recap-customer-info-discount-code {
   display: flex;
-  gap: 10px;
-  align-items: center;
+  gap: 5px;
+  //align-items: center;
+  text-align: left;
+  flex-direction: column;
+  margin-top: 10px;
 
-  @include w(sm) {
-    flex-direction: column;
-  }
 
   h2 {
     white-space: nowrap;
     width: fit-content !important;
     min-width: auto !important;
     margin: 0 !important;
+    text-align: left;
     &::after {
       content: ":";
 
@@ -882,13 +900,20 @@ input {
   padding: 5px 15px;
   width: 100%;
   font-size: 1rem;
-  font-weight: lighter;
+  font-weight: 400;
   color: $text-dark;
   border-radius: 5px;
   box-sizing: border-box;
   border: 1px solid $gray-300 !important;
   background-color: inherit;
   box-shadow: $shadow-inner;
+}
+input, textarea, select { font-family:inherit !important; }
+
+input[type=submit] {
+  font-size: $text-4;
+  font-weight: 500;
+  font-family: "PT Sans Narrow", sans-serif;
 }
 
 input[type="checkbox"] {
@@ -1225,6 +1250,7 @@ footer {
 
 .footer-wrapper {
   display: flex;
+  flex-direction: column;
   gap: 30px;
   box-sizing: border-box;
   align-items: center;
@@ -1295,6 +1321,7 @@ footer {
   }
 
   .service-text {
+    line-height: 21px;
     font-size: $text-2;
     color: $gray-500;
     font-weight: 300;
@@ -1328,6 +1355,7 @@ footer {
 
     &.customer-code {
       font-size: $text-2 !important;
+      font-weight: 300;
     }
   }
   .recap-custome-info-data {

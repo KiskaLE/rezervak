@@ -40,22 +40,16 @@ final class HomePresenter extends BasePresenter
         $this->template->backupTimes = [];
     }
 
-    public function actionDefault($run, $day, $service_id, $discountCode = "")
+    public function actionDefault($run, $day, $service_id, $discountCode = "", $krok = 1)
     {
-        $this->user = $this->database->table("users")->order("created_at ASC")->fetch();
-        $this->user_uuid = $this->user->uuid;
         $user_settings = $this->database->table("settings")->fetch();
-
-        $this->template->gdprUrl = $user_settings->gdpr_url;
-
-
         if ($this->isAjax()) {
             if ($run == "fetch") {
                 $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
                 $this->service = $service;
                 $this->template->selectedService = $service;
                 $this->payload->postGet = true;
-                $this->payload->url = $this->link("default");
+                $this->payload->url = $this->link("default", ["krok" => 2]);
                 $this->sendJson(["availableDates" => $this->availableDates->getAvailableDates($user_settings->number_of_days, $service)]);
             } else if ($run == "setDate") {
                 $this->setDate(intval($service_id), $day);
@@ -66,22 +60,77 @@ final class HomePresenter extends BasePresenter
                 $this->sendJson(["serviceName" => $service->name]);
             }
             $this->payload->postGet = true;
-            $this->payload->url = $this->link("default");
-        }
+            $this->payload->url = $this->link("default", ["krok" => $krok]);
+            $this->redrawControl("content");
+        } else {
 
-        $services = $this->database->table("services")->where("hidden=0")
-            ->fetchAll();
-        $servicesAvailableTimesCount = [];
-        foreach ($services as $service) {
-            $servicesAvailableTimesCount[$service->id] = $this->availableDates->getNumberOfAvailableTimes($user_settings->number_of_days, $service);
+            $formSession = $this->getSession('newReservationForm');
+            if (!$formSession->step) {
+                $formSession->step = 1;
+                $this->redirect("default", ["krok" => 1]);
+            }
+            if ($krok != $formSession->step) {
+                $this->redirect("default", ["krok" => $formSession->step]);
+            }
+
+            if ($krok == 1) {
+                $this->getSession('newReservationForm')->setExpiration("10 minutes");
+            }
+            $this->template->step = $krok;
+            $this->user = $this->database->table("users")->order("created_at ASC")->fetch();
+            $this->user_uuid = $this->user->uuid;
+
+
+            switch ($krok) {
+                case 1:
+                    $services = $this->database->table("services")->where("hidden=0")
+                        ->fetchAll();
+                    $servicesAvailableTimesCount = [];
+                    foreach ($services as $service) {
+                        $servicesAvailableTimesCount[$service->id] = $this->availableDates->getNumberOfAvailableTimes($user_settings->number_of_days, $service);
+                    }
+                    $this->template->servicesAvailableTimesCount = $servicesAvailableTimesCount;
+                    $this->template->services = $services;
+                case 2:
+                    if ($formSession->service) {
+                        $service = $this->database->table("services")->where("id=?", $formSession->service)->fetch();
+                        $this->template->selectedService = $service;
+                        $available = $this->availableDates->getAvailableDates($user_settings->number_of_days, $service);
+                        $explode = explode("-", $available[0]);
+                        $this->template->month = $explode[1];
+                        $this->template->year = $explode[0];
+                        $this->template->availableDates = $available;
+                    }
+                    break;
+                case 3:
+                    $service = $this->database->table("services")->where("id=?", $formSession->service)->fetch();
+                    $this->template->selectedService = $service;
+                    $this->template->date =  $formSession->date;
+                    $this->template->selectedTime = $formSession->time;
+                    break;
+                case 4:
+                    $service = $this->database->table("services")->where("id=?", $formSession->service)->fetch();
+                    $this->template->selectedService = $service;
+                    $this->template->date =  $formSession->date;
+                    $this->template->selectedTime = $formSession->time;
+                    $this->template->end = date("Y-m-d H:i:s", strtotime($formSession->date . " " . $formSession->time . " + " . $service->duration . " minutes"));
+                    $this->template->firstname = $formSession->firstname;
+                    $this->template->lastname = $formSession->lastname;
+                    $this->template->phone = $formSession->phone;
+                    $this->template->email = $formSession->email;
+                    $this->template->address = $formSession->address;
+                    $this->template->code = $formSession->code;
+                    $this->template->city = $formSession->city;
+                    break;
+            }
+
+            $this->template->gdprUrl = $user_settings->gdpr_url;
+            $this->redrawControl("newReservationForm");
         }
-        $this->template->servicesAvailableTimesCount = $servicesAvailableTimesCount;
-        $this->template->services = $services;
-        $this->redrawControl("content");
     }
 
-    public
-    function actionConfirmation($id)
+
+    public function actionConfirmation($id)
     {
         $this->template->uuid = $id;
         $reservation = $this->database->table("reservations")->where("uuid=?", $id)->fetch();
@@ -89,17 +138,133 @@ final class HomePresenter extends BasePresenter
         $this->template->settings = $this->database->table("settings")->fetch();
     }
 
-    public
-    function actionBackup($id)
+    public function actionBackup($id)
     {
         $reservation = $this->database->table("reservations")->where("uuid=? AND type=1", $id)->fetch();
         $this->template->reservation = $reservation;
     }
 
+    protected function createComponentFormPartOne(): Form
+    {
+        $form = new Form;
+        $form->addHidden("service");
+        $form->addSubmit("submit", "Pokračovat");
+
+        $form->onSuccess[] = [$this, "formSucceededPartOne"];
+        return $form;
+    }
+
+    public function formSucceededPartOne(Form $form, $values)
+    {
+        if ($values->service !== "") {
+            $session = $this->getSession('newReservationForm');
+            $session->service = $values->service;
+            $session->step = 2;
+            $this->redirect("default", ["krok" => 2]);
+        }
+    }
+
+    protected function createComponentFormPartTwo(): Form
+    {
+        $form = new Form;
+        $form->addHidden("dateType")
+            ->setRequired()
+            ->addRule($form::PATTERN, 'Neplatný druh rezervace', 'default|backup');
+        $form->addHidden("date")
+            ->setRequired()
+            ->addRule($form::PATTERN, 'Neplatný datum', '^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$');
+        $form->addHidden("time")
+            ->setRequired()
+            ->addRule($form::PATTERN, 'Čas musí být číslo', '\d+');
+
+        $form->addSubmit("submit", "Pokračovat");
+        $form->onSuccess[] = [$this, "formSucceededPartTwo"];
+
+        return $form;
+    }
+
+    public function formSucceededPartTwo(Form $form, $values)
+    {
+        $session = $this->getSession('newReservationForm');
+        $sessionReservation = $this->getSession('Reservation');
+        $session->dateType = $values->dateType;
+        $session->date = $values->date;
+        if ($session->dateType == "default") {
+            $times = $sessionReservation->availableTimes;
+            $time = $times[$values->time];
+            $session->time = $time;
+        } else {
+            $times = $sessionReservation->availableBackupTimes;
+            $time = $times[$values->time];
+            $session->time = $time;
+        }
+        $session->step = 3;
+        $this->redirect("default", ["krok" => 3]);
+    }
+
+    protected function createComponentFormPartThree(): Form
+    {
+        $form = new Form;
+
+        $form->addText("firstname", "Jmeno:")
+            ->setRequired("Jméno je povinné");
+        $form->addText("lastname", "Příjmení:")
+            ->setRequired("Príjmení je povinné");
+        $form->addText("phone", "Telefon:")
+            ->setRequired("Telefon je povinny")
+            ->addRule($form::PATTERN, 'Telefoní čílo není platný', '\d+');
+        $form->addText("email", "E-mail:")
+            ->setRequired("E-mail je povinny")
+            ->addRule($form::EMAIL, 'Neplatný formát e-mailu');
+        $form->addText("address", "Adresa a čp:");
+        $form->addText("code", "PSČ:")
+            ->addFilter(function ($value) {
+                return str_replace(' ', '', $value);
+            })
+            ->addRule($form::PATTERN, 'Neplatný formát PSČ', '^\d{5}$');
+        $form->addText("city", "Město:");
+        $form->addCheckbox("gdpr", "gdpr")->setRequired("Souhlas s GDPR je povinný");
+
+        $form->addSubmit("submit", "Další");
+
+        $form->onSuccess[] = [$this, "formSucceededPartThree"];
+
+        $this->template->form = $form;
+
+        return $form;
+    }
+
+    public function formSucceededPartThree(Form $form, $values)
+    {
+        $session = $this->getSession('newReservationForm');
+        $session->firstname = $values->firstname;
+        $session->lastname = $values->lastname;
+        $session->phone = $values->phone;
+        $session->email = $values->email;
+        $session->address = $values->address;
+        $session->code = $values->code;
+        $session->city = $values->city;
+        $session->gdpr = $values->gdpr;
+        $session->step = 4;
+        $this->redirect("default", ["krok" => 4]);
+    }
+
+    protected function createComponentFormPartFour(): Form
+    {
+        $form = new Form;
+        $form->addSubmit("submit", "Rezervovat");
+
+        $form->onSuccess[] = [$this, "formSucceeded"];
+
+        return $form;
+    }
+
+
+
     protected function createComponentForm(): Form
     {
         $form = new Form;
-        $form->addhidden("service")
+        $form->addHidden("service")
             ->setRequired()
             ->addRule($form::PATTERN, 'Vybraná služba je neplatná', '\d+');
         $form->addHidden("dateType")
@@ -136,37 +301,34 @@ final class HomePresenter extends BasePresenter
 
     public function formSucceeded(Form $form, \stdClass $data): void
     {
-        $session = $this->getSession('Reservation');
+        $sessionReservation = $this->getSession('Reservation');
+        $sessionNewReservationForm = $this->getSession('newReservationForm');
         $uuid = strval(Uuid::uuid4());
-        $email = $data->email;
+        $email = $sessionNewReservationForm->email;
 
-        if (!$data->gdpr) {
+        if (!$sessionNewReservationForm->gdpr) {
             $this->flashMessage("Prosím, vyplníte souhlas s GDPR.", "error");
-            $this->redirect("default");
+            //$this->redirect("default");
         }
 
-        if ($data->dateType == "default") {
-            $times = $session->availableTimes;
-            $time = $times[$data->time];
-            if (!$this->checkAvailability($data->date, $data->service, $time)) {
+        if ($sessionNewReservationForm->dateType == "default") {
+            if (!$this->checkAvailability($sessionNewReservationForm->date, $sessionNewReservationForm->service, $sessionNewReservationForm->time)) {
                 $this->flashMessage("Nepovedlo se vytvořit rezervaci. Termín je již obsazen", "error");
-                $this->redirect("default", $this->user_uuid);
+                //$this->redirect("default");
             }
-            $result = $this->insertReservation($uuid, $data, "default", $time);
+            $result = $this->insertReservation($uuid, "default", $sessionNewReservationForm->time);
             if (!$result) {
                 $this->flashMessage("Nepovedlo se uložit rezervaci.", "error");
-                $this->redirect("default", $this->user_uuid);
+                //$this->redirect("default");
             }
             $this->mailer->sendConfirmationMail($email, $this->link("Payment:default", $uuid), $result);
             $this->redirect("confirmation", ["id" => $uuid]);
-        } else if ($data->dateType == "backup") {
-            $times = $session->availableBackupTimes;
-            $time = $times[$data->time];
-            if (!$this->checkAvailability($data->date, $data->service, $time, "backup")) {
+        } else if ($sessionNewReservationForm->dateType == "backup") {
+            if (!$this->checkAvailability($sessionNewReservationForm->date, $sessionNewReservationForm->service, $sessionNewReservationForm->time, "backup")) {
                 $this->flashMessage("Nepovedlo se vytvořit rezervaci. Termín je již obsazen", "error");
-                $this->redirect("default", $this->user_uuid);
+                $this->redirect("default");
             }
-            $result = $this->insertReservation($uuid, $data, "backup", $time);
+            $result = $this->insertReservation($uuid, "backup", $sessionNewReservationForm->time);
             if (!$result) {
                 $this->flashMessage("Nepovedlo se uložit rezervaci.", "error");
                 $this->redirect("default", $this->user_uuid);
@@ -174,7 +336,7 @@ final class HomePresenter extends BasePresenter
             $this->mailer->sendBackupConfiramationMail($email, $this->link("Payment:backup", $uuid), $result);
             $this->redirect("confirmation", ["id" => $uuid]);
         }
-        $this->redirect("default");
+        //$this->redirect("default");
     }
 
 
@@ -204,28 +366,32 @@ final class HomePresenter extends BasePresenter
      * @param array $times The array of available times.
      * @return mixed The inserted reservation data.
      */
-    private function insertReservation(string $uuid, $data, string $type, $time)
+    private function insertReservation(string $uuid, string $type, $time)
     {
-        $result = $this->database->transaction(function ($database) use ($uuid, $data, $type, $time) {
-            $start = $data->date . " " . $time;
-            $service_id = $data->service;
+        $result = $this->database->transaction(function ($database) use ($uuid, $type, $time) {
+            $sessionNewReservationForm = $this->getSession('newReservationForm');
+            $start = $sessionNewReservationForm->date . " " . $time;
+            $service_id = $sessionNewReservationForm->service;
             $success = true;
             try {
                 $reservation = $this->database->table("reservations")->insert([
                     "uuid" => $uuid,
                     "service_id" => $service_id,
                     "start" => $start,
-                    "firstname" => $data->firstname,
-                    "lastname" => $data->lastname,
-                    "phone" => $data->phone,
-                    "email" => $data->email,
-                    "address" => $data->address,
-                    "code" => $data->code,
-                    "city" => $data->city,
+                    "firstname" => $sessionNewReservationForm->firstname,
+                    "lastname" => $sessionNewReservationForm->lastname,
+                    "phone" => $sessionNewReservationForm->phone,
+                    "email" => $sessionNewReservationForm->email,
+                    "address" => $sessionNewReservationForm->address,
+                    "code" => $sessionNewReservationForm->code,
+                    "city" => $sessionNewReservationForm->city,
                     "created_at" => date("Y-m-d H:i:s"),
                     "type" => $type == "backup" ? 1 : 0,
                 ]);
-                if (!$this->payments->createPayment($database, $reservation, $data->dicountCode)) {
+
+                //reset session
+                $this->getSession('newReservationForm')->remove();
+                if (!$this->payments->createPayment($database, $reservation, $sessionNewReservationForm->dicountCode ?? "")) {
                     $success = false;
                 }
             } catch (\Throwable $e) {
@@ -297,5 +463,12 @@ final class HomePresenter extends BasePresenter
         } else {
             $this->sendJson(["status" => false, "price" => $price]);
         }
+    }
+
+    public function handleBack($step)
+    {
+        $session = $this->getSession('newReservationForm');
+        $session->step = $step;
+        $this->redirect("default", ["krok" => $step]);
     }
 }

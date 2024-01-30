@@ -1,293 +1,6 @@
-let currentTab = 0; // Current tab is set to be the first tab (0)
-let tabCounter = 0;
-showTab(currentTab); // Display the current tab
-let showMonth = new Date().getMonth();
-let showYear = new Date().getFullYear();
-let address = new URL(window.location.href);
-let searchParams = address.searchParams;
-
-async function showTab(n) {
-  // This function will display the specified tab of the form ...
-  let x = document.getElementsByClassName("tab");
-  x[n].style.display = "flex";
-
-  // ... and fix the Previous/Next buttons:
-  document.getElementById("prevBtn").style.display = "none";
-  if (n == 0) {
-    document.getElementById("prevBtn").style.display = "none";
-  }
-  if (n < 2) {
-    document.getElementById("nextBtn").style.display = "none";
-  } else {
-    // document.getElementById("prevBtn").style.display = "inline";
-    document.getElementById("nextBtn").style.display = "inline";
-  }
-  // if (n == 1) {
-  //     document.getElementById("prevBtn").style.display = "inline";
-  // }
-  if (n == x.length - 1) {
-    document.getElementById("nextBtn").innerHTML = "Odeslat";
-  } else {
-    document.getElementById("nextBtn").innerHTML = "Další";
-  }
-
-  if (n == x.length - 1) {
-    document.getElementById("nextBtn").innerHTML = "Odeslat";
-  }
-  //render recap
-  if (currentTab >= x.length - 1) {
-    setRecap();
-  }
-  //render calendar
-  if (currentTab == 1) {
-    calendarLoading(true);
-    const availableDays = await getAvailableDays();
-    if (availableDays.length > 0) {
-      showMonth = Number(availableDays[0].split("-")[1]) - 1;
-      showYear = availableDays[0].split("-")[0];
-    } else {
-      showMonth = new Date().getMonth();
-      showYear = new Date().getFullYear();
-    }
-    await createCalendar(showMonth, showYear, availableDays);
-  }
-
-  // ... and run a function that displays the correct step indicator:
-  if (n == 2) {
-    await changeDay();
-  }
-  fixStepIndicator(n);
-}
-
-async function nextPrev(n) {
-  // This function will figure out which tab to display
-  let x = document.getElementsByClassName("tab");
-  // Exit the function if any field in the current tab is invalid:
-  if (n == 1 && !validateForm()) return false;
-  // Hide the current tab:
-  x[currentTab].style.display = "none";
-  // Increase or decrease the current tab by 1:
-  currentTab = currentTab + n;
-  // if you have reached the end of the form... :
-  if (currentTab >= x.length) {
-    //...the form gets submitted:
-    document.getElementById("regForm").submit();
-    return false;
-  }
-
-  // Otherwise, display the correct tab:
-  await showTab(currentTab);
-  tabCounter++;
-}
-
-async function goToTab(n) {
-  let x = document.getElementsByClassName("tab");
-  // activeted tabs
-  const tabs = document.querySelectorAll(".step");
-
-  if (n < currentTab) {
-    x[currentTab].style.display = "none";
-    currentTab = n;
-    await showTab(currentTab);
-  }
-  //remove active from tabs berore active tab
-  for (let i = 0; i < tabs.length; i++) {
-    if (i >= n) {
-      tabs[i].classList.remove("finish");
-    }
-  }
-}
-
-function validateForm() {
-  // This function deals with validation of the form fields
-  let x,
-    y,
-    i,
-    valid = true;
-  x = document.getElementsByClassName("tab");
-  y = x[currentTab].getElementsByTagName("input");
-  // A loop that checks every input field in the current tab:
-  for (i = 0; i < y.length; i++) {
-    // If a field is empty...
-    let name = y[i].name;
-    let value = y[i].value;
-    console.log(name, value);
-    y[i].className = "multiform";
-    const parentEl = y[i].parentNode.parentNode;
-    parentEl.classList.remove("invalid");
-    if (name == "service" || name == "time") {
-      if (!value.match(/\d+/)) {
-        y[i].className += " invalid";
-        valid = false;
-      }
-    } else if (name == "date") {
-      if (!value.match(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/)) {
-        y[i].className += " invalid";
-        valid = false;
-      }
-    } else if (name == "firstname" || name == "lastname") {
-      if (value.match(/\d+/) || value.length == 0) {
-        y[i].className += " invalid";
-        parentEl.classList.add("invalid");
-        valid = false;
-      }
-    } else if (name == "city") {
-      if (value != "" && value.match(/\d+/)) {
-        y[i].className += " invalid";
-        parentEl.classList.add("invalid");
-        valid = false;
-      }
-    } else if (name == "phone") {
-      if (!value.match(/^\+?[1-9]\d{1,14}$/)) {
-        y[i].className += " invalid";
-        parentEl.classList.add("invalid");
-        valid = false;
-      }
-    } else if (name == "email") {
-      if (!value.match(/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/)) {
-        y[i].className += " invalid";
-        parentEl.classList.add("invalid");
-        valid = false;
-      }
-    } else if (name == "address") {
-    } else if (name == "code") {
-      if (value != "" && !value.match(/^\d{5}$/)) {
-        y[i].className += " invalid";
-        parentEl.classList.add("invalid");
-        valid = false;
-      }
-    } else if (name == "dateType") {
-      if (!(value == "default" || value == "backup")) {
-        y[i].className += " invalid";
-        parentEl.classList.add("invalid");
-        valid = false;
-      }
-    } else if (name == "discountCode") {
-    } else if (name == "gdpr") {
-      if (!y[i].checked) {
-        y[i].className += " invalid";
-        parentEl.classList.add("invalid");
-        valid = false;
-      }
-    }
-  }
-  // If the valid status is true, mark the step as finished and valid:
-  if (valid) {
-    document.getElementsByClassName("step")[currentTab].className += " finish";
-  }
-  return valid; // return the valid status
-}
-
-function fixStepIndicator(n) {
-  // This function removes the "active" class of all steps...
-  let i,
-    x = document.getElementsByClassName("step");
-  for (i = 0; i < x.length; i++) {
-    x[i].className = x[i].className.replace(" active", "");
-  }
-  //... and adds the "active" class to the current step:
-  x[n].className += " active";
-}
-
-async function createRecap() {
-  const container = document.getElementById("recap");
-  container.innerHTML = "";
-
-  //get form data into objest with key and value format, key = name, value = value, text is in uft-8 format;
-  const inputs = document.querySelectorAll(".multiform");
-  let data = [];
-  for (let i = 0; i < inputs.length; i++) {
-    const input = inputs[i];
-    data.push({
-      name: input.name,
-      value: input.value,
-    });
-  }
-  // generate text from data
-  for (let i = 0; i < data.length; i++) {
-    const div = document.createElement("div");
-    const h2 = document.createElement("h2");
-    const p = document.createElement("p");
-    p.id = data[i].name;
-    h2.innerHTML = data[i].name;
-
-    div.appendChild(h2);
-    div.appendChild(p);
-    container.appendChild(div);
-  }
-}
-
-function setRecap() {
-  let data = document.querySelectorAll(".multiform");
-  for (let i = 0; i < data.length; i++) {
-    if (
-      data[i].name == "service" ||
-      data[i].name == "time" ||
-      data[i].name == "dateType" ||
-      data[i].name == "date"
-    ) {
-      continue;
-    }
-    document.querySelector("#" + data[i].name).innerHTML = data[i].value;
-  }
-}
-
-async function getServiceName(service_id) {
-  let naja = window.Naja;
-  await naja
-    .makeRequest(
-      "GET",
-      "/",
-      {
-        run: "getServiceName",
-        service_id: service_id,
-      },
-      {
-        fetch: {
-          credentials: "include",
-        },
-      }
-    )
-    .then((payload) => {
-      // processing the response
-    });
-}
-
-async function getTime(time_id) {
-  let naja = window.Naja;
-  const res = await naja.makeRequest(
-    "GET",
-    "/",
-    {
-      u: searchParams.get("u"),
-      run: "getTime",
-      time_id: time_id,
-    },
-    {
-      fetch: {
-        credentials: "include",
-      },
-    }
-  );
-  return Promise.resolve(res.time);
-}
-
-function getOption(name, number) {
-  //get all select options into array
-  let selectElement = document.getElementsByName(name)[0];
-  let options = selectElement.options;
-  let optionsArray = [];
-  for (let i = 0; i < options.length; i++) {
-    optionsArray.push(options[i].text);
-  }
-
-  return optionsArray[parseInt(number)];
-}
-
-async function changeDay() {
+async function changeDay(service) {
   const button = document.querySelector("#load-day");
   const day = document.querySelector("[name='date']").value;
-  const service = document.querySelector("[name='service']").value;
   const box = document.querySelector(".calendar-times");
   let naja = window.Naja;
   if (!box.classList.contains("open")) {
@@ -299,7 +12,6 @@ async function changeDay() {
       "GET",
       "/",
       {
-        u: searchParams.get("u"),
         run: "setDate",
         day: day,
         service_id: service,
@@ -386,21 +98,21 @@ function setService(id, name, price, duration) {
   }
 }
 
-function setTime(id, type, timeStart, timeEnd) {
+function setTime(id, type) {
   document.querySelector("[name='time']").value = id;
   document.querySelector("[name='dateType']").value = type;
-  const timeStartEl = document.querySelector("#time");
-  timeStartEl.innerHTML = timeStart;
-  const timeEndEl = document.querySelector("#time-end");
-  timeEndEl.innerHTML = timeEnd;
-
-  document.querySelectorAll(".calendar-reservation-time").forEach((item) => {
-    item.innerHTML = timeStart;
-  });
-  nextPrev(1);
+  console.log(document.querySelector("#submit2"));
+  document.querySelector("#submit2").click();
 }
 
-function calNext(n) {
+function calNext(n, service_id) {
+  //get mont and year from data attribute
+  showMonth = Number(
+    document.querySelector("#calendar").getAttribute("data-month")
+  );
+  showYear = Number(
+    document.querySelector("#calendar").getAttribute("data-year")
+  );
   showMonth += n;
   if (showMonth < 0) {
     showMonth = 11;
@@ -409,7 +121,7 @@ function calNext(n) {
     showMonth = 0;
     showYear++;
   }
-  createCalendar(showMonth, showYear);
+  createCalendar(showMonth, showYear, service_id);
 }
 
 function timesLoading(isLoading) {
@@ -454,17 +166,22 @@ function calendarLoading(isLoading) {
   }
 }
 
-async function createCalendar(month, year, availableDays = []) {
+async function createCalendar(month, year, service_id, availableDays = []) {
   const container = document.querySelector("#calendar");
   calendarLoading(true);
+  console.log(month);
+  month = Number(month);
+  year = Number(year);
+  //write mont and year to data attribute
+  container.setAttribute("data-month", month);
+  container.setAttribute("data-year", year);
 
   const calendarTitle = document.querySelector("#calendar-month");
   const curDate = new Date();
-  const curMonth = curDate.getMonth();
   const firstDateOfMonth = new Date(year, month, 1);
-  const lastDayOfMonth = new Date(year, month + 1, 0);
+  const lastDayOfMonth = new Date(year, year + 1, 0);
   if (availableDays.length == 0) {
-    availableDays = await getAvailableDays();
+    availableDays = await getAvailableDays(service_id);
   }
   container.style.filter = "grayscale(0%)";
   container.innerHTML = "";
@@ -569,7 +286,7 @@ async function createCalendar(month, year, availableDays = []) {
           date.getDate().toString().padStart(2, "0");
         removeDaySelected();
         div.classList.add("selected");
-        changeDay();
+        changeDay(service_id);
       });
     }
     container.appendChild(div);
@@ -592,14 +309,12 @@ async function createCalendar(month, year, availableDays = []) {
   }
 }
 
-async function getAvailableDays() {
+async function getAvailableDays(service_id) {
   let naja = window.Naja;
-  const service_id = document.querySelector("[name='service']").value;
   const res = await naja.makeRequest(
     "POST",
     `/`,
     {
-      u: searchParams.get("u"),
       run: "fetch",
       service_id: service_id,
     },
@@ -635,7 +350,7 @@ const debouncedVerify = debounce(verify, 300);
 
 async function verify() {
   let code = document.querySelector("[name='dicountCode']").value;
-  const service = document.querySelector("[name='service']").value;
+  const service = document.querySelector("#service_id").value;
   if (service != null) {
     if (code == null) {
       code = "";
@@ -645,7 +360,6 @@ async function verify() {
       "POST",
       "/",
       {
-        u: searchParams.get("u"),
         run: "verifyCode",
         discountCode: code,
         service_id: service,

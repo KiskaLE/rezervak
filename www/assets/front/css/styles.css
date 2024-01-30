@@ -10,6 +10,7 @@ h2 {
 
 :root {
   font-size: 16px;
+  font-family: "Roboto", sans-serif;
 }
 
 .hidden {
@@ -134,8 +135,13 @@ body {
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
-  margin-top: 20px;
+  margin-top: 60px;
   margin-bottom: 50px;
+}
+.page-wrapper form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .items-table {
@@ -186,8 +192,13 @@ body {
     margin-top: 0;
   }
 }
-.reservationForm-wrapper h1 {
+
+h1 {
   text-align: center;
+}
+
+#snippet--newReservationForm {
+  width: 100%;
 }
 
 .center {
@@ -245,6 +256,7 @@ body {
   text-decoration: none;
   color: black;
   transition: 100ms;
+  text-align: center;
 }
 
 .button:hover {
@@ -691,15 +703,16 @@ body {
   text-align: center;
 }
 
+#verify-code {
+  font-weight: 300;
+}
+
 .recap-customer-info-discount-code {
   display: flex;
-  gap: 10px;
-  align-items: center;
-}
-@media (max-width: 500px) {
-  .recap-customer-info-discount-code {
-    flex-direction: column;
-  }
+  gap: 5px;
+  text-align: left;
+  flex-direction: column;
+  margin-top: 10px;
 }
 .recap-customer-info-discount-code h2 {
   white-space: nowrap;
@@ -707,6 +720,7 @@ body {
   width: fit-content !important;
   min-width: auto !important;
   margin: 0 !important;
+  text-align: left;
 }
 .recap-customer-info-discount-code h2::after {
   content: ":";
@@ -734,13 +748,23 @@ input {
   padding: 5px 15px;
   width: 100%;
   font-size: 1rem;
-  font-weight: lighter;
+  font-weight: 400;
   color: rgb(29, 27, 39);
   border-radius: 5px;
   box-sizing: border-box;
   border: 1px solid #94999a !important;
   background-color: inherit;
   box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+}
+
+input, textarea, select {
+  font-family: inherit !important;
+}
+
+input[type=submit] {
+  font-size: 20px;
+  font-weight: 500;
+  font-family: "PT Sans Narrow", sans-serif;
 }
 
 input[type=checkbox] {
@@ -1035,6 +1059,7 @@ footer {
 
 .footer-wrapper {
   display: flex;
+  flex-direction: column;
   gap: 30px;
   box-sizing: border-box;
   align-items: center;
@@ -1099,6 +1124,7 @@ footer {
   border-radius: 5px;
 }
 .recap-service-card .service-text {
+  line-height: 21px;
   font-size: 16px;
   color: #595f60;
   font-weight: 300;
@@ -1132,6 +1158,7 @@ footer {
 }
 #recap-customer-info .recap-customer-info-title.customer-code {
   font-size: 16px !important;
+  font-weight: 300;
 }
 #recap-customer-info .recap-custome-info-data {
   display: flex;

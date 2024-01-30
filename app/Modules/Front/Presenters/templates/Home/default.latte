@@ -1,286 +1,272 @@
 {block title}Rezervace{/block}
 {block content}
 
-
+<script src="{$basePath}/assets/front/js/multistepForm.js"></script>
+<script src="{$basePath}/assets/front/js/live-form-validation.js"></script> 
 <div class="page-wrapper">
-    <div id="reservation-steps" style="display: none">
-        <span onclick="goToTab(0)" class="step"></span>
-        <span onclick="goToTab(1)" class="step"></span>
-        <span onclick="goToTab(2)" class="step"></span>
-        <span onclick="goToTab(3)" class="step"></span>
-        <span onclick="goToTab(4)" class="step"></span>
+
+{if $step == 1}
+<form n:name="formPartOne">
+    <h1>Vyberte službu</h1>
+    <div class="select-wrapper">
+    <input n:name="service" id="service">
+    <input n:name="submit" id="submit" style="display: none;">
+        {var $i = 0}
+        {foreach $services as $service}
+
+            <div class="recap-service-card service-card-button" onclick="$('#service').val({$service->id}); $('#submit').trigger('click')">
+                <div>
+                    <h2 class="recap-service-title">{$service->name}</h2>
+                    <span class="service-availability {$servicesAvailableTimesCount[$service->id] == 0 ? 'unavailable': '' }" n:if="$servicesAvailableTimesCount">{$servicesAvailableTimesCount[$service->id] > 10 ? "Volné termíny > 10" : "Volné termíny: " . $servicesAvailableTimesCount[$service->id]}<br></span>
+                    <span>{$service->duration} minut <br></span>
+                    {* <span>{$service->description}</span> *}
+                </div>
+                <div>
+                    <div class="service-price"><span>{$service->price|currency}</span><span>&nbsp;Kč</span>
+                    </div>
+                </div>
+            </div>
+            {do $i++}
+        {/foreach}
     </div>
-    <div class="reservationForm-wrapper">
+</form>
 
-        <form n:name="form" id="regForm">
-
-
-            <div class="tab">
-                <h1>Vyberte službu</h1>
-                <div class="select-wrapper">
-                    {var $i = 0}
-                    {foreach $services as $service}
-
-                        <div class="recap-service-card service-card-button"
-                             onclick="setService({$service->id}, {$service->name}, {$service->price}, {$service->duration})">
-                            <div class="">
-                                <h2 class="recap-service-title">{$service->name}</h2>
-                                <span class="service-availability {$servicesAvailableTimesCount[$service->id] == 0 ? 'unavailable': '' }" n:if="$servicesAvailableTimesCount">{$servicesAvailableTimesCount[$service->id] > 10 ? "Volné termíny > 10" : "Volné termíny: " . $servicesAvailableTimesCount[$service->id]}<br></span>
-                                <span>{$service->duration} minut <br></span>
-                                {* <span>{$service->description}</span> *}
-                            </div>
-                            <div>
-                                <div class="service-price"><span>{$service->price|currency}</span><span>&nbsp;Kč</span>
-                                </div>
-                            </div>
-                        </div>
-                        {do $i++}
-                    {/foreach}
-                </div>
-                <input n:name="service" class="multiform">
-            </div>
-
-
-            <div class="tab">
-                <div class="row">
-                    <div class="back">
-                        <img src="{$basePath}/assets/front/icons/back.svg" alt="zpět" onclick="nextPrev(-1)">
-                    </div>
-                </div>
-                <div class="calendar-box">
-                    <div class="reservation-info">
-                        <h2 class="calendar-reservation-service">Rezervace</h2>
-                        <div class="reservation-info-group">
-                            <span class="info-group-title">Doba trvání</span>
-                            <div class="info-group-value"><span class="calendar-reservation-duration"></span><span> minut</span>
-                            </div>
-                        </div>
-                        <div class="reservation-info-group">
-                            <span class="info-group-title">Cena</span>
-                            <div class="info-group-value"><span
-                                        class="calendar-reservation-price">500</span><span> Kč</span></div>
-                        </div>
-                    </div>
-
-                    <div class="calendar-date">
-                        <h2>Vyberte datum a čas služby</h2>
-
-                        <div class="calender-wrapper" style="position:relative;">
-                            <div id="calendar-times-loading" class="loading" style="display:none;">
-                                <div></div>
-                            </div>
-                            <div id="calendar-nav"><img
-                                        src="{$basePath}/assets/front/icons/arrow-calendar-left.svg"
-                                        alt="předchozí měsíc"
-                                        onclick="calNext(-1)" id="prev-month">
-                                <h2 id="calendar-month"></h2><img
-                                        src="{$basePath}/assets/front/icons/arrow-calendar-left.svg"
-                                        style="transform: rotate(180deg)"
-                                        alt="další měsíc"
-                                        onclick="calNext(1)" id="next-month">
-                            </div>
-                            <div id="calendar"></div>
-                        </div>
-                        <input n:name="date" class="multiform data">
-                    </div>
-
-                    <div class="calendar-times" style="position:relative;">
-                        <div id="times-loading" class="loading" style="display: none;">
-                            <div></div>
-                        </div>
-                        <div class="back hidden" id="times-back" onclick="toggleCalendarTimes()"><img
-                                    src="{$basePath}/assets/front/icons/back.svg"
-                                    alt="zpět"></div>
-                        <h3 id="calendar-selected-date" class="text-center"></h3>
-                        <div class="time-wrapper">
-                            <input n:name="time" value="{$times ? $times[0] : ''}" id="timeInput" class="multiform">
-                            <input n:name="dateType">
-
-                            {snippet content}
-                                <div class="time select-wrapper">
-                                    {var $i = 0}
-                                {foreach $times as $time}
-                                        {var $end = date("H:i", strtotime($time . "+" . $selectedService->duration . " minutes"))}
-                                        <p onclick="setTime({$i},'default', {$time}, {$end})"
-                                           class="button button-time">{$time}</p>
-                                        {do $i++}
-                                    {/foreach}
-
-                                </div>
-                                <p n:if="$backupTimes" style="text-align: center;">Náhradní čas:</p>
-                                <div class="time">
-                                    {var $j = 0}
-                                    {foreach $backupTimes as $time}
-                                        {var $end = date("H:i", strtotime($time . "+" . $selectedService->duration . " minutes"))}
-                                        <p onclick="setTime({$j},'backup', {$time}, {$end})"
-                                           class="button button-backup">{$time}</p>
-                                        {do $j++}
-                                    {/foreach}
-                                </div>
-                            {/snippet}
-
-                        </div>
-                    </div>
+{elseif $step == 2}
+<div class="row">
+        <a n:href="back!" class="back">
+            <img src="{$basePath}/assets/front/icons/back.svg" alt="zpět">
+        </a>
+</div>
+<form id="form2" n:name="formPartTwo">
+<input n:name="submit" id="submit2" style="display: none;"> 
+    <div class="calendar-box">
+        <div class="reservation-info">
+            <h2 class="calendar-reservation-service">{$selectedService->name}</h2>
+            <div class="reservation-info-group">
+                <span class="info-group-title">Doba trvání</span>
+                <div class="info-group-value"><span class="calendar-reservation-duration">{$selectedService->duration}</span><span> minut</span>
                 </div>
             </div>
-
-            <div class="tab">
-                <div class="row">
-                    <div class="back">
-                        <img src="{$basePath}/assets/front/icons/back.svg" alt="zpět" onclick="nextPrev(-1)">
-                    </div>
-                </div>
-                <div class="info-form">
-                    <div class="reservation-info">
-                        <h2 class="calendar-reservation-service">Rezervace</h2>
-                        <div class="reservation-info-group">
-                            <span class="info-group-title">Doba trvání</span>
-                            <div class="info-group-value"><span class="calendar-reservation-duration"></span><span> minut</span>
-                            </div>
-                        </div>
-                        <div class="reservation-info-group">
-                            <span class="info-group-title">Cena</span>
-                            <div class="info-group-value"><span
-                                        class="calendar-reservation-price">500</span><span> Kč</span></div>
-                        </div>
-                        <div class="reservation-info-group">
-                            <span class="info-group-title">Termín a čas</span>
-                            <div class="info-group-value"><span class="calendar-reservation-date"></span>&#160;<span
-                                        class="calendar-reservation-time"></span></div>
-                        </div>
-                    </div>
-                    <div class="form">
-                        <div class="">
-                            <h2 class="h2-center">Zadejte osobní údaje</h2>
-                        </div>
-                        <div class="form-group-multiple">
-                            <div class="form-group">
-                                <div class="input">
-                                    <label for="">Jméno*:</label>
-                                    <input autocomplete="off" autocorrect="off" autocapitalize="on" spellcheck="false" n:name="firstname" class="multiform data">
-                                </div>
-                                <span class="form-error">Zadejte jméno</span>
-                            </div>
-                            <div class="form-group">
-                                <div class="input">
-                                    <label for="">Příjmení*:</label>
-                                    <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="lastname" class="multiform data">
-                                </div>
-                                <span class="form-error">Zadejte příjmení</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input">
-                                <label for="">Tel.*:</label>
-                                <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="phone" class="multiform data">  
-                            </div>
-                            <span class="form-error">Zadejte telefoní číslo ve tvaru 720123123123</span>
-                        </div>
-                        <div class="form-group">
-                            <div class="input">
-                                <label for="">E-mail*:</label>
-                                <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="email" class="multiform data">
-                            </div>
-                            <span class="form-error">Zadejte email</span>
-                        </div>
-                        <div class="form-group">
-                            <div class="input">
-                                <label for="">Adresa a č.p.</label>
-                                <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="address" class="multiform data">
-                            </div>
-                            <span class="form-error">Zadejte adresu</span>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="input">
-                                <label for="">PSČ:</label>
-                                <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="code" class="multiform data">
-                            </div>
-                            <span class="form-error">Zadejte PSČ ve tvaru XXXXX</span>
-                        </div>
-                        <div class="form-group">
-                            <div class="input">
-                                <label for="">Město:</label>
-                                <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="city" class="multiform data">
-                            </div>
-                            <span class="form-error">Zadejte město</span>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="input checkbox">
-                                <input n:name="gdpr" class="multiform data">
-                                <label for="">Souhlasím se <a href="{$gdprUrl}" target="_blank">zpracováním osobních údajů</a></label>
-                            </div>
-                            <span class="form-error">Souhlas je povinný</span>
-                        </div>
-
-                        <div class="nav-buttons">
-                            <button class="button xl" id="prevBtn" type="button" onclick="nextPrev(-1)">Zpět</button>
-                            <button class="button xl primary" id="nextBtn" type="button" onclick="nextPrev(1)">Další
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div class="reservation-info-group">
+                <span class="info-group-title">Cena</span>
+                <div class="info-group-value"><span
+                            class="calendar-reservation-price">{$selectedService->price|currency}</span><span> Kč</span></div>
             </div>
+        </div>
 
-            {* TODO odstranit text *}
+        <div class="calendar-date">
+            <h2>Vyberte datum a čas služby</h2>
 
-
-            <div class="tab">
-
-                <div class="row">
-                    <div class="back">
-                        <img src="{$basePath}/assets/front/icons/back.svg" alt="zpět" onclick="nextPrev(-1)">
-                    </div>
+            <div class="calender-wrapper" style="position:relative;">
+                <div id="calendar-times-loading" class="loading" style="display:none;">
+                    <div></div>
                 </div>
-
-                <div class="recap-service-card">
-                    <div>
-                        <h2 class="recap-service-title" id="service"></h2>
-                        <span class="service-text"><span id="date"></span> <br>
-                    <span>od&nbsp;</span><span id="time"></span><span>&nbsp;do&nbsp;</span><span
-                                    id="time-end"></span></span>
-                    </div>
-                    <div>
-                        <div class="service-price"><span id="price">500</span><span>&nbsp;Kč</span></div>
-                    </div>
+                <div id="calendar-nav"><img
+                            src="{$basePath}/assets/front/icons/arrow-calendar-left.svg"
+                            alt="předchozí měsíc"
+                            onclick="calNext(-1, {$selectedService->id})" id="prev-month">
+                    <h2 id="calendar-month"></h2><img
+                            src="{$basePath}/assets/front/icons/arrow-calendar-left.svg"
+                            style="transform: rotate(180deg)"
+                            alt="další měsíc"
+                            onclick="calNext(1, {$selectedService->id})" id="next-month">
                 </div>
-                <div id="recap-customer-info">
-                    <div>
-                        <h2 class="recap-customer-info-title">Osobní údaje</h2>
-                        <span class="recap-custome-info-data">
-                    <span><span id="firstname"></span>&nbsp;<span id="lastname"></span></span>
-                    <span id="phone"></span>
-                    <span id="email"></span>
-                    <span id="address"></span>
-                    <span id="city"></span>
-                    <span id="code"></span>
-                    </span>
-                    </div>
-                    <div class="recap-customer-info-discount-code">
-                        <h2 class="recap-customer-info-title customer-code">Kód zákazníka</h2>
-                        <input id="verify-code" name="dicountCode" type="text" oninput="debouncedVerify()">
-                    </div>
-                </div>
-                <div class="recap-button">
-                    <button class="button xl primary">Rezervovat</button>
-                </div>
+                <div id="calendar"></div>
             </div>
+            <input n:name="date" id="date" class="multiform data">
+        </div>
 
-        </form>
+        <div class="calendar-times" style="position:relative;">
+            <div id="times-loading" class="loading" style="display: none;">
+                <div></div>
+            </div>
+            <div class="back hidden" id="times-back" onclick="toggleCalendarTimes()"><img
+                        src="{$basePath}/assets/front/icons/back.svg"
+                        alt="zpět"></div>
+            <h3 id="calendar-selected-date" class="text-center"></h3>
+            <div class="time-wrapper">
+                <input n:name="time" value="{$times ? $times[0] : ''}" id="timeInput" class="multiform">
+                <input n:name="dateType">
+
+                {snippet content}
+                    <div class="time select-wrapper">
+                        {var $i = 0}
+                    {foreach $times as $time}
+                            {var $end = date("H:i", strtotime($time . "+" . $selectedService->duration . " minutes"))}
+                            <p onclick="setTime({$i},'default');"
+                                class="button button-time">{$time}</p>
+                            {do $i++}
+                        {/foreach}
+
+                    </div>
+                    <p n:if="$backupTimes" style="text-align: center;">Náhradní čas:</p>
+                    <div class="time">
+                        {var $j = 0}
+                        {foreach $backupTimes as $time}
+                            {var $end = date("H:i", strtotime($time . "+" . $selectedService->duration . " minutes"))}
+                            <p onclick="setTime({$j},'backup')"
+                                class="button button-backup">{$time}</p>
+                            {do $j++}
+                        {/foreach}
+                    </div>
+                {/snippet}
+
+            </div>
+        </div>
     </div>
-    <script src="{$basePath}/assets/front/js/multistepForm.js"></script>
+</form>
 
-    <script>
+<script>
+    const service = {$selectedService}
+    createCalendar({$month - 1}, {$year}, {$selectedService->id}, {$availableDates})
+</script>
+{elseif $step == 3}
+<div class="row">
+    <a n:href="back! 2" class="back">
+        <img src="{$basePath}/assets/front/icons/back.svg" alt="zpět">
+    </a>
+</div>
+<form id="formPartThree" n:name="formPartThree">
+    <div class="info-form">
+        <div class="reservation-info">
+            <h2 class="calendar-reservation-service">Rezervace</h2>
+            <div class="reservation-info-group">
+                <span class="info-group-title">Doba trvání</span>
+                <div class="info-group-value"><span class="calendar-reservation-duration">{$selectedService->duration}</span><span> minut</span>
+            </div>
+            </div>
+            <div class="reservation-info-group">
+                <span class="info-group-title">Cena</span>
+                <div class="info-group-value"><span
+                            class="calendar-reservation-price">{$selectedService->price|currency}</span><span> Kč</span></div>
+            </div>
+            <div class="reservation-info-group">
+                <span class="info-group-title">Termín a čas</span>
+                <div class="info-group-value"><span class="calendar-reservation-date">{$date|date:"d.m.Y"}</span>&#160;<span
+                            class="calendar-reservation-time">{$selectedTime}</span></div>
+            </div>
+        </div>
+        <div class="form">
+            <div class="">
+                <h2 class="h2-center">Zadejte osobní údaje</h2>
+            </div>
+            <div class="form-group-multiple">
+                <div class="form-group">
+                    <div class="input">
+                        <label for="">Jméno*:</label>
+                        <input id="firstname" autocomplete="given-name" autocorrect="off" autocapitalize="on" spellcheck="false" n:name="firstname" class="multiform data">
+                    </div>
+                    <span class="form-error">Zadejte jméno</span>
+                </div>
+                <div class="form-group">
+                    <div class="input">
+                        <label for="">Příjmení*:</label>
+                        <input id="lastname" autocomplete="family-name" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="lastname" class="multiform data">
+                    </div>
+                    <span class="form-error">Zadejte příjmení</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input">
+                    <label for="">Tel.*:</label>
+                    <input id="tel" autocomplete="tel" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="phone" class="multiform data">  
+                </div>
+                <span class="form-error">Zadejte telefoní číslo ve tvaru 720 123 123 123</span>
+            </div>
+            <div class="form-group">
+                <div class="input">
+                    <label for="">E-mail*:</label>
+                    <input id="email" autocomplete="email" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="email" class="multiform data">
+                </div>
+                <span class="form-error">Zadejte email</span>
+            </div>
+            <div class="form-group">
+                <div class="input">
+                    <label for="">Adresa a č.p.</label>
+                    <input id="address" autocomplete="street-address" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="address" class="multiform data">
+                </div>
+                <span class="form-error">Zadejte adresu</span>
+            </div>
 
-        document.getElementById("regForm").onkeypress = function (e) {
-            const key = e.charCode || e.keyCode || 0;
-            if (key == 13) {
-                e.preventDefault();
-            }
-        }
-    </script>
+            <div class="form-group">
+                <div class="input">
+                    <label  for="">PSČ:</label>
+                    <input id="zip" autocomplete="postal-code" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="code" class="multiform data">
+                </div>
+                <span class="form-error">Zadejte PSČ ve tvaru XXXXX</span>
+            </div>
+            <div class="form-group">
+                <div class="input">
+                    <label for="">Město:</label>
+                    <input id="city" autocomplete="on" autocorrect="off" autocapitalize="off" spellcheck="false" n:name="city" class="multiform data">
+                </div>
+                <span class="form-error">Zadejte validní město</span>
+            </div>
+
+            <div class="form-group">
+                <div class="input checkbox">
+                    <input id="gdpr" n:name="gdpr" class="multiform data">
+                    <label for="">Souhlasím se <a href="{$gdprUrl}" target="_blank">zpracováním osobních údajů</a></label>
+                </div>
+                <span class="form-error">Souhlas je povinný</span>
+            </div>
+
+            <div class="nav-buttons">
+                <div class="button xl primary" onclick="validateForm()">Další</div>
+            </div>
+        </div>
+    </div>
+</form>
+
+{elseif $step == 4}
+    <div class="row">
+        <a n:href="back! 3" class="back">
+            <img src="{$basePath}/assets/front/icons/back.svg" alt="zpět">
+        </a>
+    </div>
+<form n:name="formPartFour">
+
+    <div class="recap-service-card">
+        <div>
+            <h2 class="recap-service-title" id="service">{$selectedService->name}</h2>
+            <span class="service-text"><span id="date">{$date|date:"d.m.Y"}</span> <br>
+        <span>od&nbsp;</span><span id="time">{$selectedTime}</span><span>&nbsp;do&nbsp;</span><span
+                        id="time-end">{$end|date:"H:i"}</span></span>
+        </div>
+        <div>
+            <div class="service-price"><span id="price">{$selectedService->price|currency}</span><span>&nbsp;Kč</span></div>
+        </div>
+    </div>
+    <div id="recap-customer-info">
+        <div>
+            <h2 class="recap-customer-info-title">Osobní údaje</h2>
+            <span class="recap-custome-info-data">
+        <span><span id="firstname">{$firstname}</span>&nbsp;<span id="lastname">{$lastname}</span></span>
+        <span n:if="$phone" id="phone">{$phone}</span>
+        <span n:if="$email" id="email">{$email}</span>
+        <span n:if="$address" id="address">{$address}</span>
+        <span n:if="$city" id="city">{$city}</span>
+        <span n:if="$code" id="code">{$code}</span>
+        </span>
+        </div>
+        <div class="recap-customer-info-discount-code">
+            <h2 class="recap-customer-info-title customer-code">Kód zákazníka</h2>
+            <input type="hidden" id="service_id" value={$selectedService->id} >
+            <input id="verify-code" name="dicountCode" type="text" oninput="debouncedVerify()">
+        </div>
+    </div>
+    <div class="recap-button">
+        <input n:name="submit" class="button xl primary">
+    </div>
+</form>
+{/if}
+
 </div>
 
-
+<script>
+    LiveFormOptions = {
+        messageErrorPrefix: 'Error: ',
+        wait: 500
+    };
+</script> 
 

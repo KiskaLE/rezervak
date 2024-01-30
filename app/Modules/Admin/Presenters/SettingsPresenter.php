@@ -82,6 +82,8 @@ class SettingsPresenter extends SecurePresenter
         $form->addText("email")
             ->setDefaultValue($this->settings->info_email)->addRule($form::EMAIL, "Neplatný mailový formát");
 
+        $form->addTextArea("footer")->setDefaultValue($this->settings->footer);
+
         $form->addSubmit("submit", "Uložit změny");
 
         $form->onSuccess[] = [$this, "basicSettingsFormSucceeded"];
@@ -91,6 +93,7 @@ class SettingsPresenter extends SecurePresenter
 
     public function basicSettingsFormSucceeded(Form $form, $data)
     {
+        bdump($data);
 
         try {
             $this->database->table("settings")->update([
@@ -101,16 +104,13 @@ class SettingsPresenter extends SecurePresenter
                 "homepage" => $data->homepage,
                 "info_email" => $data->email,
                 "updated_at" => date("Y-m-d H:i:s"),
-                "notify_time" => $data->notifyTime
+                "notify_time" => $data->notifyTime,
+                "footer" => $data->footer,
             ]);
             $this->flashMessage("Změny byly uloženy.", "success");
         } catch (\Throwable $th) {
             $this->flashMessage("Nepodarilo se uložit změny!", "error");
         }
         $this->redirect("this");
-
-
     }
-
-
 }
