@@ -96,6 +96,7 @@ final class HomePresenter extends BasePresenter
                         $service = $this->database->table("services")->where("id=?", $formSession->service)->fetch();
                         $this->template->selectedService = $service;
                         $available = $this->availableDates->getAvailableDates($user_settings->number_of_days, $service);
+                        bdump($available);
                         $explode = explode("-", $available[0]);
                         $this->template->month = $explode[1];
                         $this->template->year = $explode[0];

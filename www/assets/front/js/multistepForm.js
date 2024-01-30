@@ -169,9 +169,9 @@ function calendarLoading(isLoading) {
 async function createCalendar(month, year, service_id, availableDays = []) {
   const container = document.querySelector("#calendar");
   calendarLoading(true);
-  console.log(month);
   month = Number(month);
   year = Number(year);
+  console.log(month, year);
   //write mont and year to data attribute
   container.setAttribute("data-month", month);
   container.setAttribute("data-year", year);
@@ -179,7 +179,8 @@ async function createCalendar(month, year, service_id, availableDays = []) {
   const calendarTitle = document.querySelector("#calendar-month");
   const curDate = new Date();
   const firstDateOfMonth = new Date(year, month, 1);
-  const lastDayOfMonth = new Date(year, year + 1, 0);
+  const lastDayOfMonth = new Date(year, month + 1, 0);
+  console.log(lastDayOfMonth);
   if (availableDays.length == 0) {
     availableDays = await getAvailableDays(service_id);
   }
