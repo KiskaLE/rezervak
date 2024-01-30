@@ -96,7 +96,6 @@ final class HomePresenter extends BasePresenter
                         $service = $this->database->table("services")->where("id=?", $formSession->service)->fetch();
                         $this->template->selectedService = $service;
                         $available = $this->availableDates->getAvailableDates($user_settings->number_of_days, $service);
-                        bdump($available);
                         $explode = explode("-", $available[0]);
                         $this->template->month = $explode[1];
                         $this->template->year = $explode[0];
@@ -206,25 +205,34 @@ final class HomePresenter extends BasePresenter
     protected function createComponentFormPartThree(): Form
     {
         $form = new Form;
+        $session = $this->getSession('newReservationForm');
 
         $form->addText("firstname", "Jmeno:")
+            ->setDefaultValue($session->firstname)
             ->setRequired("Jméno je povinné");
         $form->addText("lastname", "Příjmení:")
+            ->setDefaultValue($session->lastname)
             ->setRequired("Príjmení je povinné");
         $form->addText("phone", "Telefon:")
+            ->setDefaultValue($session->phone)
             ->setRequired("Telefon je povinny")
             ->addRule($form::PATTERN, 'Telefoní čílo není platný', '\d+');
         $form->addText("email", "E-mail:")
+            ->setDefaultValue($session->email)
             ->setRequired("E-mail je povinny")
             ->addRule($form::EMAIL, 'Neplatný formát e-mailu');
-        $form->addText("address", "Adresa a čp:");
+        $form->addText("address", "Adresa a čp:")
+            ->setDefaultValue($session->address);
         $form->addText("code", "PSČ:")
+            ->setDefaultValue($session->code)
             ->addFilter(function ($value) {
                 return str_replace(' ', '', $value);
             })
             ->addRule($form::PATTERN, 'Neplatný formát PSČ', '^\d{5}$');
-        $form->addText("city", "Město:");
-        $form->addCheckbox("gdpr", "gdpr")->setRequired("Souhlas s GDPR je povinný");
+        $form->addText("city", "Město:")
+            ->setDefaultValue($session->city);
+        $form->addCheckbox("gdpr", "gdpr")->setRequired("Souhlas s GDPR je povinný")
+            ->setDefaultValue($session->gdpr);
 
         $form->addSubmit("submit", "Další");
 

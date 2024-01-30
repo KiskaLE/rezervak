@@ -861,8 +861,14 @@ h1 {
   gap: 5px;
   //align-items: center;
   text-align: left;
-  flex-direction: column;
-  margin-top: 10px;
+  margin-top: 5px;
+  align-items: center;
+  border-top: 1px solid $gray-100;
+  padding-top: 10px;
+
+  @include w(sm) {
+    flex-direction: column;
+  }
 
 
   h2 {
