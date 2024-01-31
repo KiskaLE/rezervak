@@ -43,6 +43,8 @@ final class HomePresenter extends BasePresenter
     public function actionDefault($run, $day, $service_id, $discountCode = "", $krok = 1)
     {
         $user_settings = $this->database->table("settings")->fetch();
+        $this->template->backupInfo = $user_settings->backup_info;
+        $this->template->userSettings = $user_settings;
         if ($this->isAjax()) {
             if ($run == "fetch") {
                 $service = $this->database->table("services")->where("id=?", $service_id)->fetch();
@@ -125,6 +127,7 @@ final class HomePresenter extends BasePresenter
             }
 
             $this->template->gdprUrl = $user_settings->gdpr_url;
+
             $this->redrawControl("newReservationForm");
         }
     }

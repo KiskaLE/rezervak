@@ -84,6 +84,8 @@ class SettingsPresenter extends SecurePresenter
 
         $form->addTextArea("footer")->setDefaultValue($this->settings->footer);
 
+        $form->addTextArea("backupInfo")->setDefaultValue($this->settings->backup_info);
+
         $form->addSubmit("submit", "Uložit změny");
 
         $form->onSuccess[] = [$this, "basicSettingsFormSucceeded"];
@@ -93,7 +95,6 @@ class SettingsPresenter extends SecurePresenter
 
     public function basicSettingsFormSucceeded(Form $form, $data)
     {
-        bdump($data);
 
         try {
             $this->database->table("settings")->update([
@@ -106,6 +107,7 @@ class SettingsPresenter extends SecurePresenter
                 "updated_at" => date("Y-m-d H:i:s"),
                 "notify_time" => $data->notifyTime,
                 "footer" => $data->footer,
+                "backup_info" => $data->backupInfo
             ]);
             $this->flashMessage("Změny byly uloženy.", "success");
         } catch (\Throwable $th) {

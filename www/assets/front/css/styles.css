@@ -140,8 +140,14 @@ body {
 }
 .page-wrapper form {
   display: flex;
+  align-items: center;
   flex-direction: column;
   gap: 20px;
+}
+@media (max-width: 900px) {
+  .page-wrapper form {
+    width: 90%;
+  }
 }
 
 .items-table {
@@ -417,6 +423,13 @@ h1 {
   overflow-y: auto;
   padding: 5px;
 }
+@media (max-width: 900px) {
+  .time-wrapper {
+    overflow-y: unset;
+    height: -moz-fit-content;
+    height: fit-content;
+  }
+}
 @media (max-width: 500px) {
   .time-wrapper {
     height: -moz-max-content !important;
@@ -498,6 +511,7 @@ h1 {
   transition: all 0.3s;
 }
 .calendar-times.open {
+  overflow-x: visible;
   width: 150px;
   border-left: 1px solid #d5d8d9;
   padding: 0 20px;
@@ -1179,18 +1193,16 @@ footer {
 .recap-button {
   display: flex;
   justify-content: center;
-}
-@media (max-width: 500px) {
-  .recap-button {
-    width: 100%;
-  }
-}
-.recap-button button {
   width: 340px;
 }
 @media (max-width: 500px) {
+  .recap-button {
+    width: 91%;
+  }
+}
+@media (max-width: 500px) {
   .recap-button button {
-    width: 92%;
+    width: 67%;
   }
 }
 
@@ -1239,7 +1251,6 @@ footer {
 }
 @media (max-width: 900px) {
   .calendar-date {
-    padding-left: 0;
     min-height: 400px;
   }
   .calendar-date h2 {
@@ -1296,4 +1307,26 @@ footer {
   100% {
     transform: rotate(360deg);
   }
+}
+#backup-times {
+  position: relative;
+  z-index: 10;
+}
+#backup-times:hover .tooltiptext {
+  display: inline;
+}
+
+.backup-times-info {
+  display: flex;
+  cursor: pointer;
+}
+
+#backup-info-modal {
+  display: none;
+}
+#backup-info-modal div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }/*# sourceMappingURL=styles.css.map */

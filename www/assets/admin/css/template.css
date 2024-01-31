@@ -376,6 +376,16 @@ h1 {
   text-align: center;
 }
 
+.btn-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.btn-center svg {
+  position: unset !important;
+}
+
 .btn-c-primary {
   background-color: #eb6c51;
   border-color: #eb6c51 !important;
@@ -406,8 +416,9 @@ h1 {
 }
 
 .btn-danger {
-  background-color: #ef4444;
-  color: white;
+  background-color: #ffb8b3;
+  color: #270304;
+  border: 2px solid #ffb8b3;
 }
 
 .btn-gold {
@@ -419,7 +430,7 @@ h1 {
 .btn-green {
   background: #8dca81;
   border: 2px solid #8dca81;
-  color: #20710a;
+  color: #061603;
 }
 
 .btn-default {
@@ -619,6 +630,11 @@ h1 {
   background: white;
 }
 
+.list-item-actions {
+  display: flex;
+  gap: 15px;
+}
+
 .list-items-filter {
   min-width: 500px;
   display: flex;
@@ -671,7 +687,7 @@ h1 {
   width: 100%;
   height: 100px;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: 1fr 1fr 1fr 250px 1fr 1fr;
   transition-duration: 100ms;
 }
 .list-wrapper .list-item .list-item-head:hover {
@@ -735,7 +751,7 @@ h1 {
   box-sizing: border-box;
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 2fr;
+  grid-template-columns: 1fr 1fr 1fr 250px 1fr 1fr;
   transition: all 0.3s ease;
   height: 0;
   opacity: 0;

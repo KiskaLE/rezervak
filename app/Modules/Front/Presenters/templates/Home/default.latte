@@ -99,7 +99,13 @@
                         {/foreach}
 
                     </div>
-                    <p n:if="$backupTimes" style="text-align: center;">Náhradní čas:</p>
+                    <br>
+                    <span n:if="$backupTimes" style="text-align: center; display: flex; gap: 5px; align-items: center; justify-content: center;">Náhradní časy:
+                        <span id="backup-info-button" class="backup-times-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        </span>
+                    </span>
+                    <br>
                     <div class="time">
                         {var $j = 0}
                         {foreach $backupTimes as $time}
@@ -109,12 +115,17 @@
                             {do $j++}
                         {/foreach}
                     </div>
+                    <script src="{$basePath}/assets/front/js/info.js"></script>
                 {/snippet}
 
             </div>
         </div>
     </div>
 </form>
+
+<div id="backup-info-modal">
+    <div>{$backupInfo|noescape}</div>
+</div>
 
 <script>
     const service = {$selectedService}
