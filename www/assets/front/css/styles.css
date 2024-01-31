@@ -978,6 +978,16 @@ input.valid {
   font-size: 16px;
   font-weight: 500;
 }
+.payment-wrapper .payment-message {
+  display: flex;
+  font-size: 14px;
+  justify-content: center;
+  padding: 20px 20px 20px;
+  border-top: 1px solid #d5d8d9;
+}
+.payment-wrapper .payment-message span {
+  color: #3f4344;
+}
 .payment-wrapper .payment {
   padding: 10px 20px 20px;
   display: grid;

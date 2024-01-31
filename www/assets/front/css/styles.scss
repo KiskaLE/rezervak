@@ -1147,6 +1147,19 @@ input.valid {
     }
   }
 
+  .payment-message {
+    display: flex;
+    font-size: $text-1;
+    justify-content: center;
+    padding: $padding $padding $padding;
+    border-top: 1px solid $gray-100;
+
+    span {
+      //text-align: center;
+      color: $gray-600
+    }
+  }
+
   .payment {
     padding: 10px $padding $padding;
     display: grid;
