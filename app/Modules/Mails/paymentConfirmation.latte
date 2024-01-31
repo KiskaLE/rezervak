@@ -1,44 +1,92 @@
 <html>
-<head>
-    <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8" />
     <title>Potvrzení platby</title>
-</head>
-<body style="background: #EEEEEE;
-            padding: 20px;
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;">
-<div style="display: flex; flex-direction: column; align-items: center; padding: 20px 0;">
-    <div style="max-width: 500px; padding: 30px; border-radius: 10px; background: white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);">
-        <h1 style="font-size: 24px;
-        font-weight: bolder;
-        color: #d0482b;
-        margin: 0 0 20px;">Potvzení platby</h1>
-        <p style="font-size: 16px; line-height: 30px;">Dobrý den, <br> Vaše platba rezervace <b>č.{$payment->id_transaction}</b> v hodnotě <b>{$payment->price} Kč</b> byla <b>úspěšně přijata</b>.</p>
-        <h2 style="font-size: 16px; margin: 0px;">Detaily vaší Rezervace:</h2>
-        <p style="font-size: 16px; margin-top: 2px;
-        line-height: 30px;">
-            {$reservation->ref("services", "service_id")->name} <br>
-            {$reservation->start|date:"d.m.Y"}<br>
-            {$reservation->start|date:"H:i"}<br>
-            {var $price = $reservation->related("payments")->fetch()->price}
-            {$price|currency} Kč
+  </head>
+  <body
+    style="
+      background: #eeeeee;
+      padding: 20px;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    "
+  >
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0;
+      "
+    >
+      <div
+        style="
+          max-width: 500px;
+          padding: 30px;
+          border-radius: 10px;
+          background: white;
+          box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+            0 2px 4px -2px rgb(0 0 0 / 0.1);
+        "
+      >
+        <h1
+          style="
+            font-size: 24px;
+            font-weight: bolder;
+            color: #d0482b;
+            margin: 0 0 20px;
+          "
+          >Potvzení platby</h1
+        >
+        <p style="font-size: 16px; line-height: 30px"
+          >Dobrý den, <br />
+          Rezervace číslo {$payment->id_transaction} byla uhrazena a Váš termin
+          byl potvrzen.</p
+        >
+        <h2 style="font-size: 16px; margin: 0px">Detaily vaší Rezervace:</h2>
+        <p style="font-size: 16px; margin-top: 2px; line-height: 30px">
+          {$reservation->ref("services", "service_id")->name} <br />
+          {$reservation->start|date:"d.m.Y"}<br />
+          {$reservation->start|date:"H:i"}<br />
+          {var $price = $reservation->related("payments")->fetch()->price}
+          {$price|currency} Kč
         </p>
-        <div style="display: flex; gap: 80px; justify-content:space-between;">
-            <p style="font-size: 16px;
-                line-height: 30px;">S pozdravem, <br>
-                <span n:if="$user->company">{$user->company}</span><br>
-                <span n:if="$user->ico">IČO: {$user->ico}</span> <br>
-                <span n:if="$user->dic">DIC: {$user->dic}</span> <br>
-                <span n:if="$user->email">{$user->email}</span><br>
-                <span n:if="$user->phone">{$user->phone}</span>
-            </p>
-            <!-- <img src="{$url}/assets/images/{$user->logo_url}" alt="Logo"> -->
-            <div style="display: flex; justify-content: center; align-items: center; margin-right: 20px">
-                <img  style="height: 100px" src="{$serverUrl}/assets/images/{$user->logo_url}" alt="Logo">
-            </div>
-        </div>
-    </div>
-</div>
 
-</body>
+        <p
+          ><a
+            href="https://www.google.com/maps/place/Tyr%C5%A1ova+168,+561+51+Letohrad-Orlice/@50.0317114,16.5096582,18z/data=!4m15!1m8!3m7!1s0x470dfafbea67d219:0xf5bad6e56b2e9937!2sU+Distance,+561+51+Letohrad!3b1!8m2!3d50.0317114!4d16.5104095!16s%2Fg%2F1tj4fs7y!3m5!1s0x470dfafbc469593d:0x6a03115a9a039bfc!8m2!3d50.0314043!4d16.5103668!16s%2Fg%2F11c23_yxsr?entry=ttu"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Odkaz na mapu</a
+          ></p
+        >
+
+        <div style="display: flex; gap: 80px; justify-content: space-between">
+          <p style="font-size: 16px; line-height: 30px"
+            >S pozdravem, <br />
+            <span n:if="$user->company">{$user->company}</span><br />
+            <span n:if="$user->ico">IČO: {$user->ico}</span> <br />
+            <span n:if="$user->dic">DIC: {$user->dic}</span> <br />
+            <span n:if="$user->email">{$user->email}</span><br />
+            <span n:if="$user->phone">{$user->phone}</span>
+          </p>
+          <!-- <img src="{$url}/assets/images/{$user->logo_url}" alt="Logo"> -->
+          <div
+            style="
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-right: 20px;
+            "
+          >
+            <img
+              style="height: 100px"
+              src="{$serverUrl}/assets/images/{$user->logo_url}"
+              alt="Logo"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

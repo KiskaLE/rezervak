@@ -58,9 +58,9 @@
 
                         <div class="list-item-column">
                             <div class="list-item-actions">
-                                <a n:if="$payment->status != 1 && $reservation->status == 'VERIFIED'" class="btn btn-primary btn-green btn-center" n:href="setPaid! $reservation->id"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check"><polyline points="20 6 9 17 4 12"/></svg></a>
+                                <a id="paid-button-info" n:if="$payment->status != 1 && $reservation->status == 'VERIFIED'" class="btn btn-primary btn-green btn-center" n:href="setPaid! $reservation->id"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check"><polyline points="20 6 9 17 4 12"/></svg></a>
                             {* <a class="btn btn-tertiary" n:href="edit $reservation->uuid">Upravit</a> *}
-                            <a n:if="$reservation->status != 'CANCELED'" class="btn btn-primary btn-center btn-danger" n:href="cancel! $reservation->id"
+                            <a id="cancel-button-info" n:if="$reservation->status != 'CANCELED'" class="btn btn-primary btn-center btn-danger" n:href="cancel! $reservation->id"
                                     onclick="if(confirm('Opravdu chcete zrušit rezervaci?')) { handleDelete(this, {$reservation->id}); } else { event.preventDefault(); }"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></a>
                         
                             </div>
@@ -97,7 +97,7 @@
                             </div>
 
                             <div class="list-item-info">
-                                <span class="list-item-label">Adresa</span>
+                                <span n:if="$reservation->address || $reservation->code ||$reservation->city" class="list-item-label">Adresa</span>
                                 <span>{$reservation->address}</span>
                                 <span>{$reservation->code}</span>
                                 <span>{$reservation->city}</span>
@@ -137,4 +137,13 @@
                     <div class="list-no-data"><span>Nemáte naplánované žádné rezervace</span></div>
                 {/if}
             </div>
+
+<script>
+    tippy("#paid-button-info", {
+        content: "Označit zaplaceno"
+    });
+    tippy("#cancel-button-info", {
+        content: "Zrušit rezervaci"
+    });
+</script>
 {/define}
